@@ -8,6 +8,8 @@
 
 
 ## Modules
-- [x] Configurations
+- [x] Configurations 
 - [x] User Management
 - [x] Authentication
+- [x] Human Resources
+- [x] Customers
