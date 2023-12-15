@@ -1,0 +1,45 @@
+{{ template "partials/header-back" . }}
+
+    <div class="card">
+        <div class="card-header">
+            *Essas configurações são necessárias para o funcionamento do Sistema
+        </div>
+        <div class="card-body">
+            <form class="" action="/configuracoes/editar-basica" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for=""><strong>Nome da Empresa:</strong></label>
+                    <input type="text" class="form-control" name="NomeEmpresa" value="{{ .Configuracao.NomeEmpresa }}" autofocus required>
+                </div>
+                <div class="mb-3">
+                    <label for=""><strong>Sigla da Empresa:</strong></label>
+                    <input type="text" class="form-control" name="SiglaEmpresa" value="{{ .Configuracao.SiglaEmpresa }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for=""><strong>Número da Instituição:</strong></label>
+                    <input type="text" class="form-control" name="NumeroInstituicao" value="{{ .Configuracao.NumeroInstituicao }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for=""><strong>Nº de Registos por Página:</strong></label>
+                    <input type="number" class="form-control" name="NumRegistosPorPagina" min="5" max="100" value="{{ .Configuracao.NumRegistosPorPagina }}" required>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-sm">
+                        <i class="bi bi-send"></i>
+                        Submeter
+                    </button>
+                    <button type="reset" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-eraser"></i>
+                        Limpar
+                    </button>
+                    <a href="/configuracoes" class="btn btn-danger btn-sm">
+                        <i class="bi bi-x"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+        </div>
+    </div>
+
+{{ template "partials/footer-back" . }}

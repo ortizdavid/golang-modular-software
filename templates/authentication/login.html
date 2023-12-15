@@ -1,0 +1,28 @@
+{{ template "partials/header-auth" . }}
+
+    <div class="form-signin">
+        <form id="login-form" action="/auth/login" method="POST">
+            <div class="form-floating">
+                <input type="email" name="username" class="form-control" id="emailInput" placeholder="name@example.com" required autofocus>
+                <label for="emailInput">Password</label>
+                <div id="email-error" style="color: red;"></div>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="password" class="form-control" id="passwordInput" 
+                    placeholder="Password" maxlength="150" minlength="8" required>
+                <label for="floatingPassword">Password</label>
+                <div id="passwor-error" style="color: red;"></div>
+            </div>
+            <br>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Sign in
+            </button>
+            <div class="">
+                Forgot passord? Recover <a href="/auth/get-recover-link">here</a>
+            </div>
+            <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
+        </form>
+    </div>
+
+{{ template "partials/footer-auth" . }}

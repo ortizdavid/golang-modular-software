@@ -1,0 +1,37 @@
+{{ template "partials/header-back" . }}
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <div align="right">
+                    {{ if ne .User.UserId .LoggedUser.UserId}}
+                        {{ if eq .User.Active "Yes"}}
+                            <a href="/users/{{ .User.UniqueId }}/deactivate" class="btn btn-danger btn-sm">
+                                <i class="bi bi-person-slash"></i>
+                                Deactivate
+                            </a>
+                        {{ else }}
+                            <a href="/users/{{ .User.UniqueId }}/activate" class="btn btn-primary btn-sm">
+                                <i class="bi bi-person-check"></i>
+                                Activate
+                            </a>
+                        {{ end }}
+                    {{ end }}
+                    <a href="/users/{{ .User.UniqueId }}/edit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-pencil"></i>
+                        Edit User
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <p><strong>Id: </strong>{{ .User.UserId }}</p>
+                <p><strong>Username: </strong>{{ .User.UserName }}</p>
+                <p><strong>Role: </strong>{{ .User.RoleName }}</p>
+                <p><strong>Active: </strong>{{ .User.Active }}</p>
+                <p><strong>Created: </strong>{{ .User.CreatedAtStr }}</p>
+                <p><strong>Updated: </strong>{{ .User.UpdatedAtStr }}</p>
+            </div>
+        </div>
+    </div>    
+
+{{ template "partials/footer-back" . }}

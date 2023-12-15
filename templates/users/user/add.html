@@ -1,0 +1,46 @@
+{{ template "partials/header-back" . }}
+
+    <div class="card">
+        <div class="card-header">
+            *All fields are mandatory
+        </div>
+        <div class="card-body">
+            <form class="" action="/users/add" method="POST">
+                <div class="mb-3">
+                    <label for=""><strong>Username:</strong></label>
+                    <input class="form-control" type="text" name="username" id="" autofocus>
+                </div>
+                <div class="mb-3">
+                    <label for=""><strong>Role:</strong></label>
+                    <select class="form-control" name="role_id" id="">
+                        {{ range .Roles }}
+                            <option value="{{ .RoleId }}">{{ .RoleName }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for=""><strong>Password:</strong></label>
+                    <input class="form-control" type="password" name="password" id="">
+                </div>
+                <div class="mb-3">
+                    <label for=""><strong>Password Confirmation:</strong></label>
+                    <input class="form-control" type="password" name="password_conf" id="">
+                </div>
+                <br>
+                <div>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-send"></i>
+                        Submit
+                    </button>
+                    <a href="/users" class="btn btn-danger btn-sm">
+                        <i class="bi bi-x"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>  
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+
+{{ template "partials/footer-back" . }}

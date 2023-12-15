@@ -1,0 +1,34 @@
+{{ template "partials/header-back" . }}
+
+    <div class="card">
+        <div class="card-header">
+            *Desactive o usuário - até a activação
+        </div>
+        <div class="card-body">
+            <form class="" action="/users/{{ .User.UniqueId }}/deactivate" method="POST">
+                <div class="field">
+                    <label for=""><strong>Username:</strong></label>
+                    <input class="form-control" type="text" value="{{ .User.UserName }}" id="" readonly>
+                </div>
+                <div class="field">
+                    <label for=""><strong>Role:</strong></label>
+                    <input class="form-control" type="text" value="{{ .User.RoleName }}" id="" readonly>
+                </div>
+                <br>
+                <div>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-slash-circle"></i>
+                        Confirm Deactivation
+                    </button>
+                    <a href="/users/{{ .User.UniqueId }}/details" class="btn btn-danger btn-sm">
+                        <i class="bi bi-x"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+
+{{ template "partials/footer-back" . }}

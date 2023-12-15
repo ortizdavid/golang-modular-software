@@ -1,0 +1,36 @@
+{{ template "partials/header-back" . }}
+
+    <div class="">
+        <div class="">
+            <p><b>{{ .Count }} </b>Resultados encontrados para <b><i>{{ .Param }}</i></b></p><br>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Active?</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .Results }}
+                        <tr class=" {{ if eq .Active "Yes"}} alert-success {{ else }} alert-danger {{ end }}">
+                            <td class="collapsing">{{ .UserId }}</td>
+                            <td>{{ .UserName }}</td>
+                            <td>{{ .RoleName }}</td>
+                            <td>{{ .Active }}</td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details">
+                                    <i class="bi bi-eye"></i>
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+        
+{{ template "partials/footer-back" . }}
