@@ -13,3 +13,6 @@ CREATE SCHEMA users;
 
 -- human resources management
 CREATE SCHEMA human_resources;
+
+-- customers management
+CREATE SCHEMA customers;
