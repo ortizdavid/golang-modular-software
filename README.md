@@ -11,5 +11,5 @@
 - [x] Configurations 
 - [x] User Management
 - [x] Authentication
-- [x] Human Resources
-- [x] Customers
+- [ ] Human Resources
+- [ ] Customers
