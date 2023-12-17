@@ -9,11 +9,12 @@ import (
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/config"
 	"github.com/ortizdavid/golang-modular-software/helpers"
-	entities "github.com/ortizdavid/golang-modular-software/modules/users/entities"
-	models "github.com/ortizdavid/golang-modular-software/modules/users/models"
+	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
+	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 )
+
 
 type UserController struct {
 }

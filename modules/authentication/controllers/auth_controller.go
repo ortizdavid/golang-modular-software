@@ -5,7 +5,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/config"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
-	users "github.com/ortizdavid/golang-modular-software/modules/users/models"
 	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	"github.com/ortizdavid/go-nopain/encryption"
 )
@@ -34,7 +33,7 @@ func (AuthController) loginForm(ctx *fiber.Ctx) error {
 
 
 func (AuthController) login(ctx *fiber.Ctx) error {
-	var userModel users.UserModel
+	var userModel models.UserModel
 	userName := ctx.FormValue("username")
 	password := ctx.FormValue("password")
 	user, _ := userModel.FindByUserName(userName)
@@ -76,7 +75,7 @@ func (AuthController) logout(ctx *fiber.Ctx) error {
 
 func (AuthController) recoverPasswordForm(ctx *fiber.Ctx) error {
 	token := ctx.Params("token")
-	user, _ := users.UserModel{}.FindByToken(token)
+	user, _ := models.UserModel{}.FindByToken(token)
 	return ctx.Render("authentication/recover-password", fiber.Map{
 		"Title": "Recuperação da Senha",
 		"User": user,
@@ -88,7 +87,7 @@ func (AuthController) recoverPassword(ctx *fiber.Ctx) error {
 	password := ctx.FormValue("password")
 	//passwordConf := ctx.FormValue("password_conf")
 	token := ctx.Params("token")
-	var userModel users.UserModel
+	var userModel models.UserModel
 	
 	user, _ := userModel.FindByToken(token)
 	user.Password = encryption.HashPassword(password)
@@ -124,7 +123,7 @@ func (AuthController) getRecoverLinkForm(ctx *fiber.Ctx) error {
 
 func (AuthController) getRecoverLink(ctx *fiber.Ctx) error {
 	email := ctx.FormValue("email")
-	var userModel users.UserModel
+	var userModel models.UserModel
 	user, _ := userModel.FindByUserName(email)
 	
 	//enviar os credenciais por email

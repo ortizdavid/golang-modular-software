@@ -4,8 +4,7 @@ import (
 	"log"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/config"
-	entities "github.com/ortizdavid/golang-modular-software/modules/users/entities"
-	models "github.com/ortizdavid/golang-modular-software/modules/users/models"
+	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/go-nopain/conversion"
 )
 
@@ -15,7 +14,7 @@ func GetLoggedUser(ctx *fiber.Ctx) entities.UserData {
 	session, _ := store.Get(ctx)
 	userName := conversion.ConvertAnyToString(session.Get("username"))
 	password := conversion.ConvertAnyToString(session.Get("password"))
-	user, err := models.UserModel{}.GetByUserNameAndPassword(userName, password)
+	user, err := UserModel{}.GetByUserNameAndPassword(userName, password)
 	if err != nil {
 		log.Fatal(err)
 		return entities.UserData{}
@@ -31,7 +30,6 @@ func IsUserAuthenticated(ctx *fiber.Ctx) bool {
 	}
 	return true
 }
-
 
 
 func IsUserAdmin(ctx *fiber.Ctx) bool {

@@ -4,15 +4,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
-	models "github.com/ortizdavid/golang-modular-software/modules/users/models"
+	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 )
 
 type RoleController struct {
 }
 
+
 func (role RoleController) Routes(router *fiber.App) {
 
 }
+
 
 func (RoleController) index(ctx *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
@@ -22,6 +24,7 @@ func (RoleController) index(ctx *fiber.Ctx) error {
 		"BasicConfig": basicConfig,
 	})
 }
+
 
 func (RoleController) addForm(ctx *fiber.Ctx) error {
 	roles, _ := models.RoleModel{}.FindAll()

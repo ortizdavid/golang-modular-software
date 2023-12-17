@@ -2,11 +2,10 @@ package modules
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/modules/authentication"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations"
-	"github.com/ortizdavid/golang-modular-software/modules/customers"
+	"github.com/ortizdavid/golang-modular-software/modules/authentication"
 	"github.com/ortizdavid/golang-modular-software/modules/humanresources"
-	"github.com/ortizdavid/golang-modular-software/modules/users"
+	"github.com/ortizdavid/golang-modular-software/modules/customers"
 )
 
 
@@ -14,9 +13,6 @@ import (
 func RegisterControllers(router *fiber.App) {
 	// Register routes for configurations module
 	configurations.RegisterRoutes(router)
-
-	// Register routes for users module
-	users.RegisterRoutes(router)
 
 	// Register routes for authentication module
 	authentication.RegisterRoutes(router)

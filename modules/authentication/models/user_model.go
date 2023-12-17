@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/ortizdavid/golang-modular-software/config"
-	"github.com/ortizdavid/golang-modular-software/modules/users/entities"
+	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"gorm.io/gorm"
 )
 

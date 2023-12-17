@@ -2,14 +2,14 @@ package entities
 
 
 type EmailConfiguration struct {
-	ConfigurationId		int `gorm:"column:ConfigurationId;primaryKey"`
-	SMTPServer   		string `gorm:"column:SMTPServer;type:varchar(50)"`
-	SMTPPort   			int `gorm:"column:SMTPPort;type:int"`
-	SenderEmail   		string `gorm:"column:SenderEmail;type:varchar(100);int"`
-	SenderPassword   	string `gorm:"column:SenderPassword;type:varchar(100);;int"`
+	ConfigurationId		int `gorm:"column:primaryKey"`
+	SMTPServer   		string `gorm:"column:smtp_server"`
+	SMTPPort   			int `gorm:"column:smtp_port"`
+	SenderEmail   		string `gorm:"column:ender_email"`
+	SenderPassword   	string `gorm:"column:sender_password"`
 }
 
 
 func (EmailConfiguration) TableName() string {
-	return "EmailConfiguration"
+	return "configurations.email_configuration"
 }

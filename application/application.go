@@ -12,7 +12,7 @@ type Application struct {
 	App *fiber.App
 }
 
-
+// initialize an application with static files, middlewares and controllers
 func NewApplication() *Application {
 	app := fiber.New(fiber.Config{
 		Views: config.GetTemplateEngine(),		

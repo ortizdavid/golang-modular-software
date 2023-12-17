@@ -3,7 +3,7 @@ package models
 import (
 	"gorm.io/gorm"
 	"github.com/ortizdavid/golang-modular-software/config"
-	"github.com/ortizdavid/golang-modular-software/modules/users/entities"
+	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 )
 
 type RoleModel struct {
@@ -20,6 +20,7 @@ func (RoleModel) Create(role entities.Role) (*gorm.DB, error) {
 	return result, nil
 }
 
+
 func (RoleModel) FindAll() ([]entities.Role, error) {
 	db, _ := config.ConnectDB()
 	defer config.DisconnectDB(db)
@@ -31,6 +32,7 @@ func (RoleModel) FindAll() ([]entities.Role, error) {
 	return roles, nil
 }
 
+
 func (RoleModel) Update(role entities.Role) (*gorm.DB, error) {
 	db, _ := config.ConnectDB()
 	defer config.DisconnectDB(db)
@@ -40,6 +42,7 @@ func (RoleModel) Update(role entities.Role) (*gorm.DB, error) {
 	}
 	return result, nil
 }
+
 
 func (RoleModel) FindById(id int) (entities.Role, error) {
 	db, _ := config.ConnectDB()
@@ -52,6 +55,7 @@ func (RoleModel) FindById(id int) (entities.Role, error) {
 	return role, nil
 }
 
+
 func (RoleModel) FindByName(name string) (entities.Role, error) {
 	db, _ := config.ConnectDB()
 	defer config.DisconnectDB(db)
@@ -62,6 +66,7 @@ func (RoleModel) FindByName(name string) (entities.Role, error) {
 	}
 	return role, nil
 }
+
 
 func (RoleModel) Count() (int64, error) {
 	db, _ := config.ConnectDB()

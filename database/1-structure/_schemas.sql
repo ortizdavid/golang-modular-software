@@ -8,11 +8,13 @@ CREATE DATABASE golang_modular_software;
 -- for all configurations
 CREATE SCHEMA configurations;
 
--- user management
-CREATE SCHEMA users;
+-- user, roles, permission, authentication management
+CREATE SCHEMA authentication;
 
 -- human resources management
 CREATE SCHEMA human_resources;
 
 -- customers management
 CREATE SCHEMA customers;
+
+
