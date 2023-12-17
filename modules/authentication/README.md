@@ -1,4 +1,4 @@
-# Users Module
+# Authentication Module
 
 ## Features
 - Complete CRUD Users
