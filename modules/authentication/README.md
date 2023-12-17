@@ -10,5 +10,6 @@
     - Activate and Deactivate user
 - Auth
     - Login
+    - User recognition (Logged User)
     - Logout
     - Password recovery

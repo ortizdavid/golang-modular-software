@@ -34,8 +34,9 @@ CREATE TABLE authentication.users (
 DROP TABLE IF EXISTS authentication.permissions;
 CREATE TABLE authentication.permissions (
     permission_id SERIAL PRIMARY KEY,
-    code VARCHAR(50) UNIQUE,
+    code VARCHAR(50) UNIQUE NOT NULL,
     permission_name VARCHAR(100) NOT NULL,
+    description VARCHAR(200),
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
@@ -54,10 +55,11 @@ CREATE TABLE authentication.permission_roles (
     CONSTRAINT fk_permission FOREIGN KEY(permission_id) REFERENCES  authentication.permissions(permission_id)
 );
 
+
 -- Initial inserts
 -- roles
 INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super Administrator');
-INSERT INTO authentication.roles (code, role_name) VALUES ('administrator', 'Administrator');
+INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
 
 -- permissions

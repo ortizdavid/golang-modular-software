@@ -30,8 +30,8 @@ type UserData struct {
 	Password 		string
 	Active   		string
 	UserImage   	string
-	CreatedAtStr 	string
-	UpdatedAtStr  	string
+	CreatedAt 		string
+	UpdatedAt  		string
 	RoleId 			int
 	RoleName 		string
 	RoleCode 		string

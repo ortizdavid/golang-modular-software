@@ -16,3 +16,18 @@ type Permission struct {
 func (Permission) TableName() string {
 	return "authentication.permissions"
 }
+
+
+type PermissionData struct {
+	PermissionId    int
+	PermissionName  string
+	Code      		string
+	Description 	string
+	CreatedAt 		string
+	UpdatedAt  		string
+	RoleId 			int
+	RoleName 		string
+	RoleCode 		string
+	UserId			int 
+	UserName 		string
+}
