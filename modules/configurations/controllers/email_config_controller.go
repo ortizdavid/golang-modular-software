@@ -17,17 +17,17 @@ type EmailConfigController struct {
 func (configuration EmailConfigController) Routes(router *fiber.App) {
 	group := router.Group("/email-configurations")
 	group.Get("", configuration.index)
-	group.Get("/editar-basica", configuration.editForm)
-	group.Post("/editar-basica", configuration.edit)
+	group.Get("/edit", configuration.editForm)
+	group.Post("/edit", configuration.edit)
 }
 
 
 func (EmailConfigController) index(ctx *fiber.Ctx) error {
 	configuration, _ := models.GetBasicConfiguration()
-	return ctx.Render("configuration/index", fiber.Map{
-		"Title":             "Configurações",
+	return ctx.Render("configurations/email/index", fiber.Map{
+		"Title": "Email Configurations",
 		"BasicConfiguration": configuration,
-		"LoggedUser":         authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(ctx),
 	})
 }
 
@@ -35,11 +35,11 @@ func (EmailConfigController) index(ctx *fiber.Ctx) error {
 func (EmailConfigController) editForm(ctx *fiber.Ctx) error {
 	configurationEmail, _ := models.GetEmailConfiguration()
 	configurationBasica, _ := models.GetBasicConfiguration()
-	return ctx.Render("configuration/editar-email", fiber.Map{
-		"Title": "Editar EmailConfig de Email",
-		"EmailConfiguration":       configurationEmail,
+	return ctx.Render("configurations//email/edit", fiber.Map{
+		"Title": "Edita EmailConfig de Email",
+		"EmailConfiguration": configurationEmail,
 		"BasicConfiguration": configurationBasica,
-		"LoggedUser":         authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(ctx),
 	})
 }
 

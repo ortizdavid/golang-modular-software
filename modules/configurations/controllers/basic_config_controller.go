@@ -43,16 +43,16 @@ func (BasicConfigController) editForm(ctx *fiber.Ctx) error {
 
 
 func (BasicConfigController) edit(ctx *fiber.Ctx) error {
-	companyName := ctx.FormValue("companyName")
-	companyAcronym := ctx.FormValue("companyAcronym")
-	numOfRecordPerPage := ctx.FormValue("numOfRecordPerPage")
+	maxAdminUsers := ctx.FormValue("max_admin_users")
+	maxSuperAdminUsers := ctx.FormValue("max_super_admin_users")
+	maxRecordsPerPage := ctx.FormValue("max_records_per_page")
 	loggedUser := authentication.GetLoggedUser(ctx)
 
 	var configurationModel models.BasicConfigurationModel
 	configuration, _ := models.GetBasicConfiguration()
-	configuration.CompanyName = companyName
-	configuration.CompanyAcronym = companyAcronym
-	configuration.NumOfRecordsPerPage = conversion.StringToInt(numOfRecordPerPage)
+	configuration.MaxAdmninUsers = conversion.StringToInt(maxAdminUsers)
+	configuration.MaxSuperAdmninUsers = conversion.StringToInt(maxSuperAdminUsers)
+	configuration.MaxRecordsPerPage = conversion.StringToInt(maxRecordsPerPage)
 	_, err := configurationModel.Update(configuration)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())

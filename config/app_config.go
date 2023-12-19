@@ -22,7 +22,12 @@ func ListenAddr() string {
 	return os.Getenv("APP_HOST")+":"+os.Getenv("APP_PORT")
 }
 
-//------- Upload
+func ShutdownTimeout() int {
+	LoadDotEnv()
+	return conversion.StringToInt(os.Getenv("SHUTDOWN_TIMEOUT"))
+}
+
+//------- Uploads
 func UploadImagePath() string {
 	LoadDotEnv()
 	return os.Getenv("UPLOAD_IMAGE_PATH")
@@ -33,6 +38,7 @@ func UploadDocumentPath() string {
 	return os.Getenv("UPLOAD_DOCUMENT_PATH")
 }
 
+// ---- Requests
 func RequestsPerSecond() int {
 	LoadDotEnv()
 	return conversion.StringToInt(os.Getenv("REQUESTS_PER_SECONDS"))

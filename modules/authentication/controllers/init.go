@@ -5,5 +5,5 @@ import (
 )
 
 
-var loggerUser = config.NewLogger("user.log")
-var loggerAuth = config.NewLogger("autentication.log")
+var userLogger = config.NewLogger("user.log")
+var authLogger = config.NewLogger("autentication.log")

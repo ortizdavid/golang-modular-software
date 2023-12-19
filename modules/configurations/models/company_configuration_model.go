@@ -6,23 +6,23 @@ import (
 	"gorm.io/gorm"
 )
 
-type BasicConfigurationModel struct {
+type CompanyConfigurationModel struct {
 }
 
 
-func (BasicConfigurationModel) FindById(id int) (entities.BasicConfiguration, error) {
+func (CompanyConfigurationModel) FindById(id int) (entities.CompanyConfiguration, error) {
 	db, _ := config.ConnectDB()
 	defer config.DisconnectDB(db)
-	var configuration entities.BasicConfiguration
+	var configuration entities.CompanyConfiguration
 	result := db.First(&configuration, id)
 	if result.Error != nil {
-		return entities.BasicConfiguration{}, result.Error
+		return entities.CompanyConfiguration{}, result.Error
 	}
 	return configuration, nil
 }
 
 
-func (BasicConfigurationModel) Update(configuration entities.BasicConfiguration) (*gorm.DB, error) {
+func (CompanyConfigurationModel) Update(configuration entities.CompanyConfiguration) (*gorm.DB, error) {
 	db, _ := config.ConnectDB()
 	defer config.DisconnectDB(db)
 	result := db.Save(&configuration)
@@ -33,14 +33,10 @@ func (BasicConfigurationModel) Update(configuration entities.BasicConfiguration)
 }
 
 
-func (configurationModel BasicConfigurationModel) FindFirst() (entities.BasicConfiguration, error) {
+func (configurationModel CompanyConfigurationModel) FindFirst() (entities.CompanyConfiguration, error) {
 	configuration, err := configurationModel.FindById(1)
 	if err != nil {
-		return entities.BasicConfiguration{}, err
-	}
-	if configuration.MaxRecordsPerPage < 5 {
-		configuration.MaxRecordsPerPage = 5
-		configurationModel.Update(configuration)
+		return entities.CompanyConfiguration{}, err
 	}
 	return configuration, nil
 }

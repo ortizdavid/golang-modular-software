@@ -10,11 +10,11 @@ import (
 )
 
 
-var loggerRequest = config.NewLogger("requests.log")
+var requestLogger = config.NewLogger("requests.log")
 
 
 func requestLoggerMiddleware(ctx *fiber.Ctx) error {
-	loggerRequest.Info("Request",
+	requestLogger.Info("Request",
 		zap.String("Method", ctx.Method()),
 		zap.String("Path", ctx.Path()),
 		zap.String("StatusCode", fmt.Sprintf("%d", ctx.Response().StatusCode())),

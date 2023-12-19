@@ -72,7 +72,7 @@ func (RoleModel) Count() (int64, error) {
 	db, _ := config.ConnectDB()
 	defer config.DisconnectDB(db)
 	var count int64
-	result := db.Table("roles").Count(&count)
+	result := db.Table("authentication.roles").Count(&count)
 	if result.Error != nil {
 		return 0, result.Error
 	}

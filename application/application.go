@@ -30,9 +30,18 @@ func NewApplication() *Application {
 }
 
 // Start application in port defined at .ENV file
-func (a *Application) Start()  {
+func (a *Application) Start() error {
 	err := a.App.Listen(config.ListenAddr())
 	if err != nil {
 		log.Fatalf("Error starting the server: %v", err)
+		return err
 	}
+	return nil
 }
+
+// Shutdown Application
+func (a *Application) Shutdown() {
+	// timeout for shutdown server 
+	//timeout := time.Duration(config.ShutdownTimeout()) * time.Second
+}
+

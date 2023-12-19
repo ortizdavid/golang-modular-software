@@ -16,6 +16,11 @@ func GetEmailConfiguration() (entities.EmailConfiguration, error) {
 }
 
 
+func GetCompanyConfiguration() (entities.CompanyConfiguration, error) {
+	return CompanyConfigurationModel{}.FindFirst()
+}
+
+
 func DefaultEmailService() *mailer.EmailService {
 	configuracao, _ := GetEmailConfiguration()
 	return mailer.NewEmailService(

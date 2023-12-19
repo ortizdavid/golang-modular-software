@@ -53,10 +53,10 @@ func (AuthController) login(ctx *fiber.Ctx) error {
 		if err != nil {
 			return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
-		loggerAuth.Info(fmt.Sprintf("User '%s' authenticated sucessfully!", userName), config.LogRequestPath(ctx))
+		authLogger.Info(fmt.Sprintf("User '%s' authenticated sucessfully!", userName), config.LogRequestPath(ctx))
 		return ctx.Status(fiber.StatusOK).Redirect("/inicio")
 	} else {
-		loggerAuth.Error(fmt.Sprintf("User '%s' failed to login", userName), config.LogRequestPath(ctx))
+		authLogger.Error(fmt.Sprintf("User '%s' failed to login", userName), config.LogRequestPath(ctx))
 		return ctx.Status(fiber.StatusUnauthorized).Redirect("/authentication/login")
 	}
 }
@@ -68,7 +68,7 @@ func (AuthController) logout(ctx *fiber.Ctx) error {
 	store := config.GetSessionStore()
 	session, _ := store.Get(ctx)
 	session.Destroy()
-	loggerAuth.Info(fmt.Sprintf("User '%s' logged out", userName), config.LogRequestPath(ctx))
+	authLogger.Info(fmt.Sprintf("User '%s' logged out", userName), config.LogRequestPath(ctx))
 	return ctx.Redirect("/authentication/login")
 }
 
@@ -109,7 +109,7 @@ func (AuthController) recoverPassword(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerAuth.Info(fmt.Sprintf("User '%s' recovered password", user.UserName), config.LogRequestPath(ctx))
+	authLogger.Info(fmt.Sprintf("User '%s' recovered password", user.UserName), config.LogRequestPath(ctx))
 	return ctx.Redirect("/authentication/login")
 }
 
@@ -141,6 +141,6 @@ func (AuthController) getRecoverLink(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerAuth.Info(fmt.Sprintf("User '%s' recovered password", email), config.LogRequestPath(ctx))
+	authLogger.Info(fmt.Sprintf("User '%s' recovered password", email), config.LogRequestPath(ctx))
 	return ctx.Redirect("/authentication/get-recover-link")
 }

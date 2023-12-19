@@ -47,7 +47,7 @@ func (UserController) index(ctx *fiber.Ctx) error {
 	
 	loggedUser := authentication.GetLoggedUser(ctx)
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	itemsPerPage := basicConfig.NumOfRecordsPerPage
+	itemsPerPage := basicConfig.MaxRecordsPerPage
 	pageNumber := pagination.GetPageNumber(ctx, "page")
 	startIndex := pagination.CalculateStartIndex(pageNumber, itemsPerPage)
 	users, _ := userModel.FindAllDataLimit(startIndex, itemsPerPage)
@@ -123,7 +123,7 @@ func (UserController) add(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerUser.Info("User '"+userName+"' added successfully", config.LogRequestPath(ctx))
+	userLogger.Info("User '"+userName+"' added successfully", config.LogRequestPath(ctx))
 	return ctx.Redirect("/users")
 }
 
@@ -154,7 +154,7 @@ func (UserController) edit(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerUser.Info("User '"+user.UserName+"' updated successfully", config.LogRequestPath(ctx))
+	userLogger.Info("User '"+user.UserName+"' updated successfully", config.LogRequestPath(ctx))
 	return ctx.Redirect("/users")
 }
 
@@ -175,7 +175,7 @@ func (UserController) search(ctx *fiber.Ctx) error {
 	count := len(results)
 	loggedUser := authentication.GetLoggedUser(ctx)
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	loggerUser.Info(fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, param, count), config.LogRequestPath(ctx))
+	userLogger.Info(fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, param, count), config.LogRequestPath(ctx))
 	return ctx.Render("user/user/search-results", fiber.Map{
 		"Title": "Results",
 		"Results": results,
@@ -207,7 +207,7 @@ func (UserController) deactivate(ctx *fiber.Ctx) error {
 	user.Active = "No"
 	user.UpdatedAt = time.Now()
 	userModel.Update(user)
-	loggerUser.Info(fmt.Sprintf("User '%s' deactivated successfully!", user.UserName), config.LogRequestPath(ctx))
+	userLogger.Info(fmt.Sprintf("User '%s' deactivated successfully!", user.UserName), config.LogRequestPath(ctx))
 	return ctx.Redirect("/users/"+id+"/details")
 }
 
@@ -236,7 +236,7 @@ func (UserController) activate(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerUser.Info(fmt.Sprintf("User '%s' activated successfully!", user.UserName), config.LogRequestPath(ctx))
+	userLogger.Info(fmt.Sprintf("User '%s' activated successfully!", user.UserName), config.LogRequestPath(ctx))
 	return ctx.Redirect("/users/"+id+"/details")
 }
 
@@ -262,7 +262,7 @@ func (UserController) addImage(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerUser.Info(fmt.Sprintf("User '%s' added image", user.UserName), config.LogRequestPath(ctx))
+	userLogger.Info(fmt.Sprintf("User '%s' added image", user.UserName), config.LogRequestPath(ctx))
 	return ctx.Redirect("/user-data")
 }
 
@@ -289,6 +289,6 @@ func (UserController) changePassword(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	loggerUser.Info(fmt.Sprintf("User '%s' updated password", user.UserName), config.LogRequestPath(ctx))
+	userLogger.Info(fmt.Sprintf("User '%s' updated password", user.UserName), config.LogRequestPath(ctx))
 	return ctx.Redirect("/auth/login")
 }
