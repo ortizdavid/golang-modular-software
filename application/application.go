@@ -38,10 +38,3 @@ func (a *Application) Start() error {
 	}
 	return nil
 }
-
-// Shutdown Application
-func (a *Application) Shutdown() {
-	// timeout for shutdown server 
-	//timeout := time.Duration(config.ShutdownTimeout()) * time.Second
-}
-

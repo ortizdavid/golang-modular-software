@@ -11,5 +11,4 @@ func main() {
 
 	// start the application
 	app.Start()
-	app.Shutdown()
 }
