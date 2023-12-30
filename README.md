@@ -1,8 +1,10 @@
 # Golang Modular Software Example
 Example of a complete modular sofware, written in Golang 
 
+
 ## Status
 - In progress
+
 
 ## Tools
 - Golang
@@ -15,3 +17,9 @@ Example of a complete modular sofware, written in Golang
 - [x] Authentication
 - [ ] Human Resources
 - [ ] Customers
+
+## Module Comunication
+![Comunication Between Modules](docs/Comunication.jpg)
+
+## Routing 
+![Routing](docs/Routes.jpg)
