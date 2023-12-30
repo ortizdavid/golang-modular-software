@@ -1,5 +1,8 @@
 # Golang Modular Software Example
-Example of a complete modular sofware, written in Golang
+Example of a complete modular sofware, written in Golang 
+
+## Status
+- In progress
 
 ## Tools
 - Golang
