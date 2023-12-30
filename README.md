@@ -23,3 +23,7 @@ Example of a complete modular sofware, written in Golang
 
 ## Routing 
 ![Routing](docs/Routes.jpg)
+
+## Database 
+![Routing](docs/Database.jpg.jpg)
+![Schema Objects](docs/Schema-Objects.png)

@@ -1,3 +1,4 @@
+-- Schema: authentication
 
 DROP TYPE IF EXISTS TYPE_USER_STATUS;
 CREATE TYPE TYPE_USER_STATUS AS ENUM('Yes', 'No');
