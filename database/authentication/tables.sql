@@ -3,7 +3,6 @@
 DROP TYPE IF EXISTS TYPE_USER_STATUS;
 CREATE TYPE TYPE_USER_STATUS AS ENUM('Yes', 'No');
 
-
 DROP TABLE IF EXISTS authentication.roles;
 CREATE TABLE authentication.roles (
     role_id SERIAL PRIMARY KEY,
@@ -14,7 +13,6 @@ CREATE TABLE authentication.roles (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
-
 
 DROP TABLE IF EXISTS authentication.users;
 CREATE TABLE authentication.users (
@@ -31,7 +29,6 @@ CREATE TABLE authentication.users (
     CONSTRAINT fk_user_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id)
 );
 
-
 DROP TABLE IF EXISTS authentication.permissions;
 CREATE TABLE authentication.permissions (
     permission_id SERIAL PRIMARY KEY,
@@ -42,7 +39,6 @@ CREATE TABLE authentication.permissions (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
-
 
 DROP TABLE IF EXISTS authentication.permission_roles;
 CREATE TABLE authentication.permission_roles (
@@ -56,13 +52,11 @@ CREATE TABLE authentication.permission_roles (
     CONSTRAINT fk_permission FOREIGN KEY(permission_id) REFERENCES  authentication.permissions(permission_id)
 );
 
-
 -- Initial inserts
 -- roles
 INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
-
 -- permissions
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('change-configuration', 'Change Configuration');
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('list-configuration', 'List Configurations');
@@ -75,5 +69,4 @@ INSERT INTO authentication.permissions (code, permission_name) VALUES ('create-u
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('delete-user', 'Delete User');
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('update-user', 'Update User');
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('list-users', 'List Users');
-
 
