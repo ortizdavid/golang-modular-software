@@ -36,7 +36,7 @@ Example of a complete modular sofware, written in Golang
 - Configure Database:
     - Open Postgres: ``psql -U postgres``
     - Create Database: ``CREATE DATABASE golang_modular_software;``
-    - Go to project and Run database scripts: ``go run exec_database_scripts.go``
+    - Go to project and execute database scripts: ``go run exec_database_scripts.go``
     - Or Copy all database scripts located in [Datatabase folder](database)  to     Posgresql 
 - Run Application: ``go run main.go``
 - User the url: http://localhost:9000
