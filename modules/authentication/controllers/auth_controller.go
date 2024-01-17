@@ -14,7 +14,9 @@ type AuthController struct {
 
 
 func (auth AuthController) Routes(router *fiber.App) {
-	group := router.Group("/authentication")
+	router.Get("/", auth.index)
+
+	group := router.Group("/auth")
 	group.Get("/login", auth.loginForm)
 	group.Post("/login", auth.login)
 	group.Get("/logout", auth.logout)
@@ -23,6 +25,12 @@ func (auth AuthController) Routes(router *fiber.App) {
 	group.Get("/get-recover-link", auth.getRecoverLinkForm)
 	group.Post("/get-recover-link", auth.getRecoverLink)
 }
+
+
+func (AuthController) index(ctx *fiber.Ctx) error {
+	return ctx.Redirect("/auth/login")
+}
+
 
 
 func (AuthController) loginForm(ctx *fiber.Ctx) error {
@@ -54,10 +62,10 @@ func (AuthController) login(ctx *fiber.Ctx) error {
 			return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 		authLogger.Info(fmt.Sprintf("User '%s' authenticated sucessfully!", userName), config.LogRequestPath(ctx))
-		return ctx.Status(fiber.StatusOK).Redirect("/inicio")
+		return ctx.Status(fiber.StatusOK).Redirect("/home")
 	} else {
 		authLogger.Error(fmt.Sprintf("User '%s' failed to login", userName), config.LogRequestPath(ctx))
-		return ctx.Status(fiber.StatusUnauthorized).Redirect("/authentication/login")
+		return ctx.Status(fiber.StatusUnauthorized).Redirect("/auth/login")
 	}
 }
 
@@ -69,7 +77,7 @@ func (AuthController) logout(ctx *fiber.Ctx) error {
 	session, _ := store.Get(ctx)
 	session.Destroy()
 	authLogger.Info(fmt.Sprintf("User '%s' logged out", userName), config.LogRequestPath(ctx))
-	return ctx.Redirect("/authentication/login")
+	return ctx.Redirect("/auth/login")
 }
 
 
@@ -110,7 +118,7 @@ func (AuthController) recoverPassword(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 	authLogger.Info(fmt.Sprintf("User '%s' recovered password", user.UserName), config.LogRequestPath(ctx))
-	return ctx.Redirect("/authentication/login")
+	return ctx.Redirect("/auth/login")
 }
 
 
@@ -128,7 +136,7 @@ func (AuthController) getRecoverLink(ctx *fiber.Ctx) error {
 	
 	//enviar os credenciais por email
 	emailService := configurations.DefaultEmailService()
-	recoverLink := fmt.Sprintf("%s/authentication/recover-password/%s", ctx.BaseURL(), user.Token)
+	recoverLink := fmt.Sprintf("%s/auth/recover-password/%s", ctx.BaseURL(), user.Token)
 	htmlBody := `
 		<html>
 			<body>
@@ -142,5 +150,5 @@ func (AuthController) getRecoverLink(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 	authLogger.Info(fmt.Sprintf("User '%s' recovered password", email), config.LogRequestPath(ctx))
-	return ctx.Redirect("/authentication/get-recover-link")
+	return ctx.Redirect("/auth/get-recover-link")
 }

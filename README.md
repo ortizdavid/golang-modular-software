@@ -27,3 +27,13 @@ Example of a complete modular sofware, written in Golang
 ## Database 
 ![Database Schemas](docs/Database.jpg)
 ![Schema Objects](docs/Schema-Objects.png)
+
+
+## How to Run App
+- Configure Database:
+    - Copy all database scripts placed in ![datatabase dir](database)
+- Run Application: ``go run main.go``
+- User the url: http://localhost:9000
+- Login with Default user:
+    - Username: admin@user.com
+    - Password: 12345678

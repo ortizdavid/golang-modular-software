@@ -21,8 +21,8 @@ CREATE TABLE authentication.users (
     user_name VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(150) NOT NULL,
     user_image VARCHAR(100), 
-    active TYPE_USER_STATUS NOT NULL DEFAULT 'Yes',
-    token VARCHAR(150) UNIQUE NOT NULL,
+    active TYPE_USER_STATUS DEFAULT 'Yes',
+    token VARCHAR(150) UNIQUE,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
@@ -70,3 +70,5 @@ INSERT INTO authentication.permissions (code, permission_name) VALUES ('delete-u
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('update-user', 'Update User');
 INSERT INTO authentication.permissions (code, permission_name) VALUES ('list-users', 'List Users');
 
+-- Default user: used to manage application
+INSERT INTO authentication.users (role_id, user_name, password) VALUES (2, 'admin@user.com', '$2a$10$9VE1S3YfjRPA5Hu7ZAV.ROy9M8aQsEAy0t2AgrCnzoDpEqhbunspq');

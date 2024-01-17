@@ -1,19 +1,15 @@
--- Create database
-CREATE DATABASE golang_modular_software;
-
-\c golang_modular_software;
-
 -- SCHEMAS 
 
 -- for all configurations
-CREATE SCHEMA configurations;
+CREATE SCHEMA IF NOT EXISTS configurations;
 
 -- user, roles, permission, authentication management
-CREATE SCHEMA authentication;
+CREATE SCHEMA IF NOT EXISTS authentication;
 
 -- human resources management
-CREATE SCHEMA human_resources;
+CREATE SCHEMA IF NOT EXISTS human_resources;
 
 -- customers management
-CREATE SCHEMA customers;
+CREATE SCHEMA IF NOT EXISTS customers;
+
 

@@ -17,7 +17,7 @@ type User struct {
 }
 
 
-func TableName() string {
+func (User) TableName() string {
 	return "authentication.users"
 }
 
