@@ -18,11 +18,14 @@ Example of a complete modular sofware, written in Golang
 - [ ] Human Resources
 - [ ] Customers
 
+
 ## Module Comunication
 ![Comunication Between Modules](docs/Comunication.jpg)
 
+
 ## Routing 
 ![Routing](docs/Routes.jpg)
+
 
 ## Database 
 ![Database Schemas](docs/Database.jpg)
@@ -31,7 +34,10 @@ Example of a complete modular sofware, written in Golang
 
 ## How to Run App
 - Configure Database:
-    - Copy all database scripts placed in [datatabase dir](database)
+    - Open Postgres: ``psql -U postgres``
+    - Create Database: ``CREATE DATABASE golang_modular_software;``
+    - Go to project and Run database scripts: ``go run exec_database_scripts.go``
+    - Or Copy all database scripts located in [Datatabase folder](database)  to     Posgresql 
 - Run Application: ``go run main.go``
 - User the url: http://localhost:9000
 - Login with Default user:
