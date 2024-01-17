@@ -31,7 +31,7 @@ Example of a complete modular sofware, written in Golang
 
 ## How to Run App
 - Configure Database:
-    - Copy all database scripts placed in ![datatabase dir](database)
+    - Copy all database scripts placed in [datatabase dir](database)
 - Run Application: ``go run main.go``
 - User the url: http://localhost:9000
 - Login with Default user:
