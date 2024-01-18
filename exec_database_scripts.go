@@ -73,7 +73,7 @@ func main() {
 
 	db, err := config.ConnectDB()
 	if err != nil {
-		log.Fatal("Failed to connect tp database")
+		log.Fatal("Failed to connect to database")
 		panic(err)
 	}
 	defer config.DisconnectDB(db)

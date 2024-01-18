@@ -1,8 +1,6 @@
 package config
 
 import (
-	"os"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
@@ -18,34 +16,28 @@ func GetTemplateEngine() *html.Engine {
 }
 
 func ListenAddr() string {
-	LoadDotEnv()
-	return os.Getenv("APP_HOST")+":"+os.Getenv("APP_PORT")
+	return GetEnv("APP_HOST") +":"+ GetEnv("APP_PORT")
 }
 
 func ShutdownTimeout() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("SHUTDOWN_TIMEOUT"))
+	return conversion.StringToInt(GetEnv("SHUTDOWN_TIMEOUT"))
 }
 
 //------- Uploads
 func UploadImagePath() string {
-	LoadDotEnv()
-	return os.Getenv("UPLOAD_IMAGE_PATH")
+	return GetEnv("UPLOAD_IMAGE_PATH")
 }
 
 func UploadDocumentPath() string {
-	LoadDotEnv()
-	return os.Getenv("UPLOAD_DOCUMENT_PATH")
+	return GetEnv("UPLOAD_DOCUMENT_PATH")
 }
 
 // ---- Requests
 func RequestsPerSecond() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("REQUESTS_PER_SECONDS"))
+	return conversion.StringToInt(GetEnv("REQUESTS_PER_SECONDS"))
 }
 
 func RequestsExpiration() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("REQUESTS_EXPIRATION"))
+	return conversion.StringToInt(GetEnv("REQUESTS_EXPIRATION"))
 }
 

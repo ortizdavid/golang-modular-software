@@ -1,7 +1,6 @@
 package config
 
 import (
-	"os"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"github.com/gofiber/fiber/v2"
@@ -36,23 +35,19 @@ func LogRequestPath(ctx *fiber.Ctx) zap.Field {
 }
 
 func LogRootPath() string {
-	LoadDotEnv()
-	return os.Getenv("LOG_ROOT_PATH")
+	return GetEnv("LOG_ROOT_PATH")
 }
 
 func LogMaxFileSize() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("LOG_MAX_SIZE"))
+	return conversion.StringToInt(GetEnv("LOG_MAX_SIZE"))
 }
 
 func LogMaxAge() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("LOG_MAX_AGE"))
+	return conversion.StringToInt(GetEnv("LOG_MAX_AGE"))
 }
 
 func LogMaxBackups() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("LOG_MAX_BACKUPS"))
+	return conversion.StringToInt(GetEnv("LOG_MAX_BACKUPS"))
 }
 
 

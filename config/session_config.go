@@ -1,7 +1,6 @@
 package config
 
 import (
-	"os"
 	"time"
 	"github.com/gofiber/storage/postgres"
 	"github.com/ortizdavid/go-nopain/conversion"
@@ -21,6 +20,5 @@ func GetSessionStore() *session.Store {
 }
 
 func SessionExpiration() int {
-	LoadDotEnv()
-	return conversion.StringToInt(os.Getenv("APP_SESSION_EXPIRATION"))
+	return conversion.StringToInt(GetEnv("APP_SESSION_EXPIRATION"))
 }
