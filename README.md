@@ -19,6 +19,10 @@ Example of a complete modular sofware, written in Golang
 - [ ] Customers
 
 
+## Architecture
+![Modular Arquitecure](docs/Modular-Architecture.png)
+
+
 ## Module Comunication
 ![Comunication Between Modules](docs/Comunication.jpg)
 
