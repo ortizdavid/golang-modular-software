@@ -7,8 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/go-nopain/encryption"
-	"github.com/ortizdavid/golang-modular-software/config"
-	"github.com/ortizdavid/golang-modular-software/helpers"
+	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
@@ -49,24 +49,25 @@ func (UserController) index(ctx *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
 	itemsPerPage := basicConfig.MaxRecordsPerPage
 	pageNumber := pagination.GetPageNumber(ctx, "page")
-	startIndex := pagination.CalculateStartIndex(pageNumber, itemsPerPage)
-	users, _ := userModel.FindAllDataLimit(startIndex, itemsPerPage)
+	//startIndex := pagination.CalculateStartIndex(pageNumber, itemsPerPage)
+	//users, _ := userModel.FindAllDataLimit(startIndex, itemsPerPage)
+	users, _ := userModel.FindAllData()
 	countUsers, _ := userModel.Count()
 	count := int(countUsers)
 	totalPages := pagination.CalculateTotalPages(count, itemsPerPage)
 
-	if pageNumber>totalPages && count!=0 {
+	/*if pageNumber>totalPages && count!=0 {
 		return ctx.Status(fiber.StatusInternalServerError).Render("errors/pagination", fiber.Map{
 			"Title": "Users",
 			"TotalPages": totalPages, 
 			"LoggedUser": loggedUser,
 			"BasicConfig": basicConfig,
 		})
-	}
+	}*/
 	return ctx.Render("user/index", fiber.Map{
 		"Title": "Users",
 		"Users": users,
-		"Pagination": helpers.NewPaginationRender(pageNumber),
+		"Pagination": helpers.NewPaginationRender(1),
 		"Count": count,
 		"PageNumber": pageNumber,
 		"TotalPages": totalPages,

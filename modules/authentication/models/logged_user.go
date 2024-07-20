@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/go-nopain/conversion"
 )

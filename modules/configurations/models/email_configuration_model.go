@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"gorm.io/gorm"
 )

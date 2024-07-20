@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
 	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	"github.com/ortizdavid/go-nopain/encryption"
@@ -61,7 +61,7 @@ func (AuthController) login(ctx *fiber.Ctx) error {
 		if err != nil {
 			return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
-		authLogger.Info(fmt.Sprintf("User '%s' authenticated sucessfully!", userName), config.LogRequestPath(ctx))
+		authLogger.Info(fmt.Sprintf("User '%s' authenticated sucessful!", userName), config.LogRequestPath(ctx))
 		return ctx.Status(fiber.StatusOK).Redirect("/home")
 	} else {
 		authLogger.Error(fmt.Sprintf("User '%s' failed to login", userName), config.LogRequestPath(ctx))

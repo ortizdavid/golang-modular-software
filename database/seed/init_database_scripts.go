@@ -1,10 +1,10 @@
-package main
+package database
 
 import (
 	"log"
 	"os"
 	"path/filepath"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	"gorm.io/gorm"
 )
 
@@ -84,7 +84,7 @@ func execCustomerScripts(db *gorm.DB) {
 }
 
 
-func main() {
+func InitDatabaseScripts() {
 
 	db, err := config.ConnectDB()
 	if err != nil {

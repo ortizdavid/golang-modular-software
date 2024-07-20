@@ -32,3 +32,4 @@ func ConnectionString() string {
 		GetEnv("DB_NAME"),
 	)
 }
+

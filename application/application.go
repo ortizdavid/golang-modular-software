@@ -3,8 +3,8 @@ package application
 import (
 	"log"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/config"
-	"github.com/ortizdavid/golang-modular-software/middlewares"
+	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/modules"
 )
 

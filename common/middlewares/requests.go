@@ -2,10 +2,8 @@ package middlewares
 
 import (
 	"fmt"
-	"time"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	"go.uber.org/zap"
 )
 
@@ -20,12 +18,4 @@ func requestLoggerMiddleware(ctx *fiber.Ctx) error {
 		zap.String("StatusCode", fmt.Sprintf("%d", ctx.Response().StatusCode())),
 	)
 	return ctx.Next()
-}
-
-
-func limitRequestPerSecond(ctx *fiber.Ctx) fiber.Handler {
-	return limiter.New(limiter.Config{
-		Expiration: time.Duration(config.RequestsExpiration()) * time.Second,
-		Max:      config.RequestsPerSecond(),
-	})
 }

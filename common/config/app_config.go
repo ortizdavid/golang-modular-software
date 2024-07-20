@@ -7,11 +7,11 @@ import (
 )
 
 func ConfigStaticFiles(app *fiber.App) {
-	app.Static("/", "./static")
+	app.Static("/", "./public/static")
 }
 
 func GetTemplateEngine() *html.Engine {
-	engine := html.New("./templates", ".html")
+	engine := html.New("./public/templates", ".html")
 	return engine
 }
 

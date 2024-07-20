@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/models"
 	"github.com/ortizdavid/go-nopain/conversion"

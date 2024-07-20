@@ -8,7 +8,6 @@ import (
 	"github.com/ortizdavid/go-nopain/conversion"
 )
 
-
 func NewLogger(logFileName string) *zap.Logger {
 	lumberjackLogger := &lumberjack.Logger{
 		Filename:   LogRootPath() +"/"+logFileName,

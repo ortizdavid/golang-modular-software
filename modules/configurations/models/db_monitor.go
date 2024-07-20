@@ -2,7 +2,7 @@ package models
 
 import (
 	"log"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 )
 
 

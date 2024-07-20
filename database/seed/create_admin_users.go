@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 )
 
-func main() {
+func CreateAdminUsers() {
 	var userName, password, roleName string
 	var roleId int
 	var roleModel models.RoleModel

@@ -30,7 +30,7 @@ func (gen *HtmlPdfGenenerator) GeneratePDF(htmlTemplate string, data map[string]
 	// Set global options
 	pdfGen.Dpi.Set(100)
 	pdfGen.Orientation.Set(wkhtmltopdf.OrientationPortrait)
-	pdfGen.Grayscale.Set(true)
+	pdfGen.Grayscale.Set(false)
 	// Create a new input page from HTML content
 	page := wkhtmltopdf.NewPageReader(&buf)
 	// Set options for this page

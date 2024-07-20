@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/config"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/models"
 	"github.com/ortizdavid/go-nopain/conversion"
@@ -35,7 +35,7 @@ func (EmailConfigController) index(ctx *fiber.Ctx) error {
 func (EmailConfigController) editForm(ctx *fiber.Ctx) error {
 	configurationEmail, _ := models.GetEmailConfiguration()
 	configurationBasica, _ := models.GetBasicConfiguration()
-	return ctx.Render("configurations//email/edit", fiber.Map{
+	return ctx.Render("configurations/email/edit", fiber.Map{
 		"Title": "Edita EmailConfig de Email",
 		"EmailConfiguration": configurationEmail,
 		"BasicConfiguration": configurationBasica,
