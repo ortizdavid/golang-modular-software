@@ -4,7 +4,7 @@ import "time"
 
 
 type User struct {
-	UserId    	int `gorm:"autoIncrement;primarykey"`
+	UserId    	int64 `gorm:"autoIncrement;primarykey"`
 	RoleId  	int `gorm:"column:role_id"`
 	UserName  	string `gorm:"column:user_name"`
 	Password  	string `gorm:"column:password"`
@@ -23,7 +23,7 @@ func (User) TableName() string {
 
 
 type UserData struct {
-	UserId			int 
+	UserId			int64 
 	UniqueId 		string
 	Token 			string
 	UserName 		string

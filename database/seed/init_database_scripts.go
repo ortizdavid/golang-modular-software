@@ -19,27 +19,22 @@ const (
 
 // Execute a sql script located in a directory
 func execDatabaseScript(db *gorm.DB, directory string, scriptFile string) {
-
-	parentDir := "database"
+	parentDir := "../sql"
 	scriptDir := filepath.Join(parentDir, directory)
 	scriptPath := filepath.Join(scriptDir, scriptFile)
-
 	// Read script
 	scriptContent, err := os.ReadFile(scriptPath)
 	if err != nil {
 		log.Fatalf("Failed to read script '%s': %v", scriptFile, err)
 	}
-
 	// start transaction
 	tx := db.Begin()
-
 	// execute scrpt content
 	result := db.Exec(string(scriptContent))
 	if result.Error != nil {
 		tx.Rollback() //Rollback transaction
 		log.Fatalf("Error executing script '%s': %v", scriptFile, result.Error)
 	}
-	
 	//commit transaction
 	commit := tx.Commit()
 	if commit.Error != nil {
@@ -85,11 +80,9 @@ func execCustomerScripts(db *gorm.DB) {
 
 
 func InitDatabaseScripts() {
-
 	db, err := config.ConnectDB()
 	if err != nil {
-		log.Fatal("Failed to connect to database")
-		panic(err)
+		log.Fatal("Failed to connect to database: ", err)
 	}
 	defer config.DisconnectDB(db)
 	log.Printf("Connected to Database ...\n\n")

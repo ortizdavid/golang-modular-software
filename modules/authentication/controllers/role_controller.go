@@ -16,23 +16,23 @@ func (role RoleController) Routes(router *fiber.App) {
 }
 
 
-func (RoleController) index(ctx *fiber.Ctx) error {
+func (RoleController) index(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("users/roles/index", fiber.Map{
+	return c.Render("users/roles/index", fiber.Map{
 		"Title":       "User Details",
-		"LoggedUser":  authentication.GetLoggedUser(ctx),
+		"LoggedUser":  authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (RoleController) addForm(ctx *fiber.Ctx) error {
+func (RoleController) addForm(c *fiber.Ctx) error {
 	roles, _ := models.RoleModel{}.FindAll()
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("users/roles/add", fiber.Map{
+	return c.Render("users/roles/add", fiber.Map{
 		"Title":       "Add Role",
 		"Roles":       roles,
-		"LoggedUser":  authentication.GetLoggedUser(ctx),
+		"LoggedUser":  authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }

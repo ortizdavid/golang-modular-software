@@ -9,7 +9,7 @@ import (
 
 func GetSessionStore() *session.Store {
 	storage := postgres.New(postgres.Config{
-		ConnectionURI: ConnectionString(),
+		ConnectionURI: GetEnv("DATABASE_URL"),
 		Reset:         false,
 		GCInterval:  time.Duration(SessionExpiration()) * time.Minute,
 	})

@@ -41,14 +41,14 @@ func (user UserController) Routes(router *fiber.App) {
 }
 
 
-func (UserController) index(ctx *fiber.Ctx) error {
+func (UserController) index(c *fiber.Ctx) error {
 	var pagination helpers.Pagination
 	var userModel models.UserModel
 	
-	loggedUser := authentication.GetLoggedUser(ctx)
+	loggedUser := authentication.GetLoggedUser(c)
 	basicConfig, _ := configurations.GetBasicConfiguration()
 	itemsPerPage := basicConfig.MaxRecordsPerPage
-	pageNumber := pagination.GetPageNumber(ctx, "page")
+	pageNumber := pagination.GetPageNumber(c, "page")
 	//startIndex := pagination.CalculateStartIndex(pageNumber, itemsPerPage)
 	//users, _ := userModel.FindAllDataLimit(startIndex, itemsPerPage)
 	users, _ := userModel.FindAllData()
@@ -57,14 +57,14 @@ func (UserController) index(ctx *fiber.Ctx) error {
 	totalPages := pagination.CalculateTotalPages(count, itemsPerPage)
 
 	/*if pageNumber>totalPages && count!=0 {
-		return ctx.Status(fiber.StatusInternalServerError).Render("errors/pagination", fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).Render("errors/pagination", fiber.Map{
 			"Title": "Users",
 			"TotalPages": totalPages, 
 			"LoggedUser": loggedUser,
 			"BasicConfig": basicConfig,
 		})
 	}*/
-	return ctx.Render("user/index", fiber.Map{
+	return c.Render("user/index", fiber.Map{
 		"Title": "Users",
 		"Users": users,
 		"Pagination": helpers.NewPaginationRender(1),
@@ -77,35 +77,35 @@ func (UserController) index(ctx *fiber.Ctx) error {
 }
 
 
-func (UserController) details(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+func (UserController) details(c *fiber.Ctx) error {
+	id := c.Params("id")
 	user, _ := models.UserModel{}.GetDataByUniqueId(id)
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("user/details", fiber.Map{
+	return c.Render("user/details", fiber.Map{
 		"Title": "User Details",
 		"User": user,
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) addForm(ctx *fiber.Ctx) error {
+func (UserController) addForm(c *fiber.Ctx) error {
 	roles, _ := models.RoleModel{}.FindAll()
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("users/user/add", fiber.Map{
+	return c.Render("users/user/add", fiber.Map{
 		"Title": "Add User",
 		"Roles": roles,
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) add(ctx *fiber.Ctx) error {
-	userName := ctx.FormValue("username")
-	password := ctx.FormValue("password")
-	roleId := ctx.FormValue("role_id")
+func (UserController) add(c *fiber.Ctx) error {
+	userName := c.FormValue("username")
+	password := c.FormValue("password")
+	roleId := c.FormValue("role_id")
 
 	var userModel models.UserModel
 	user := entities.User{
@@ -122,62 +122,62 @@ func (UserController) add(ctx *fiber.Ctx) error {
 	}
 	_, err := userModel.Create(user)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info("User '"+userName+"' added successfully", config.LogRequestPath(ctx))
-	return ctx.Redirect("/users")
+	userLogger.Info("User '"+userName+"' added successfully", config.LogRequestPath(c))
+	return c.Redirect("/users")
 }
 
 
-func (UserController) editForm(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+func (UserController) editForm(c *fiber.Ctx) error {
+	id := c.Params("id")
 	user, _ := models.UserModel{}.GetDataByUniqueId(id)
 	roles, _ := models.RoleModel{}.FindAll()
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("users/user/edit", fiber.Map{
+	return c.Render("users/user/edit", fiber.Map{
 		"Title": "Editar User",
 		"Roles": roles,
 		"User": user,
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) edit(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
-	roleId := ctx.FormValue("role_id")
+func (UserController) edit(c *fiber.Ctx) error {
+	id := c.Params("id")
+	roleId := c.FormValue("role_id")
 	var userModel models.UserModel
 	user, _ := userModel.FindByUniqueId(id)
 	user.RoleId = conversion.StringToInt(roleId)
 	user.UpdatedAt = time.Now()
 	_, err := userModel.Update(user)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info("User '"+user.UserName+"' updated successfully", config.LogRequestPath(ctx))
-	return ctx.Redirect("/users")
+	userLogger.Info("User '"+user.UserName+"' updated successfully", config.LogRequestPath(c))
+	return c.Redirect("/users")
 }
 
 
-func (UserController) searchForm(ctx *fiber.Ctx) error {
+func (UserController) searchForm(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("user/user/search", fiber.Map{
+	return c.Render("user/user/search", fiber.Map{
 		"Title": "Search Users",
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) search(ctx *fiber.Ctx) error {
-	param := ctx.FormValue("search_param")
+func (UserController) search(c *fiber.Ctx) error {
+	param := c.FormValue("search_param")
 	results, _ := models.UserModel{}.Search(param)
 	count := len(results)
-	loggedUser := authentication.GetLoggedUser(ctx)
+	loggedUser := authentication.GetLoggedUser(c)
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	userLogger.Info(fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, param, count), config.LogRequestPath(ctx))
-	return ctx.Render("user/user/search-results", fiber.Map{
+	userLogger.Info(fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, param, count), config.LogRequestPath(c))
+	return c.Render("user/user/search-results", fiber.Map{
 		"Title": "Results",
 		"Results": results,
 		"Param": param,
@@ -188,46 +188,46 @@ func (UserController) search(ctx *fiber.Ctx) error {
 }
 
 
-func (UserController) deactivateForm(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+func (UserController) deactivateForm(c *fiber.Ctx) error {
+	id := c.Params("id")
 	user, _ := models.UserModel{}.GetDataByUniqueId(id)
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("user/deactivate", fiber.Map{
+	return c.Render("user/deactivate", fiber.Map{
 		"Title": "Desactivar User",
 		"User": user,
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) deactivate(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+func (UserController) deactivate(c *fiber.Ctx) error {
+	id := c.Params("id")
 	var userModel models.UserModel
 	user, _ := userModel.FindByUniqueId(id)
 	user.Active = "No"
 	user.UpdatedAt = time.Now()
 	userModel.Update(user)
-	userLogger.Info(fmt.Sprintf("User '%s' deactivated successfully!", user.UserName), config.LogRequestPath(ctx))
-	return ctx.Redirect("/users/"+id+"/details")
+	userLogger.Info(fmt.Sprintf("User '%s' deactivated successfully!", user.UserName), config.LogRequestPath(c))
+	return c.Redirect("/users/"+id+"/details")
 }
 
 
-func (UserController) activateForm(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+func (UserController) activateForm(c *fiber.Ctx) error {
+	id := c.Params("id")
 	user, _ := models.UserModel{}.GetDataByUniqueId(id)
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("user/user/activate", fiber.Map{
+	return c.Render("user/user/activate", fiber.Map{
 		"Title": "Activar User",
 		"User": user,
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) activate(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+func (UserController) activate(c *fiber.Ctx) error {
+	id := c.Params("id")
 	var userModel models.UserModel
 	user, _ := userModel.FindByUniqueId(id)
 	user.Active = "Yes"
@@ -235,61 +235,61 @@ func (UserController) activate(ctx *fiber.Ctx) error {
 	user.Token = encryption.GenerateRandomToken()
 	_, err := userModel.Update(user)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info(fmt.Sprintf("User '%s' activated successfully!", user.UserName), config.LogRequestPath(ctx))
-	return ctx.Redirect("/users/"+id+"/details")
+	userLogger.Info(fmt.Sprintf("User '%s' activated successfully!", user.UserName), config.LogRequestPath(c))
+	return c.Redirect("/users/"+id+"/details")
 }
 
 
-func (UserController) addImageForm(ctx *fiber.Ctx) error {
+func (UserController) addImageForm(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("user/user/add-image", fiber.Map{
+	return c.Render("user/user/add-image", fiber.Map{
 		"Title": "Add Image",
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) addImage(ctx *fiber.Ctx) error {
-	userImage, _ := helpers.UploadFile(ctx, "user_image", "image", config.UploadImagePath())
-	loggedUser := authentication.GetLoggedUser(ctx)
+func (UserController) addImage(c *fiber.Ctx) error {
+	userImage, _ := helpers.UploadFile(c, "user_image", "image", config.UploadImagePath())
+	loggedUser := authentication.GetLoggedUser(c)
 	var userModel models.UserModel
 	user, _ := userModel.FindById(loggedUser.UserId)
 	user.Image = userImage
 	user.UpdatedAt = time.Now()
 	_, err := userModel.Update(user)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info(fmt.Sprintf("User '%s' added image", user.UserName), config.LogRequestPath(ctx))
-	return ctx.Redirect("/user-data")
+	userLogger.Info(fmt.Sprintf("User '%s' added image", user.UserName), config.LogRequestPath(c))
+	return c.Redirect("/user-data")
 }
 
 
-func (UserController) changePasswordForm(ctx *fiber.Ctx) error {
+func (UserController) changePasswordForm(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
-	return ctx.Render("user/user/change-password", fiber.Map{
+	return c.Render("user/user/change-password", fiber.Map{
 		"Title": "Updated Password",
-		"LoggedUser": authentication.GetLoggedUser(ctx),
+		"LoggedUser": authentication.GetLoggedUser(c),
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) changePassword(ctx *fiber.Ctx) error {
-	password := ctx.FormValue("password")
-	//passwordConf := ctx.FormValue("password_conf")
-	loggedUser := authentication.GetLoggedUser(ctx)
+func (UserController) changePassword(c *fiber.Ctx) error {
+	password := c.FormValue("password")
+	//passwordConf := c.FormValue("password_conf")
+	loggedUser := authentication.GetLoggedUser(c)
 
 	var userModel models.UserModel
 	user, _ := userModel.FindById(loggedUser.UserId)
 	user.Password = encryption.HashPassword(password)
 	_, err := userModel.Update(user)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info(fmt.Sprintf("User '%s' updated password", user.UserName), config.LogRequestPath(ctx))
-	return ctx.Redirect("/auth/login")
+	userLogger.Info(fmt.Sprintf("User '%s' updated password", user.UserName), config.LogRequestPath(c))
+	return c.Redirect("/auth/login")
 }
