@@ -67,10 +67,7 @@ func (repo *UserRepository) Search(ctx context.Context, param interface{}) ([]en
 func (repo *UserRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.users").Count(&count)
-	if result.Error != nil {
-		return 0, result.Error
-	}
-	return count, nil
+	return count, result.Error
 }
 
 func (repo *UserRepository) FindAllOrdered(ctx context.Context) ([]entities.User, error) {
@@ -149,4 +146,10 @@ func (repo *UserRepository) FindInactiveByRole(ctx context.Context, roleName str
 	var users []entities.UserData
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE role_name=? and active='No'",  roleName).Find(&users)
 	return users, result.Error
+}
+
+func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles []string) (bool, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).Where("user_id=? AND role_code IN ?", userId, roles).Count(&count)
+	return count > 0 , result.Error
 }

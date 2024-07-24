@@ -7,12 +7,19 @@ import (
 	"go.uber.org/zap"
 )
 
+type RequestLoggerMiddleware struct {
+	logger * zap.Logger
+}
 
-var requestLogger = config.NewLogger("requests.log")
+func NewRequestLoggerMiddleware() *RequestLoggerMiddleware {
+	return &RequestLoggerMiddleware{
+		logger: config.NewLogger("requests.log"),
+	}
+}
 
 
-func requestLoggerMiddleware(ctx *fiber.Ctx) error {
-	requestLogger.Info("Request",
+func (mid *RequestLoggerMiddleware) Handle(ctx *fiber.Ctx) error {
+	mid.logger.Info("Request",
 		zap.String("Method", ctx.Method()),
 		zap.String("Path", ctx.Path()),
 		zap.String("StatusCode", fmt.Sprintf("%d", ctx.Response().StatusCode())),

@@ -7,13 +7,11 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
-
 type ExcelGenerator struct {
 	File  		*xlsx.File
 	Sheet 		*xlsx.Sheet
 	HeaderColor	string
 }
-
 
 func NewExcelGenerator() *ExcelGenerator {
 	file := xlsx.NewFile()
@@ -25,7 +23,6 @@ func NewExcelGenerator() *ExcelGenerator {
 	}
 }
 
-
 func (eg *ExcelGenerator) AddTitle(title string) {
 	row := eg.Sheet.AddRow()
 	cell := row.AddCell()
@@ -35,7 +32,6 @@ func (eg *ExcelGenerator) AddTitle(title string) {
 	titleStyle.Font.Bold = true
 	cell.SetStyle(titleStyle)
 }
-
 
 func (eg *ExcelGenerator) AddHeaderRow(columns ...string) {
 	row := eg.Sheet.AddRow()
@@ -52,7 +48,6 @@ func (eg *ExcelGenerator) AddHeaderRow(columns ...string) {
 	}
 }
 
-
 func (eg *ExcelGenerator) AddDataRow(data ...interface{}) {
 	row := eg.Sheet.AddRow()
 	for idx, d := range data {
@@ -64,7 +59,6 @@ func (eg *ExcelGenerator) AddDataRow(data ...interface{}) {
 		eg.adjustColumnWidth(idx, textLength)
 	}
 }
-
 
 // getHeaderBorderStyle returns a style with header cell borders.
 func (eg *ExcelGenerator) getHeaderBorderStyle() *xlsx.Style {
@@ -78,7 +72,6 @@ func (eg *ExcelGenerator) getHeaderBorderStyle() *xlsx.Style {
 	style.Border = border
 	return style
 }
-
 
 // getCellBorderStyle returns a style with data cell borders.
 func (eg *ExcelGenerator) getCellBorderStyle() *xlsx.Style {
@@ -106,7 +99,6 @@ func (eg *ExcelGenerator) getTitleBorderStyle() *xlsx.Style {
 	return style
 }
 
-
 // adjustColumnWidth adjusts the column width based on the text length.
 func (eg *ExcelGenerator) adjustColumnWidth(colIndex int, textLength int) {
 	// Calculate column width based on text length
@@ -115,7 +107,6 @@ func (eg *ExcelGenerator) adjustColumnWidth(colIndex int, textLength int) {
 	// Set the column width
 	eg.Sheet.Col(colIndex).Width = colWidth
 }
-
 
 // getCellBackgroundColorStyle returns a style with a specific background color.
 func (eg *ExcelGenerator) getCellBackgroundColorStyle() *xlsx.Style {
