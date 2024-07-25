@@ -12,7 +12,6 @@ type Role struct {
 	UpdatedAt 	time.Time `gorm:"column:updated_at"`
 }
 
-
 func (Role) TableName() string {
 	return "authentication.roles"
 }

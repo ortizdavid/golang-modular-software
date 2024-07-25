@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"github.com/ortizdavid/golang-modular-software/common/config"
 	"gorm.io/gorm"
 )
 
@@ -13,8 +12,8 @@ const (
 	structureDir = "_structure"
 	authDir = "authentication"
 	configDir = "configuration"
-	hrDir = "human-resources"
-	customerDir = "customers"
+	companyDir = "company"
+	referenceDir = "reference"
 )
 
 // Execute a sql script located in a directory
@@ -40,7 +39,6 @@ func execDatabaseScript(db *gorm.DB, directory string, scriptFile string) {
 	if commit.Error != nil {
 		log.Fatalf("Error committing transaction for script '%s': %v", scriptFile, commit.Error)
 	}
-
 	log.Printf("Script '%s' executed successfully!\n", scriptPath)
 }
 
@@ -64,33 +62,28 @@ func execConfigurationScripts(db *gorm.DB) {
 	execDatabaseScript(db, configDir, "views.sql")
 }
 
-// execute all human_resources scripts
-func execHumanResourcesScripts(db *gorm.DB) {
-	log.Printf("Executing human_resources schema scripts...")
-	execDatabaseScript(db, hrDir, "tables.sql")
-	execDatabaseScript(db, hrDir, "views.sql")
+// execute all company scripts
+func execCompanyScripts(db *gorm.DB) {
+	log.Printf("Executing company schema scripts...")
+	execDatabaseScript(db, companyDir, "tables.sql")
+	execDatabaseScript(db, companyDir, "views.sql")
 }
 
-// execute all customers scripts
-func execCustomerScripts(db *gorm.DB) {
-	log.Printf("Executing customers schema scripts...")
-	execDatabaseScript(db, customerDir, "tables.sql")
-	execDatabaseScript(db, customerDir, "views.sql")
+// execute all reference scripts
+func execReferenceScripts(db *gorm.DB) {
+	log.Printf("Executing reference schema scripts...")
+	execDatabaseScript(db, referenceDir, "tables.sql")
+	execDatabaseScript(db, referenceDir, "views.sql")
 }
 
 
-func InitDatabaseScripts() {
-	db, err := config.ConnectDB()
-	if err != nil {
-		log.Fatal("Failed to connect to database: ", err)
-	}
-	defer config.DisconnectDB(db)
+func InitDatabaseScripts(db *gorm.DB) {
 	log.Printf("Connected to Database ...\n\n")
 
 	log.Println("Executing database scripts...")
 	execCreateScemas(db)
 	execAuthenticationScripts(db)
 	execConfigurationScripts(db)
-	execHumanResourcesScripts(db)
-	execCustomerScripts(db)
+	execCompanyScripts(db)
+	execReferenceScripts(db)
 }

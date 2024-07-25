@@ -23,8 +23,27 @@ func (repo *UserRepository) Create(ctx context.Context, user entities.User) erro
 	return result.Error
 }
 
+func (repo *UserRepository) CreateBatch(ctx context.Context, users []entities.User) error {
+	tx := repo.db.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	result := tx.WithContext(ctx).Create(&users)
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+	tx.Commit()
+	return nil
+}
+
 func (repo *UserRepository) Update(ctx context.Context, user entities.User) error {
 	result := repo.db.WithContext(ctx).Save(&user)
+	return result.Error
+}
+
+func (repo *UserRepository) Delete(ctx context.Context, user entities.User) error {
+	result := repo.db.WithContext(ctx).Delete(&user)
 	return result.Error
 }
 
@@ -34,7 +53,13 @@ func (repo *UserRepository) FindAll(ctx context.Context) ([]entities.User, error
 	return users, result.Error
 }
 
-func (repo *UserRepository) FindById(ctx context.Context, id int) (entities.User, error) {
+func (repo *UserRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.User, error) {
+	var users []entities.User
+	result := repo.db.WithContext(ctx).Limit(limit).Offset(offset).Find(&users)
+	return users, result.Error
+}
+
+func (repo *UserRepository) FindById(ctx context.Context, id int64) (entities.User, error) {
 	var user entities.User
 	result := repo.db.WithContext(ctx).First(&user, id)
 	return user, result.Error
@@ -130,9 +155,15 @@ func (repo *UserRepository) GetDataByUserName(ctx context.Context, userName stri
 	return userData, result.Error
 }
 
-func (repo *UserRepository) FindAllByStatus(ctx context.Context, statusName string) ([]entities.UserData, error) {
+func (repo *UserRepository) GetDataByEmail(ctx context.Context, email string) (entities.UserData, error) {
+	var userData entities.UserData
+	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE email=?", email).Scan(&userData)
+	return userData, result.Error
+}
+
+func (repo *UserRepository) FindAllByStatus(ctx context.Context, status bool, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
-	repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE active=?",  statusName).Find(&users)
+	repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE is_active=? LIMIT ?, OFFSET ?",  status, limit, offset).Find(&users)
 	return users, nil
 }
 
@@ -148,8 +179,20 @@ func (repo *UserRepository) FindInactiveByRole(ctx context.Context, roleName str
 	return users, result.Error
 }
 
-func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles []string) (bool, error) {
+func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles ...string) (bool, error) {
+    var count int64
+    result := repo.db.WithContext(ctx).
+        Table("view_user_role_data").
+        Where("user_id = ? AND role_code IN (?)", userId, roles).
+        Count(&count)
+    if result.Error != nil {
+        return false, result.Error
+    }
+    return count > 0, nil
+}
+
+func (repo *UserRepository) CountByStatus(ctx context.Context, status bool) (int64, error) {
 	var count int64
-	result := repo.db.WithContext(ctx).Where("user_id=? AND role_code IN ?", userId, roles).Count(&count)
-	return count > 0 , result.Error
+	result := repo.db.WithContext(ctx).Table("authentication.users").Where("is_active = ?", status).Count(&count)
+	return count, result.Error
 }

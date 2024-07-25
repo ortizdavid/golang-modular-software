@@ -12,11 +12,9 @@ type Permission struct {
 	UpdatedAt 		time.Time `gorm:"column:updated_at"`
 }
 
-
 func (Permission) TableName() string {
 	return "authentication.permissions"
 }
-
 
 type PermissionData struct {
 	PermissionId    int

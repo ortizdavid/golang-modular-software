@@ -30,7 +30,6 @@
             form.addEventListener("submit", function (event) {
                 // Prevent the form from submitting by default
                 event.preventDefault();
-    
                 // Check if the email is valid
                 const email = emailInput.value.trim();
                 if (!validateEmail(email)) {
@@ -39,11 +38,9 @@
                 } else {
                     emailError.textContent = "";
                 }
-    
                 // If email is valid, you can submit the form
                 form.submit();
             });
-    
             // Email validation function
             function validateEmail(email) {
                 const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;

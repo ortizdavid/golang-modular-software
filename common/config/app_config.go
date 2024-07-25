@@ -32,6 +32,14 @@ func UploadDocumentPath() string {
 	return GetEnv("UPLOAD_DOCUMENT_PATH")
 }
 
+func MaxUploadImageSize() int {
+	return conversion.StringToInt(GetEnv("MAX_UPLOAD_IMAGE_SIZE"))
+}
+
+func MaxUploadDocumentSize() int {
+	return conversion.StringToInt(GetEnv("MAX_UPLOAD_DOCUMENT_SIZE"))
+}
+
 // ---- Requests
 func RequestsPerSecond() int {
 	return conversion.StringToInt(GetEnv("REQUESTS_PER_SECONDS"))

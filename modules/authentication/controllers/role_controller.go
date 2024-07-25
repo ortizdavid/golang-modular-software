@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
-	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
-	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
+	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
+	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/repositores"
 )
 
 type RoleController struct {

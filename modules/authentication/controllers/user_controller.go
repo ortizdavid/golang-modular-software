@@ -3,164 +3,182 @@ package controllers
 import (
 	"fmt"
 	"time"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
-	models "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
-	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/models"
-	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/models"
+	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
+	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
+	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	"gorm.io/gorm"
 )
 
-
 type UserController struct {
+	service *services.UserService
+	roleService *services.RoleService
+	authService *services.AuthService
+	configService *configurations.BasicConfigurationService
 }
 
+func NewUserController(db *gorm.DB) *UserController {
+	return &UserController{
+		service: authentication.NewUserService(db),
+	}
+}
 
-func (user UserController) Routes(router *fiber.App) {
+func (ctrl *UserController) Routes(router *fiber.App) {
 	group := router.Group("/users")
-	group.Get("/", user.index)
-	group.Get("/add", user.addForm)
-	group.Post("/add", user.add)
-	group.Get("/:id/details", user.details)
-	group.Get("/:id/edit", user.editForm)
-	group.Post("/:id/edit", user.edit)
-	group.Get("/:id/deactivate", user.deactivateForm)
-	group.Post("/:id/deactivate", user.deactivate)
-	group.Get("/:id/activate", user.activateForm)
-	group.Post("/:id/activate", user.activate)
-	group.Get("/add-image", user.addImageForm)
-	group.Post("/add-image", user.addImage)
-	group.Get("/search", user.searchForm)
-	group.Get("/search-results", user.search)
-	router.Get("/change-password", user.changePasswordForm)
-	router.Post("/change-password", user.changePassword)
+	group.Get("/", ctrl.index)
+	group.Get("/create", ctrl.createForm)
+	group.Post("/create", ctrl.create)
+	group.Get("/:id/details", ctrl.details)
+	group.Get("/:id/assign-role", ctrl.assignRoleForm)
+	group.Post("/:id/assign-role", ctrl.assignRole)
+	group.Get("/:id/deactivate", ctrl.deactivateForm)
+	group.Post("/:id/deactivate", ctrl.deactivate)
+	group.Get("/:id/activate", ctrl.activateForm)
+	group.Post("/:id/activate", ctrl.activate)
+	group.Get("/change-image", ctrl.changeUserImageForm)
+	group.Post("/change-image", ctrl.changeUserImage)
+	group.Get("/search", ctrl.searchForm)
+	group.Get("/search-results", ctrl.search)
+	router.Get("/change-password", ctrl.changePasswordForm)
+	router.Post("/change-password", ctrl.changePassword)
 }
 
-
-func (UserController) index(c *fiber.Ctx) error {
-	var pagination helpers.Pagination
-	var userModel models.UserModel
-	
-	loggedUser := authentication.GetLoggedUser(c)
-	basicConfig, _ := configurations.GetBasicConfiguration()
-	itemsPerPage := basicConfig.MaxRecordsPerPage
-	pageNumber := pagination.GetPageNumber(c, "page")
-	//startIndex := pagination.CalculateStartIndex(pageNumber, itemsPerPage)
-	//users, _ := userModel.FindAllDataLimit(startIndex, itemsPerPage)
-	users, _ := userModel.FindAllData()
-	countUsers, _ := userModel.Count()
-	count := int(countUsers)
-	totalPages := pagination.CalculateTotalPages(count, itemsPerPage)
-
-	/*if pageNumber>totalPages && count!=0 {
-		return c.Status(fiber.StatusInternalServerError).Render("errors/pagination", fiber.Map{
-			"Title": "Users",
-			"TotalPages": totalPages, 
-			"LoggedUser": loggedUser,
-			"BasicConfig": basicConfig,
-		})
-	}*/
-	return c.Render("user/index", fiber.Map{
+func (ctrl *UserController) index(c *fiber.Ctx) error {
+	var params helpers.PaginationParam
+	if err := c.QueryParser(&params); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	count, err := ctrl.service.CountUsers(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	users, err := ctrl.service.GetAllUsers(c.Context(), c, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/index", fiber.Map{
 		"Title": "Users",
 		"Users": users,
-		"Pagination": helpers.NewPaginationRender(1),
 		"Count": count,
-		"PageNumber": pageNumber,
-		"TotalPages": totalPages,
+		"LoggedUser": loggedUser,
+		"BasicConfig": basicConfig,
+	})
+}
+
+func (ctrl *UserController) details(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("user/details", fiber.Map{
+		"Title": "User Details",
+		"User": user,
+		"LoggedUser": loggedUser,
+		"BasicConfig": basicConfig,
+	})
+}
+
+func (ctrl *UserController) createForm(c *fiber.Ctx) error {
+	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	roles, err := ctrl.roleService.GetAllRoles(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("users/user/add", fiber.Map{
+		"Title": "Add User",
+		"Roles": roles,
+		"LoggedUser": loggedUser,
+		"BasicConfig": basicConfig,
+	})
+}
+
+func (ctrl *UserController) create(c *fiber.Ctx) error {
+	var request entities.CreateUserRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err := ctrl.service.CreateUser(c.Context(), request)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	userLogger.Info("User '"+request.UserName+"' added successfully", config.LogRequestPath(c))
+	return c.Redirect("/users")
+}
+
+
+func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	roles, err := ctrl.roleService.GetAllRoles(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("users/user/edit", fiber.Map{
+		"Title": "Assign Role",
+		"Roles": roles,
+		"User": user,
 		"LoggedUser": loggedUser,
 		"BasicConfig": basicConfig,
 	})
 }
 
 
-func (UserController) details(c *fiber.Ctx) error {
+func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 	id := c.Params("id")
-	user, _ := models.UserModel{}.GetDataByUniqueId(id)
-	basicConfig, _ := configurations.GetBasicConfiguration()
-	return c.Render("user/details", fiber.Map{
-		"Title": "User Details",
-		"User": user,
-		"LoggedUser": authentication.GetLoggedUser(c),
-		"BasicConfig": basicConfig,
-	})
-}
-
-
-func (UserController) addForm(c *fiber.Ctx) error {
-	roles, _ := models.RoleModel{}.FindAll()
-	basicConfig, _ := configurations.GetBasicConfiguration()
-	return c.Render("users/user/add", fiber.Map{
-		"Title": "Add User",
-		"Roles": roles,
-		"LoggedUser": authentication.GetLoggedUser(c),
-		"BasicConfig": basicConfig,
-	})
-}
-
-
-func (UserController) add(c *fiber.Ctx) error {
-	userName := c.FormValue("username")
-	password := c.FormValue("password")
-	roleId := c.FormValue("role_id")
-
-	var userModel models.UserModel
-	user := entities.User{
-		UserId:    0,
-		RoleId:    conversion.StringToInt(roleId),
-		UserName:  userName,
-		Password:  encryption.HashPassword(password),
-		Active:    "Yes",
-		Image:     "",
-		UniqueId:  encryption.GenerateUUID(),
-		Token:     encryption.GenerateRandomToken(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	var request entities.AssignUserRoleRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
-	_, err := userModel.Create(user)
+	err = ctrl.service.AssignUserRole(c.Context(), user.UserId, request)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
-	userLogger.Info("User '"+userName+"' added successfully", config.LogRequestPath(c))
+	userLogger.Info("User '"+user.UserName+"' assigned role", config.LogRequestPath(c))
 	return c.Redirect("/users")
 }
 
 
-func (UserController) editForm(c *fiber.Ctx) error {
-	id := c.Params("id")
-	user, _ := models.UserModel{}.GetDataByUniqueId(id)
-	roles, _ := models.RoleModel{}.FindAll()
-	basicConfig, _ := configurations.GetBasicConfiguration()
-	return c.Render("users/user/edit", fiber.Map{
-		"Title": "Editar User",
-		"Roles": roles,
-		"User": user,
-		"LoggedUser": authentication.GetLoggedUser(c),
-		"BasicConfig": basicConfig,
-	})
-}
-
-
-func (UserController) edit(c *fiber.Ctx) error {
-	id := c.Params("id")
-	roleId := c.FormValue("role_id")
-	var userModel models.UserModel
-	user, _ := userModel.FindByUniqueId(id)
-	user.RoleId = conversion.StringToInt(roleId)
-	user.UpdatedAt = time.Now()
-	_, err := userModel.Update(user)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
-	userLogger.Info("User '"+user.UserName+"' updated successfully", config.LogRequestPath(c))
-	return c.Redirect("/users")
-}
-
-
-func (UserController) searchForm(c *fiber.Ctx) error {
+func (ctrl *UserController) searchForm(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
 	return c.Render("user/user/search", fiber.Map{
 		"Title": "Search Users",
@@ -170,7 +188,7 @@ func (UserController) searchForm(c *fiber.Ctx) error {
 }
 
 
-func (UserController) search(c *fiber.Ctx) error {
+func (ctrl *UserController) search(c *fiber.Ctx) error {
 	param := c.FormValue("search_param")
 	results, _ := models.UserModel{}.Search(param)
 	count := len(results)
@@ -188,7 +206,7 @@ func (UserController) search(c *fiber.Ctx) error {
 }
 
 
-func (UserController) deactivateForm(c *fiber.Ctx) error {
+func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, _ := models.UserModel{}.GetDataByUniqueId(id)
 	basicConfig, _ := configurations.GetBasicConfiguration()
@@ -201,19 +219,19 @@ func (UserController) deactivateForm(c *fiber.Ctx) error {
 }
 
 
-func (UserController) deactivate(c *fiber.Ctx) error {
+func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var userModel models.UserModel
 	user, _ := userModel.FindByUniqueId(id)
-	user.Active = "No"
-	user.UpdatedAt = time.Now()
+	ctrl.Active = "No"
+	ctrl.UpdatedAt = time.Now()
 	userModel.Update(user)
-	userLogger.Info(fmt.Sprintf("User '%s' deactivated successfully!", user.UserName), config.LogRequestPath(c))
+	userLogger.Info(fmt.Sprintf("User '%s' deactivated successfully!", ctrl.UserName), config.LogRequestPath(c))
 	return c.Redirect("/users/"+id+"/details")
 }
 
 
-func (UserController) activateForm(c *fiber.Ctx) error {
+func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, _ := models.UserModel{}.GetDataByUniqueId(id)
 	basicConfig, _ := configurations.GetBasicConfiguration()
@@ -226,23 +244,23 @@ func (UserController) activateForm(c *fiber.Ctx) error {
 }
 
 
-func (UserController) activate(c *fiber.Ctx) error {
+func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var userModel models.UserModel
 	user, _ := userModel.FindByUniqueId(id)
-	user.Active = "Yes"
-	user.UpdatedAt = time.Now()
-	user.Token = encryption.GenerateRandomToken()
+	ctrl.Active = "Yes"
+	ctrl.UpdatedAt = time.Now()
+	ctrl.Token = encryption.GenerateRandomToken()
 	_, err := userModel.Update(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info(fmt.Sprintf("User '%s' activated successfully!", user.UserName), config.LogRequestPath(c))
+	userLogger.Info(fmt.Sprintf("User '%s' activated successfully!", ctrl.UserName), config.LogRequestPath(c))
 	return c.Redirect("/users/"+id+"/details")
 }
 
 
-func (UserController) addImageForm(c *fiber.Ctx) error {
+func (ctrl *UserController) changeUserImageForm(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
 	return c.Render("user/user/add-image", fiber.Map{
 		"Title": "Add Image",
@@ -252,23 +270,23 @@ func (UserController) addImageForm(c *fiber.Ctx) error {
 }
 
 
-func (UserController) addImage(c *fiber.Ctx) error {
+func (ctrl *UserController) changeUserImage(c *fiber.Ctx) error {
 	userImage, _ := helpers.UploadFile(c, "user_image", "image", config.UploadImagePath())
 	loggedUser := authentication.GetLoggedUser(c)
 	var userModel models.UserModel
 	user, _ := userModel.FindById(loggedUser.UserId)
-	user.Image = userImage
-	user.UpdatedAt = time.Now()
+	ctrl.Image = userImage
+	ctrl.UpdatedAt = time.Now()
 	_, err := userModel.Update(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info(fmt.Sprintf("User '%s' added image", user.UserName), config.LogRequestPath(c))
+	userLogger.Info(fmt.Sprintf("User '%s' added image", ctrl.UserName), config.LogRequestPath(c))
 	return c.Redirect("/user-data")
 }
 
 
-func (UserController) changePasswordForm(c *fiber.Ctx) error {
+func (ctrl *UserController) changePasswordForm(c *fiber.Ctx) error {
 	basicConfig, _ := configurations.GetBasicConfiguration()
 	return c.Render("user/user/change-password", fiber.Map{
 		"Title": "Updated Password",
@@ -278,18 +296,18 @@ func (UserController) changePasswordForm(c *fiber.Ctx) error {
 }
 
 
-func (UserController) changePassword(c *fiber.Ctx) error {
+func (ctrl *UserController) changePassword(c *fiber.Ctx) error {
 	password := c.FormValue("password")
 	//passwordConf := c.FormValue("password_conf")
 	loggedUser := authentication.GetLoggedUser(c)
 
 	var userModel models.UserModel
 	user, _ := userModel.FindById(loggedUser.UserId)
-	user.Password = encryption.HashPassword(password)
+	ctrl.Password = encryption.HashPassword(password)
 	_, err := userModel.Update(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	userLogger.Info(fmt.Sprintf("User '%s' updated password", user.UserName), config.LogRequestPath(c))
+	userLogger.Info(fmt.Sprintf("User '%s' updated password", ctrl.UserName), config.LogRequestPath(c))
 	return c.Redirect("/auth/login")
 }

@@ -2,13 +2,12 @@ package entities
 
 import "time"
 
-
 type User struct {
 	UserId    	int64 `gorm:"autoIncrement;primarykey"`
-	RoleId  	int `gorm:"column:role_id"`
 	UserName  	string `gorm:"column:user_name"`
+	Email  		string `gorm:"column:email"`
 	Password  	string `gorm:"column:password"`
-	Active  	string `gorm:"column:active"`
+	IsActive  	bool `gorm:"column:is_active"`
 	Image  		string `gorm:"column:user_image"`
 	Token  		string `gorm:"column:token;"`
 	UniqueId  	string `gorm:"column:unique_id"`
@@ -16,23 +15,26 @@ type User struct {
 	UpdatedAt  	time.Time `gorm:"column:updated_at"`
 }
 
-
 func (User) TableName() string {
 	return "authentication.users"
 }
 
-
 type UserData struct {
-	UserId			int64 
-	UniqueId 		string
-	Token 			string
-	UserName 		string
-	Password 		string
-	Active   		string
-	UserImage   	string
-	CreatedAt 		string
-	UpdatedAt  		string
-	RoleId 			int
-	RoleName 		string
-	RoleCode 		string
+	UserId       int64 `json:"user_id"`
+	UniqueId     string `json:"unique_id"`
+	Token        string `json:"token"`
+	UserName     string `json:"user_name"`
+	Email        string `json:"email"`
+	Password     string `json:"password"`  
+	Active       string `json:"active"`
+	UserImage    string `json:"user_image"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
+
+/*s.user_id, us.unique_id,
+	us.user_name, us.email,
+    us.password, us.active, 
+    us.user_image, us.token, 
+	TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,*/

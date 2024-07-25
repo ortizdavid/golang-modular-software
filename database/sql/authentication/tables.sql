@@ -1,8 +1,4 @@
 -- Schema: authentication
-
-DROP TYPE IF EXISTS TYPE_USER_STATUS;
-CREATE TYPE TYPE_USER_STATUS AS ENUM('Yes', 'No');
-
 DROP TABLE IF EXISTS authentication.roles;
 CREATE TABLE authentication.roles (
     role_id SERIAL PRIMARY KEY,
@@ -17,16 +13,27 @@ CREATE TABLE authentication.roles (
 DROP TABLE IF EXISTS authentication.users;
 CREATE TABLE authentication.users (
     user_id SERIAL PRIMARY KEY,
-    role_id INT NOT NULL,
     user_name VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(150) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(200) NOT NULL,
     user_image VARCHAR(100), 
-    active TYPE_USER_STATUS DEFAULT 'Yes',
+    is_active BOOLEAN,
     token VARCHAR(150) UNIQUE,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+DROP TABLE IF EXISTS authentication.user_roles;
+CREATE TABLE authentication.user_roles (
+    user_role_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT fk_user_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id)
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.user(user_id),
+    CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id)
 );
 
 DROP TABLE IF EXISTS authentication.permissions;
@@ -57,18 +64,5 @@ CREATE TABLE authentication.permission_roles (
 INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
--- permissions
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('change-configuration', 'Change Configuration');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('list-configuration', 'List Configurations');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('lock-application', 'Lock Application');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('create-role', 'Create Roles');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('update-role', 'Update Roles');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('assign-role', 'Assign Roles');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('list-roles', 'List Roles');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('create-user', 'Create User');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('delete-user', 'Delete User');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('update-user', 'Update User');
-INSERT INTO authentication.permissions (code, permission_name) VALUES ('list-users', 'List Users');
-
 -- Default user: used to manage application
 INSERT INTO authentication.users (role_id, user_name, password) VALUES (2, 'admin@user.com', '$2a$10$9VE1S3YfjRPA5Hu7ZAV.ROy9M8aQsEAy0t2AgrCnzoDpEqhbunspq');

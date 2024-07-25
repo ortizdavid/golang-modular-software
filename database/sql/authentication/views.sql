@@ -4,15 +4,26 @@
 DROP VIEW IF EXISTS authentication.view_user_data;
 CREATE VIEW authentication.view_user_data AS 
 SELECT us.user_id, us.unique_id,
-	us.user_name, us.password, 
-	us.active, us.user_image,
-    us.token, 
+	us.user_name, us.email,
+    us.password, us.is_active, 
+    us.user_image, us.token, 
 	TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
-    TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-	ro.role_id, ro.role_name,
-	ro.code AS role_code
+    TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at
 FROM authentication.users us
-JOIN authentication.roles ro ON(ro.role_id = us.role_id)
+ORDER BY created_at DESC;
+
+-- View: view_user_role_data
+DROP VIEW IF EXISTS authentication.view_user_role_data;
+CREATE VIEW authentication.view_user_role_data AS 
+SELECT  ur.user_role_id, ur.unique_id,
+    TO_CHAR(ur.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(ur.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    ro.role_id, ro.role_name,
+    ro.code AS role_code,
+    us.user_id, us.user_name
+FROM authentication.user_roles ur
+JOIN authentication.roles ro ON(ro.role_id = ur.role_id)
+JOIN authentication.users us ON(us.role_id = ur.user_id)
 ORDER BY created_at DESC;
 
 

@@ -26,9 +26,20 @@ func (repo *RoleRepository) Update(ctx context.Context, role entities.Role) erro
 	return result.Error
 }
 
+func (repo *RoleRepository) Delete(ctx context.Context, role entities.Role) error {
+	result := repo.db.WithContext(ctx).Delete(&role)
+	return result.Error
+}
+
 func (repo *RoleRepository) FindAll(ctx context.Context) ([]entities.Role, error) {
 	var roles []entities.Role
 	result := repo.db.WithContext(ctx).Find(&roles)
+	return roles, result.Error
+}
+
+func (repo *RoleRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.Role, error) {
+	var roles []entities.Role
+	result := repo.db.WithContext(ctx).Limit(limit).Offset(offset).Find(&roles)
 	return roles, result.Error
 }
 
