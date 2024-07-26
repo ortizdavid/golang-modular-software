@@ -182,7 +182,7 @@ func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, para
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, users, int(count), params.CurrentPage, params.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, params.CurrentPage, params.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
 	}
@@ -201,7 +201,7 @@ func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, users, int(count), params.CurrentPage, params.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, params.CurrentPage, params.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
 	}
@@ -220,7 +220,26 @@ func (s *UserService) GetAllInActiveUsers(ctx context.Context, fiberCtx *fiber.C
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, users, int(count), params.CurrentPage, params.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, params.CurrentPage, params.Limit)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+	}
+	return pagination, nil
+}
+
+func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, searchParam interface{}, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+	if err := paginationParams.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
+	}
+	count, err := s.CountUsersByParam(ctx, searchParam)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No records found")
+	}
+	users, err := s.repository.Search(ctx, true, paginationParams.Limit, paginationParams.CurrentPage)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
 	}
@@ -275,3 +294,12 @@ func (s *UserService) CountUsersByStatus(ctx context.Context, status bool) (int6
 	}
 	return count, nil
 }
+
+func (s *UserService) CountUsersByParam(ctx context.Context, searchParam interface{}) (int64, error) {
+	count, err := s.repository.CountByParam(ctx, searchParam)
+	if err != nil {
+		return 0, apperrors.NewNotFoundError("No users found")
+	}
+	return count, nil
+}
+

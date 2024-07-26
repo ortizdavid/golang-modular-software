@@ -83,9 +83,13 @@ func (repo *UserRepository) FindByToken(ctx context.Context, token string) (enti
 	return user, result.Error
 }
 
-func (repo *UserRepository) Search(ctx context.Context, param interface{}) ([]entities.UserData, error) {
+func (repo *UserRepository) Search(ctx context.Context, param interface{}, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
-	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR role_name=?", param, param).Scan(&users)
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).
+		Limit(limit).
+		Offset(offset).
+		Scan(&users)
 	return users, result.Error
 }
 
@@ -194,5 +198,13 @@ func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles ..
 func (repo *UserRepository) CountByStatus(ctx context.Context, status bool) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.users").Where("is_active = ?", status).Count(&count)
+	return count, result.Error
+}
+
+func (repo *UserRepository) CountByParam(ctx context.Context, param interface{}) (int64, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).
+		Count(&count)
 	return count, result.Error
 }

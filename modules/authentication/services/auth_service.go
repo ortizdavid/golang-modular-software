@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/go-nopain/encryption"

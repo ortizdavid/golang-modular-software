@@ -83,7 +83,7 @@ func (s *RoleService) GetAllRolesPaginated(ctx context.Context, fiberCtx *fiber.
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, roles, int(count), params.CurrentPage, params.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, roles, count, params.CurrentPage, params.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
 	}

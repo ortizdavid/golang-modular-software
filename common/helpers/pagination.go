@@ -14,7 +14,7 @@ type Pagination[T any] struct {
 
 type MetaData struct {
 	CurrentPage     int      `json:"current_page"`
-	TotalItems      int      `json:"total_items"`
+	TotalItems      int64      `json:"total_items"`
 	TotalPages      int      `json:"total_pages"`
 	FirstPageUrl    string   `json:"first_page_url"`
 	PreviousPageUrl string   `json:"previous_page_url"`
@@ -22,7 +22,7 @@ type MetaData struct {
 	LastPageUrl     string   `json:"last_page_url"`
 }
 
-func NewPagination[T any](c *fiber.Ctx, items []T, count int, currentPage int, limit int) (*Pagination[T], error) {
+func NewPagination[T any](c *fiber.Ctx, items []T, count int64, currentPage int, limit int) (*Pagination[T], error) {
 	if currentPage < 0 {
 		return nil, fmt.Errorf("current page must be >= 0")
 	}
