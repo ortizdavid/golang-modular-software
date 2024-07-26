@@ -49,13 +49,13 @@ func (repo *RoleRepository) FindById(ctx context.Context, id int) (entities.Role
 	return role, result.Error
 }
 
-func (repo *RoleRepository) FindByName(name string) (entities.Role, error) {
+func (repo *RoleRepository) FindByName(ctx context.Context, name string) (entities.Role, error) {
 	var role entities.Role
-	result := repo.db.Where("role_name=?", name).First(&role)
+	result := repo.db.WithContext(ctx).Where("role_name=?", name).First(&role)
 	return role, result.Error
 }
 
-func (repo *RoleRepository) Count() (int64, error) {
+func (repo *RoleRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
 	result := repo.db.Table("authentication.roles").Count(&count)
 	return count, result.Error
@@ -63,6 +63,6 @@ func (repo *RoleRepository) Count() (int64, error) {
 
 func (repo *RoleRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
 	var count int64
-	result := repo.db.WithContext(ctx).Where("role_code = ?", code).Count(&count)
+	result := repo.db.WithContext(ctx).WithContext(ctx).Where("role_code = ?", code).Count(&count)
 	return count > 0 , result.Error
 }

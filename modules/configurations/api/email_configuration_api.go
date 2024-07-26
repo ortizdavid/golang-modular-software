@@ -3,11 +3,10 @@ package api
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +14,8 @@ type EmailConfigurationApi struct {
 	service     *services.EmailConfigurationService
 	basicConfigService *services.BasicConfigurationService
 	authService *authentication.AuthService
-	logger      *zap.Logger
+	infoLogger *helpers.Logger
+	errorLogger *helpers.Logger
 }
 
 func NewEmailConfigurationApi(db *gorm.DB) *EmailConfigurationApi {
@@ -23,16 +23,18 @@ func NewEmailConfigurationApi(db *gorm.DB) *EmailConfigurationApi {
 		service:     services.NewEmailConfigurationService(db),
 		basicConfigService: services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
-		logger: configurationLogger,
+		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
 func (api *EmailConfigurationApi) Routes(router *fiber.App) {
 	group := router.Group("/configurations/email-configurations")
+	group.Put("", api.getEmailConfiguration)
 	group.Put("", api.edit)
 }
 
-func (api *EmailConfigurationApi) index(c *fiber.Ctx) error {
+func (api *EmailConfigurationApi) getEmailConfiguration(c *fiber.Ctx) error {
 	basicConfig, err := api.basicConfigService.GetBasicConfiguration(c.Context())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
@@ -59,9 +61,10 @@ func (api *EmailConfigurationApi) edit(c *fiber.Ctx) error {
 	}
 	err = api.service.UpdateEmailConfiguration(c.Context(), request)
 	if err != nil {
+		api.errorLogger.Error(c, err.Error())
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 	message := fmt.Sprintf("User '%s' updated email configurations!", loggedUser.UserName)
-	api.logger.Info(message, config.LogRequestPath(c))
+	api.infoLogger.Info(c, message)
 	return c.JSON(message)
 }

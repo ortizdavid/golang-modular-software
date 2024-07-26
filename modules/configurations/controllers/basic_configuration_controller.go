@@ -4,27 +4,29 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 type BasicConfigurationController struct {
 	service *services.BasicConfigurationService
 	authService *authentication.AuthService
-	logger *zap.Logger
+	infoLogger *helpers.Logger
+	errorLogger *helpers.Logger
 }
 
 func NewBasicConfigurationController(db *gorm.DB) *BasicConfigurationController {
 	return &BasicConfigurationController{
 		service:     services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
-		logger: configurationLogger,
+		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
+
 
 func (ctrl *BasicConfigurationController) Routes(router *fiber.App) {
 	group := router.Group("/configurations/basic-configurations")
@@ -76,8 +78,9 @@ func (ctrl *BasicConfigurationController) edit(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.UpdateBasicConfiguration(c.Context(), request)
 	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to update basic configurations")
 	}
-	ctrl.logger.Info(fmt.Sprintf("User '%s' updated basic configurations!", loggedUser.UserName), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated basic configurations!", loggedUser.UserName))
 	return c.Redirect("/basic-configurations")
 }

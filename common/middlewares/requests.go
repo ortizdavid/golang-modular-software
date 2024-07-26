@@ -13,7 +13,7 @@ type RequestLoggerMiddleware struct {
 
 func NewRequestLoggerMiddleware() *RequestLoggerMiddleware {
 	return &RequestLoggerMiddleware{
-		logger: config.NewLogger("requests.log"),
+		logger: config.NewZapLogger("requests.log", zap.DebugLevel),
 	}
 }
 

@@ -3,11 +3,10 @@ package api
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +14,8 @@ type CompanyConfigurationApi struct {
 	service     *services.CompanyConfigurationService
 	basicConfigService *services.BasicConfigurationService
 	authService *authentication.AuthService
-	logger      *zap.Logger
+	infoLogger *helpers.Logger
+	errorLogger *helpers.Logger
 }
 
 func NewCompanyConfigurationApi(db *gorm.DB) *CompanyConfigurationApi {
@@ -23,7 +23,8 @@ func NewCompanyConfigurationApi(db *gorm.DB) *CompanyConfigurationApi {
 		service:     services.NewCompanyConfigurationService(db),
 		basicConfigService: services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
-		logger: configurationLogger,
+		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -56,9 +57,10 @@ func (api *CompanyConfigurationApi) edit(c *fiber.Ctx) error {
 	}
 	err = api.service.UpdateCompanyConfiguration(c.Context(), request)
 	if err != nil {
+		api.errorLogger.Error(c, err.Error())
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 	message := fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName)
-	api.logger.Info(message, config.LogRequestPath(c))
+	api.infoLogger.Info(c, message)
 	return c.JSON(message)
 }

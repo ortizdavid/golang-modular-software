@@ -208,7 +208,7 @@ func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx
 	return pagination, nil
 }
 
-func (s *UserService) GetAllInActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}

@@ -22,7 +22,12 @@ func NewAuthService(db *gorm.DB) *AuthService {
 	}
 }
 
-func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, userName string, password string) error {
+func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, request entities.LoginRequest) error {
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	userName := request.UserName
+	password := request.Password
 	// check if exists
 	exists, err := s.repository.ExistsActiveUser(ctx, userName)
 	if err != nil {

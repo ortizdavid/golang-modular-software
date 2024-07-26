@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterRoutes(router *fiber.App, db *gorm.DB) {
+func RegisterModuleRoutes(router *fiber.App, db *gorm.DB) {
 	controllers.RegisterRoutes(router, db)
 	api.RegisterRoutes(router, db)
 }

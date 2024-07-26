@@ -2,27 +2,27 @@ package api
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 type BasicConfigurationApi struct {
 	service     *services.BasicConfigurationService
 	authService *authentication.AuthService
-	logger      *zap.Logger
+	infoLogger *helpers.Logger
+	errorLogger *helpers.Logger
 }
 
 func NewBasicConfigurationApi(db *gorm.DB) *BasicConfigurationApi {
 	return &BasicConfigurationApi{
 		service:     services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
-		logger: configurationLogger,
+		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -55,9 +55,10 @@ func (api *BasicConfigurationApi) edit(c *fiber.Ctx) error {
 	}
 	err = api.service.UpdateBasicConfiguration(c.Context(), request)
 	if err != nil {
+		api.errorLogger.Error(c, err.Error())
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to update basic configurations")
 	}
 	message := fmt.Sprintf("User '%s' updated basic configurations!", loggedUser.UserName)
-	api.logger.Info(message, config.LogRequestPath(c))
+	api.infoLogger.Info(c, message)
 	return c.JSON(message)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/ortizdavid/go-nopain/conversion"
 )
 
-func NewLogger(logFileName string) *zap.Logger {
+func NewZapLogger(logFileName string, logLevel zapcore.Level) *zap.Logger {
 	lumberjackLogger := &lumberjack.Logger{
 		Filename:   LogRootPath() +"/"+logFileName,
 		MaxSize:    LogMaxFileSize(),
@@ -22,11 +22,27 @@ func NewLogger(logFileName string) *zap.Logger {
 	zapCore := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderConfig),
 		zapcore.AddSync(lumberjackLogger),
-		zap.DebugLevel,
+		logLevel,
 	)
 	// Create a logger with the zap core
 	logger := zap.New(zapCore)
 	return logger
+}
+
+func NewZapInfoLogger(logFileName string) *zap.Logger {
+	return NewZapLogger(logFileName, zapcore.InfoLevel)
+}
+
+func NewZapErrorLogger(logFileName string) *zap.Logger {
+	return NewZapLogger(logFileName, zapcore.ErrorLevel)
+}
+
+func NewZapDebugLogger(logFileName string) *zap.Logger {
+	return NewZapLogger(logFileName, zapcore.DebugLevel)
+}
+
+func NewZapPanicLogger(logFileName string) *zap.Logger {
+	return NewZapLogger(logFileName, zapcore.PanicLevel)
 }
 
 func LogRequestPath(ctx *fiber.Ctx) zap.Field {

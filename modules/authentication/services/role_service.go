@@ -75,7 +75,7 @@ func (s *RoleService) GetAllRolesPaginated(ctx context.Context, fiberCtx *fiber.
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	count, err := s.repository.Count()
+	count, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No roles found")
 	}
@@ -91,7 +91,7 @@ func (s *RoleService) GetAllRolesPaginated(ctx context.Context, fiberCtx *fiber.
 }
 
 func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) {
-	_, err := s.repository.Count()
+	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No roles found")
 	}
@@ -99,6 +99,13 @@ func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) 
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	
 	return roles, nil
+}
+
+func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {
+	count, err := s.repository.Count(ctx)
+	if err != nil {
+		return 0, apperrors.NewNotFoundError("No users found")
+	}
+	return count, nil
 }

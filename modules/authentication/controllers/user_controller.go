@@ -3,13 +3,11 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -18,8 +16,8 @@ type UserController struct {
 	roleService *services.RoleService
 	authService *services.AuthService
 	configService *configurations.BasicConfigurationService
-	infoLogger *zap.Logger
-	errorLogger *zap.Logger
+	infoLogger *helpers.Logger
+	errorLogger *helpers.Logger
 }
 
 func NewUserController(db *gorm.DB) *UserController {
@@ -28,8 +26,8 @@ func NewUserController(db *gorm.DB) *UserController {
 		roleService:   authentication.NewRoleService(db),
 		authService:   authentication.NewAuthService(db),
 		configService: configurations.NewBasicConfigurationService(db),
-		infoLogger:    userInfoLogger,
-		errorLogger:   userErrorLogger,
+		infoLogger:    helpers.NewInfoLogger("users-info.log"),
+		errorLogger:   helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
@@ -51,6 +49,8 @@ func (ctrl *UserController) Routes(router *fiber.App) {
 	group.Get("/search-results", ctrl.search)
 	router.Get("/change-password", ctrl.changePasswordForm)
 	router.Post("/change-password", ctrl.changePassword)
+	router.Get("/active-users", ctrl.changePasswordForm)
+	router.Post("/inactive-users", ctrl.changePassword)
 }
 
 func (ctrl *UserController) index(c *fiber.Ctx) error {
@@ -133,10 +133,10 @@ func (ctrl *UserController) create(c *fiber.Ctx) error {
 	}
 	err := ctrl.service.CreateUser(c.Context(), request)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info("User '"+request.UserName+"' added successfully", config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, "User '"+request.UserName+"' added successfully")
 	return c.Redirect("/users")
 }
 
@@ -178,10 +178,10 @@ func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.AssignUserRole(c.Context(), user.UserId, request)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info("User '"+user.UserName+"' assigned role", config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, "User '"+user.UserName+"' assigned role")
 	return c.Redirect("/users")
 }
 
@@ -223,10 +223,10 @@ func (ctrl *UserController) search(c *fiber.Ctx) error {
 	}
 	results, err := ctrl.service.SearchUsers(c.Context(), c, searchParam, paginationParams)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, searchParam, count), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, searchParam, count))
 	return c.Render("authentication/user/search-results", fiber.Map{
 		"Title": "Results",
 		"Results": results,
@@ -269,10 +269,10 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.DeactivateUser(c.Context(), user.UserId)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(fmt.Sprintf("User '%s' deactivated successfully!", user.UserName), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' deactivated successfully!", user.UserName))
 	return c.Redirect("/users/"+id+"/details")
 }
 
@@ -308,10 +308,10 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.ActivateUser(c.Context(), user.UserId)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(fmt.Sprintf("User '%s' activated successfully!", user.UserName), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' activated successfully!", user.UserName))
 	return c.Redirect("/users/"+id+"/details")
 }
 
@@ -341,10 +341,10 @@ func (ctrl *UserController) changeUserImage(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.ChangeUserImage(c.Context(), c, user.UserId)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(fmt.Sprintf("User '%s' added image", user.UserName), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' added image", user.UserName))
 	return c.Redirect("/user-data")
 }
 
@@ -374,9 +374,70 @@ func (ctrl *UserController) changePassword(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.ChangeUserPassword(c.Context(), loggedUser.UserId, request)
 	if err != nil {
-		ctrl.errorLogger.Error(err.Error())
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(fmt.Sprintf("User '%s' updated password", loggedUser.UserName), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated password", loggedUser.UserName))
 	return c.Redirect("/auth/login")
+}
+
+
+func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
+	var params helpers.PaginationParam
+	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	count, err := ctrl.service.CountUsers(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	if err := c.QueryParser(&params); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	users, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/active-users", fiber.Map{
+		"Title": "Active Users",
+		"Users": users,
+		"Count": count,
+		"LoggedUser": loggedUser,
+		"BasicConfig": basicConfig,
+	})
+}
+
+func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
+	var params helpers.PaginationParam
+	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	count, err := ctrl.service.CountUsers(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	if err := c.QueryParser(&params); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	users, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/inactive-users", fiber.Map{
+		"Title": "Inactive Users",
+		"Users": users,
+		"Count": count,
+		"LoggedUser": loggedUser,
+		"BasicConfig": basicConfig,
+	})
 }

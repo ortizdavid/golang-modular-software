@@ -3,11 +3,10 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +14,8 @@ type CompanyConfigurationController struct {
 	service *services.CompanyConfigurationService
 	basicConfigService *services.BasicConfigurationService
 	authService *authentication.AuthService
-	logger *zap.Logger
+	infoLogger *helpers.Logger
+	errorLogger *helpers.Logger
 }
 
 func NewCompanyConfigurationController(db *gorm.DB) *CompanyConfigurationController {
@@ -23,7 +23,8 @@ func NewCompanyConfigurationController(db *gorm.DB) *CompanyConfigurationControl
 		service:     services.NewCompanyConfigurationService(db),
 		basicConfigService: services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
-		logger: configurationLogger,
+		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -82,8 +83,9 @@ func (ctrl *CompanyConfigurationController) edit(c *fiber.Ctx) error {
 	}
 	err = ctrl.service.UpdateCompanyConfiguration(c.Context(), request)
 	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	ctrl.logger.Info(fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName), config.LogRequestPath(c))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName))
 	return c.Redirect("/email-configurations")
 }
