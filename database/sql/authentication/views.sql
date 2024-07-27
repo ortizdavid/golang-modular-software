@@ -23,7 +23,7 @@ SELECT  ur.user_role_id, ur.unique_id,
     us.user_id, us.user_name
 FROM authentication.user_roles ur
 JOIN authentication.roles ro ON(ro.role_id = ur.role_id)
-JOIN authentication.users us ON(us.role_id = ur.user_id)
+JOIN authentication.users us ON(us.user_id = ur.user_id)
 ORDER BY created_at DESC;
 
 
@@ -41,6 +41,6 @@ SELECT  pe.permission_id, pe.unique_id,
 FROM authentication.permissions pe
 JOIN authentication.permission_roles pr ON(pr.permission_id = pe.permission_id)
 JOIN authentication.roles ro ON(ro.role_id = pr.role_id)
-JOIN authentication.users us ON(ro.role_id = us.role_id)
+JOIN authentication.users us ON(us.user_id = pr.role_id)
 ORDER BY created_at DESC;
 

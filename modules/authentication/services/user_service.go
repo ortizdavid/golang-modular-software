@@ -33,6 +33,13 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	exists, err := s.repository.ExistsByName(ctx, request.UserName)
+	if err != nil {
+		return apperrors.NewNotFoundError(err.Error())
+	}
+	if exists {
+		return apperrors.NewConflictError("user "+request.UserName+" already exists")
+	}
 	user := entities.User{
 		UserId:    0,
 		UserName:  request.UserName,
@@ -45,7 +52,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
-	err := s.repository.Create(ctx, user)
+	err = s.repository.Create(ctx, user)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while creating user: "+ err.Error())
 	}
@@ -54,7 +61,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		return apperrors.NewNotFoundError("role not found")
 	}
 	userRole := entities.UserRole{
-		UserId:     user.UserId,
+		UserId:     s.repository.LastInsertId,
 		RoleId:     request.RoleId,
 		UniqueId:  encryption.GenerateUUID(),
 		CreatedAt: time.Now().UTC(),

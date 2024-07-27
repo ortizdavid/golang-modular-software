@@ -6,6 +6,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
+	seed "github.com/ortizdavid/golang-modular-software/database/seed"
 	"github.com/ortizdavid/golang-modular-software/modules"
 )
 
@@ -18,18 +19,29 @@ func NewApplication() (*Application, error) {
 	app := fiber.New(fiber.Config{
 		Views: config.GetTemplateEngine(),		
 	})
+
 	// Main database
 	dbConn, err := database.NewDBConnectionFromEnv("DATABASE_MAIN_URL")
 	if err != nil {
 		return nil, err
 	}
-	database := database.NewDatabase(dbConn.DB)
+	db := database.NewDatabase(dbConn.DB)
+
+	// Seed Database
+	if config.GetEnv("DATABASE_SEEDING_STATUS") == "false" {
+		if err := seed.SeedDatabase(db); err != nil {
+			return nil, err
+		}
+	}
+
 	// configure location of css, js, .jpg, .pdf and other files
 	config.ConfigStaticFiles(app)
+
 	// initialize all the middlewares needed
-	middlewares.InitializeMiddlewares(app, database)
+	middlewares.InitializeMiddlewares(app, db)
+	
 	// initialize all controllers containing routes of application
-	modules.RegisterControllers(app, database)
+	modules.RegisterControllers(app, db)
 	
 	return &Application{
 		App: app,

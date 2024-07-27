@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"gorm.io/gorm"
+	"github.com/ortizdavid/golang-modular-software/database"
 )
 
 const (
@@ -14,11 +14,11 @@ const (
 	configDir      = "configuration"
 	companyDir     = "company"
 	referenceDir   = "reference"
-	sqlScriptsBase = "../sql"
+	sqlScriptsBase = "./database/sql"
 )
 
 // execDatabaseScript executes a SQL script located in the specified directory.
-func execDatabaseScript(db *gorm.DB, directory, scriptFile string) error {
+func execDatabaseScript(db *database.Database, directory, scriptFile string) error {
 	scriptPath := filepath.Join(sqlScriptsBase, directory, scriptFile)
 	
 	scriptContent, err := os.ReadFile(scriptPath)
@@ -45,13 +45,13 @@ func execDatabaseScript(db *gorm.DB, directory, scriptFile string) error {
 }
 
 // execCreateSchemas creates database schemas.
-func execCreateSchemas(db *gorm.DB) error {
+func execCreateSchemas(db *database.Database) error {
 	log.Println("Executing schema creation scripts...")
 	return execDatabaseScript(db, structureDir, "schemas.sql")
 }
 
 // execAuthenticationScripts executes all authentication scripts.
-func execAuthenticationScripts(db *gorm.DB) error {
+func execAuthenticationScripts(db *database.Database) error {
 	log.Println("Executing authentication schema scripts...")
 	if err := execDatabaseScript(db, authDir, "tables.sql"); err != nil {
 		return err
@@ -60,7 +60,7 @@ func execAuthenticationScripts(db *gorm.DB) error {
 }
 
 // execConfigurationScripts executes all configuration scripts.
-func execConfigurationScripts(db *gorm.DB) error {
+func execConfigurationScripts(db *database.Database) error {
 	log.Println("Executing configuration schema scripts...")
 	if err := execDatabaseScript(db, configDir, "tables.sql"); err != nil {
 		return err
@@ -69,7 +69,7 @@ func execConfigurationScripts(db *gorm.DB) error {
 }
 
 // execCompanyScripts executes all company scripts.
-func execCompanyScripts(db *gorm.DB) error {
+func execCompanyScripts(db *database.Database) error {
 	log.Println("Executing company schema scripts...")
 	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
 		return err
@@ -78,7 +78,7 @@ func execCompanyScripts(db *gorm.DB) error {
 }
 
 // execReferenceScripts executes all reference scripts.
-func execReferenceScripts(db *gorm.DB) error {
+func execReferenceScripts(db *database.Database) error {
 	log.Println("Executing reference schema scripts...")
 	if err := execDatabaseScript(db, referenceDir, "tables.sql"); err != nil {
 		return err
@@ -87,7 +87,7 @@ func execReferenceScripts(db *gorm.DB) error {
 }
 
 // InitDatabaseScripts initializes and executes all database scripts.
-func InitDatabaseScripts(db *gorm.DB) error {
+func InitDatabaseScripts(db *database.Database) error {
 	log.Println("Connected to Database...")
 	log.Println("Executing database scripts...")
 

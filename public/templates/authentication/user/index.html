@@ -1,0 +1,63 @@
+{{ template "partials/header-back" . }}
+
+    <div class="card">
+        <div class="card-header">
+            <div align="right">
+                <a href="/users/add" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-circle btn-sm"></i>
+                    Add
+                </a>
+                <a href="/users/search" class="btn btn-primary btn-sm">
+                    <i class="bi bi-search btn-sm"></i>
+                    Search
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {{ if .Count }}
+                <p>Total : {{ .Count }}</p>
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>User</th>
+                            <th>Profile</th>
+                            <th>Active?</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range .Users }}
+                            <tr class=" {{ if eq .Active "Yes"}} alert-success {{ else }} alert-danger {{ end }}">
+                                <td class="collapsing">{{ .UserId }}</td>
+                                <td>{{ .UserName }}</td>
+                                <td>{{ .RoleName }}</td>
+                                <td>{{ .Active }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details" data-toggle="tooltip" title="Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+                <div>
+                    {{ if .Pagination.PrevPage }}
+                        <a href="/users?page={{ .Pagination.PrevPage }}" class="btn btn-link"><< Página Anterior</a> | 
+                    {{ end }}
+                    {{ if .Pagination.NextPage }}
+                        <a href="/users?page={{ .Pagination.NextPage }}" class="btn btn-link">Próxima Página >></a>
+                    {{ end }}
+                </div>
+            {{ else }}
+                <div class="alert alert-warning">
+                    Nenhum Registo Encontrado!
+                </div>
+            {{ end }}
+        </div>
+        <div class="card footer">
+        </div>
+    </div>
+        
+{{ template "partials/footer-back" . }}

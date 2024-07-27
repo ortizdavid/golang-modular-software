@@ -141,6 +141,12 @@ func (repo *UserRepository) Exists(ctx context.Context, userName string, passwor
 	return user.UserId !=0 , result.Error
 }
 
+func (repo *UserRepository) ExistsByName(ctx context.Context, userName string) (bool, error) {
+	var user entities.User
+	result := repo.db.WithContext(ctx).Where("user_name=?", userName).Find(&user)
+	return user.UserId !=0 , result.Error
+}
+
 func (repo *UserRepository) ExistsActive(ctx context.Context, userName string, password string) (bool, error) {
 	var user entities.User
 	result := repo.db.WithContext(ctx).Where("user_name=? AND password=? AND active='Yes'", userName, password).Find(&user)

@@ -17,7 +17,7 @@ CREATE TABLE authentication.users (
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(200) NOT NULL,
     user_image VARCHAR(100), 
-    is_active BOOLEAN,
+    is_active BOOLEAN DEFAULT TRUE,
     token VARCHAR(150) UNIQUE,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -32,7 +32,7 @@ CREATE TABLE authentication.user_roles (
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.user(user_id),
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id),
     CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id)
 );
 
@@ -65,4 +65,4 @@ INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super
 INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
 -- Default user: used to manage application
-INSERT INTO authentication.users (role_id, user_name, password) VALUES (2, 'admin@user.com', '$2a$10$9VE1S3YfjRPA5Hu7ZAV.ROy9M8aQsEAy0t2AgrCnzoDpEqhbunspq');
+INSERT INTO authentication.users (user_name, email,  password) VALUES ('admin@user.com', 'admin@user.com', '$2a$10$9VE1S3YfjRPA5Hu7ZAV.ROy9M8aQsEAy0t2AgrCnzoDpEqhbunspq');

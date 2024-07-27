@@ -8,7 +8,7 @@ type UserRole struct {
     RoleId     int `gorm:"column:role_id"`
     UniqueId   string `gorm:"column:unique_id"`
     CreatedAt  time.Time `gorm:"column:created_at"`
-    UpdatedAt  time.Time `gorm:"column:updted_at"`
+    UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
 func (UserRole) TableName() string {
