@@ -5,13 +5,12 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type RoleController struct {
 	service *services.RoleService
-	authService *authentication.AuthService
+	authService *services.AuthService
 	configService *configurations.BasicConfigurationService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
@@ -19,21 +18,19 @@ type RoleController struct {
 
 func NewRoleController(db *database.Database) *RoleController {
 	return &RoleController{
-		service:       authentication.NewRoleService(db),
-		authService:   authentication.NewAuthService(db),
+		service:       services.NewRoleService(db),
+		authService:   services.NewAuthService(db),
 		configService: configurations.NewBasicConfigurationService(db),
 		infoLogger:    helpers.NewInfoLogger("users-info.log"),
 		errorLogger:   helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
-
 func (ctrl *RoleController) Routes(router *fiber.App) {
 	group := router.Group("/roles")
 	group.Get("/", ctrl.index)
 	group.Get("/create", ctrl.createForm)
 }
-
 
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
 	var params helpers.PaginationParam

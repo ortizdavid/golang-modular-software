@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-	"gorm.io/gorm"
 )
 
 type AuthorizationMiddleware struct {
@@ -11,7 +11,7 @@ type AuthorizationMiddleware struct {
 	userService *authentication.UserService
 }
 
-func NewAuthorizationMiddleware(db *gorm.DB) *AuthorizationMiddleware {
+func NewAuthorizationMiddleware(db *database.Database) *AuthorizationMiddleware {
 	return &AuthorizationMiddleware{
 		authService: authentication.NewAuthService(db),
 		userService: authentication.NewUserService(db),

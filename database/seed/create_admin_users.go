@@ -5,12 +5,12 @@ import (
 	"log"
 	"time"
 	"github.com/ortizdavid/go-nopain/encryption"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
-	"gorm.io/gorm"
 )
 
-func CreateAdminUsers(db *gorm.DB) {
+func CreateAdminUsers(db *database.Database) {
 	repository := repositories.NewUserRepository(db)
 	ctx := context.Background()
 	users := []entities.User{

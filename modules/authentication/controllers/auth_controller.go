@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -43,20 +42,13 @@ func (auth AuthController) Routes(router *fiber.App) {
 	group.Post("/get-recover-link", auth.getRecoverLink)
 }
 
-
 func (ctrl *AuthController) index(c *fiber.Ctx) error {
 	return c.Redirect("/auth/login")
 }
 
-
 func (ctrl *AuthController) loginForm(c *fiber.Ctx) error {
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
 	return c.Render("authentication/auth/login", fiber.Map{
 		"Title": "Authentication",
-		"BasicConfig": basicConfig,
 	})
 }
 
@@ -74,7 +66,6 @@ func (ctrl *AuthController) login(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).Redirect("/home")
 }
 
-
 func (ctrl *AuthController) logout(c *fiber.Ctx) error {
 	loggedUser, err := ctrl.service.GetLoggedUser(c.Context(), c)
 	if err != nil {
@@ -89,24 +80,17 @@ func (ctrl *AuthController) logout(c *fiber.Ctx) error {
 	return c.Redirect("/auth/login")
 }
 
-
 func (ctrl *AuthController) recoverPasswordForm(c *fiber.Ctx) error {
 	token := c.Params("token")
 	user, err := ctrl.userService.GetUserByToken(c.Context(), token)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
 	return c.Render("authentication/auth/recover-password", fiber.Map{
 		"Title": "Password Recover",
 		"User": user,
-		"BasicConfig": basicConfig,
 	})
 }
-
 
 func (ctrl *AuthController) recoverPassword(c *fiber.Ctx) error {
 	var request entities.RecoverPasswordRequest
@@ -127,18 +111,11 @@ func (ctrl *AuthController) recoverPassword(c *fiber.Ctx) error {
 	return c.Redirect("/auth/login")
 }
 
-
 func (ctrl *AuthController) getRecoverLinkForm(c *fiber.Ctx) error {
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
 	return c.Render("authentication/get-recover-link", fiber.Map{
 		"Title": "Get Recovery Link",
-		"BasicConfig": basicConfig,
 	})
 }
-
 
 func (ctrl *AuthController) getRecoverLink(c *fiber.Ctx) error {
 	var request entities.GetRecoverLinkRequest

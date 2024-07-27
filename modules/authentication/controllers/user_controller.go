@@ -8,7 +8,6 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
@@ -23,9 +22,9 @@ type UserController struct {
 
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
-		service:       authentication.NewUserService(db),
-		roleService:   authentication.NewRoleService(db),
-		authService:   authentication.NewAuthService(db),
+		service:       services.NewUserService(db),
+		roleService:   services.NewRoleService(db),
+		authService:   services.NewAuthService(db),
 		configService: configurations.NewBasicConfigurationService(db),
 		infoLogger:    helpers.NewInfoLogger("users-info.log"),
 		errorLogger:   helpers.NewInfoLogger("users-error.log"),
@@ -50,8 +49,8 @@ func (ctrl *UserController) Routes(router *fiber.App) {
 	group.Get("/search-results", ctrl.search)
 	router.Get("/change-password", ctrl.changePasswordForm)
 	router.Post("/change-password", ctrl.changePassword)
-	router.Get("/active-users", ctrl.changePasswordForm)
-	router.Post("/inactive-users", ctrl.changePassword)
+	router.Get("/active-users", ctrl.getAllActiveUsers)
+	router.Post("/inactive-users", ctrl.getAllInactiveUsers)
 }
 
 func (ctrl *UserController) index(c *fiber.Ctx) error {
@@ -173,6 +172,9 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
 	var request entities.AssignUserRoleRequest
 	if err := c.BodyParser(&request); err != nil {
 		return helpers.HandleHttpErrors(c, err)
