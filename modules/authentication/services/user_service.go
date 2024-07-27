@@ -262,6 +262,22 @@ func (s *UserService) GetUserByUniqueId(ctx context.Context, uniqueId string) (e
 	return user, nil
 }
 
+func (s *UserService) GetUserByToken(ctx context.Context, token string) (entities.User, error) {
+	user, err := s.repository.FindByToken(ctx, token)
+	if err != nil {
+		return entities.User{}, apperrors.NewNotFoundError("user not found")
+	}
+	return user, nil
+}
+
+func (s *UserService) GetUserByEmail(ctx context.Context, token string) (entities.User, error) {
+	user, err := s.repository.FindByEmail(ctx, token)
+	if err != nil {
+		return entities.User{}, apperrors.NewNotFoundError("user not found")
+	}
+	return user, nil
+}
+
 func (s *UserService) UserHasRoles(ctx context.Context, userId int64, comparedRoles ...string) (bool, error) {
 	for _, user := range comparedRoles {
 		exists, err := s.roleRepository.ExistsByCode(ctx, user)

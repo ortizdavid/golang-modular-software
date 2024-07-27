@@ -2,7 +2,6 @@ package application
 
 import (
 	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
@@ -19,17 +18,15 @@ func NewApplication() (*Application, error) {
 	app := fiber.New(fiber.Config{
 		Views: config.GetTemplateEngine(),		
 	})
-
 	// Main database
-	dbConn, err := database.NewDBConnectionFromEnv("DATABASE_URL")
+	dbConn, err := database.NewDBConnectionFromEnv("DATABASE_MAIN_URL")
 	if err != nil {
 		return nil, err
 	}
-
 	// configure location of css, js, .jpg, .pdf and other files
 	config.ConfigStaticFiles(app)
 	// initialize all the middlewares needed
-	middlewares.InitializeMiddlewares(app)
+	middlewares.InitializeMiddlewares(app, dbConn.DB)
 	// initialize all controllers containing routes of application
 	modules.RegisterControllers(app, dbConn.DB)
 	

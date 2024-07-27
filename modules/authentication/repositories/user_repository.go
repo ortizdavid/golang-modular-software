@@ -83,6 +83,12 @@ func (repo *UserRepository) FindByToken(ctx context.Context, token string) (enti
 	return user, result.Error
 }
 
+func (repo *UserRepository) FindByEmail(ctx context.Context, email string) (entities.User, error) {
+	var user entities.User
+	result := repo.db.WithContext(ctx).First(&user, "email=?", email)
+	return user, result.Error
+}
+
 func (repo *UserRepository) Search(ctx context.Context, param interface{}, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
 	result := repo.db.WithContext(ctx).

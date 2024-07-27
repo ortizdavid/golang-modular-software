@@ -40,12 +40,3 @@ func (req AssignUserRoleRequest) Validate() error {
 	return nil
 }
 
-// -- Login
-type LoginRequest struct {
-	UserName	string `json:"user_name"`
-	Password	string `json:"password"`
-}	
-
-func (req LoginRequest) Validate() error {
-	return nil
-}

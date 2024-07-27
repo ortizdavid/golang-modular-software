@@ -1,9 +1,9 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"time"
-
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -26,7 +26,7 @@ type ConnPoolConfig struct {
 func NewDBConnection(dbURL string) (*DBConnection, error) {
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect database: %v", err.Error())
 	}
 	// Create DBConnection struct with default pool settings
 	dbConn := &DBConnection{

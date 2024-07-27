@@ -2,10 +2,7 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/go-nopain/encryption"
-	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	services "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -15,7 +12,9 @@ import (
 
 type AuthController struct {
 	service *services.AuthService
+	userService *services.UserService
 	configService *configurations.BasicConfigurationService
+	emailConfigService *configurations.EmailConfigurationService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
 }
@@ -23,7 +22,9 @@ type AuthController struct {
 func NewAuthController(db *gorm.DB) *AuthController {
 	return &AuthController{
 		service:       services.NewAuthService(db),
+		userService:   services.NewUserService(db),
 		configService: configurations.NewBasicConfigurationService(db),
+		emailConfigService: configurations.NewEmailConfigurationService(db),
 		infoLogger:    helpers.NewInfoLogger("auth-info.log"),
 		errorLogger:   helpers.NewInfoLogger("auth-error.log"),
 	}
@@ -48,8 +49,13 @@ func (ctrl *AuthController) index(c *fiber.Ctx) error {
 
 
 func (ctrl *AuthController) loginForm(c *fiber.Ctx) error {
-	return c.Render("authentication/login", fiber.Map{
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/auth/login", fiber.Map{
 		"Title": "Authentication",
+		"BasicConfig": basicConfig,
 	})
 }
 
@@ -69,84 +75,84 @@ func (ctrl *AuthController) login(c *fiber.Ctx) error {
 
 
 func (ctrl *AuthController) logout(c *fiber.Ctx) error {
-	loggedUser := models.GetLoggedUser(c)
-	userName := loggedUser.UserName
-	store := config.GetSessionStore()
-	session, _ := store.Get(c)
-	session.Destroy()
-	authLogger.Info(fmt.Sprintf("User '%s' logged out", userName))
+	loggedUser, err := ctrl.service.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.service.Logout(c.Context(), c)
+	if err != nil {
+		ctrl.errorLogger.Error(c, fmt.Sprintf("User '%s' failed to logout", loggedUser.UserName))
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' logged out", loggedUser.UserName))
 	return c.Redirect("/auth/login")
 }
 
 
 func (ctrl *AuthController) recoverPasswordForm(c *fiber.Ctx) error {
 	token := c.Params("token")
-	user, _ := models.UserModel{}.FindByToken(token)
-	return c.Render("authentication/recover-password", fiber.Map{
-		"Title": "Recuperação da Senha",
+	user, err := ctrl.userService.GetUserByToken(c.Context(), token)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/auth/recover-password", fiber.Map{
+		"Title": "Password Recover",
 		"User": user,
+		"BasicConfig": basicConfig,
 	})
 }
 
 
 func (ctrl *AuthController) recoverPassword(c *fiber.Ctx) error {
-	password := c.FormValue("password")
-	//passwordConf := c.FormValue("password_conf")
+	var request entities.RecoverPasswordRequest
 	token := c.Params("token")
-	var userModel models.UserModel
-	
-	user, _ := userModel.FindByToken(token)
-	user.Password = encryption.HashPassword(password)
-	_, err := userModel.Update(user)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
-	//enviar os credenciais por email
-	emailService := configurations.DefaultEmailService()
-	htmlBody := `
-		<html>
-			<body>
-				<h1>Password Changed!</h1>
-				<p>Hello, `+user.UserName+`!</p>
-				<p>Your new password: <b>`+password+`</b></p>
-			</body>
-		</html>`
-	err = emailService.SendHTMLEmail(user.UserName, "New Password", htmlBody)
+	user, err := ctrl.userService.GetUserByToken(c.Context(), token)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
-	authLogger.Info(fmt.Sprintf("User '%s' recovered password", user.UserName))
+	err = ctrl.service.RecoverPassword(c.Context(), c, user, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' recovered password", user.UserName))
 	return c.Redirect("/auth/login")
 }
 
 
 func (ctrl *AuthController) getRecoverLinkForm(c *fiber.Ctx) error {
+	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
 	return c.Render("authentication/get-recover-link", fiber.Map{
 		"Title": "Get Recovery Link",
+		"BasicConfig": basicConfig,
 	})
 }
 
 
 func (ctrl *AuthController) getRecoverLink(c *fiber.Ctx) error {
-	email := c.FormValue("email")
-	var userModel models.UserModel
-	user, _ := userModel.FindByUserName(email)
-	
-	//enviar os credenciais por email
-	emailService := configurations.DefaultEmailService()
-	recoverLink := fmt.Sprintf("%s/auth/recover-password/%s", c.BaseURL(), user.Token)
-	htmlBody := `
-		<html>
-			<body>
-				<h1>Password Recovery!</h1>
-				<p>Hello, `+user.UserName+`!</p>
-				<p>To recover password Click <a href="`+recoverLink+`">Here</a></p>
-			</body>
-		</html>`
-	err := emailService.SendHTMLEmail(user.UserName, "Password Recovery", htmlBody)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	var request entities.GetRecoverLinkRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
-	authLogger.Info(fmt.Sprintf("User '%s' recovered password", email))
+	user, err := ctrl.userService.GetUserByEmail(c.Context(), request.Email)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.service.GetRecoverLink(c.Context(), c, user, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' recovered password", user.UserName))
 	return c.Redirect("/auth/get-recover-link")
 }

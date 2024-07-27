@@ -36,8 +36,9 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 
 func (s *BasicConfigurationService) GetBasicConfiguration(ctx context.Context) (entities.BasicConfiguration, error) {
 	conf, err := s.repository.FindFirst(ctx)
-	if conf.MaxRecordsPerPage < 5 {
-		conf.MaxRecordsPerPage = 5
+	maxRecords := 20
+	if conf.MaxRecordsPerPage < maxRecords {
+		conf.MaxRecordsPerPage = maxRecords
 		s.repository.Update(ctx, conf)
 	}
 	return conf, err

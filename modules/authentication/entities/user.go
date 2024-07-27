@@ -31,10 +31,3 @@ type UserData struct {
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
-
-/*s.user_id, us.unique_id,
-	us.user_name, us.email,
-    us.password, us.active, 
-    us.user_image, us.token, 
-	TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
-    TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,*/
