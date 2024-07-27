@@ -9,10 +9,10 @@ import (
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/database"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"gorm.io/gorm"
 )
 
 type AuthService struct {
@@ -20,7 +20,7 @@ type AuthService struct {
 	emailService *configurations.EmailConfigurationService
 }
 
-func NewAuthService(db *gorm.DB) *AuthService {
+func NewAuthService(db *database.Database) *AuthService {
 	return &AuthService{
 		repository: repositories.NewUserRepository(db),
 		emailService: configurations.NewEmailConfigurationService(db),

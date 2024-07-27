@@ -3,17 +3,18 @@ package services
 import (
 	"context"
 	"fmt"
+
 	"github.com/ortizdavid/go-nopain/mailer"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
-	"gorm.io/gorm"
 )
 
 type EmailConfigurationService struct {
 	repository *repositories.EmailConfigurationRepository
 }
 
-func NewEmailConfigurationService(db *gorm.DB) *EmailConfigurationService {
+func NewEmailConfigurationService(db *database.Database) *EmailConfigurationService {
 	return &EmailConfigurationService{
 		repository: repositories.NewEmailConfigurationRepository(db),
 	}

@@ -2,15 +2,16 @@ package repositories
 
 import (
 	"context"
+
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
-	"gorm.io/gorm"
 )
 
 type CompanyConfigurationRepository struct {
-	db *gorm.DB
+	db *database.Database
 }
 
-func NewCompanyConfigurationRepository(db *gorm.DB) *CompanyConfigurationRepository {
+func NewCompanyConfigurationRepository(db *database.Database) *CompanyConfigurationRepository {
 	return &CompanyConfigurationRepository{
 		db: db,
 	}

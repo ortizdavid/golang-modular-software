@@ -4,16 +4,16 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
-	"gorm.io/gorm"
 )
 
 type CompanyConfigurationService struct {
 	repository *repositories.CompanyConfigurationRepository
 }
 
-func NewCompanyConfigurationService(db *gorm.DB) *CompanyConfigurationService {
+func NewCompanyConfigurationService(db *database.Database) *CompanyConfigurationService {
 	return &CompanyConfigurationService{
 		repository: repositories.NewCompanyConfigurationRepository(db),
 	}

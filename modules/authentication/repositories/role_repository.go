@@ -2,15 +2,15 @@ package repositories
 
 import (
 	"context"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
-	"gorm.io/gorm"
 )
 
 type RoleRepository struct {
-	db *gorm.DB
+	db *database.Database
 }
 
-func NewRoleRepository(db *gorm.DB) *RoleRepository {
+func NewRoleRepository(db *database.Database) *RoleRepository {
 	return &RoleRepository {
 		db: db,
 	}

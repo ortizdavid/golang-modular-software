@@ -2,13 +2,13 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
+	"github.com/ortizdavid/golang-modular-software/database"
 )
 
 type CompanyApi struct {
 }
 
-func NewCompanyApi(db *gorm.DB) *CompanyApi {
+func NewCompanyApi(db *database.Database) *CompanyApi {
 	return &CompanyApi{}
 }
 

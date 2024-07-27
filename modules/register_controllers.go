@@ -2,14 +2,14 @@ package modules
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication"
-	"github.com/ortizdavid/golang-modular-software/modules/configurations"
 	"github.com/ortizdavid/golang-modular-software/modules/company"
-	"gorm.io/gorm"
+	"github.com/ortizdavid/golang-modular-software/modules/configurations"
 )
 
 // RegisterControllers initializes and registers controllers (routes) from different modules
-func RegisterControllers(router *fiber.App, db *gorm.DB) {
+func RegisterControllers(router *fiber.App, db *database.Database) {
 	// Register routes for configurations module
 	configurations.RegisterModuleRoutes(router, db)
 

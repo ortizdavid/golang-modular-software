@@ -1,89 +1,107 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"gorm.io/gorm"
 )
 
-
 const (
-	structureDir = "_structure"
-	authDir = "authentication"
-	configDir = "configuration"
-	companyDir = "company"
-	referenceDir = "reference"
+	structureDir   = "_structure"
+	authDir        = "authentication"
+	configDir      = "configuration"
+	companyDir     = "company"
+	referenceDir   = "reference"
+	sqlScriptsBase = "../sql"
 )
 
-// Execute a sql script located in a directory
-func execDatabaseScript(db *gorm.DB, directory string, scriptFile string) {
-	parentDir := "../sql"
-	scriptDir := filepath.Join(parentDir, directory)
-	scriptPath := filepath.Join(scriptDir, scriptFile)
-	// Read script
+// execDatabaseScript executes a SQL script located in the specified directory.
+func execDatabaseScript(db *gorm.DB, directory, scriptFile string) error {
+	scriptPath := filepath.Join(sqlScriptsBase, directory, scriptFile)
+	
 	scriptContent, err := os.ReadFile(scriptPath)
 	if err != nil {
-		log.Fatalf("Failed to read script '%s': %v", scriptFile, err)
+		return fmt.Errorf("failed to read script '%s': %w", scriptFile, err)
 	}
-	// start transaction
+
 	tx := db.Begin()
-	// execute scrpt content
-	result := db.Exec(string(scriptContent))
-	if result.Error != nil {
-		tx.Rollback() //Rollback transaction
-		log.Fatalf("Error executing script '%s': %v", scriptFile, result.Error)
+	if err := tx.Error; err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	//commit transaction
-	commit := tx.Commit()
-	if commit.Error != nil {
-		log.Fatalf("Error committing transaction for script '%s': %v", scriptFile, commit.Error)
+
+	if err := tx.Exec(string(scriptContent)).Error; err != nil {
+		tx.Rollback()
+		return fmt.Errorf("error executing script '%s': %w", scriptFile, err)
 	}
+
+	if err := tx.Commit().Error; err != nil {
+		return fmt.Errorf("error committing transaction for script '%s': %w", scriptFile, err)
+	}
+
 	log.Printf("Script '%s' executed successfully!\n", scriptPath)
+	return nil
 }
 
-// Create database schemas
-func execCreateScemas(db *gorm.DB) {
-	log.Printf("Executing schema creation scripts...")
-	execDatabaseScript(db, structureDir, "schemas.sql")
+// execCreateSchemas creates database schemas.
+func execCreateSchemas(db *gorm.DB) error {
+	log.Println("Executing schema creation scripts...")
+	return execDatabaseScript(db, structureDir, "schemas.sql")
 }
 
-// execute all authentication scripts
-func execAuthenticationScripts(db *gorm.DB) {
-	log.Printf("Executing authentication schema scripts...")
-	execDatabaseScript(db, authDir, "tables.sql")
-	execDatabaseScript(db, authDir, "views.sql")
+// execAuthenticationScripts executes all authentication scripts.
+func execAuthenticationScripts(db *gorm.DB) error {
+	log.Println("Executing authentication schema scripts...")
+	if err := execDatabaseScript(db, authDir, "tables.sql"); err != nil {
+		return err
+	}
+	return execDatabaseScript(db, authDir, "views.sql")
 }
 
-// execute all configuration scripts
-func execConfigurationScripts(db *gorm.DB) {
-	log.Printf("Executing configurationn schema scripts...")
-	execDatabaseScript(db, configDir, "tables.sql")
-	execDatabaseScript(db, configDir, "views.sql")
+// execConfigurationScripts executes all configuration scripts.
+func execConfigurationScripts(db *gorm.DB) error {
+	log.Println("Executing configuration schema scripts...")
+	if err := execDatabaseScript(db, configDir, "tables.sql"); err != nil {
+		return err
+	}
+	return execDatabaseScript(db, configDir, "views.sql")
 }
 
-// execute all company scripts
-func execCompanyScripts(db *gorm.DB) {
-	log.Printf("Executing company schema scripts...")
-	execDatabaseScript(db, companyDir, "tables.sql")
-	execDatabaseScript(db, companyDir, "views.sql")
+// execCompanyScripts executes all company scripts.
+func execCompanyScripts(db *gorm.DB) error {
+	log.Println("Executing company schema scripts...")
+	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
+		return err
+	}
+	return execDatabaseScript(db, companyDir, "views.sql")
 }
 
-// execute all reference scripts
-func execReferenceScripts(db *gorm.DB) {
-	log.Printf("Executing reference schema scripts...")
-	execDatabaseScript(db, referenceDir, "tables.sql")
-	execDatabaseScript(db, referenceDir, "views.sql")
+// execReferenceScripts executes all reference scripts.
+func execReferenceScripts(db *gorm.DB) error {
+	log.Println("Executing reference schema scripts...")
+	if err := execDatabaseScript(db, referenceDir, "tables.sql"); err != nil {
+		return err
+	}
+	return execDatabaseScript(db, referenceDir, "views.sql")
 }
 
-
-func InitDatabaseScripts(db *gorm.DB) {
-	log.Printf("Connected to Database ...\n\n")
-
+// InitDatabaseScripts initializes and executes all database scripts.
+func InitDatabaseScripts(db *gorm.DB) error {
+	log.Println("Connected to Database...")
 	log.Println("Executing database scripts...")
-	execCreateScemas(db)
-	execAuthenticationScripts(db)
-	execConfigurationScripts(db)
-	execCompanyScripts(db)
-	execReferenceScripts(db)
+
+	if err := execCreateSchemas(db); err != nil {
+		return err
+	}
+	if err := execAuthenticationScripts(db); err != nil {
+		return err
+	}
+	if err := execConfigurationScripts(db); err != nil {
+		return err
+	}
+	if err := execCompanyScripts(db); err != nil {
+		return err
+	}
+	return execReferenceScripts(db)
 }

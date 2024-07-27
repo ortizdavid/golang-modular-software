@@ -3,10 +3,10 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"gorm.io/gorm"
 )
 
 type RoleController struct {
@@ -17,7 +17,7 @@ type RoleController struct {
 	errorLogger *helpers.Logger
 }
 
-func NewRoleController(db *gorm.DB) *RoleController {
+func NewRoleController(db *database.Database) *RoleController {
 	return &RoleController{
 		service:       authentication.NewRoleService(db),
 		authService:   authentication.NewAuthService(db),

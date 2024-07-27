@@ -2,12 +2,13 @@ package api
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"gorm.io/gorm"
 )
 
 type CompanyConfigurationApi struct {
@@ -18,7 +19,7 @@ type CompanyConfigurationApi struct {
 	errorLogger *helpers.Logger
 }
 
-func NewCompanyConfigurationApi(db *gorm.DB) *CompanyConfigurationApi {
+func NewCompanyConfigurationApi(db *database.Database) *CompanyConfigurationApi {
 	return &CompanyConfigurationApi{
 		service:     services.NewCompanyConfigurationService(db),
 		basicConfigService: services.NewBasicConfigurationService(db),

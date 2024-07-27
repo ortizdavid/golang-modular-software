@@ -10,9 +10,9 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/database"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
-	"gorm.io/gorm"
 )
 
 type UserService struct {
@@ -21,7 +21,7 @@ type UserService struct {
 	userRoleRepository *repositories.UserRoleRepository
 }
 
-func NewUserService(db *gorm.DB) *UserService {
+func NewUserService(db *database.Database) *UserService {
 	return &UserService{
 		repository: repositories.NewUserRepository(db),
 		roleRepository: repositories.NewRoleRepository(db),

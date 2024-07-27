@@ -2,15 +2,16 @@ package repositories
 
 import (
 	"context"
+
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
-	"gorm.io/gorm"
 )
 
 type EmailConfigurationRepository struct {
-	db *gorm.DB
+	db *database.Database
 }
 
-func NewEmailConfigurationRepository(db *gorm.DB) *EmailConfigurationRepository {
+func NewEmailConfigurationRepository(db *database.Database) *EmailConfigurationRepository {
 	return &EmailConfigurationRepository{
 		db: db,
 	}

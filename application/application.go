@@ -23,12 +23,13 @@ func NewApplication() (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
+	database := database.NewDatabase(dbConn.DB)
 	// configure location of css, js, .jpg, .pdf and other files
 	config.ConfigStaticFiles(app)
 	// initialize all the middlewares needed
-	middlewares.InitializeMiddlewares(app, dbConn.DB)
+	middlewares.InitializeMiddlewares(app, database)
 	// initialize all controllers containing routes of application
-	modules.RegisterControllers(app, dbConn.DB)
+	modules.RegisterControllers(app, database)
 	
 	return &Application{
 		App: app,

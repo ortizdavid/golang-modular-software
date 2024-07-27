@@ -2,12 +2,13 @@ package controllers
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	services "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"gorm.io/gorm"
 )
 
 type AuthController struct {
@@ -19,7 +20,7 @@ type AuthController struct {
 	errorLogger *helpers.Logger
 }
 
-func NewAuthController(db *gorm.DB) *AuthController {
+func NewAuthController(db *database.Database) *AuthController {
 	return &AuthController{
 		service:       services.NewAuthService(db),
 		userService:   services.NewUserService(db),

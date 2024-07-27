@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
+	"github.com/ortizdavid/golang-modular-software/database"
 )
 
-func RegisterApiRoutes(router *fiber.App, db *gorm.DB) {
+func RegisterApiRoutes(router *fiber.App, db *database.Database) {
 
 }

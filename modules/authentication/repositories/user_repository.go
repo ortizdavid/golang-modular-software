@@ -2,16 +2,16 @@ package repositories
 
 import (
 	"context"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
-	"gorm.io/gorm"
 )
 
 type UserRepository struct {
-	db *gorm.DB
+	db *database.Database
 	LastInsertId int64
 }
 
-func NewUserRepository(db *gorm.DB) *UserRepository {
+func NewUserRepository(db *database.Database) *UserRepository {
 	return &UserRepository{
 		db: db,
 	}

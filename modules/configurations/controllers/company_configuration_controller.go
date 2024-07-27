@@ -2,12 +2,13 @@ package controllers
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	"gorm.io/gorm"
 )
 
 type CompanyConfigurationController struct {
@@ -18,7 +19,7 @@ type CompanyConfigurationController struct {
 	errorLogger *helpers.Logger
 }
 
-func NewCompanyConfigurationController(db *gorm.DB) *CompanyConfigurationController {
+func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurationController {
 	return &CompanyConfigurationController{
 		service:     services.NewCompanyConfigurationService(db),
 		basicConfigService: services.NewBasicConfigurationService(db),

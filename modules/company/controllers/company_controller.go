@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
+	"github.com/ortizdavid/golang-modular-software/database"
 )
 
 type CompanyController struct {
 }
 
-func NewCompanyController(db *gorm.DB) *CompanyController {
+func NewCompanyController(db *database.Database) *CompanyController {
 	return &CompanyController{}
 }
 

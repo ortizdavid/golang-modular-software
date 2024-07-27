@@ -3,20 +3,21 @@ package services
 import (
 	"context"
 	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
-	"gorm.io/gorm"
 )
 
 type RoleService struct {
 	repository *repositories.RoleRepository
 }
 
-func NewRoleService(db *gorm.DB) *RoleService {
+func NewRoleService(db *database.Database) *RoleService {
 	return &RoleService{
 		repository: repositories.NewRoleRepository(db),
 	}
