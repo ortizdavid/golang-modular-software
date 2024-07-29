@@ -3,12 +3,14 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
@@ -18,12 +20,14 @@ import (
 type AuthService struct {
 	repository *repositories.UserRepository
 	emailService *configurations.EmailConfigurationService
+	loginActRepository *repositories.LoginActivityRepository
 }
 
 func NewAuthService(db *database.Database) *AuthService {
 	return &AuthService{
 		repository: repositories.NewUserRepository(db),
 		emailService: configurations.NewEmailConfigurationService(db),
+		loginActRepository: repositories.NewLoginActivityRepository(db),
 	}
 }
 
@@ -61,9 +65,25 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	if err := session.Save(); err != nil {
 		return apperrors.NewInternalServerError(err.Error())
 	}
-	//Update Token
+	//Mark as logged and Update Token
+	user.IsLogged = true;
 	user.Token = encryption.GenerateRandomToken()
 	if err := s.repository.Update(ctx, user); err != nil {
+		return apperrors.NewInternalServerError(err.Error())
+	}
+	//Update Login Activity------------------------------------------------------------
+	loginAct, err := s.loginActRepository.FindByUserId(ctx, user.UserId)
+	if err != nil {
+		return apperrors.NewInternalServerError("User activity not found: "+err.Error())
+	}
+	loginAct.Status = entities.ActivityStatusOnline
+	loginAct.Host = fiberCtx.Hostname()
+	loginAct.Browser = string(fiberCtx.Context().UserAgent())
+	loginAct.LastLogin = time.Now().UTC()
+	loginAct.IPAddress = fiberCtx.IP() 
+	loginAct.Device = fiberCtx.Get("Device") 
+	loginAct.Location = fiberCtx.Get("Location") 
+	if err := s.loginActRepository.Update(ctx, loginAct); err != nil {
 		return apperrors.NewInternalServerError(err.Error())
 	}
 	return nil
@@ -75,6 +95,33 @@ func (s *AuthService) Logout(ctx context.Context, fiberCtx *fiber.Ctx) error {
 	if err != nil {
 		return apperrors.NewInternalServerError("Error while get session store: " +err.Error())
 	}
+	// Mark as not logged
+	loggedUser, err := s.GetLoggedUser(ctx, fiberCtx)
+	if err != nil {
+		return err
+	}
+	user, _ := s.repository.FindById(ctx, loggedUser.UserId)
+	user.IsLogged = false
+	err = s.repository.Update(ctx, user)
+	if err != nil {
+		return apperrors.NewInternalServerError(err.Error())
+	}
+	//Update Login Activity--------------------------------------------------------
+	loginAct, err := s.loginActRepository.FindByUserId(ctx, user.UserId)
+	if err != nil {
+		return apperrors.NewInternalServerError("User activity not found: "+err.Error())
+	}
+	loginAct.Status = entities.ActivityStatusOffline
+	loginAct.Host = fiberCtx.Hostname()
+	loginAct.Browser = string(fiberCtx.Context().UserAgent())
+	loginAct.LastLogout = time.Now().UTC()
+	loginAct.IPAddress = fiberCtx.IP() 
+	loginAct.Device = fiberCtx.Get("Device") 
+	loginAct.Location = fiberCtx.Get("Location") 
+	if err := s.loginActRepository.Update(ctx, loginAct); err != nil {
+		return apperrors.NewInternalServerError(err.Error())
+	}
+	//----- Destroy session
 	session.Destroy()
 	if err := session.Save(); err != nil {
 		return apperrors.NewInternalServerError("Error while destroying session: " +err.Error())
@@ -96,14 +143,7 @@ func (s *AuthService) RecoverPassword(ctx context.Context, fiberCtx *fiber.Ctx, 
 	if err != nil {
 		return apperrors.NewInternalServerError("Error while getting Email service: "+err.Error())
 	}
-	htmlBody := `
-		<html>
-			<body>
-				<h1>Password Changed!</h1>
-				<p>Hello, `+user.UserName+`!</p>
-				<p>Your new password: <b>`+request.Password+`</b></p>
-			</body>
-		</html>`
+	htmlBody := helpers.RecoverPasswordTmpl(user.UserName, request.Password)
 	err = defaultMail.SendHTMLEmail(user.Email, "New Password", htmlBody)
 	if err != nil {
 		return apperrors.NewInternalServerError("Error while sending Email: "+err.Error())
@@ -121,14 +161,7 @@ func (s *AuthService) GetRecoverLink(ctx context.Context, fiberCtx *fiber.Ctx, u
 		return apperrors.NewInternalServerError("Error while getting Email service: "+err.Error())
 	}
 	recoverLink := fmt.Sprintf("%s/auth/recover-password/%s", fiberCtx.BaseURL(), user.Token)
-	htmlBody := `
-		<html>
-			<body>
-				<h1>Password Recovery!</h1>
-				<p>Hello, `+user.UserName+`!</p>
-				<p>To recover password Click <a href="`+recoverLink+`">Here</a></p>
-			</body>
-		</html>`
+	htmlBody := helpers.RecoverLinkTmpl(user.UserName, recoverLink)
 	err = defaultMail.SendHTMLEmail(user.Email, "Password Recovery", htmlBody)
 	if err != nil {
 		return apperrors.NewInternalServerError("Error while sending Email: "+err.Error())

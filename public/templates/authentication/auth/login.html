@@ -1,10 +1,10 @@
-{{ template "partials/header-auth" . }}
+{{ template "_partials/header-auth" . }}
 
     <div class="form-signin">
         <form id="login-form" action="/auth/login" method="POST">
             <div class="form-floating">
-                <input type="email" name="username" class="form-control" id="emailInput" placeholder="name@example.com" required autofocus>
-                <label for="emailInput">Password</label>
+                <input type="email" name="user_name" class="form-control" id="emailInput" placeholder="name@example.com" required autofocus>
+                <label for="emailInput">User Name</label>
                 <div id="email-error" style="color: red;"></div>
             </div>
             <div class="form-floating">
@@ -25,4 +25,4 @@
         </form>
     </div>
 
-{{ template "partials/footer-auth" . }}
+{{ template "_partials/footer-auth" . }}

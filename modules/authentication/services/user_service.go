@@ -19,6 +19,7 @@ type UserService struct {
 	repository *repositories.UserRepository
 	roleRepository *repositories.RoleRepository
 	userRoleRepository *repositories.UserRoleRepository
+	loginActRepository *repositories.LoginActivityRepository
 }
 
 func NewUserService(db *database.Database) *UserService {
@@ -26,6 +27,7 @@ func NewUserService(db *database.Database) *UserService {
 		repository: repositories.NewUserRepository(db),
 		roleRepository: repositories.NewRoleRepository(db),
 		userRoleRepository: repositories.NewUserRoleRepository(db),
+		loginActRepository: repositories.NewLoginActivityRepository(db),
 	}
 }
 
@@ -46,6 +48,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		Email:     request.Email,
 		Password:  encryption.HashPassword(request.Password),
 		IsActive:  true,
+		IsLogged:  false,
 		Image:     "",
 		Token:     encryption.GenerateRandomToken(),
 		UniqueId:  encryption.GenerateUUID(),
@@ -70,6 +73,17 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	err = s.userRoleRepository.Create(ctx, userRole)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
+	}
+	loginAct := entities.LoginActivity{
+		UserId:   s.repository.LastInsertId,
+		Status: entities.ActivityStatusOffline,
+		UniqueId:  encryption.GenerateUUID(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+	}
+	err = s.loginActRepository.Create(ctx, loginAct)
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -109,6 +123,7 @@ func (s *UserService) ChangeUserPassword(ctx context.Context, userId int64, requ
 		return apperrors.NewNotFoundError("user not found")
 	}
 	user.Password = encryption.HashPassword(request.NewPassword)
+	user.Token = encryption.GenerateRandomToken()
 	user.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, user)
 	if err != nil {

@@ -149,13 +149,13 @@ func (repo *UserRepository) ExistsByName(ctx context.Context, userName string) (
 
 func (repo *UserRepository) ExistsActive(ctx context.Context, userName string, password string) (bool, error) {
 	var user entities.User
-	result := repo.db.WithContext(ctx).Where("user_name=? AND password=? AND active='Yes'", userName, password).Find(&user)
+	result := repo.db.WithContext(ctx).Where("user_name=? AND password=? AND id_active=true", userName, password).Find(&user)
 	return user.UserId !=0 , result.Error
 }
 
 func (repo *UserRepository) ExistsActiveUser(ctx context.Context, userName string) (bool, error) {
 	var user entities.User
-	result := repo.db.WithContext(ctx).Where("user_name=? AND active='Yes'", userName).Find(&user)
+	result := repo.db.WithContext(ctx).Where("user_name=? AND is_active=true", userName).Find(&user)
 	return user.UserId !=0 , result.Error
 }
 

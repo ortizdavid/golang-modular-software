@@ -1,0 +1,8 @@
+{{ template "_partials/header-auth" . }}
+
+<div class="alert alert-danger">
+    <strong>{{ .Title }}</strong>: {{ .Message }} 
+    <a href="javascript:history.back()">Back to Previous Page</a>
+</div>
+        
+{{ template "_partials/footer-auth" . }}

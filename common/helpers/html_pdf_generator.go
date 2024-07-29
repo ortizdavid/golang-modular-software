@@ -49,12 +49,10 @@ func (gen *HtmlPdfGenenerator) GeneratePDF(htmlTemplate string, data map[string]
 	return pdfBytes, nil
 }
 
-
 func (gen *HtmlPdfGenenerator) LoadHtmlTemplate(filePath string) (*template.Template, error) {
 	tmpl, err := template.ParseFiles(filePath)
 	return tmpl, err
 }
-
 
 func (gen *HtmlPdfGenenerator) SetOutput(ctx *fiber.Ctx, pdfBytes []byte, fileName string) error {
 	ctx.Response().Header.SetContentType("application/pdf")

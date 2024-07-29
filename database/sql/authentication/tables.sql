@@ -18,6 +18,7 @@ CREATE TABLE authentication.users (
     password VARCHAR(200) NOT NULL,
     user_image VARCHAR(100), 
     is_active BOOLEAN DEFAULT TRUE,
+    is_logged BOOLEAN,
     token VARCHAR(150) UNIQUE,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -57,6 +58,28 @@ CREATE TABLE authentication.permission_roles (
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id),
     CONSTRAINT fk_permission FOREIGN KEY(permission_id) REFERENCES  authentication.permissions(permission_id)
+);
+
+
+DROP TYPE IF EXISTS TYPE_ACTIVITY_STATUS;
+CREATE TYPE TYPE_ACTIVITY_STATUS AS ENUM('Online', 'Offline');
+
+DROP TABLE IF EXISTS authentication.login_activity;
+CREATE TABLE authentication.login_activity (
+    login_id SERIAL PRIMARY KEY,
+    user_id INT UNIQUE NOT NULL,
+    status TYPE_ACTIVITY_STATUS DEFAULT 'Offline',
+    host VARCHAR(100),
+    browser VARCHAR(100),
+    ip_address VARCHAR(50),
+    device VARCHAR(100),
+    location VARCHAR(100),
+    last_login TIMESTAMP DEFAULT NOW(),
+    last_logout TIMESTAMP DEFAULT NOW(),
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
 );
 
 -- Initial inserts
