@@ -17,6 +17,11 @@ func NewCompanyConfigurationRepository(db *database.Database) *CompanyConfigurat
 	}
 }
 
+func (repo *CompanyConfigurationRepository) Create(ctx context.Context, configuration entities.CompanyConfiguration) error {
+	result := repo.db.WithContext(ctx).Create(&configuration)
+	return result.Error
+}
+
 func (repo *CompanyConfigurationRepository) Update(ctx context.Context, configuration entities.CompanyConfiguration) error {
 	result := repo.db.WithContext(ctx).Save(&configuration)
 	return result.Error

@@ -13,7 +13,6 @@ import (
 
 type EmailConfigurationApi struct {
 	service     *services.EmailConfigurationService
-	basicConfigService *services.BasicConfigurationService
 	authService *authentication.AuthService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
@@ -22,7 +21,6 @@ type EmailConfigurationApi struct {
 func NewEmailConfigurationApi(db *database.Database) *EmailConfigurationApi {
 	return &EmailConfigurationApi{
 		service:     services.NewEmailConfigurationService(db),
-		basicConfigService: services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
 		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
 		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
@@ -30,40 +28,36 @@ func NewEmailConfigurationApi(db *database.Database) *EmailConfigurationApi {
 }
 
 func (api *EmailConfigurationApi) Routes(router *fiber.App) {
-	group := router.Group("/configurations/email-configurations")
-	group.Put("", api.getEmailConfiguration)
+	group := router.Group("/api/configurations/email-configurations")
+	group.Get("", api.getEmailConfiguration)
 	group.Put("", api.edit)
 }
 
 func (api *EmailConfigurationApi) getEmailConfiguration(c *fiber.Ctx) error {
-	basicConfig, err := api.basicConfigService.GetBasicConfiguration(c.Context())
+	_, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
-	loggedUser, err := api.authService.GetLoggedUser(c.Context(), c)
+	emailConfig, err := api.service.GetEmailConfiguration(c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
-	return c.Render("configurations/email/index", fiber.Map{
-		"Title": "Email Configurations",
-		"BasicConfiguration": basicConfig,
-		"LoggedUser":loggedUser,
-	})
+	return c.JSON(emailConfig)
 }
 
 func (api *EmailConfigurationApi) edit(c *fiber.Ctx) error {
 	var request entities.UpdateEmailConfigurationRequest
 	loggedUser, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Invalid update email request")
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	err = api.service.UpdateEmailConfiguration(c.Context(), request)
 	if err != nil {
 		api.errorLogger.Error(c, err.Error())
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	message := fmt.Sprintf("User '%s' updated email configurations!", loggedUser.UserName)
 	api.infoLogger.Info(c, message)

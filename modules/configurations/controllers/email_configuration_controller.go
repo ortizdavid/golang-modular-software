@@ -38,13 +38,13 @@ func (ctrl *EmailConfigurationController) Routes(router *fiber.App) {
 
 
 func (ctrl *EmailConfigurationController) index(c *fiber.Ctx) error {
-	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configurations/email/index", fiber.Map{
 		"Title": "Email Configurations",
@@ -54,17 +54,17 @@ func (ctrl *EmailConfigurationController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *EmailConfigurationController) editForm(c *fiber.Ctx) error {
-	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
 	emailConfig, err := ctrl.service.GetEmailConfiguration(c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configurations/email/edit", fiber.Map{
 		"Title": "Edita EmailConfig de Email",
@@ -79,15 +79,15 @@ func (ctrl *EmailConfigurationController) edit(c *fiber.Ctx) error {
 	var request entities.UpdateEmailConfigurationRequest
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Invalid update email request")
+		return helpers.HandleHttpErrors(c, err)
 	}
 	err = ctrl.service.UpdateEmailConfiguration(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated email configurations!", loggedUser.UserName))
 	return c.Redirect("/email-configurations")

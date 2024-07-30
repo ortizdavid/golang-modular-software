@@ -37,13 +37,13 @@ func (ctrl *CompanyConfigurationController) Routes(router *fiber.App) {
 }
 
 func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
-	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configurations/company/index", fiber.Map{
 		"Title": "Company Configurations",
@@ -53,17 +53,17 @@ func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *CompanyConfigurationController) editForm(c *fiber.Ctx) error {
-	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
 	companyConfig, err := ctrl.service.GetCompanyConfiguration(c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configuration/company/edit", fiber.Map{
 		"Title": "Edit Company Configuarions",
@@ -77,15 +77,15 @@ func (ctrl *CompanyConfigurationController) edit(c *fiber.Ctx) error {
 	var request entities.UpdateCompanyConfigurationRequest
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Invalid update company request")
+		return helpers.HandleHttpErrors(c, err)
 	}
 	err = ctrl.service.UpdateCompanyConfiguration(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName))
 	return c.Redirect("/email-configurations")

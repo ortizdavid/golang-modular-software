@@ -34,13 +34,13 @@ func (api *BasicConfigurationApi) Routes(router *fiber.App) {
 }
 
 func (api *BasicConfigurationApi) getBasicConfiguration(c *fiber.Ctx) error {
+	_, err := api.authService.GetLoggedUser(c.Context(), c)
+	if err != nil {
+		return helpers.HandleHttpErrorsApi(c, err)
+	}
 	configuration, err := api.service.GetBasicConfiguration(c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
-	_, err = api.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	return c.JSON(configuration)
 }
@@ -49,15 +49,15 @@ func (api *BasicConfigurationApi) edit(c *fiber.Ctx) error {
 	var request entities.UpdateBasicConfigurationRequest
 	loggedUser, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Invalid update basic config request")
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	err = api.service.UpdateBasicConfiguration(c.Context(), request)
 	if err != nil {
 		api.errorLogger.Error(c, err.Error())
-		return c.Status(fiber.StatusInternalServerError).SendString("Failed to update basic configurations")
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	message := fmt.Sprintf("User '%s' updated basic configurations!", loggedUser.UserName)
 	api.infoLogger.Info(c, message)

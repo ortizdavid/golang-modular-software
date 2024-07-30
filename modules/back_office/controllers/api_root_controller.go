@@ -36,7 +36,7 @@ func (ctrl ApiRootController) index(c *fiber.Ctx) error {
 
 func (ctrl *ApiRootController) downloadCollections(c * fiber.Ctx) error {
 	path := "./_api_collections/"
-	fileName := "postman.postman_collection.json"
+	fileName := "Golang-Modular-Software.postman_collection.json"
 	c.Set("Content-Disposition", "attachment; filename="+fileName)
 	c.Set("Content-Type", "application/json")
 	return c.SendFile(filepath.Join(path, fileName))

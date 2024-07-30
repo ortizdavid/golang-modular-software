@@ -36,13 +36,13 @@ func (ctrl *BasicConfigurationController) Routes(router *fiber.App) {
 }
 
 func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
-	configuration, err := ctrl.service.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	configuration, err := ctrl.service.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configurations/email/index", fiber.Map{
 		"Title": "Email Configurations",
@@ -52,13 +52,13 @@ func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *BasicConfigurationController) editForm(c *fiber.Ctx) error {
-	configuration, err := ctrl.service.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-	}
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	configuration, err := ctrl.service.GetBasicConfiguration(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configurations/email/edit", fiber.Map{
 		"Title": "Edit Basic Configuration",
@@ -71,15 +71,15 @@ func (ctrl *BasicConfigurationController) edit(c *fiber.Ctx) error {
 	var request entities.UpdateBasicConfigurationRequest
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrors(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Invalid update basic config request")
+		return helpers.HandleHttpErrors(c, err)
 	}
 	err = ctrl.service.UpdateBasicConfiguration(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return c.Status(fiber.StatusInternalServerError).SendString("Failed to update basic configurations")
+		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated basic configurations!", loggedUser.UserName))
 	return c.Redirect("/basic-configurations")

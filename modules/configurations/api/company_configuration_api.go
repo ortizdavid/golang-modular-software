@@ -13,7 +13,6 @@ import (
 
 type CompanyConfigurationApi struct {
 	service     *services.CompanyConfigurationService
-	basicConfigService *services.BasicConfigurationService
 	authService *authentication.AuthService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
@@ -22,7 +21,6 @@ type CompanyConfigurationApi struct {
 func NewCompanyConfigurationApi(db *database.Database) *CompanyConfigurationApi {
 	return &CompanyConfigurationApi{
 		service:     services.NewCompanyConfigurationService(db),
-		basicConfigService: services.NewBasicConfigurationService(db),
 		authService: authentication.NewAuthService(db),
 		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
 		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
@@ -36,30 +34,30 @@ func (api *CompanyConfigurationApi) Routes(router *fiber.App) {
 }
 
 func (api *CompanyConfigurationApi) getCompanyConfiguration(c *fiber.Ctx) error {
-	basicConfig, err := api.basicConfigService.GetBasicConfiguration(c.Context())
+	_, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
-	_, err = api.authService.GetLoggedUser(c.Context(), c)
+	companyConfig, err := api.service.GetCompanyConfiguration(c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
-	return c.JSON(basicConfig)
+	return c.JSON(companyConfig)
 }
 
 func (api *CompanyConfigurationApi) edit(c *fiber.Ctx) error {
 	var request entities.UpdateCompanyConfigurationRequest
 	loggedUser, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Invalid update company request")
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	err = api.service.UpdateCompanyConfiguration(c.Context(), request)
 	if err != nil {
 		api.errorLogger.Error(c, err.Error())
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return helpers.HandleHttpErrorsApi(c, err)
 	}
 	message := fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName)
 	api.infoLogger.Info(c, message)

@@ -17,6 +17,11 @@ func NewBasicConfigurationRepository(db *database.Database) *BasicConfigurationR
 	}
 }
 
+func (repo *BasicConfigurationRepository) Create(ctx context.Context, configuration entities.BasicConfiguration) error {
+	result := repo.db.WithContext(ctx).Create(&configuration)
+	return result.Error
+}
+
 func (repo *BasicConfigurationRepository) Update(ctx context.Context, configuration entities.BasicConfiguration) error {
 	result := repo.db.WithContext(ctx).Save(&configuration)
 	return result.Error

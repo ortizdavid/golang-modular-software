@@ -17,6 +17,11 @@ func NewEmailConfigurationRepository(db *database.Database) *EmailConfigurationR
 	}
 }
 
+func (repo *EmailConfigurationRepository) Create(ctx context.Context, configuration entities.EmailConfiguration) error {
+	result := repo.db.WithContext(ctx).Create(&configuration)
+	return result.Error
+}
+
 func (repo *EmailConfigurationRepository) Update(ctx context.Context, configuration entities.EmailConfiguration) error {
 	result := repo.db.WithContext(ctx).Save(&configuration)
 	return result.Error
