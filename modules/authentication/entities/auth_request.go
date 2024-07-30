@@ -2,8 +2,8 @@ package entities
 
 // -- Login
 type LoginRequest struct {
-	UserName	string `json:"user_name"`
-	Password	string `json:"password"`
+	UserName	string `json:"user_name" form:"user_name"`
+	Password	string `json:"password" form:"password"`
 }	
 
 func (req LoginRequest) Validate() error {

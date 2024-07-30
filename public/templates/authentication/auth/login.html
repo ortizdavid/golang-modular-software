@@ -1,11 +1,11 @@
 {{ template "_partials/header-auth" . }}
 
     <div class="form-signin">
-        <form id="login-form" action="/auth/login" method="POST">
+        <form id="login-form" action="/auth/login" method="POST" enctype="application/x-www-form-urlencoded">
             <div class="form-floating">
-                <input type="email" name="user_name" class="form-control" id="emailInput" placeholder="name@example.com" required autofocus>
-                <label for="emailInput">User Name</label>
-                <div id="email-error" style="color: red;"></div>
+                <input type="text" name="user_name" class="form-control" id="emailInput" placeholder="name@example.com" required autofocus>
+                <label for="userNameInput">User Name</label>
+                <div id="user-name-error" style="color: red;"></div>
             </div>
             <div class="form-floating">
                 <input type="password" name="password" class="form-control" id="passwordInput" 

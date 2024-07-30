@@ -15,8 +15,8 @@ Example of a complete modular sofware, written in Golang
 ## Modules
 - [x] Configurations 
 - [x] Authentication
-- [ ] Human Resources
-- [ ] Customers
+- [ ] Company
+- [ ] Reference
 
 
 ## Architecture
@@ -44,10 +44,8 @@ Example of a complete modular sofware, written in Golang
 - Configure Database:
     - Open Postgres: ``psql -U postgres``
     - Create Database: ``CREATE DATABASE golang_modular_software;``
-    - Go to project and execute database scripts: ``go run exec_database_scripts.go``
-    - Or Copy all database scripts located in [Datatabase folder](database)  to     Posgresql 
 - Run Application: ``go run main.go``
-- User the url: http://localhost:9000
+- User the url: http://localhost:4003
 - Login with Default user:
-    - Username: admin@user.com
+    - Username: admin01
     - Password: 12345678

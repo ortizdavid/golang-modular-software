@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -18,13 +17,13 @@ func CreateAdminUsers(db *database.Database) error {
 		UserName: "admin01",
 		RoleId:   1,
 		Email:    "admin01@gmail.com",
-		Password: "admin123",
+		Password: "12345678",
 	}
 	user2 := entities.CreateUserRequest{
 		UserName: "admin02",
 		RoleId:   2,
 		Email:    "admin02@gmail.com",
-		Password: encryption.HashPassword("admin123"),
+		Password: "12345678",
 	}
 	// create users -----------------------------------------------
 	err1 := userService.CreateUser(ctx, user1)

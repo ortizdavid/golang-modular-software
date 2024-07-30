@@ -3,7 +3,7 @@ package entities
 import "time"
 
 type LoginActivity struct {
-	LoginId    int64              `gorm:"column:login_id"`
+	LoginId    int64              `gorm:"primaryKey;autoIncrement"`
     UserId     int64              `gorm:"column:user_id"`
     Status     LoginActivityStatus `gorm:"column:status"`
     Host       string             `gorm:"column:host"`

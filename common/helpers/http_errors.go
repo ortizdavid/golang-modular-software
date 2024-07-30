@@ -12,9 +12,9 @@ func HandleHttpErrors(c *fiber.Ctx, err error) error {
 		"Message": err.Error(),
 	}
 	if e, ok := err.(*apperrors.HttpError); ok {
-		return c.Status(e.StatusCode).Render("errors/error", errMap)
+		return c.Status(e.StatusCode).Render("_errors/error", errMap)
 	}
-	return c.Status(fiber.StatusInternalServerError).Render("errors/error", errMap)
+	return c.Status(fiber.StatusInternalServerError).Render("_errors/error", errMap)
 }
 
 // HandleHttpErrorsApi centralizes error handling for API-related operations

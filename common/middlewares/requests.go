@@ -17,7 +17,6 @@ func NewRequestLoggerMiddleware() *RequestLoggerMiddleware {
 	}
 }
 
-
 func (mid *RequestLoggerMiddleware) Handle(ctx *fiber.Ctx) error {
 	mid.logger.Info("Request",
 		zap.String("Method", ctx.Method()),

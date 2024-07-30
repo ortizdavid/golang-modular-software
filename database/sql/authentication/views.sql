@@ -8,6 +8,7 @@ SELECT
     us.unique_id,
     us.user_name,
     us.email,
+    password,
     us.is_active,
     us.is_logged,
     us.user_image,

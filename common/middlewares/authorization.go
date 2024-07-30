@@ -24,7 +24,7 @@ func (mid *AuthorizationMiddleware) AllowRoles(roles ...string) fiber.Handler {
 		// Get the logged-in user
 		loggedUser, err := mid.authService.GetLoggedUser(c.Context(), c)
 		if err != nil {
-			return c.Status(fiber.StatusUnauthorized).Render("errors/authorization", fiber.Map{
+			return c.Status(fiber.StatusUnauthorized).Render("_errors/authorization", fiber.Map{
 				"Title":   "Authentication Error",
 				"Message": "User not authenticated: " + err.Error(),
 			})
@@ -32,13 +32,13 @@ func (mid *AuthorizationMiddleware) AllowRoles(roles ...string) fiber.Handler {
 		// Check if the user has the required roles
 		hasRoles, err := mid.userService.UserHasRoles(c.Context(), loggedUser.UserId, roles...)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).Render("errors/authorization", fiber.Map{
+			return c.Status(fiber.StatusInternalServerError).Render("_errors/authorization", fiber.Map{
 				"Title":   "Internal Server Error",
 				"Message": "Error checking user roles: " + err.Error(),
 			})
 		}
 		if !hasRoles {
-			return c.Status(fiber.StatusForbidden).Render("errors/authorization", fiber.Map{
+			return c.Status(fiber.StatusForbidden).Render("_errors/authorization", fiber.Map{
 				"Title":   "Access Denied",
 				"Message": "You do not have the necessary roles to access this resource.",
 			})

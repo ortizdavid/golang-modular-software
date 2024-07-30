@@ -20,14 +20,16 @@ func NewAuthenticationMiddleware(db *database.Database) *AuthenticationMiddlewar
 func (mid *AuthenticationMiddleware) Handle(c *fiber.Ctx) error {
 	requestedPath := c.Path()
 	if requestedPath == "/" ||
+		strings.HasPrefix(requestedPath, "/api") ||
 		strings.HasPrefix(requestedPath, "/images") ||
 		strings.HasPrefix(requestedPath, "/css") ||
 		strings.HasPrefix(requestedPath, "/js") ||
+		strings.HasPrefix(requestedPath, "/lib") ||
 		strings.HasPrefix(requestedPath, "/auth") {
 		return c.Next()
 	}
 	if !mid.service.IsUserAuthenticated(c.Context(), c) {
-		return c.Status(fiber.StatusUnauthorized).Render("errors/authentication", fiber.Map{
+		return c.Status(fiber.StatusUnauthorized).Render("_errors/authentication", fiber.Map{
 			"Title": "Authentication Error",
 		})
 	}

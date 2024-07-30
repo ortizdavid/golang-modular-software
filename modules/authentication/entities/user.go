@@ -30,15 +30,15 @@ type UserData struct {
 	IsActive     	string `json:"is_active"`
 	IsLogged     	string `json:"is_logged"`
 	UserImage    	string `json:"user_image"`
-	CreatedAt    	time.Time `json:"created_at"`
-	UpdatedAt    	time.Time `json:"updated_at"`
-	Status     		LoginActivityStatus `json:"status"`
+	CreatedAt    	string `json:"created_at"`
+	UpdatedAt    	string `json:"updated_at"`
+	Status     		string `json:"status"`
 	Host       		string `json:"host"`
 	Browser    		string `json:"browser"`
 	IPAddress  		string `json:"ip_address"`
 	Device     		string `json:"device"`
 	Location   		string `json:"location"`
-	LastLogin  		time.Time `json:"last_login"`
-	LastLogout 		time.Time `json:"last_logout"`
+	LastLogin  		string `json:"last_login"`
+	LastLogout 		string `json:"last_logout"`
 }
 

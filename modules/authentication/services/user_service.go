@@ -59,12 +59,13 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err != nil {
 		return apperrors.NewInternalServerError("error while creating user: "+ err.Error())
 	}
+	userId := s.repository.LastInsertId
 	_, err = s.roleRepository.FindById(ctx, request.RoleId)
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
 	}
 	userRole := entities.UserRole{
-		UserId:     s.repository.LastInsertId,
+		UserId:     userId,
 		RoleId:     request.RoleId,
 		UniqueId:  encryption.GenerateUUID(),
 		CreatedAt: time.Now().UTC(),
@@ -75,7 +76,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
 	}
 	loginAct := entities.LoginActivity{
-		UserId:   s.repository.LastInsertId,
+		UserId:   userId,
 		Status: entities.ActivityStatusOffline,
 		UniqueId:  encryption.GenerateUUID(),
 		CreatedAt: time.Now().UTC(),
