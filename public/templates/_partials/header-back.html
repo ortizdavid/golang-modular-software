@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{{ .Titulo }}</title>
+    <title>{{ .Title }}</title>
     <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/dashboard.css" />
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
@@ -14,7 +14,7 @@
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/inicio">
         <img src="/images/logo.png" alt="" class="img img-rounded" style="width: 30px; height: 30px;">
-        {{ .ConfiguracaoBasica.SiglaEmpresa }}
+        {{ .BasicConfiguration }}
       </a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -24,7 +24,7 @@
         <div class="nav-item text-nowrap">
           <a class="nav-link px-3" href="/auth/logout" style="color: white">
             <i class="bi bi-box-arrow-right"></i>
-            Sair
+            Logout
           </a>
         </div>
       </div>
@@ -36,56 +36,58 @@
           <div class="position-sticky pt-3 sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/inicio">
+                <a class="nav-link" aria-current="page" href="/home">
                   <i class="bi bi-house"></i>
-                  Início
+                  Home
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/balancetes">
-                  <i class="bi bi-table"></i>
-                  Balancetes
+                <a class="nav-link" aria-current="page" href="/dashboard">
+                  <i class="bi bi-bar-chart"></i>
+                  Dashboard
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/taxas-juro">
-                  <i class="bi bi-file-earmark-spreadsheet"></i>
-                  Taxas de Juro
+                <a class="nav-link" aria-current="page" href="/users">
+                  <i class="bi bi-people"></i>
+                  Users and Roles
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/reportes">
-                  <i class="bi bi-filetype-xml"></i>
-                  Reportes Gerados
+                <a class="nav-link" aria-current="page" href="/company">
+                  <i class="bi bi-buildings"></i>
+                  Company
                 </a>
               </li>
-              {{ if eq .LoggedUser.RoleCode "admin" }}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/reference">
+                  <i class="bi bi-list-columns"></i>
+                  Reference
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/reports">
+                  <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                 Reports
+                </a>
+               </li>
                 <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/users">
-                    <i class="bi bi-person-circle"></i>
-                    Usuários
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/configuracoes">
+                  <a class="nav-link" aria-current="page" href="/configurations">
                     <i class="bi bi-gear"></i>
-                    Configurações
+                    Configurations
                   </a>
                 </li>
-              {{ end }}
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/change-password">
+                <a class="nav-link" aria-current="page" href="/users/change-password">
                   <i class="bi bi-lock"></i>
-                  Alterar Senha
+                  Change Password
                 </a>
               </li>
             </ul>
           </div>
         </nav> 
-
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{ .Titulo }}</h1>
+            <h1 class="h2">{{ .Title }}</h1>
           </div>
- 
   

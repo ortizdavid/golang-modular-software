@@ -6,6 +6,4 @@ import (
 )
 
 func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
-	ApiRootController{}.Routes(router)
-	NewBackOfficeController(db).Routes(router)
 }

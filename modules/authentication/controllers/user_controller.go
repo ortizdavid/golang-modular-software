@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -54,7 +53,6 @@ func (ctrl *UserController) Routes(router *fiber.App) {
 }
 
 func (ctrl *UserController) index(c *fiber.Ctx) error {
-	var params helpers.PaginationParam
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -63,21 +61,16 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	count, err := ctrl.service.CountUsers(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	if err := c.QueryParser(&params); err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	users, err := ctrl.service.GetAllUsers(c.Context(), c, params)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.GetAllUsers(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/index", fiber.Map{
 		"Title": "Users",
-		"Users": users,
-		"Count": count,
+		"Pagination": pagination,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages": pagination.MetaData.TotalPages + 1,
 		"LoggedUser": loggedUser,
 		"BasicConfig": basicConfig,
 	})
@@ -97,7 +90,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	return c.Render("user/details", fiber.Map{
+	return c.Render("authentication/user/details", fiber.Map{
 		"Title": "User Details",
 		"User": user,
 		"LoggedUser": loggedUser,
@@ -118,7 +111,7 @@ func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	return c.Render("users/user/add", fiber.Map{
+	return c.Render("authentication/user/create", fiber.Map{
 		"Title": "Add User",
 		"Roles": roles,
 		"LoggedUser": loggedUser,
@@ -159,7 +152,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	return c.Render("users/user/edit", fiber.Map{
+	return c.Render("authentication/user/edit", fiber.Map{
 		"Title": "Assign Role",
 		"Roles": roles,
 		"User": user,
@@ -207,7 +200,6 @@ func (ctrl *UserController) searchForm(c *fiber.Ctx) error {
 
 
 func (ctrl *UserController) search(c *fiber.Ctx) error {
-	var paginationParams helpers.PaginationParam
 	searchParam := c.FormValue("search_param")
 	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
@@ -217,24 +209,17 @@ func (ctrl *UserController) search(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	count, err := ctrl.service.CountUsersByParam(c.Context(), searchParam)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	if err := c.QueryParser(&paginationParams); err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	results, err := ctrl.service.SearchUsers(c.Context(), c, searchParam, paginationParams)
-	if err != nil {
-		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
-	}
+	count, _ := ctrl.service.CountUsersByParam(c.Context(), searchParam)
+	params := helpers.GetPaginationParams(c)
+	pagination, _ := ctrl.service.SearchUsers(c.Context(), c, searchParam, params)
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, searchParam, count))
 	return c.Render("authentication/user/search-results", fiber.Map{
 		"Title": "Results",
-		"Results": results,
+		"Pagination": pagination,
 		"Param": searchParam,
 		"Count": count,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages": pagination.MetaData.TotalPages + 1,
 		"LoggedUser": loggedUser,
 		"BasicConfig": basicConfig,
 	})

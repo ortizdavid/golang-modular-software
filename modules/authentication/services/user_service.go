@@ -250,7 +250,7 @@ func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, searchParam interface{}, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, searchParam string, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	if err := paginationParams.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -258,7 +258,7 @@ func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, sear
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No records found")
 	}
-	users, err := s.repository.Search(ctx, true, paginationParams.Limit, paginationParams.CurrentPage)
+	users, err := s.repository.Search(ctx, searchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
@@ -334,7 +334,7 @@ func (s *UserService) CountUsersByStatus(ctx context.Context, status bool) (int6
 	return count, nil
 }
 
-func (s *UserService) CountUsersByParam(ctx context.Context, searchParam interface{}) (int64, error) {
+func (s *UserService) CountUsersByParam(ctx context.Context, searchParam string) (int64, error) {
 	count, err := s.repository.CountByParam(ctx, searchParam)
 	if err != nil {
 		return 0, apperrors.NewNotFoundError("No users found")

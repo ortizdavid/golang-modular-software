@@ -89,7 +89,7 @@ func (repo *UserRepository) FindByEmail(ctx context.Context, email string) (enti
 	return user, result.Error
 }
 
-func (repo *UserRepository) Search(ctx context.Context, param interface{}, limit int, offset int) ([]entities.UserData, error) {
+func (repo *UserRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).
@@ -213,7 +213,7 @@ func (repo *UserRepository) CountByStatus(ctx context.Context, status bool) (int
 	return count, result.Error
 }
 
-func (repo *UserRepository) CountByParam(ctx context.Context, param interface{}) (int64, error) {
+func (repo *UserRepository) CountByParam(ctx context.Context, param string) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).

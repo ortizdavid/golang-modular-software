@@ -8,6 +8,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/company"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations"
 	"github.com/ortizdavid/golang-modular-software/modules/reference"
+	"github.com/ortizdavid/golang-modular-software/modules/reports"
 )
 
 // RegisterControllers initializes and registers controllers (routes) from different modules
@@ -25,6 +26,10 @@ func RegisterControllers(router *fiber.App, db *database.Database) {
 	// Register routes for company module
 	company.RegisterModuleRoutes(router, db)
 
-	// routes for BackOffice
+	// Register routes for BackOffice
 	back_office.RegisterModuleRoutes(router, db)
+
+	// Register routes for BackOffice
+	reports.RegisterModuleRoutes(router, db)
+
 }

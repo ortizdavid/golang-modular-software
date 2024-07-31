@@ -2,34 +2,45 @@
 
     <div class="">
         <div class="">
-            <p><b>{{ .Count }} </b>Resultados encontrados para <b><i>{{ .Param }}</i></b></p><br>
-            <table class="table table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Id</th>
-                        <th>Username</th>
-                        <th>Role</th>
-                        <th>Active?</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{ range .Results }}
-                        <tr class=" {{ if eq .Active "Yes"}} alert-success {{ else }} alert-danger {{ end }}">
-                            <td class="collapsing">{{ .UserId }}</td>
-                            <td>{{ .UserName }}</td>
-                            <td>{{ .RoleName }}</td>
-                            <td>{{ .Active }}</td>
-                            <td>
-                                <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details">
-                                    <i class="bi bi-eye"></i>
-                                    Details
-                                </a>
-                            </td>
+            {{ if .Count }}
+                <p><b>{{ .Pagination.MetaData.TotalPages }} </b>results for <b><i>{{ .Param }}</i></b></p><br>
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Is Active?</th>
+                            <th>Options</th>
                         </tr>
-                    {{ end }}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {{ range .Pagination.Items }}
+                            <tr class=" {{ if .IsActive }} alert-success {{ else }} alert-danger {{ end }}">
+                                <td class="collapsing">{{ .UserId }}</td>
+                                <td>{{ .UserName }}</td>
+                                <td>{{ .Email }}</td>
+                                <td>{{ .IsActive }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details">
+                                        <i class="bi bi-eye"></i>
+                                        Details
+                                    </a>
+                                </td>
+                            </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+                <div>
+                    <p>Page {{ .CurrentPage }} of {{ .TotalPages }}</p>
+                    <a href="{{ .Pagination.MetaData.PreviousPageUrl }}" class="btn btn-link"><< Previous</a>| 
+                    <a href="{{ .Pagination.MetaData.NextPageUrl }}" class="btn btn-link">Next >></a>
+                </div>
+            {{ else }}
+                <div class="alert alert-warning">
+                    0 </b>results found for <b><i>{{ .Param }}</i></b>
+                </div>
+            {{ end }}
         </div>
     </div>
         

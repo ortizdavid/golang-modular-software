@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header">
             <div align="right">
-                <a href="/users/add" class="btn btn-primary btn-sm">
+                <a href="/users/create" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus-circle btn-sm"></i>
                     Add
                 </a>
@@ -14,25 +14,25 @@
             </div>
         </div>
         <div class="card-body">
-            {{ if .Count }}
-                <p>Total : {{ .Count }}</p>
+            {{ if .Pagination.MetaData.TotalItems }}
+                <p>Total : {{ .Pagination.MetaData.TotalItems }}</p>
                 <table class="table table-hover">
                     <thead class="table-dark">
                         <tr>
                             <th>Id</th>
                             <th>User</th>
-                            <th>Profile</th>
-                            <th>Active?</th>
+                            <th>Email</th>
+                            <th>Is Active?</th>
                             <th>Options</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{ range .Users }}
-                            <tr class=" {{ if eq .Active "Yes"}} alert-success {{ else }} alert-danger {{ end }}">
+                        {{ range .Pagination.Items }}
+                            <tr class="{{ if .IsActive  }} alert-success {{ else }} alert-danger {{ end }}">
                                 <td class="collapsing">{{ .UserId }}</td>
                                 <td>{{ .UserName }}</td>
-                                <td>{{ .RoleName }}</td>
-                                <td>{{ .Active }}</td>
+                                <td>{{ .Email }}</td>
+                                <td>{{ .IsActive }}</td>
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details" data-toggle="tooltip" title="Details">
                                         <i class="bi bi-eye"></i>
@@ -43,16 +43,15 @@
                     </tbody>
                 </table>
                 <div>
-                    {{ if .Pagination.PrevPage }}
-                        <a href="/users?page={{ .Pagination.PrevPage }}" class="btn btn-link"><< Página Anterior</a> | 
-                    {{ end }}
-                    {{ if .Pagination.NextPage }}
-                        <a href="/users?page={{ .Pagination.NextPage }}" class="btn btn-link">Próxima Página >></a>
-                    {{ end }}
+                    <p>Page {{ .CurrentPage }} of {{ .TotalPages }}</p>
+                    <a href="{{ .Pagination.MetaData.FirstPageUrl }}" class="btn btn-link">First</a>| 
+                    <a href="{{ .Pagination.MetaData.PreviousPageUrl }}" class="btn btn-link"><< Previous</a>| 
+                    <a href="{{ .Pagination.MetaData.NextPageUrl }}" class="btn btn-link">Next >></a>|
+                    <a href="{{ .Pagination.MetaData.LastPageUrl }}" class="btn btn-link">Last</a>
                 </div>
             {{ else }}
                 <div class="alert alert-warning">
-                    Nenhum Registo Encontrado!
+                    No records found
                 </div>
             {{ end }}
         </div>
