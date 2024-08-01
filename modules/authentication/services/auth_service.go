@@ -95,11 +95,11 @@ func (s *AuthService) Logout(ctx context.Context, fiberCtx *fiber.Ctx) error {
 	if err != nil {
 		return apperrors.NewInternalServerError("Error while get session store: " +err.Error())
 	}
-	// Mark as not logged
 	loggedUser, err := s.GetLoggedUser(ctx, fiberCtx)
 	if err != nil {
 		return err
 	}
+	// Mark as not logged
 	user, _ := s.repository.FindById(ctx, loggedUser.UserId)
 	user.IsLogged = false
 	err = s.repository.Update(ctx, user)
@@ -175,14 +175,15 @@ func (s *AuthService) GetLoggedUser(ctx context.Context, fiberCtx *fiber.Ctx) (e
 	if err != nil {
 		return entities.UserData{}, apperrors.NewInternalServerError("Error while get session store: " +err.Error())
 	}
-	userName := conversion.AnyToString(session.Get("user_name"))
+	identifier := conversion.AnyToString(session.Get("identifier"))
 	password := conversion.AnyToString(session.Get("password"))
-	user, err := s.repository.GetByUserNameAndPassword(ctx, userName, password)
+	user, err := s.repository.GetByIdentifierAndPassword(ctx, identifier, password)
 	if err != nil {
 		return entities.UserData{}, apperrors.NewInternalServerError("User not found")
 	}
 	return user, nil
 }
+
 
 func (s *AuthService) IsUserAuthenticated(ctx context.Context, fiberCtx *fiber.Ctx) bool {
 	loggedUser, err := s.GetLoggedUser(ctx, fiberCtx)
@@ -190,12 +191,4 @@ func (s *AuthService) IsUserAuthenticated(ctx context.Context, fiberCtx *fiber.C
 		return false
 	}
 	return loggedUser.UserId == 0 
-}
-
-func (s *AuthService) IsUserAdmin(ctx context.Context, fiberCtx *fiber.Ctx) bool {
-	loggedUser, err := s.GetLoggedUser(ctx, fiberCtx)
-	if err != nil {
-		return false
-	}
-	return loggedUser.UserId != 0
 }

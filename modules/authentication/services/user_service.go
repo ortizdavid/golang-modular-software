@@ -193,13 +193,13 @@ func (s *UserService) DeleteUser(ctx context.Context, userId int64) error {
 	return nil
 }
 
-func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.User], error) {
-	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
-	}
+func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No users found")
+	}
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
 	}
 	users, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
@@ -213,12 +213,12 @@ func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, para
 }
 
 func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
-	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
-	}
 	count, err := s.CountUsersByStatus(ctx, true)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No users found")
+	}
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
 	}
 	users, err := s.repository.FindAllByStatus(ctx, true, params.Limit, params.CurrentPage)
 	if err != nil {
@@ -232,12 +232,12 @@ func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx
 }
 
 func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
-	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
-	}
 	count, err := s.CountUsersByStatus(ctx, false)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No users found")
+	}
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
 	}
 	users, err := s.repository.FindAllByStatus(ctx, false, params.Limit, params.CurrentPage)
 	if err != nil {
@@ -250,15 +250,15 @@ func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, searchParam string, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchUserRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+	count, err := s.repository.CountByParam(ctx, request.SearchParam)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No users found")
+	}
 	if err := paginationParams.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	count, err := s.CountUsersByParam(ctx, searchParam)
-	if err != nil {
-		return nil, apperrors.NewNotFoundError("No records found")
-	}
-	users, err := s.repository.Search(ctx, searchParam, paginationParams.Limit, paginationParams.CurrentPage)
+	users, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
@@ -328,14 +328,6 @@ func (s *UserService) CountUsers(ctx context.Context) (int64, error) {
 
 func (s *UserService) CountUsersByStatus(ctx context.Context, status bool) (int64, error) {
 	count, err := s.repository.CountByStatus(ctx, status)
-	if err != nil {
-		return 0, apperrors.NewNotFoundError("No users found")
-	}
-	return count, nil
-}
-
-func (s *UserService) CountUsersByParam(ctx context.Context, searchParam string) (int64, error) {
-	count, err := s.repository.CountByParam(ctx, searchParam)
 	if err != nil {
 		return 0, apperrors.NewNotFoundError("No users found")
 	}

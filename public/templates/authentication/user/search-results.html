@@ -1,9 +1,24 @@
 {{ template "_partials/header-back" . }}
 
-    <div class="">
-        <div class="">
-            {{ if .Count }}
-                <p><b>{{ .Pagination.MetaData.TotalPages }} </b>results for <b><i>{{ .Param }}</i></b></p><br>
+    <div class="card">
+        <div class="card-header">
+            <form class="" action="/users/search-results" method="GET">
+                <table>
+                    <tr>
+                        <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Username or Email" required autofocus></td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-search btn-sm"></i>
+                                Search
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="card-body">
+            {{ if .Pagination.MetaData.TotalItems }}
+                <b>{{ .Pagination.MetaData.TotalItems }} </b>results for <b><i>{{ .Param }}</i></b><br><br>
                 <table class="table table-hover">
                     <thead class="table-dark">
                         <tr>
@@ -24,7 +39,6 @@
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details">
                                         <i class="bi bi-eye"></i>
-                                        Details
                                     </a>
                                 </td>
                             </tr>

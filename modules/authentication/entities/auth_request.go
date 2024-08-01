@@ -2,7 +2,7 @@ package entities
 
 // -- Login
 type LoginRequest struct {
-	UserName	string `json:"user_name" form:"user_name"`
+	UserName 	string `json:"user_name" form:"user_name"` // can be UserName, Email or Other
 	Password	string `json:"password" form:"password"`
 }	
 

@@ -4,13 +4,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
+	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type RoleController struct {
 	service *services.RoleService
-	authService *services.AuthService
 	configService *configurations.BasicConfigurationService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
@@ -19,7 +19,6 @@ type RoleController struct {
 func NewRoleController(db *database.Database) *RoleController {
 	return &RoleController{
 		service:       services.NewRoleService(db),
-		authService:   services.NewAuthService(db),
 		configService: configurations.NewBasicConfigurationService(db),
 		infoLogger:    helpers.NewInfoLogger("users-info.log"),
 		errorLogger:   helpers.NewInfoLogger("users-error.log"),
@@ -34,10 +33,7 @@ func (ctrl *RoleController) Routes(router *fiber.App) {
 
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
 	var params helpers.PaginationParam
-	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser := c.Locals("loggedUser").(entities.UserData)
 	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -60,10 +56,7 @@ func (ctrl *RoleController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *RoleController) createForm(c *fiber.Ctx) error {
-	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser := c.Locals("loggedUser").(entities.UserData)
 	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

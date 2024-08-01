@@ -1,19 +1,21 @@
 {{ template "_partials/header-back" . }}
 
-    <div class="" style="width: 80%;">
-        <form class="" action="/users/search-results" method="GET">
-            <table>
-                <tr>
-                    <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Username and role" required autofocus></td>
-                    <td>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="bi bi-search btn-sm"></i>
-                            Search
-                        </button>
-                    </td>
-                </tr>
-            </table>
-        </form>
+    <div class="card">
+        <div class="card-header">
+            <form class="" action="/users/search-results" method="GET">
+                <table>
+                    <tr>
+                        <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Username and role" required autofocus></td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-search btn-sm"></i>
+                                Search
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
-    
+
 {{ template "_partials/footer-back" . }}

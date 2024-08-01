@@ -35,3 +35,14 @@ func (mid *AuthenticationMiddleware) Handle(c *fiber.Ctx) error {
 	}
 	return c.Next()
 }
+
+
+
+func (mid *AuthenticationMiddleware)  CheckLoggedUser(c *fiber.Ctx) error {
+	loggedUser, err := mid.service.GetLoggedUser(c.Context(), c)
+	if err != nil || loggedUser.UserId == 0 {
+		return c.Redirect("/auth/login")
+	}
+	c.Locals("loggedUser", loggedUser)
+	return c.Next()
+}

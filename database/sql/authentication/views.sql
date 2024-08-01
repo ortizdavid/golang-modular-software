@@ -8,7 +8,7 @@ SELECT
     us.unique_id,
     us.user_name,
     us.email,
-    password,
+    us.password,
     us.is_active,
     us.is_logged,
     us.user_image,
@@ -24,9 +24,8 @@ SELECT
     COALESCE(TO_CHAR(la.last_login, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_login,
     COALESCE(TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_logout
 FROM authentication.users us
-LEFT JOIN authentication.login_activity la 
-ON us.user_id = la.user_id
-ORDER BY us.created_at DESC;
+LEFT JOIN authentication.login_activity la ON us.user_id = la.user_id
+ORDER BY us.created_at ASC;
 
 
 -- View: view_user_role_data

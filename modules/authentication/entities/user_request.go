@@ -40,3 +40,7 @@ func (req AssignUserRoleRequest) Validate() error {
 	return nil
 }
 
+type SearchUserRequest struct {
+	SearchParam		string `json:"search_param" form:"search_param"`
+}
+

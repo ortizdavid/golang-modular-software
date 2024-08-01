@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
-	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
+	authEntities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
@@ -14,7 +14,6 @@ import (
 type CompanyConfigurationController struct {
 	service *services.CompanyConfigurationService
 	basicConfigService *services.BasicConfigurationService
-	authService *authentication.AuthService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
 }
@@ -23,7 +22,6 @@ func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurat
 	return &CompanyConfigurationController{
 		service:     services.NewCompanyConfigurationService(db),
 		basicConfigService: services.NewBasicConfigurationService(db),
-		authService: authentication.NewAuthService(db),
 		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
 		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
@@ -37,10 +35,7 @@ func (ctrl *CompanyConfigurationController) Routes(router *fiber.App) {
 }
 
 func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
-	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser := c.Locals("loggedUser").(*authEntities.UserData)
 	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -53,10 +48,7 @@ func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *CompanyConfigurationController) editForm(c *fiber.Ctx) error {
-	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser := c.Locals("loggedUser").(*authEntities.UserData)
 	basicConfig, err := ctrl.basicConfigService.GetBasicConfiguration(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -75,14 +67,11 @@ func (ctrl *CompanyConfigurationController) editForm(c *fiber.Ctx) error {
 
 func (ctrl *CompanyConfigurationController) edit(c *fiber.Ctx) error {
 	var request entities.UpdateCompanyConfigurationRequest
-	loggedUser, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser := c.Locals("loggedUser").(*authEntities.UserData)
 	if err := c.BodyParser(&request); err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	err = ctrl.service.UpdateCompanyConfiguration(c.Context(), request)
+	err := ctrl.service.UpdateCompanyConfiguration(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)

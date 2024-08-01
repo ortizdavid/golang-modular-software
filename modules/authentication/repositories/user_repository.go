@@ -53,9 +53,12 @@ func (repo *UserRepository) FindAll(ctx context.Context) ([]entities.User, error
 	return users, result.Error
 }
 
-func (repo *UserRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.User, error) {
-	var users []entities.User
-	result := repo.db.WithContext(ctx).Limit(limit).Offset(offset).Find(&users)
+func (repo *UserRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.UserData, error) {
+	var users []entities.UserData
+	result := repo.db.WithContext(ctx).
+		Table("authentication.view_user_data").
+		Limit(limit).
+		Offset(offset).Find(&users)
 	return users, result.Error
 }
 
@@ -87,16 +90,6 @@ func (repo *UserRepository) FindByEmail(ctx context.Context, email string) (enti
 	var user entities.User
 	result := repo.db.WithContext(ctx).First(&user, "email=?", email)
 	return user, result.Error
-}
-
-func (repo *UserRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.UserData, error) {
-	var users []entities.UserData
-	result := repo.db.WithContext(ctx).
-		Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).
-		Limit(limit).
-		Offset(offset).
-		Scan(&users)
-	return users, result.Error
 }
 
 func (repo *UserRepository) Count(ctx context.Context) (int64, error) {
@@ -158,13 +151,34 @@ func (repo *UserRepository) ExistsActiveUser(ctx context.Context, userName strin
 	result := repo.db.WithContext(ctx).Where("user_name=? AND is_active=true", userName).Find(&user)
 	return user.UserId !=0 , result.Error
 }
-
 func (repo *UserRepository) GetByUserNameAndPassword(ctx context.Context, userName string, password string) (entities.UserData, error) {
 	var userData entities.UserData
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? AND password=?", userName, password).Scan(&userData)
 	return userData, result.Error
 }
+//-------------------------------------------------------------------------------------------------------------------------
+func (repo *UserRepository) FindByIdentifier(ctx context.Context, identifier string) (entities.User, error) {
+	var user entities.User
+	result := repo.db.WithContext(ctx).
+		Where("user_name = ? OR email = ?", identifier, identifier).
+		First(&user)
+	return user, result.Error
+}
 
+func (repo *UserRepository) ExistsActiveUserByIdentifier(ctx context.Context, identifier string) (bool, error) {
+	var user entities.User
+	result := repo.db.WithContext(ctx).Where("(user_name=? OR email=?) AND is_active=true", identifier, identifier).Find(&user)
+	return user.UserId !=0 , result.Error
+}
+
+func (repo *UserRepository) GetByIdentifierAndPassword(ctx context.Context, identifier string, password string) (entities.UserData, error) {
+	var userData entities.UserData
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT * FROM authentication.view_user_data WHERE (user_name=? OR email=?) AND password=?", identifier, identifier, password).
+		Scan(&userData)
+	return userData, result.Error
+}
+//-------------------------------------------------------------------------------------------------------------------------
 func (repo *UserRepository) GetDataByUserName(ctx context.Context, userName string) (entities.UserData, error) {
 	var userData entities.UserData
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE user_name=?", userName).Scan(&userData)
@@ -213,10 +227,20 @@ func (repo *UserRepository) CountByStatus(ctx context.Context, status bool) (int
 	return count, result.Error
 }
 
-func (repo *UserRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-	var count int64
+func (repo *UserRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.UserData, error) {
+	var users []entities.UserData
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).
-		Count(&count)
-	return count, result.Error
+		Limit(limit).
+		Offset(offset).
+		Scan(&users)
+	return users, result.Error
+}
+
+func (repo *UserRepository) CountByParam(ctx context.Context, param string) (int64, error) {
+    var count int64
+    result := repo.db.WithContext(ctx).
+        Raw("SELECT COUNT(*) FROM authentication.view_user_data WHERE user_name=? OR email=?", param, param).
+        Scan(&count)
+    return count, result.Error
 }
