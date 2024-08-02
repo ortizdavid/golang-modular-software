@@ -2,20 +2,21 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
-	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
+	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type BackOfficeController struct {
-	configService *configurations.BasicConfigurationService
+	appConfig *configurations.AppConfiguration
+	authService *authentication.AuthService
 }
 
 func NewBackOfficeController(db *database.Database) *BackOfficeController {
 	return &BackOfficeController{
-		configService: configurations.NewBasicConfigurationService(db),
+		appConfig: configurations.LoadAppConfigurations(db),
+		authService:   authentication.NewAuthService(db),
 	}
 }
 
@@ -26,27 +27,19 @@ func (ctrl *BackOfficeController) Routes(router *fiber.App, db *database.Databas
 }
 
 func (ctrl *BackOfficeController) home(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("_back_office/home", fiber.Map{
 		"Title": "Home",
-		"BasicConfiguration": basicConfig,
+		"AppConfig": ctrl.appConfig,
 		"LoggedUser": loggedUser,
 	})
 }
 
 func (ctrl *BackOfficeController) dashboard(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("_back_office/dashboard", fiber.Map{
 		"Title": "Dashboard",
-		"BasicConfiguration": basicConfig,
+		"AppConfig": ctrl.appConfig,
 		"LoggedUser": loggedUser,
 	})
 }

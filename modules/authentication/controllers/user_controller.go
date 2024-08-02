@@ -7,15 +7,16 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
-	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
+	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type UserController struct {
 	service *services.UserService
+	authService *services.AuthService
 	roleService *services.RoleService
-	configService *configurations.BasicConfigurationService
+	appConfig *configurations.AppConfiguration
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
 }
@@ -23,8 +24,9 @@ type UserController struct {
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
 		service:       services.NewUserService(db),
+		authService:   services.NewAuthService(db),
 		roleService:   services.NewRoleService(db),
-		configService: configurations.NewBasicConfigurationService(db),
+		appConfig: 		configurations.LoadAppConfigurations(db),
 		infoLogger:    helpers.NewInfoLogger("users-info.log"),
 		errorLogger:   helpers.NewInfoLogger("users-error.log"),
 	}
@@ -55,11 +57,7 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 }
 
 func (ctrl *UserController) index(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllUsers(c.Context(), c, params)
 	if err != nil {
@@ -71,17 +69,13 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
 		"TotalPages": pagination.MetaData.TotalPages + 1,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
 func (ctrl *UserController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -90,16 +84,12 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 		"Title": "User Details",
 		"User": user,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
 func (ctrl *UserController) createForm(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	roles, err := ctrl.roleService.GetAllRoles(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -108,7 +98,7 @@ func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 		"Title": "Add User",
 		"Roles": roles,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
@@ -132,11 +122,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	roles, err := ctrl.roleService.GetAllRoles(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -146,7 +132,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 		"Roles": roles,
 		"User": user,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
@@ -170,26 +156,18 @@ func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 }
 
 func (ctrl *UserController) searchForm(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/user/search", fiber.Map{
 		"Title": "Search Users",
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
 func (ctrl *UserController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchUserRequest{SearchParam: searcParam}
-    loggedUser := c.Locals("loggedUser").(entities.UserData)
-    basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-    if err != nil {
-        return helpers.HandleHttpErrors(c, err)
-    }
+    loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
     params := helpers.GetPaginationParams(c)
     pagination, err := ctrl.service.SearchUsers(c.Context(), c, request, params)
     if err != nil {
@@ -200,10 +178,10 @@ func (ctrl *UserController) search(c *fiber.Ctx) error {
         "Title":        "Search Results",
         "Pagination":   pagination,
         "Param":        request.SearchParam,
-        "CurrentPage":  pagination.MetaData.CurrentPage,
-        "TotalPages":   pagination.MetaData.TotalPages,
+        "CurrentPage":  pagination.MetaData.CurrentPage + 1,
+        "TotalPages":   pagination.MetaData.TotalPages + 1,
         "LoggedUser":   loggedUser,
-        "BasicConfig":  basicConfig,
+        "AppConfig":  ctrl.appConfig,
     })
 }
 
@@ -213,16 +191,12 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/user/deactivate", fiber.Map{
 		"Title": "Deactivate User",
 		"User": user,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
@@ -247,16 +221,12 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/activate", fiber.Map{
 		"Title": "Activate User",
 		"User": user,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
@@ -276,15 +246,11 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 }
 
 func (ctrl *UserController) changeUserImageForm(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/user/change-image", fiber.Map{
 		"Title": "Add Image",
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
@@ -304,21 +270,17 @@ func (ctrl *UserController) changeUserImage(c *fiber.Ctx) error {
 }
 
 func (ctrl *UserController) changePasswordForm(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/user/change-password", fiber.Map{
 		"Title": "Updated Password",
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
 func (ctrl *UserController) changePassword(c *fiber.Ctx) error {
 	var request entities.ChangePasswordRequest
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	err := ctrl.service.ChangeUserPassword(c.Context(), loggedUser.UserId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
@@ -330,11 +292,7 @@ func (ctrl *UserController) changePassword(c *fiber.Ctx) error {
 
 func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 	var params helpers.PaginationParam
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	count, err := ctrl.service.CountUsers(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -351,17 +309,13 @@ func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 		"Users": users,
 		"Count": count,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }
 
 func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 	var params helpers.PaginationParam
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
-	basicConfig, err := ctrl.configService.GetBasicConfiguration(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	count, err := ctrl.service.CountUsers(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -378,6 +332,6 @@ func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 		"Users": users,
 		"Count": count,
 		"LoggedUser": loggedUser,
-		"BasicConfig": basicConfig,
+		"AppConfig": ctrl.appConfig,
 	})
 }

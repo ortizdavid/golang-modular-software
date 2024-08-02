@@ -17,7 +17,7 @@ func NewAuthenticationMiddleware(db *database.Database) *AuthenticationMiddlewar
 	}
 }
 
-func (mid *AuthenticationMiddleware) Handle(c *fiber.Ctx) error {
+func (mid *AuthenticationMiddleware) AuthenticateRequests(c *fiber.Ctx) error {
 	requestedPath := c.Path()
 	if requestedPath == "/" ||
 		strings.HasPrefix(requestedPath, "/api") ||
@@ -25,7 +25,7 @@ func (mid *AuthenticationMiddleware) Handle(c *fiber.Ctx) error {
 		strings.HasPrefix(requestedPath, "/css") ||
 		strings.HasPrefix(requestedPath, "/js") ||
 		strings.HasPrefix(requestedPath, "/lib") ||
-		strings.HasPrefix(requestedPath, "/auth") {
+		strings.HasPrefix(requestedPath, "/auth/login") {
 		return c.Next()
 	}
 	if !mid.service.IsUserAuthenticated(c.Context(), c) {
@@ -37,12 +37,10 @@ func (mid *AuthenticationMiddleware) Handle(c *fiber.Ctx) error {
 }
 
 
-
 func (mid *AuthenticationMiddleware)  CheckLoggedUser(c *fiber.Ctx) error {
 	loggedUser, err := mid.service.GetLoggedUser(c.Context(), c)
 	if err != nil || loggedUser.UserId == 0 {
 		return c.Redirect("/auth/login")
 	}
-	c.Locals("loggedUser", loggedUser)
 	return c.Next()
 }

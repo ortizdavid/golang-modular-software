@@ -175,9 +175,9 @@ func (s *AuthService) GetLoggedUser(ctx context.Context, fiberCtx *fiber.Ctx) (e
 	if err != nil {
 		return entities.UserData{}, apperrors.NewInternalServerError("Error while get session store: " +err.Error())
 	}
-	identifier := conversion.AnyToString(session.Get("identifier"))
+	userName := conversion.AnyToString(session.Get("user_name"))
 	password := conversion.AnyToString(session.Get("password"))
-	user, err := s.repository.GetByIdentifierAndPassword(ctx, identifier, password)
+	user, err := s.repository.GetByUserNameAndPassword(ctx, userName, password)
 	if err != nil {
 		return entities.UserData{}, apperrors.NewInternalServerError("User not found")
 	}

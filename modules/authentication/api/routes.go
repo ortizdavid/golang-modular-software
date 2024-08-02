@@ -6,5 +6,7 @@ import (
 )
 
 func RegisterApiRoutes(router *fiber.App, db *database.Database) {
+	NewAuthApi(db).Routes(router)
 	NewUserApi(db).Routes(router)
+	NewRoleApi(db).Routes(router)
 }

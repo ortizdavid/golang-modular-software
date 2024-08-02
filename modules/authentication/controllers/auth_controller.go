@@ -67,13 +67,10 @@ func (ctrl *AuthController) login(c *fiber.Ctx) error {
 }
 
 func (ctrl *AuthController) logout(c *fiber.Ctx) error {
-	loggedUser, err := ctrl.service.GetLoggedUser(c.Context(), c)
+	loggedUser, _ := ctrl.service.GetLoggedUser(c.Context(), c)
+	err := ctrl.service.Logout(c.Context(), c)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	err = ctrl.service.Logout(c.Context(), c)
-	if err != nil {
-		ctrl.errorLogger.Error(c, fmt.Sprintf("User '%s' failed to logout", loggedUser.UserName))
+		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' logged out", loggedUser.UserName))

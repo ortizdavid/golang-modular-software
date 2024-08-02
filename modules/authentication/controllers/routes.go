@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
-	NewUserController(db).Routes(router, db)
-	NewRoleController(db).Routes(router)
 	NewAuthController(db).Routes(router)
+	NewRoleController(db).Routes(router, db)
+	NewUserController(db).Routes(router, db)
 }
