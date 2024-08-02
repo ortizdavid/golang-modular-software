@@ -87,5 +87,3 @@ CREATE TABLE authentication.login_activity (
 INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
--- Default user: used to manage application
-INSERT INTO authentication.users (user_name, email,  password) VALUES ('admin@user.com', 'admin@user.com', '$2a$10$9VE1S3YfjRPA5Hu7ZAV.ROy9M8aQsEAy0t2AgrCnzoDpEqhbunspq');

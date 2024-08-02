@@ -7,6 +7,7 @@ import (
 
 
 func RegisterRoutes(router *fiber.App, db *database.Database) {
+	NewRootController(db).Routes(router, db)
 	NewBasicConfigurationController(db).Routes(router, db)
 	NewCompanyConfigurationController(db).Routes(router, db)
 	NewEmailConfigurationController(db).Routes(router, db)

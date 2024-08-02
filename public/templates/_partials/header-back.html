@@ -19,14 +19,16 @@
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      
-      <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
-          <a class="nav-link px-3" href="/auth/logout" style="color: white">
-            <i class="bi bi-box-arrow-right"></i>
-            Logout
-          </a>
-        </div>
+      <div class="dropdown">
+        <button class="btn btn-black dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
+          <img src="" alt="">
+          Profile: {{ .LoggedUser.UserName }}
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/user-data">User Data</a></li>
+          <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+          <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+        </ul>
       </div>
     </header>
     
@@ -48,7 +50,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/users">
+                <a class="nav-link" aria-current="page" href="/users-and-roles">
                   <i class="bi bi-people"></i>
                   Users and Roles
                 </a>

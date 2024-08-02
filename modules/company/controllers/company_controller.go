@@ -12,6 +12,6 @@ func NewCompanyController(db *database.Database) *CompanyController {
 	return &CompanyController{}
 }
 
-func (ctrl *CompanyController) Routes(router *fiber.App) {
+func (ctrl *CompanyController) Routes(router *fiber.App, db *database.Database) {
 
 }
