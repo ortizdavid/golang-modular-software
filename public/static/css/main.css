@@ -48,3 +48,17 @@
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
   }
+
+
+
+  /* Default pagination link style */
+.ui.pagination .item a {
+  color: #555; /* Default text color */
+  font-size: 0.875rem; /* Smaller font size */
+}
+
+/* Hover style */
+.ui.pagination .item a:hover {
+  color: #1a73e8; /* Color on hover */
+  text-decoration: underline; /* Optional underline on hover */
+}

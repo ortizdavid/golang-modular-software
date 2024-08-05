@@ -28,7 +28,6 @@ type UserData struct {
 	Email        	string `json:"email"`
 	Password     	string `json:"password"`  
 	IsActive     	string `json:"is_active"`
-	IsLogged     	string `json:"is_logged"`
 	UserImage    	string `json:"user_image"`
 	CreatedAt    	string `json:"created_at"`
 	UpdatedAt    	string `json:"updated_at"`
