@@ -22,14 +22,14 @@ func NewRootController(db *database.Database) *RootController {
 
 func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
-	group := router.Group("/users-and-roles", authMiddleware.CheckLoggedUser)
+	group := router.Group("/users-management", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 }
 
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/_root/index", fiber.Map{
-		"Title": "Users and Roles",
+		"Title": "Users Management",
 		"LoggedUser": loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})

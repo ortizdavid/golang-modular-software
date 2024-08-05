@@ -109,7 +109,7 @@ func (ctrl *AuthController) recoverPassword(c *fiber.Ctx) error {
 }
 
 func (ctrl *AuthController) getRecoverLinkForm(c *fiber.Ctx) error {
-	return c.Render("authentication/get-recover-link", fiber.Map{
+	return c.Render("authentication/auth/get-recover-link", fiber.Map{
 		"Title": "Get Recovery Link",
 	})
 }

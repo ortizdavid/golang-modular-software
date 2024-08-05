@@ -5,7 +5,7 @@
             *These settings are necessary for Basic things
         </div>
         <div class="card-body">
-            <form class="" action="/configuracoes/editar-email" method="POST" enctype="multipart/form-data">
+            <form class="" action="/configurations/basic-configurations/edit" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for=""><strong>SMTP Server:</strong></label>
                     <input type="text" class="form-control" name="SMTPServer" value="{{ .Configuracao.SMTPServer }}" autofocus required>
@@ -25,15 +25,15 @@
                 <div>
                     <button type="submit" class="btn btn-primary mr-2 btn-sm">
                         <i class="bi bi-send"></i>
-                        Submeter
+                        Submit
                     </button>
                     <button type="reset" class="btn btn-secondary btn-sm">
                         <i class="bi bi-eraser"></i>
-                        Limpar
+                        Clear
                     </button>
-                    <a href="/configuracoes" class="btn btn-danger btn-sm">
+                    <a href="/configurations/basic-configurations/" class="btn btn-danger btn-sm">
                         <i class="bi bi-x"></i>
-                        Cancelar
+                        Cancel
                     </a>
                 </div>
             </form>

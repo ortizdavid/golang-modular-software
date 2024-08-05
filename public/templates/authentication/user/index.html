@@ -34,7 +34,7 @@
                                 <td>{{ .Email }}</td>
                                 <td>{{ .IsActive }}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details" data-toggle="tooltip" title="Details">
+                                    <a class="btn btn-outline-primary btn-sm" href="/users/{{ .UniqueId }}/details" data-toggle="tooltip" title="Details">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -42,13 +42,26 @@
                         {{ end }}
                     </tbody>
                 </table>
-                <div>
-                    <p>Page {{ .CurrentPage }} of {{ .TotalPages }}</p>
-                    <a href="{{ .Pagination.MetaData.FirstPageUrl }}" class="btn btn-link">First</a>| 
-                    <a href="{{ .Pagination.MetaData.PreviousPageUrl }}" class="btn btn-link"><< Previous</a>| 
-                    <a href="{{ .Pagination.MetaData.NextPageUrl }}" class="btn btn-link">Next >></a>|
-                    <a href="{{ .Pagination.MetaData.LastPageUrl }}" class="btn btn-link">Last</a>
-                </div>
+                <nav>
+                    Page {{ .CurrentPage }} of {{ .TotalPages }}
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="{{ .Pagination.MetaData.FirstPageUrl }}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ .Pagination.MetaData.PreviousPageUrl }}">
+                                <span aria-hidden="true">&laquo;</span> Previous
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ .Pagination.MetaData.NextPageUrl }}">
+                                Next <span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ .Pagination.MetaData.LastPageUrl }}">Last</a>
+                        </li>
+                    </ul>
+                </nav>
             {{ else }}
                 <div class="alert alert-warning">
                     No records found

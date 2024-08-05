@@ -6,92 +6,61 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>{{ .Title }}</title>
     <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/lib/semantic-ui/semantic.min.css">
     <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/lib/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/inicio">
-        <img src="/images/logo.png" alt="" class="img img-rounded" style="width: 30px; height: 30px;">
-        {{ .AppConfig.CompanyConfig.CompanyName }}
-      </a>
-      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="dropdown">
-        <button class="btn btn-black dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
-          <img src="" alt="">
-          Profile: {{ .LoggedUser.UserName }}
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/user-data">User Data</a></li>
-          <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
-          <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
-        </ul>
+    <!-- sidebar -->
+    <div class="ui sidebar black inverted vertical menu sidebar-menu" id="sidebar">
+        <!-- Menu acoording role -->
+        {{ template "_partials/menu" .}}
+    </div>
+    <!--END sidebar -->
+
+    <!-- top nav -->
+    <nav class="ui top fixed blue inverted menu">
+      <div class="left menu">
+        <a href="" class="sidebar-menu-toggler item" data-target="#sidebar">
+          <i class="sidebar icon"></i>
+        </a>
+        <a href="" class="header item">
+          <img src="/images/logo.png" alt="" style="width: 25px; height: 26px;"> &nbsp;&nbsp;
+          {{ .AppConfig.BasicConfig.AppAcronym }}
+        </a>
       </div>
-    </header>
-    
-    <div class="container-fluid">
-      <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-          <div class="position-sticky pt-3 sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/home">
-                  <i class="bi bi-house"></i>
-                  Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/dashboard">
-                  <i class="bi bi-bar-chart"></i>
-                  Dashboard
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/users-and-roles">
-                  <i class="bi bi-people"></i>
-                  Users and Roles
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/company">
-                  <i class="bi bi-buildings"></i>
-                  Company
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/reference">
-                  <i class="bi bi-list-columns"></i>
-                  Reference
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/reports">
-                  <i class="bi bi-file-earmark-bar-graph-fill"></i>
-                 Reports
-                </a>
-               </li>
-                <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/configurations">
-                    <i class="bi bi-gear"></i>
-                    Configurations
-                  </a>
-                </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/users/change-password">
-                  <i class="bi bi-lock"></i>
-                  Change Password
-                </a>
-              </li>
-            </ul>
+      <div class="right menu">
+        <a href="/notifications" class="item">
+          <i class="bell icon"></i>
+        </a>
+        <div class="ui dropdown item">
+          <i class="user cirlce icon"></i>
+          <div class="menu">
+            <a href="/user-data" class="item">
+              <i class="info circle icon"></i> 
+              User Data
+            </a>
+            <a href="/change-password" class="item">
+              <i class="edit icon"></i>
+              Change Passord
+            </a>
+            <a href="/auth/logout" class="item">
+              <i class="sign out alternate icon"></i>
+              Logout
+            </a>
           </div>
-        </nav> 
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{ .Title }}</h1>
-          </div>
-  
-          Logged User ID: {{ .LoggedUser.UserId }}<br>
-          Logged User Email: {{ .LoggedUser.Email }}
+        </div>
+      </div>
+    </nav>
+    <!-- END top nav -->
+
+    <!-- CONTENT -->
+    <div class="pusher">
+      <div class="main-content">
+          <div class="ui container">
+            <div>
+              <h3>{{ .Title }}</h3>
+            </div>
+            Logged User ID: {{ .LoggedUser.UserId }}<br>
+            Logged User Email: {{ .LoggedUser.Email }}
+        

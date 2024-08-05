@@ -7,7 +7,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/back_office"
 	"github.com/ortizdavid/golang-modular-software/modules/company"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations"
-	"github.com/ortizdavid/golang-modular-software/modules/reference"
+	"github.com/ortizdavid/golang-modular-software/modules/references"
 	"github.com/ortizdavid/golang-modular-software/modules/reports"
 )
 
@@ -18,7 +18,7 @@ func RegisterControllers(router *fiber.App, db *database.Database) {
 	configurations.RegisterModuleRoutes(router, db)
 
 	// Register routes for reference module
-	reference.RegisterModuleRoutes(router, db)
+	references.RegisterModuleRoutes(router, db)
 
 	// Register routes for authentication module
 	authentication.RegisterModuleRoutes(router, db)

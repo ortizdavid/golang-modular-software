@@ -51,7 +51,7 @@ func (ctrl *EmailConfigurationController) index(c *fiber.Ctx) error {
 func (ctrl *EmailConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("configurations/email/edit", fiber.Map{
-		"Title": "Edita EmailConfig de Email",
+		"Title": "Edit Email Configuration",
 		"AppConfig": ctrl.appConfig,
 		"LoggedUser": loggedUser,
 	})

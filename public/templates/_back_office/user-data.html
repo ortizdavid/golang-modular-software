@@ -15,9 +15,15 @@
                 </div>
             </div>
             <div class="card-body">
+                <p><strong>Basic</strong></p><hr>
                 <p><strong>ID: </strong>{{ .LoggedUser.UserId }}</p>
                 <p><strong>User Name: </strong>{{ .LoggedUser.UserName }}</p>
                 <p><strong>Email: </strong>{{ .LoggedUser.Email }}</p>
+                <br>
+                <p><strong>Login Activity</strong></p><hr>
+                <p><strong>Status: </strong>{{ .LoggedUser.Status }}</p>
+                <p><strong>Device: </strong>{{ .LoggedUser.Device }}</p>
+                <p><strong>Browser: </strong>{{ .LoggedUser.Browser }}</p>
                 <p><strong>Last Login: </strong>{{ .LoggedUser.LastLogin }}</p>
                 <p><strong>Last Logout: </strong>{{ .LoggedUser.LastLogout }}</p>
             </div>

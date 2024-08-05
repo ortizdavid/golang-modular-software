@@ -27,6 +27,8 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 		// Create a new configuration if none exists
 		conf = entities.BasicConfiguration{
 			ConfigurationId:     0,
+			AppName:             request.AppName,
+			AppAcronym:          request.AppAcronym,
 			MaxRecordsPerPage:   request.MaxRecordPerPage,
 			MaxAdmninUsers:      request.MaxAdmninUsers,
 			MaxSuperAdmninUsers: request.MaxSuperAdminUsers,
@@ -41,6 +43,8 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 		return nil
 	}
 	// Update the existing configuration
+	conf.AppName = request.AppName
+	conf.AppAcronym = request.AppAcronym
 	conf.MaxAdmninUsers = request.MaxAdmninUsers
 	conf.MaxSuperAdmninUsers = request.MaxSuperAdminUsers // Fixed the assignment here
 	conf.MaxRecordsPerPage = request.MaxRecordPerPage

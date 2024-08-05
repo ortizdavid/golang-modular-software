@@ -1,28 +1,28 @@
 {{ template "_partials/header-auth" . }}
 
-    <div class="form-signin">
-        <form id="login-form" action="/auth/login" method="POST" enctype="application/x-www-form-urlencoded">
-            <div class="form-floating">
-                <input type="text" name="user_name" class="form-control" id="emailInput" placeholder="name@example.com" required autofocus>
-                <label for="userNameInput">User Name or Email</label>
-                <div id="user-name-error" style="color: red;"></div>
+    <form class="ui large form" action="/auth/login" method="POST">
+        <div class="ui stacked segment">
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" name="user_name" placeholder="Type your User Name" autofocus>
+                </div>
             </div>
-            <div class="form-floating">
-                <input type="password" name="password" class="form-control" id="passwordInput" 
-                    placeholder="Password" maxlength="150" minlength="8" required>
-                <label for="floatingPassword">Password</label>
-                <div id="passwor-error" style="color: red;"></div>
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input type="password" name="password" placeholder="Type your Password">
+                </div>
             </div>
-            <br>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">
-                <i class="bi bi-box-arrow-in-right"></i>
-                Sign in
+            <button type="submit" class="ui fluid large teal submit button">
+                Login
             </button>
-            <div class="">
-                Forgot passord? Recover <a href="/auth/get-recover-link">here</a>
-            </div>
-            <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
-        </form>
+        </div>
+        <div class="ui error message"></div>
+    </form>
+
+    <div class="ui message">
+        Forgot Password? Click <a href="/auth/recover-password">Here</a>
     </div>
 
 {{ template "_partials/footer-auth" . }}

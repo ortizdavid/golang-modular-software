@@ -5,7 +5,7 @@
             *These settings are necessary for Company Information
         </div>
         <div class="card-body">
-            <form class="" action="/configuracoes/editar-email" method="POST" enctype="multipart/form-data">
+            <form class="" action="/configurations/company-configurations/edit" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for=""><strong>SMTP Server:</strong></label>
                     <input type="text" class="form-control" name="SMTPServer" value="{{ .Configuracao.SMTPServer }}" autofocus required>
@@ -31,7 +31,7 @@
                         <i class="bi bi-eraser"></i>
                         Limpar
                     </button>
-                    <a href="/configuracoes" class="btn btn-danger btn-sm">
+                    <a href="/configurations/company-configurations" class="btn btn-danger btn-sm">
                         <i class="bi bi-x"></i>
                         Cancelar
                     </a>

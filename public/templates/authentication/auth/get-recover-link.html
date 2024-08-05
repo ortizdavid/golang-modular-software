@@ -1,52 +1,23 @@
 {{ template "_partials/header-auth" . }}
 
-    <div class="form-signin">
-        <form id="get-link-form" action="/auth/get-recover-link" method="POST" >
-            <div class="form-floating">
-                <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com">
-                <label for="floatingInput">Recovery Email</label>
-                <div id="email-error" style="color: red;"></div>
+    <form class="ui large form" id="get-link-form" action="/auth/get-recover-link" method="POST">
+        <div class="ui stacked segment">
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input type="email" name="email" placeholder="Type Recovery Email" autofocus>
+                    <div id="email-error" style="color: red;"></div>
+                </div>
             </div>
-            <br>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">
-                <i class="bi bi-send"></i>
-                Get recover link
+            <button type="submit" class="ui fluid large teal submit button">
+                Get Recover Link
             </button>
-            <div class="checkbox mb-3">
-                Do you have an account? Click <a href="/auth/login">Here</a>
-            </div>
-            <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
-        </form>
+        </div>
+        <div class="ui error message"></div>
+    </form>
+
+    <div class="ui message">
+        Did you get recovery link? Click <a href="/auth/login">Here</a>
     </div>
-
-    <script>
-        // JavaScript for form validation
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById("get-link-form");
-            const emailInput = document.getElementById("emailInput");
-            const emailError = document.getElementById("email-error");
-            const submitButton = document.getElementById("submit-button");
     
-            form.addEventListener("submit", function (event) {
-                // Prevent the form from submitting by default
-                event.preventDefault();
-                // Check if the email is valid
-                const email = emailInput.value.trim();
-                if (!validateEmail(email)) {
-                    emailError.textContent = "Email inválido";
-                    return;
-                } else {
-                    emailError.textContent = "";
-                }
-                // If email is valid, you can submit the form
-                form.submit();
-            });
-            // Email validation function
-            function validateEmail(email) {
-                const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-                return emailPattern.test(email);
-            }
-        });
-    </script>
-
 {{ template "_partials/footer-auth" . }}

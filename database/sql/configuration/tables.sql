@@ -16,6 +16,8 @@ CREATE TABLE configurations.email_configuration (
 DROP TABLE IF EXISTS configurations.basic_configuration;
 CREATE TABLE configurations.basic_configuration (
     configuration_id SERIAL PRIMARY KEY,
+    app_name VARCHAR(100) NOT NULL,
+    app_acronym VARCHAR(50),
     max_records_per_page INT,
     max_admin_users INT,
     max_super_admin_users INT,
