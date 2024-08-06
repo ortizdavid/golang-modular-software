@@ -1,34 +1,24 @@
 {{ template "_partials/header-back" . }}
 
-    <div class="card">
-        <div class="card-header">
-            *Activate the User - until deactivation
+<div class="ui segment">
+    
+    <form class="ui form" action="/users/{{ .User.UniqueId }}/activate" method="POST">
+        <div class="field">
+            <label for="username"><strong>User:</strong></label>
+            <input class="ui input" type="text" value="{{ .User.UserName }}" id="user_name" readonly>
         </div>
-        <div class="card-body">
-            <form class="" action="/users/{{ .User.UniqueId }}/activate" method="POST">
-                <div class="field">
-                    <label for=""><strong>User:</strong></label>
-                    <input class="form-control" type="text" value="{{ .User.UserName }}" id="" readonly>
-                </div>
-                <div class="field">
-                    <label for=""><strong>Role:</strong></label>
-                    <input class="form-control" type="text" value="{{ .User.RoleName }}" id="" readonly>
-                </div>
-                <br>
-                <div>
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="bi bi-check-circle"></i>
-                        Confirm Activation
-                    </button>
-                    <a href="/users/{{ .User.UniqueId }}/details" class="btn btn-danger btn-sm">
-                        <i class="bi bi-x"></i>
-                        Cancel
-                    </a>
-                </div>
-            </form>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="check circle icon"></i>
+                Confirm Activation
+            </button>
+            <div class="or"></div>
+            <a href="/users/{{ .User.UniqueId }}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
         </div>
-        <div class="card-footer">
-        </div>
-    </div>
+    </form>
+</div>
 
 {{ template "_partials/footer-back" . }}

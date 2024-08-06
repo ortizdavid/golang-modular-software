@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -39,6 +40,8 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 	group.Get("/", ctrl.index)
 	group.Get("/create", ctrl.createForm)
 	group.Post("/create", ctrl.create)
+	group.Get("/:id/edit", ctrl.editForm)
+	group.Post("/:id/edit", ctrl.edit)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/:id/assign-role", ctrl.assignRoleForm)
 	group.Post("/:id/assign-role", ctrl.assignRole)
@@ -73,21 +76,6 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl *UserController) details(c *fiber.Ctx) error {
-	id := c.Params("id")
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	return c.Render("authentication/user/details", fiber.Map{
-		"Title": "User Details",
-		"User": user,
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
-	})
-}
-
 func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	roles, err := ctrl.roleService.GetAllRoles(c.Context())
@@ -116,6 +104,55 @@ func (ctrl *UserController) create(c *fiber.Ctx) error {
 	return c.Redirect("/users")
 }
 
+func (ctrl *UserController) editForm(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	return c.Render("authentication/user/edit", fiber.Map{
+		"Title": "Edit User",
+		"User": user,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
+func (ctrl *UserController) edit(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	var request entities.EditUserRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.service.EditUser(c.Context(), user.UserId, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, "User '"+user.UserName+"' edited successfuly")
+	return c.Redirect("/users")
+}
+
+func (ctrl *UserController) details(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/details", fiber.Map{
+		"Title": "User Details",
+		"User": user,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
 func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
@@ -127,7 +164,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	return c.Render("authentication/user/edit", fiber.Map{
+	return c.Render("authentication/user/assign-role", fiber.Map{
 		"Title": "Assign Role",
 		"Roles": roles,
 		"User": user,
@@ -192,6 +229,9 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if loggedUser.UserId == user.UserId {
+		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot deactivate your own account"))
+	}
 	return c.Render("authentication/user/deactivate", fiber.Map{
 		"Title": "Deactivate User",
 		"User": user,
@@ -205,6 +245,10 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if loggedUser.UserId == user.UserId {
+		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot deactivate your own account"))
 	}
 	err = ctrl.service.DeactivateUser(c.Context(), user.UserId)
 	if err != nil {
@@ -222,7 +266,10 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("authentication/activate", fiber.Map{
+	if loggedUser.UserId == user.UserId {
+		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot activate your own account"))
+	}
+	return c.Render("authentication/user/activate", fiber.Map{
 		"Title": "Activate User",
 		"User": user,
 		"LoggedUser": loggedUser,
@@ -235,6 +282,10 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if loggedUser.UserId == user.UserId {
+		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot activate your own account"))
 	}
 	err = ctrl.service.ActivateUser(c.Context(), user.UserId)
 	if err != nil {

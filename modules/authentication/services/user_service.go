@@ -48,7 +48,6 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		Email:     request.Email,
 		Password:  encryption.HashPassword(request.Password),
 		IsActive:  true,
-		IsLogged:  false,
 		Image:     "",
 		Token:     encryption.GenerateRandomToken(),
 		UniqueId:  encryption.GenerateUUID(),
@@ -89,6 +88,22 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	return nil
 }
 
+func (s *UserService) EditUser(ctx context.Context, userId int64, request entities.EditUserRequest) error {
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	user, err := s.repository.FindById(ctx, userId)
+	if err != nil {
+		return apperrors.NewNotFoundError("user not found")
+	}
+	user.UserName = request.UserName
+	err = s.repository.Update(ctx, user)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while assign role: "+ err.Error())
+	}
+	return nil
+}
+
 func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request entities.AssignUserRoleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -110,7 +125,7 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	}
 	err = s.userRoleRepository.Create(ctx, userRole)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while assign role: "+ err.Error())
+		return apperrors.NewInternalServerError("error while assigning role: "+ err.Error())
 	}
 	return nil
 }

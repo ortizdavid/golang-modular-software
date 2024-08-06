@@ -1,8 +1,10 @@
 {{ template "_partials/header-auth" . }}
 
-<div class="alert alert-danger">
-    <strong>{{ .Title }}</strong>: {{ .Message }} 
-    <a href="javascript:history.back()">Back to Previous Page</a>
+<div class="ui negative message">
+    <div class="header">
+        <strong>{{ .Title }}</strong>: {{ .Message }}
+    </div>
+    <p><a href="javascript:history.back()">Go back to the previous page</a>.</p>
 </div>
-        
+
 {{ template "_partials/footer-auth" . }}

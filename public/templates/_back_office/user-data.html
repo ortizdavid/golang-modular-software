@@ -1,33 +1,32 @@
 {{ template "_partials/header-back" . }}
 
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <div align="right">
-                    <a href="/change-user-image" class="btn btn-primary btn-sm">
-                        <i class="bi bi-camera"></i>
-                        Change Image
-                    </a>
-                    <a href="/edit-user-data" class="btn btn-primary btn-sm">
-                        <i class="bi bi-pencil"></i>
-                        Edit
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                <p><strong>Basic</strong></p><hr>
-                <p><strong>ID: </strong>{{ .LoggedUser.UserId }}</p>
-                <p><strong>User Name: </strong>{{ .LoggedUser.UserName }}</p>
-                <p><strong>Email: </strong>{{ .LoggedUser.Email }}</p>
-                <br>
-                <p><strong>Login Activity</strong></p><hr>
-                <p><strong>Status: </strong>{{ .LoggedUser.Status }}</p>
-                <p><strong>Device: </strong>{{ .LoggedUser.Device }}</p>
-                <p><strong>Browser: </strong>{{ .LoggedUser.Browser }}</p>
-                <p><strong>Last Login: </strong>{{ .LoggedUser.LastLogin }}</p>
-                <p><strong>Last Logout: </strong>{{ .LoggedUser.LastLogout }}</p>
-            </div>
+    <div class="ui segment">
+        <div class="ui right floated buttons mini">
+            <a href="/change-user-image" class="ui button primary">
+                <i class="camera icon"></i>
+                Change Image
+            </a>
+            <a href="/edit-user-data" class="ui button primary">
+                <i class="pencil icon"></i>
+                Edit
+            </a>
+        </div>
+        <div class="">
+            {{ if .User.UserImage }}
+            <img src="/uploads/{{ .User.UserImage }}" alt="User Image" class="ui small rounded image">
+            {{ else }}
+                <img src="/images/user-blank.jpg" alt="Default User Image" class="ui small rounded image">
+            {{ end }}
+            <div class="ui clearing divider"></div>
+            <p><strong>ID: </strong>{{ .LoggedUser.UserId }}</p>
+            <p><strong>User Name: </strong>{{ .LoggedUser.UserName }}</p>
+            <p><strong>Email: </strong>{{ .LoggedUser.Email }}</p>
+            <div class="ui clearing divider"></div>
+            <p><strong>Device: </strong>{{ .LoggedUser.Device }}</p>
+            <p><strong>Browser: </strong>{{ .LoggedUser.Browser }}</p>
+            <p><strong>Last Login: </strong>{{ .LoggedUser.LastLogin }}</p>
+            <p><strong>Last Logout: </strong>{{ .LoggedUser.LastLogout }}</p>
         </div>
     </div>
-    
+
 {{ template "_partials/footer-back" . }}

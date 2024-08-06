@@ -1,0 +1,29 @@
+# .air.toml
+
+# Application name
+app = "myapp"
+
+# Directory to watch for changes
+root = "."
+
+# Output directory for built artifacts
+build = "build"
+
+# Path to the main Go file
+cmd = "main.go"
+
+# Reload configuration
+[watch]
+# Files to watch for changes (including HTML templates)
+include = ["*.go", "public/templates/**/*"]
+
+# Files to ignore
+exclude = ["build/**/*"]
+
+# Commands to execute before building
+[build]
+cmd = "go build -o ./build/main main.go"
+
+# Commands to execute after building
+[run]
+cmd = "./build/main"

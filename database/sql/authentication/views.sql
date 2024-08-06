@@ -10,7 +10,6 @@ SELECT
     us.email,
     us.password, 
     CASE WHEN us.is_active THEN 'Yes' ELSE 'No' END AS is_active,
-    us.is_logged,
     us.user_image,
     us.token,
     TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,

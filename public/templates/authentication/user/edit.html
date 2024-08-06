@@ -1,39 +1,23 @@
 {{ template "_partials/header-back" . }}
 
-    <div class="card">
-        <div class="card-header">
-            *Edite o perfil de usuário
+<div class="ui segment">
+    <form class="ui form" action="/users/{{ .User.UniqueId }}/edit" method="POST">
+        <div class="field">
+            <label for="username"><strong>User Name:</strong></label>
+            <input class="ui input" type="text" value="{{ .User.UserName }}" id="user_name" autofocus>
         </div>
-        <div class="card-body">
-            <form class="" action="/users/{{ .User.UniqueId }}/edit" method="POST">
-                <div class="field">
-                    <label for=""><strong>Username:</strong></label>
-                    <input class="form-control" type="text" value="{{ .User.UserName }}" id="" readonly>
-                </div>
-                <div>
-                    <label for=""><strong>Role:</strong></label>
-                    <select class="form-control" name="role_id" id="" autofocus>
-                        <option value="{{ .User.RoleId }}">{{ .User.RoleName }}</option>
-                        {{ range .Roles }}
-                            <option value="{{ .RoleId }}">{{ .RoleName }}</option>
-                        {{ end }}
-                    </select>
-                </div>
-                <br>
-                <div>
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="bi bi-send"></i>
-                        Submit
-                    </button>
-                    <a href="/users/{{ .Usr.UniqueId }}" class="btn btn-danger btn-sm">
-                        <i class="bi bi-x"></i>
-                        Cancel
-                    </a>
-                </div>
-            </form>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/users/{{ .User.UniqueId }}" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
         </div>
-        <div class="card-footer">
-        </div>
-    </div>
+    </form>
+</div>
 
 {{ template "_partials/footer-back" . }}

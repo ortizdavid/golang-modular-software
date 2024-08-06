@@ -1,37 +1,52 @@
 {{ template "_partials/header-back" . }}
 
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <div align="right">
-                    {{ if ne .User.UserId .LoggedUser.UserId}}
-                        {{ if eq .User.Active "Yes"}}
-                            <a href="/users/{{ .User.UniqueId }}/deactivate" class="btn btn-danger btn-sm">
-                                <i class="bi bi-person-slash"></i>
-                                Deactivate
-                            </a>
-                        {{ else }}
-                            <a href="/users/{{ .User.UniqueId }}/activate" class="btn btn-primary btn-sm">
-                                <i class="bi bi-person-check"></i>
-                                Activate
-                            </a>
-                        {{ end }}
-                    {{ end }}
-                    <a href="/users/{{ .User.UniqueId }}/edit" class="btn btn-primary btn-sm">
-                        <i class="bi bi-pencil"></i>
-                        Edit User
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                <p><strong>Id: </strong>{{ .User.UserId }}</p>
-                <p><strong>Username: </strong>{{ .User.UserName }}</p>
-                <p><strong>Role: </strong>{{ .User.RoleName }}</p>
-                <p><strong>Active: </strong>{{ .User.Active }}</p>
-                <p><strong>Created: </strong>{{ .User.CreatedAtStr }}</p>
-                <p><strong>Updated: </strong>{{ .User.UpdatedAtStr }}</p>
-            </div>
-        </div>
-    </div>    
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        {{ if eq .User.IsActive "Yes" }}
+            <a href="/users/{{ .User.UniqueId }}/deactivate" class="ui red button">
+                <i class="ban icon"></i>
+                Deactivate
+            </a>
+        {{ else }}
+            <a href="/users/{{ .User.UniqueId }}/activate" class="ui primary button">
+                <i class="checkmark icon"></i>
+                Activate
+            </a>
+        {{ end }}
+        <a href="/users/{{ .User.UniqueId }}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+
+    <div class="ui image">
+        {{ if .User.UserImage }}
+            <img src="/uploads/{{ .User.UserImage }}" alt="User Image" class="ui small rounded image">
+        {{ else }}
+            <img src="/images/user-blank.jpg" alt="Default User Image" class="ui small rounded image">
+        {{ end }}
+    </div>
+
+    <div class="ui clearing divider"></div>
+    
+    <p><strong>ID:</strong> {{ .User.UserId }}</p>
+    <p><strong>User Name:</strong> {{ .User.UserName }}</p>
+    <p><strong>Email:</strong> {{ .User.Email }}</p>
+    <p><strong>Active Status:</strong>
+        <span class="{{ if eq .User.IsActive "Yes" }}ui green label{{ else }}ui red label{{ end }}">
+            {{ if eq .User.IsActive "Yes" }}Active{{ else }}Inactive{{ end }}
+        </span>
+    </p>
+    <p><strong>Creation Date:</strong> {{ .User.CreatedAt }}</p>
+    <p><strong>Last Update:</strong> {{ .User.UpdatedAt }}</p>
+
+    <div class="ui clearing divider"></div>
+    <p><strong>Status:</strong> {{ .User.Status }}</p>
+    <p><strong>Device:</strong> {{ .User.Device }}</p>
+    <p><strong>Browser:</strong> {{ .User.Browser }}</p>
+    <p><strong>Last Login:</strong> {{ .User.LastLogin }}</p>
+    <p><strong>Last Logout:</strong> {{ .User.LastLogout }}</p>
+
+</div>
 
 {{ template "_partials/footer-back" . }}

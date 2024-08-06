@@ -8,7 +8,6 @@ type User struct {
 	Email  		string `gorm:"column:email"`
 	Password  	string `gorm:"column:password"`
 	IsActive  	bool `gorm:"column:is_active"`
-	IsLogged  	bool `gorm:"column:is_logged"`
 	Image  		string `gorm:"column:user_image"`
 	Token  		string `gorm:"column:token;"`
 	UniqueId  	string `gorm:"column:unique_id"`

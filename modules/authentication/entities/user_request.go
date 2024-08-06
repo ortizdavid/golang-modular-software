@@ -40,6 +40,16 @@ func (req AssignUserRoleRequest) Validate() error {
 	return nil
 }
 
+// 
+type EditUserRequest struct {
+	UserName	string `json:"user_name" form:"user_name"`
+}
+
+func (req EditUserRequest) Validate() error {
+	return nil
+}
+
+
 type SearchUserRequest struct {
 	SearchParam		string `json:"search_param" form:"search_param"`
 }

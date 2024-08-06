@@ -39,7 +39,7 @@ func (mid *AuthenticationMiddleware) AuthenticateRequests(c *fiber.Ctx) error {
 
 func (mid *AuthenticationMiddleware)  CheckLoggedUser(c *fiber.Ctx) error {
 	loggedUser, err := mid.service.GetLoggedUser(c.Context(), c)
-	if err != nil || loggedUser.UserId == 0 {
+	if err != nil || loggedUser.UserId == 0 || loggedUser.IsActive == "No" {
 		return c.Redirect("/auth/login")
 	}
 	return c.Next()

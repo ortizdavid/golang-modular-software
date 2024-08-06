@@ -65,8 +65,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	if err := session.Save(); err != nil {
 		return apperrors.NewInternalServerError(err.Error())
 	}
-	//Mark as logged and Update Token
-	user.IsLogged = true;
+	//Update Token
 	user.Token = encryption.GenerateRandomToken()
 	if err := s.repository.Update(ctx, user); err != nil {
 		return apperrors.NewInternalServerError(err.Error())
@@ -99,13 +98,8 @@ func (s *AuthService) Logout(ctx context.Context, fiberCtx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	// Mark as not logged
+	// Get user
 	user, _ := s.repository.FindById(ctx, loggedUser.UserId)
-	user.IsLogged = false
-	err = s.repository.Update(ctx, user)
-	if err != nil {
-		return apperrors.NewInternalServerError(err.Error())
-	}
 	//Update Login Activity--------------------------------------------------------
 	loginAct, err := s.loginActRepository.FindByUserId(ctx, user.UserId)
 	if err != nil {

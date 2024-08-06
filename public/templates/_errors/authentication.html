@@ -1,8 +1,10 @@
 {{ template "_partials/header-auth" . }}
 
-<div class="alert alert-danger">
-    <strong>{{ .Title }}</strong>
-    Access restricted. Please <a href="/auth/login">log in</a> to continue.
+<div class="ui negative message">
+    <div class="header">
+        <strong>{{ .Title }}</strong>
+    </div>
+    <p>Access restricted. Please <a href="/auth/login">log in</a> to continue.</p>
 </div>
- 
+
 {{ template "_partials/footer-auth" . }}
