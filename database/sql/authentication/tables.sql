@@ -18,7 +18,6 @@ CREATE TABLE authentication.users (
     password VARCHAR(200) NOT NULL,
     user_image VARCHAR(100), 
     is_active BOOLEAN DEFAULT TRUE,
-    is_logged BOOLEAN,
     token VARCHAR(150) UNIQUE,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -87,3 +86,11 @@ CREATE TABLE authentication.login_activity (
 INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
 INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
+
+-- test users
+-- Inserting the users into the 'authentication.users' table
+
+INSERT INTO authentication.users (user_name, email, password, user_image, is_active, token, unique_id, created_at, updated_at) VALUES
+('admin01', 'admin01@example.com', '$2a$10$WK73KU34gno.h1TqJFLrmux5uVIrNwS5TfgKxLcKxeSO15DP.McwO', NULL, TRUE, NULL, '0c8e2b1f-89ba-49b6-ba4f-81622f33732d', NOW(), NOW()),
+('admin02', 'admin02@example.com', '$2a$10$Rb44LaGqdM9R4Lx3zg59Z.bZGAlP05OGU5cR9Vni7W35EksJOuW/a', NULL, TRUE, NULL, '30823080-e83a-462d-ba41-88daff6e016d', NOW(), NOW()),
+('employee01', 'employee01@example.com', '$2a$10$AlQU9C64eQgiXGTcn2/gLuszJWfw31VkPkP4TI6OpgKjmzST6h1/a', NULL, TRUE, NULL, '1fbe2e02-8f87-4312-9059-1d14f3cef623', NOW(), NOW());

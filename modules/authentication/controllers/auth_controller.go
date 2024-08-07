@@ -48,7 +48,7 @@ func (ctrl *AuthController) index(c *fiber.Ctx) error {
 
 func (ctrl *AuthController) loginForm(c *fiber.Ctx) error {
 	return c.Render("authentication/auth/login", fiber.Map{
-		"Title": "Authentication",
+		"Title": "Login",
 	})
 }
 

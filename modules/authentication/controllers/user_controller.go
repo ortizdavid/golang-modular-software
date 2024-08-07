@@ -373,11 +373,12 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 	if loggedUser.UserId == user.UserId {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
 	}
+	fmt.Printf("\nRESET PASSWORD\nNew Password: %s\nPassword Conf: %s", request.NewPassword, request.PasswordConf)
 	err = ctrl.service.ResetUserPassword(c.Context(), user.UserId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' password reseted", loggedUser.UserName))
-	return c.Redirect("/auth/login")
+	return c.Redirect("/users/"+user.UniqueId+"/details")
 }

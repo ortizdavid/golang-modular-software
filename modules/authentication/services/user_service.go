@@ -7,7 +7,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/encryption"
-	"github.com/ortizdavid/go-nopain/filemanager"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
@@ -175,18 +174,13 @@ func (s *UserService) ResetUserPassword(ctx context.Context, userId int64, reque
 }
 
 func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, userId int64) error {
-	var fileInfo filemanager.FileInfo
-	var fileManager filemanager.FileManager
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
 		return apperrors.NewNotFoundError("user not found")
 	}
-	// remove current image if exists
+	// remove current image if exists //TODO
 	uploadPath := config.UploadImagePath()
-	currentImage := user.UserImage
-	if  fileInfo.FileExists(uploadPath, currentImage) {
-		fileManager.RemoveFile(uploadPath, currentImage)
-	}
+	//currentImage := user.UserImage
 	uploader := helpers.NewUploader(uploadPath, config.MaxUploadImageSize(), helpers.ExtImages)
 	info, err := uploader.UploadSingleFile(fiberCtx, "user_image")
 	if err != nil {

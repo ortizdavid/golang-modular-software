@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -70,20 +71,43 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	if err := s.repository.Update(ctx, user); err != nil {
 		return apperrors.NewInternalServerError(err.Error())
 	}
-	//Update Login Activity------------------------------------------------------------
+		// Update or insert login activity
 	loginAct, err := s.loginActRepository.FindByUserId(ctx, user.UserId)
 	if err != nil {
-		return apperrors.NewInternalServerError("User activity not found: "+err.Error())
-	}
-	loginAct.Status = entities.ActivityStatusOnline
-	loginAct.Host = fiberCtx.Hostname()
-	loginAct.Browser = string(fiberCtx.Context().UserAgent())
-	loginAct.LastLogin = time.Now().UTC()
-	loginAct.IPAddress = fiberCtx.IP() 
-	loginAct.Device = fiberCtx.Get("Device") 
-	loginAct.Location = fiberCtx.Get("Location") 
-	if err := s.loginActRepository.Update(ctx, loginAct); err != nil {
-		return apperrors.NewInternalServerError(err.Error())
+		if err == sql.ErrNoRows {
+			// Create a new login activity record if not found
+			loginAct = entities.LoginActivity{
+				UserId:     user.UserId,
+				Status:     entities.ActivityStatusOnline,
+				Host:       fiberCtx.Hostname(),
+				Browser:    string(fiberCtx.Context().UserAgent()),
+				IPAddress:  fiberCtx.IP(),
+				Device:     fiberCtx.Get("Device"),
+				Location:   fiberCtx.Get("Location"),
+				UniqueId:   encryption.GenerateUUID(),
+				LastLogin:  time.Now().UTC(),
+				CreatedAt:  time.Now().UTC(),
+				UpdatedAt:  time.Now().UTC(),
+			}
+			if err := s.loginActRepository.Create(ctx, loginAct); err != nil {
+				return apperrors.NewInternalServerError("Failed to create login activity: " + err.Error())
+			}
+		} else {
+			return apperrors.NewInternalServerError("Failed to find login activity: " + err.Error())
+		}
+	} else {
+		// Update the existing login activity record
+		loginAct.Status = entities.ActivityStatusOnline
+		loginAct.Host = fiberCtx.Hostname()
+		loginAct.Browser = string(fiberCtx.Context().UserAgent())
+		loginAct.LastLogin = time.Now().UTC()
+		loginAct.IPAddress = fiberCtx.IP()
+		loginAct.Device = fiberCtx.Get("Device")
+		loginAct.Location = fiberCtx.Get("Location")
+		loginAct.UpdatedAt = time.Now().UTC()
+		if err := s.loginActRepository.Update(ctx, loginAct); err != nil {
+			return apperrors.NewInternalServerError("Failed to update login activity: " + err.Error())
+		}
 	}
 	return nil
 }
