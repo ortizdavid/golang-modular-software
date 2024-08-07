@@ -1,4 +1,189 @@
 {{ template "_partials/header-back" .}}
-    
-    
+
+<div class="ui grid stackable padded">
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header blue">
+                    <i class="icon users"></i>
+                </div>
+                <div class="header">
+                    <div class="ui blue header">
+                        {{ .Statistic.Users }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Users</strong>
+                </div>
+                <div class="description">
+                    Total number of users
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/users" class="ui primary button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header green">
+                    <i class="icon check square"></i>
+                </div>
+                <div class="header">
+                    <div class="ui green header">
+                        {{ .Statistic.ActiveUsers }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Active Users</strong>
+                </div>
+                <div class="description">
+                    Total number of active users
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/active-users" class="ui green button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header red">
+                    <i class="icon user times"></i>
+                </div>
+                <div class="header">
+                    <div class="ui red header">
+                        {{ .Statistic.InactiveUsers }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Inactive Users</strong>
+                </div>
+                <div class="description">
+                    Total number of inactive users
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/inactive-users" class="ui red button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header teal">
+                    <i class="icon user circle"></i>
+                </div>
+                <div class="header">
+                    <div class="ui teal header">
+                        {{ .Statistic.OnlineUsers }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Online Users</strong>
+                </div>
+                <div class="description">
+                    Total number of online users
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/online-users" class="ui teal button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header green">
+                    <i class="icon user plus"></i>
+                </div>
+                <div class="header">
+                    <div class="ui green header">
+                        {{ .Statistic.BeneficiaryTypes }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Roles</strong>
+                </div>
+                <div class="description">
+                    Different roles within the system
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/roles" class="ui green button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header teal">
+                    <i class="icon lock"></i>
+                </div>
+                <div class="header">
+                    <div class="ui teal header">
+                        {{ .Statistic.Permissions }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Permissions</strong>
+                </div>
+                <div class="description">
+                    Access permissions and roles
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/permissions" class="ui teal button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header purple">
+                    <i class="icon sign-in"></i>
+                </div>
+                <div class="header">
+                    <div class="ui purple header">
+                        {{ .Statistic.LoginActivity }}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Login Activity</strong>
+                </div>
+                <div class="description">
+                    Recent login activities
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/login-activity" class="ui purple button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {{ template "_partials/footer-back" .}}

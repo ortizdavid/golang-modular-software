@@ -5,13 +5,13 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
-	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type RoleController struct {
 	service *services.RoleService
+	authService *services.AuthService
 	appConfig *configurations.AppConfiguration
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
@@ -19,10 +19,11 @@ type RoleController struct {
 
 func NewRoleController(db *database.Database) *RoleController {
 	return &RoleController{
-		service:       services.NewRoleService(db),
-		appConfig: 	configurations.LoadAppConfigurations(db),
-		infoLogger:    helpers.NewInfoLogger("users-info.log"),
-		errorLogger:   helpers.NewInfoLogger("users-error.log"),
+		service:     services.NewRoleService(db),
+		authService: services.NewAuthService(db),
+		appConfig:   configurations.LoadAppConfigurations(db),
+		infoLogger:  helpers.NewInfoLogger("users-info.log"),
+		errorLogger: helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
@@ -34,8 +35,8 @@ func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 }
 
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
-	var params helpers.PaginationParam
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
+	params := helpers.GetPaginationParams(c)
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	count, err := ctrl.service.CountRoles(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -44,8 +45,8 @@ func (ctrl *RoleController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	return c.Render("authentication/roles/index", fiber.Map{
-		"Title": "User Details",
+	return c.Render("authentication/role/index", fiber.Map{
+		"Title": "Roles",
 		"Roles": roles,
 		"Count": count,
 		"LoggedUser":  loggedUser,
@@ -54,7 +55,7 @@ func (ctrl *RoleController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *RoleController) createForm(c *fiber.Ctx) error {
-	loggedUser := c.Locals("loggedUser").(entities.UserData)
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/roles/create", fiber.Map{
 		"Title":       "Create Role",
 		"LoggedUser":  loggedUser,
