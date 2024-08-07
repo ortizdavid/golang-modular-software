@@ -8,6 +8,7 @@ import (
 
 func ConfigStaticFiles(app *fiber.App) {
 	app.Static("/", "./public/static")
+	app.Static("/uploads", "./public/uploads")
 }
 
 func GetTemplateEngine() *html.Engine {

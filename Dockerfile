@@ -10,5 +10,5 @@ RUN GOOS=linux go build -o golang-modular-software
 FROM alpine
 WORKDIR /app
 COPY --from=builder /app /app/
-EXPOSE 9000
+EXPOSE 4003
 CMD [ "./golang-modular-software" ]

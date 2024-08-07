@@ -10,4 +10,5 @@ func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
 	NewRootController(db).Routes(router, db)
 	NewRoleController(db).Routes(router, db)
 	NewUserController(db).Routes(router, db)
+	NewAccountController(db).Routes(router, db)
 }

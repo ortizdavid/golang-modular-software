@@ -1,4 +1,34 @@
-{{ template "_partials/header-back" . }}
+{{ template "_partials/header-back" .}}
 
+<div class="ui segment">
+    <form class="ui form" action="/users/{{.User.UniqueId}}/assign-role" method="POST">
+        <div class="field">
+            <label for="user_name"><strong>User Name:</strong></label>
+            <input class="ui input" type="text" value="{{.User.UserName}}" name="user_name" readonly>
+        </div>
+        
+        <div class="field">
+            <label for="role"><strong>Assign Role:</strong></label>
+            <select class="ui dropdown" id="role" name="role_id" required>
+                <option value="">Select Role</option>
+                {{ range .Roles }}
+                    <option value="{{.RoleId}}">{{.RoleName}}</option>
+                {{ end }}
+            </select>
+        </div>
 
-{{ template "_partials/footer-back" . }}
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/users/{{.User.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

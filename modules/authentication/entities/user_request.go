@@ -22,6 +22,16 @@ func (req ChangePasswordRequest) Validate() error {
 	return nil
 }
 
+// -- Change Password
+type ResetPasswordRequest struct {
+	NewPassword		string `json:"new_password" form:"new_password"`
+	PasswordConf	string `json:"password_conf" form:"password_conf"`
+}
+
+func (req ResetPasswordRequest) Validate() error {
+	return nil
+}
+
 // -- Change Profile Image
 type ChangeImageRequest struct {
 	UserImage		string `json:"user_image" form:"user_image"`

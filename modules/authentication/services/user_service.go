@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/encryption"
+	"github.com/ortizdavid/go-nopain/filemanager"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
@@ -48,7 +49,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		Email:     request.Email,
 		Password:  encryption.HashPassword(request.Password),
 		IsActive:  true,
-		Image:     "",
+		UserImage:     "",
 		Token:     encryption.GenerateRandomToken(),
 		UniqueId:  encryption.GenerateUUID(),
 		CreatedAt: time.Now().UTC(),
@@ -108,13 +109,20 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	_, err := s.repository.FindById(ctx, userId)
+	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
 		return apperrors.NewNotFoundError("user not found")
 	}
-	_, err = s.roleRepository.FindById(ctx, request.RoleId)
+	role, err := s.roleRepository.FindById(ctx, request.RoleId)
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
+	}
+	exists, err := s.userRoleRepository.ExistsByUserId(ctx, userId, request.RoleId)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return apperrors.NewConflictError(fmt.Sprintf("role '%s' already assigned to user '%s'", role.RoleName, user.UserName))
 	}
 	userRole := entities.UserRole{
 		UserId:     userId,
@@ -148,17 +156,43 @@ func (s *UserService) ChangeUserPassword(ctx context.Context, userId int64, requ
 	return nil
 }
 
-func (s *UserService) ChangeUserImage(ctx context.Context, fiberCtx *fiber.Ctx, userId int64) error {
+func (s *UserService) ResetUserPassword(ctx context.Context, userId int64, request entities.ResetPasswordRequest) error {
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
 		return apperrors.NewNotFoundError("user not found")
 	}
-	uploader := helpers.NewUploader(config.UploadImagePath(), config.MaxUploadImageSize(), helpers.ExtImages)
+	user.Password = encryption.HashPassword(request.NewPassword)
+	user.Token = encryption.GenerateRandomToken()
+	user.UpdatedAt = time.Now().UTC()
+	err = s.repository.Update(ctx, user)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while reseting password: "+ err.Error())
+	}
+	return nil
+}
+
+func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, userId int64) error {
+	var fileInfo filemanager.FileInfo
+	var fileManager filemanager.FileManager
+	user, err := s.repository.FindById(ctx, userId)
+	if err != nil {
+		return apperrors.NewNotFoundError("user not found")
+	}
+	// remove current image if exists
+	uploadPath := config.UploadImagePath()
+	currentImage := user.UserImage
+	if  fileInfo.FileExists(uploadPath, currentImage) {
+		fileManager.RemoveFile(uploadPath, currentImage)
+	}
+	uploader := helpers.NewUploader(uploadPath, config.MaxUploadImageSize(), helpers.ExtImages)
 	info, err := uploader.UploadSingleFile(fiberCtx, "user_image")
 	if err != nil {
 		return apperrors.NewNotFoundError("error while uploading image: "+err.Error())
 	}
-	user.Image = info.FinalName
+	user.UserImage = info.FinalName
 	user.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, user)
 	if err != nil {

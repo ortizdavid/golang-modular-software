@@ -1,4 +1,4 @@
-{{ template "_partials/header-back" . }}
+{{ template "_partials/header-back" .}}
 
     <div class="card">
         <div class="card-header">
@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="card-body">
-            {{ if .Count }}
-                <p>Total : {{ .Count }}</p>
+            {{ if .Count}}
+                <p>Total : {{.Count}}</p>
                 <table class="table table-hover">
                     <thead class="table-dark">
                         <tr>
@@ -27,14 +27,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{ range .Users }}
-                            <tr class=" {{ if eq .Active "Yes"}} alert-success {{ else }} alert-danger {{ end }}">
-                                <td class="collapsing">{{ .UserId }}</td>
-                                <td>{{ .UserName }}</td>
-                                <td>{{ .RoleName }}</td>
-                                <td>{{ .Active }}</td>
+                        {{ range .Users}}
+                            <tr class=" {{ if eq .Active "Yes" }} alert-success {{ else }} alert-danger {{ end }}">
+                                <td class="collapsing">{{.UserId}}</td>
+                                <td>{{.UserName}}</td>
+                                <td>{{.RoleName}}</td>
+                                <td>{{.Active}}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="/users/{{ .UniqueId }}/details" data-toggle="tooltip" title="Details">
+                                    <a class="btn btn-primary btn-sm" href="/users/{{.UniqueId}}/details" data-toggle="tooltip" title="Details">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </td>
@@ -43,11 +43,11 @@
                     </tbody>
                 </table>
                 <div>
-                    {{ if .Pagination.PrevPage }}
-                        <a href="/users?page={{ .Pagination.PrevPage }}" class="btn btn-link"><< Página Anterior</a> | 
+                    {{ if .Pagination.PrevPage}}
+                        <a href="/users?page={{.Pagination.PrevPage}}" class="btn btn-link"><< Página Anterior</a> | 
                     {{ end }}
-                    {{ if .Pagination.NextPage }}
-                        <a href="/users?page={{ .Pagination.NextPage }}" class="btn btn-link">Próxima Página >></a>
+                    {{ if .Pagination.NextPage}}
+                        <a href="/users?page={{.Pagination.NextPage}}" class="btn btn-link">Próxima Página >></a>
                     {{ end }}
                 </div>
             {{ else }}
@@ -60,4 +60,4 @@
         </div>
     </div>
         
-{{ template "_partials/footer-back" . }}
+{{ template "_partials/footer-back" .}}

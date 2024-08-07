@@ -49,12 +49,10 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 	group.Post("/:id/deactivate", ctrl.deactivate)
 	group.Get("/:id/activate", ctrl.activateForm)
 	group.Post("/:id/activate", ctrl.activate)
-	group.Get("/change-user-image", ctrl.changeUserImageForm)
-	group.Post("/change-user-image", ctrl.changeUserImage)
+	group.Get("/:id/reset-password", ctrl.resetPasswordForm)
+	group.Post("/:id/reset-password", ctrl.resetPassword)
 	group.Get("/search", ctrl.searchForm)
 	group.Get("/search-results", ctrl.search)
-	router.Get("/change-password", ctrl.changePasswordForm)
-	router.Post("/change-password", ctrl.changePassword)
 	router.Get("/active-users", ctrl.getAllActiveUsers)
 	router.Post("/inactive-users", ctrl.getAllInactiveUsers)
 }
@@ -188,7 +186,7 @@ func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User '"+user.UserName+"' assigned role")
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' assigned role %d", user.UserName, request.RoleId))
 	return c.Redirect("/users")
 }
 
@@ -296,51 +294,6 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	return c.Redirect("/users/"+id+"/details")
 }
 
-func (ctrl *UserController) changeUserImageForm(c *fiber.Ctx) error {
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("authentication/user/change-image", fiber.Map{
-		"Title": "Add Image",
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
-	})
-}
-
-func (ctrl *UserController) changeUserImage(c *fiber.Ctx) error {
-	id := c.Params("id")
-	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	err = ctrl.service.ChangeUserImage(c.Context(), c, user.UserId)
-	if err != nil {
-		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
-	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' added image", user.UserName))
-	return c.Redirect("/user-data")
-}
-
-func (ctrl *UserController) changePasswordForm(c *fiber.Ctx) error {
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("authentication/user/change-password", fiber.Map{
-		"Title": "Updated Password",
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
-	})
-}
-
-func (ctrl *UserController) changePassword(c *fiber.Ctx) error {
-	var request entities.ChangePasswordRequest
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	err := ctrl.service.ChangeUserPassword(c.Context(), loggedUser.UserId, request)
-	if err != nil {
-		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
-	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated password", loggedUser.UserName))
-	return c.Redirect("/auth/login")
-}
-
 func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 	var params helpers.PaginationParam
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
@@ -385,4 +338,46 @@ func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 		"LoggedUser": loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})
+}
+
+
+func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if loggedUser.UserId == user.UserId {
+		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
+	}
+	return c.Render("authentication/user/reset-password", fiber.Map{
+		"Title":  "Reset Password",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.appConfig,
+		"User": user,
+	})
+}
+
+func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	var request entities.ResetPasswordRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	if loggedUser.UserId == user.UserId {
+		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
+	}
+	err = ctrl.service.ResetUserPassword(c.Context(), user.UserId, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' password reseted", loggedUser.UserName))
+	return c.Redirect("/auth/login")
 }

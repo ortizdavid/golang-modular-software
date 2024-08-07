@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{{ .Title }}</title>
+    <title>{{.Title}}</title>
     <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="/lib/semantic-ui/semantic.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -13,7 +13,7 @@
     <!-- sidebar -->
     <div class="ui sidebar black inverted vertical menu sidebar-menu" id="sidebar">
         <!-- Menu acoording role -->
-        {{ template "_partials/menu" . }}
+        {{ template "_partials/menu" .}}
     </div>
     <!-- top nav -->
     <nav class="ui top fixed blue inverted menu">
@@ -23,7 +23,7 @@
         </a>
         <a href="" class="header item">
           <img src="/images/logo.png" alt="" style="width: 25px; height: 26px;"> &nbsp;&nbsp;
-          {{ .AppConfig.BasicConfig.AppAcronym }}
+          {{.AppConfig.BasicConfig.AppAcronym}}
         </a>
       </div>
       <div class="right menu">
@@ -33,11 +33,15 @@
         <div class="ui dropdown item">
           <i class="user cirlce icon"></i>
           <div class="menu">
-            <a href="/user-data" class="item">
+            <a href="/account/user-data" class="item">
               <i class="info circle icon"></i> 
               User Data
             </a>
-            <a href="/change-password" class="item">
+            <a href="/account/upload-image" class="item">
+              <i class="camera icon"></i>
+              Upload Image
+            </a>
+            <a href="/account/change-password" class="item">
               <i class="edit icon"></i>
               Change Password
             </a>
@@ -54,6 +58,6 @@
       <div class="main-content">
           <div class="" style="padding: 1%;">
             <div>
-              <h3>{{ .Title }}</h3>
+              <h3>{{.Title}}</h3>
             </div>
         

@@ -1,0 +1,32 @@
+{{ template "_partials/header-back" .}}
+
+    <div class="ui segment">
+        <div class="ui right floated buttons mini">
+            <a href="/account/upload-image" class="ui button primary">
+                <i class="camera icon"></i>
+                Upload Image
+            </a>
+            <a href="/account/change-data" class="ui button primary">
+                <i class="pencil icon"></i>
+                Edit
+            </a>
+        </div>
+        <div class="">
+            {{ if .LoggedUser.UserImage }}
+                <img src="/uploads/images/{{.LoggedUser.UserImage}}" alt="User Image" class="ui small rounded image">
+            {{ else }}
+                <img src="/images/user-blank.jpg" alt="Default User Image" class="ui small rounded image">
+            {{ end }}
+            <div class="ui clearing divider"></div>
+            <p><strong>ID: </strong>{{.LoggedUser.UserId}}</p>
+            <p><strong>User Name: </strong>{{.LoggedUser.UserName}}</p>
+            <p><strong>Email: </strong>{{.LoggedUser.Email}}</p>
+            <div class="ui clearing divider"></div>
+            <p><strong>Device: </strong>{{.LoggedUser.Device}}</p>
+            <p><strong>Browser: </strong>{{.LoggedUser.Browser}}</p>
+            <p><strong>Last Login: </strong>{{.LoggedUser.LastLogin}}</p>
+            <p><strong>Last Logout: </strong>{{.LoggedUser.LastLogout}}</p>
+        </div>
+    </div>
+
+{{ template "_partials/footer-back" .}}

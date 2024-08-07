@@ -1,0 +1,27 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/account/upload-image" method="POST" enctype="multipart/form-data">
+        <div class="field">
+            <label for="user_name"><strong>User Name:</strong></label>
+            <input class="ui input" type="text" value="{{.LoggedUser.UserName}}" id="user_name" name="user_name" readonly>
+        </div>
+        <div class="field">
+            <label for="user_image"><strong>Picture:</strong></label>
+            <input class="ui input" type="file" name="user_image" id="user_image" autofocus>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button small">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/account/user-data" class="ui red button small">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

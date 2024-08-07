@@ -1,4 +1,4 @@
-{{ template "_partials/header-back" . }}
+{{ template "_partials/header-back" .}}
 
     <div class="card">
         <div class="card-header">
@@ -7,7 +7,7 @@
         <div class="card-body">
             <form class="" action="/users/create" method="POST">
                 <div class="mb-3">
-                    <label for="form-label"><strong>Username:</strong></label>
+                    <label for="form-label"><strong>User Name:</strong></label>
                     <input class="form-control" type="text" name="user_name" id="" autofocus>
                 </div>
                 <div class="mb-3">
@@ -17,8 +17,8 @@
                 <div class="mb-3">
                     <label for=""><strong>Role:</strong></label>
                     <select class="form-control" name="role_id" id="">
-                        {{ range .Roles }}
-                            <option value="{{ .RoleId }}">{{ .RoleName }}</option>
+                        {{ range .Roles}}
+                            <option value="{{.RoleId}}">{{.RoleName}}</option>
                         {{ end }}
                     </select>
                 </div>
@@ -47,4 +47,4 @@
         </div>
     </div>
 
-{{ template "_partials/footer-back" . }}
+{{ template "_partials/footer-back" .}}

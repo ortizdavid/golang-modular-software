@@ -1,4 +1,4 @@
-{{ template "_partials/header-back" . }}
+{{ template "_partials/header-back" .}}
 
     <div class="card">
         <div class="card-header">
@@ -8,19 +8,19 @@
             <form class="" action="/configurations/company-configurations/edit" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for=""><strong>SMTP Server:</strong></label>
-                    <input type="text" class="form-control" name="SMTPServer" value="{{ .Configuracao.SMTPServer }}" autofocus required>
+                    <input type="text" class="form-control" name="SMTPServer" value="{{.Configuracao.SMTPServer}}" autofocus required>
                 </div>
                 <div class="mb-3">
                     <label for=""><strong>SMTP Port:</strong></label>
-                    <input type="number" class="form-control" name="SMTPPort" value="{{ .Configuracao.SMTPPort }}" required>
+                    <input type="number" class="form-control" name="SMTPPort" value="{{.Configuracao.SMTPPort}}" required>
                 </div>
                 <div class="mb-3">
                     <label for=""><strong>Sender Email:</strong></label>
-                    <input type="text" class="form-control" name="SenderEmail" value="{{ .Configuracao.SenderEmail }}" required>
+                    <input type="text" class="form-control" name="SenderEmail" value="{{.Configuracao.SenderEmail}}" required>
                 </div>
                 <div class="mb-3">
                     <label for=""><strong>Sender Password:</strong></label>
-                    <input type="text" class="form-control" name="SenderPassword" min="5" max="50" value="{{ .Configuracao.SenderPassword }}" required>
+                    <input type="text" class="form-control" name="SenderPassword" min="5" max="50" value="{{.Configuracao.SenderPassword}}" required>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary mr-2 btn-sm">
@@ -42,4 +42,4 @@
         </div>
     </div>
 
-{{ template "_partials/footer-back" . }}
+{{ template "_partials/footer-back" .}}

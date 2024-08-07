@@ -73,3 +73,9 @@ func (repo *UserRoleRepository) ExistsByCode(ctx context.Context, code string) (
 	result := repo.db.WithContext(ctx).Table("view_user_role_data").Where("role_code = ?", code).Count(&count)
 	return count > 0 , result.Error
 }
+
+func (repo *UserRoleRepository) ExistsByUserId(ctx context.Context, userId int64, roleId int) (bool, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).Table("authentication.user_roles").Where("user_id = ? AND role_id = ?", userId, roleId).Count(&count)
+	return count > 0 , result.Error
+}
