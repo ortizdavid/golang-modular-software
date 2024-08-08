@@ -49,6 +49,12 @@ func (repo *PermissionRepository) FindById(ctx context.Context, id int) (entitie
 	return permission, result.Error
 }
 
+func (repo *PermissionRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Permission, error) {
+	var permission entities.Permission
+	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&permission)
+	return permission, result.Error
+}
+
 func (repo *PermissionRepository) FindByName(ctx context.Context, name string) (entities.Permission, error) {
 	var permission entities.Permission
 	result := repo.db.WithContext(ctx).Where("permission_name=?", name).First(&permission)

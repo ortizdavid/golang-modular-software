@@ -1,0 +1,18 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/permissions/{{.Permission.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Permission.PermissionId}}</p>
+    <p><strong>Permission Name:</strong> {{.Permission.PermissionName}}</p>
+    <p><strong>Code:</strong> {{.Permission.Code}}</p>
+    <p><strong>Description:</strong> {{.Permission.Description}}</p>
+    <p><strong>Creation Date:</strong> {{.Permission.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Permission.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

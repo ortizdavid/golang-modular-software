@@ -39,13 +39,19 @@ func (repo *RoleRepository) FindAll(ctx context.Context) ([]entities.Role, error
 
 func (repo *RoleRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.Role, error) {
 	var roles []entities.Role
-	result := repo.db.WithContext(ctx).Limit(limit).Offset(offset).Find(&roles)
+	result := repo.db.WithContext(ctx).Table("authentication.view_role_data").Limit(limit).Offset(offset).Find(&roles)
 	return roles, result.Error
 }
 
 func (repo *RoleRepository) FindById(ctx context.Context, id int) (entities.Role, error) {
 	var role entities.Role
 	result := repo.db.WithContext(ctx).First(&role, id)
+	return role, result.Error
+}
+
+func (repo *RoleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
+	var role entities.RoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_role_data").Where("unique_id=?", uniqueId).First(&role)
 	return role, result.Error
 }
 
@@ -63,6 +69,12 @@ func (repo *RoleRepository) Count(ctx context.Context) (int64, error) {
 
 func (repo *RoleRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
 	var count int64
-	result := repo.db.WithContext(ctx).WithContext(ctx).Where("role_code = ?", code).Count(&count)
+	result := repo.db.WithContext(ctx).Table("authentication.roles").WithContext(ctx).Where("code = ?", code).Count(&count)
+	return count > 0 , result.Error
+}
+
+func (repo *RoleRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).Table("authentication.roles").Where("role_name = ?", name).Count(&count)
 	return count > 0 , result.Error
 }

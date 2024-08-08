@@ -2,9 +2,9 @@ package entities
 
 // --------- CREATE-------------------------
 type CreateRoleRequest struct {
-	Code string `json:"code"`
-	RoleName string `json:"role_name"`
-	Description string `json:"description"`
+	RoleName string `json:"role_name" form:"role_name"`
+	Code string `json:"code"  form:"code"`
+	Description string `json:"description"  form:"description"`
 }
 
 func (req CreateRoleRequest) Validate() error {

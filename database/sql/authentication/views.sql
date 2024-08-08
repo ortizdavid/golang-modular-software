@@ -29,6 +29,18 @@ LEFT JOIN authentication.login_activity la ON us.user_id = la.user_id
 ORDER BY us.created_at ASC;
 
 
+-- View: view_role_data
+DROP VIEW IF EXISTS authentication.view_role_data;
+CREATE VIEW authentication.view_role_data AS 
+SELECT  ro.role_id, ro.unique_id,
+    ro.role_name, ro.code,
+    ro.description,
+    ro.created_at,
+    ro.updated_at
+FROM authentication.roles ro
+ORDER BY created_at DESC;
+
+
 -- View: view_user_role_data
 DROP VIEW IF EXISTS authentication.view_user_role_data;
 CREATE VIEW authentication.view_user_role_data AS 

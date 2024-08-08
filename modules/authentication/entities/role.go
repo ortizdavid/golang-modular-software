@@ -15,3 +15,13 @@ type Role struct {
 func (Role) TableName() string {
 	return "authentication.roles"
 }
+
+type RoleData struct {
+	RoleId      int    `json:"role_id"`
+	UniqueId    string `json:"unique_id"`
+	RoleName    string `json:"role_name"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}

@@ -24,9 +24,23 @@ func NewRoleService(db *database.Database) *RoleService {
 }
 
 func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRoleRequest) error {
+	// Validate the request
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	// Check if the role name already exists
+	if exists, err := s.repository.ExistsByName(ctx, request.RoleName); err != nil {
+		return err
+	} else if exists {
+		return apperrors.NewConflictError("Role with name '"+request.RoleName+"' already exists")
+	}
+	// Check if the role code already exists
+	if exists, err := s.repository.ExistsByCode(ctx, request.Code); err != nil {
+		return err
+	} else if exists {
+		return apperrors.NewConflictError("Role with code '"+request.Code+"' already exists")
+	}
+	// Create the new role entity
 	role := entities.Role{
 		RoleName:    request.RoleName,
 		Code:        request.Code,
@@ -35,12 +49,13 @@ func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRol
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
 	}
-	err := s.repository.Create(ctx, role)
-	if err != nil {
-		return apperrors.NewInternalServerError("error while creating role: "+ err.Error())
+	// Persist the role entity
+	if err := s.repository.Create(ctx, role); err != nil {
+		return apperrors.NewInternalServerError("Error while creating role: " + err.Error())
 	}
 	return nil
 }
+
 
 func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entities.CreateRoleRequest) error {
 	if err := request.Validate(); err != nil {
@@ -101,6 +116,14 @@ func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) 
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
 	return roles, nil
+}
+
+func (s *RoleService) GetRoleByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
+	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.RoleData{}, apperrors.NewNotFoundError("role not found")
+	}
+	return user, nil
 }
 
 func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {

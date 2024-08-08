@@ -85,9 +85,9 @@ CREATE TABLE authentication.login_activity (
 
 -- Initial inserts
 -- roles
-INSERT INTO authentication.roles (code, role_name) VALUES ('super-admin', 'Super Administrator');
-INSERT INTO authentication.roles (code, role_name) VALUES ('admin', 'Administrator');
-INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('super-admin', 'Super Administrator', '0c4e2b1f-79ba-49b6-ba4f-81622f33732d');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('admin', 'Administrator', '0c8e2b1f-89ba-49b6-ba4f-81634f33732d');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('employee', 'Employee', '0c8e2b1f-89ba-49b6-ba4f-81622f33732d');
 
 -- test users
 -- Inserting the users into the 'authentication.users' table
