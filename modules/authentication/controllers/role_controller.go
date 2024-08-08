@@ -37,18 +37,13 @@ func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	count, err := ctrl.service.CountRoles(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	roles, err := ctrl.service.GetAllRolesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllRolesPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/index", fiber.Map{
 		"Title": "Roles",
-		"Roles": roles,
-		"Count": count,
+		"Pagination": pagination,
 		"LoggedUser":  loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})

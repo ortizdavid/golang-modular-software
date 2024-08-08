@@ -75,6 +75,8 @@ CREATE TABLE authentication.login_activity (
     location VARCHAR(150),
     last_login TIMESTAMP DEFAULT NOW(),
     last_logout TIMESTAMP DEFAULT NOW(),
+    total_login INT DEFAULT 0,
+    total_logout INT DEFAULT 0,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
@@ -89,7 +91,6 @@ INSERT INTO authentication.roles (code, role_name) VALUES ('employee', 'Employee
 
 -- test users
 -- Inserting the users into the 'authentication.users' table
-
 INSERT INTO authentication.users (user_name, email, password, user_image, is_active, token, unique_id, created_at, updated_at) VALUES
 ('admin01', 'admin01@example.com', '$2a$10$WK73KU34gno.h1TqJFLrmux5uVIrNwS5TfgKxLcKxeSO15DP.McwO', NULL, TRUE, NULL, '0c8e2b1f-89ba-49b6-ba4f-81622f33732d', NOW(), NOW()),
 ('admin02', 'admin02@example.com', '$2a$10$Rb44LaGqdM9R4Lx3zg59Z.bZGAlP05OGU5cR9Vni7W35EksJOuW/a', NULL, TRUE, NULL, '30823080-e83a-462d-ba41-88daff6e016d', NOW(), NOW()),

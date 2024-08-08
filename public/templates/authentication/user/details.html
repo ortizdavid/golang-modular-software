@@ -8,7 +8,7 @@
                 Deactivate
             </a>
         {{ else }}
-            <a href="/users/{{.User.UniqueId}}/activate" class="ui primary button">
+            <a href="/users/{{.User.UniqueId}}/activate" class="ui green button">
                 <i class="checkmark icon"></i>
                 Activate
             </a>
@@ -36,7 +36,6 @@
     </div>
 
     <div class="ui clearing divider"></div>
-
     <p><strong>ID:</strong> {{.User.UserId}}</p>
     <p><strong>User Name:</strong> {{.User.UserName}}</p>
     <p><strong>Email:</strong> {{.User.Email}}</p>
@@ -47,13 +46,14 @@
     </p>
     <p><strong>Creation Date:</strong> {{.User.CreatedAt}}</p>
     <p><strong>Last Update:</strong> {{.User.UpdatedAt}}</p>
-
     <div class="ui clearing divider"></div>
     <p><strong>Status:</strong> {{.User.Status}}</p>
     <p><strong>Device:</strong> {{.User.Device}}</p>
     <p><strong>Browser:</strong> {{.User.Browser}}</p>
     <p><strong>Last Login:</strong> {{.User.LastLogin}}</p>
     <p><strong>Last Logout:</strong> {{.User.LastLogout}}</p>
+    <p><strong>Total Login:</strong> {{.User.TotalLogin}}</p>
+    <p><strong>Total Logout:</strong> {{.User.TotalLogout}}</p>
 
 </div>
 

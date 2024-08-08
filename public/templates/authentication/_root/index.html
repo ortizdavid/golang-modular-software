@@ -9,15 +9,15 @@
                     <i class="icon users"></i>
                 </div>
                 <div class="header">
-                    <div class="ui blue header">
-                        {{ .Statistic.Users }}
+                    <div class="ui blue header" id="users">
+                        {{.Statistics.Users}}
                     </div>
                 </div>
                 <div class="meta">
                     <strong>Users</strong>
                 </div>
                 <div class="description">
-                    Total number of users
+                    Total number of registered users
                 </div>
             </div>
             <div class="extra content">
@@ -35,8 +35,8 @@
                     <i class="icon check square"></i>
                 </div>
                 <div class="header">
-                    <div class="ui green header">
-                        {{ .Statistic.ActiveUsers }}
+                    <div class="ui green header" id="active-users">
+                        {{.Statistics.ActiveUsers}}
                     </div>
                 </div>
                 <div class="meta">
@@ -48,7 +48,7 @@
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/active-users" class="ui green button">View More</a>
+                    <a href="/users/active-users" class="ui green button">View More</a>
                 </div>
             </div>
         </div>
@@ -61,20 +61,20 @@
                     <i class="icon user times"></i>
                 </div>
                 <div class="header">
-                    <div class="ui red header">
-                        {{ .Statistic.InactiveUsers }}
+                    <div class="ui red header" id="inactive-users">
+                        {{.Statistics.InactiveUsers}}
                     </div>
                 </div>
                 <div class="meta">
                     <strong>Inactive Users</strong>
                 </div>
                 <div class="description">
-                    Total number of inactive users
+                    Total of inactive users
                 </div>
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/inactive-users" class="ui red button">View More</a>
+                    <a href="/users/inactive-users" class="ui red button">View More</a>
                 </div>
             </div>
         </div>
@@ -87,8 +87,8 @@
                     <i class="icon user circle"></i>
                 </div>
                 <div class="header">
-                    <div class="ui teal header">
-                        {{ .Statistic.OnlineUsers }}
+                    <div class="ui teal header" id="online-users">
+                        {{.Statistics.OnlineUsers}}
                     </div>
                 </div>
                 <div class="meta">
@@ -100,7 +100,7 @@
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/online-users" class="ui teal button">View More</a>
+                    <a href="/users/online-users" class="ui teal button">View More</a>
                 </div>
             </div>
         </div>
@@ -109,12 +109,38 @@
     <div class="four wide computer eight wide tablet sixteen wide mobile column">
         <div class="ui fluid card">
             <div class="content">
-                <div class="ui right floated header green">
+                <div class="ui right floated header orange">
+                    <i class="icon user circle"></i>
+                </div>
+                <div class="header">
+                    <div class="ui orange header" id="offline-users">
+                        {{.Statistics.OfflineUsers}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Offline Users</strong>
+                </div>
+                <div class="description">
+                    Total number of offline users
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/users/offline-users" class="ui orange button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header brown">
                     <i class="icon user plus"></i>
                 </div>
                 <div class="header">
-                    <div class="ui green header">
-                        {{ .Statistic.BeneficiaryTypes }}
+                    <div class="ui brown header" id="roles">
+                        {{.Statistics.Roles}}
                     </div>
                 </div>
                 <div class="meta">
@@ -126,7 +152,7 @@
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/roles" class="ui green button">View More</a>
+                    <a href="/roles" class="ui brown button">View More</a>
                 </div>
             </div>
         </div>
@@ -135,12 +161,12 @@
     <div class="four wide computer eight wide tablet sixteen wide mobile column">
         <div class="ui fluid card">
             <div class="content">
-                <div class="ui right floated header teal">
+                <div class="ui right floated header olive">
                     <i class="icon lock"></i>
                 </div>
                 <div class="header">
-                    <div class="ui teal header">
-                        {{ .Statistic.Permissions }}
+                    <div class="ui olive header" id="permissions">
+                        {{.Statistics.Permissions}}
                     </div>
                 </div>
                 <div class="meta">
@@ -152,7 +178,7 @@
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/permissions" class="ui teal button">View More</a>
+                    <a href="/permissions" class="ui olive button">View More</a>
                 </div>
             </div>
         </div>
@@ -165,20 +191,20 @@
                     <i class="icon sign-in"></i>
                 </div>
                 <div class="header">
-                    <div class="ui purple header">
-                        {{ .Statistic.LoginActivity }}
+                    <div class="ui purple header" id="login-activity">
+                        {{.Statistics.LoginActivity}}
                     </div>
                 </div>
                 <div class="meta">
                     <strong>Login Activity</strong>
                 </div>
                 <div class="description">
-                    Recent login activities
+                    Recent login and logout activities
                 </div>
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/login-activity" class="ui purple button">View More</a>
+                    <a href="/users/login-activities" class="ui purple button">View More</a>
                 </div>
             </div>
         </div>

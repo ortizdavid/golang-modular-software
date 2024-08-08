@@ -19,7 +19,7 @@ require (
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.3
 	github.com/andybalholm/brotli v1.0.5 // indirect
-	github.com/gofiber/fiber/v2 v2.52.5 // indirect
+	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/gofiber/storage/postgres v1.3.4
 	github.com/gofiber/template/html/v2 v2.1.2
 	github.com/google/uuid v1.5.0 // indirect
@@ -30,7 +30,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/ortizdavid/go-nopain v0.0.0-20240724110659-04355dfeaca8 // indirect
+	github.com/ortizdavid/go-nopain v0.0.0-20240724110659-04355dfeaca8
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/tealeg/xlsx v1.0.5
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

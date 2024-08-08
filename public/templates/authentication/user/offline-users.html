@@ -1,0 +1,93 @@
+{{ template "_partials/header-back" .}}
+
+    <div class="ui segment">
+       
+        <div class="ui right aligned container">
+            <div class="ui buttons">
+                <a href="/users/search" class="ui blue button">
+                    <i class="search icon"></i>
+                    Search Users
+                </a>
+            </div>
+        </div>
+        
+        <div class="">
+            {{ if .Pagination.MetaData.TotalItems}}
+                <p><strong>{{.Pagination.MetaData.TotalItems}}</strong> records</p>
+                <table class="ui celled striped selectable blue table">
+                    <thead class="">
+                        <tr>
+                            <th>Id</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Active Status</th>
+                            <th>Creation Date</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range .Pagination.Items}}
+                            <tr class="{{ if eq .IsActive "Yes" }}positive{{ else }}negative{{ end }}">
+                                <td class="collapsing">{{.UserId}}</td>
+                                <td>{{.UserName}}</td>
+                                <td>{{.Email}}</td>
+                                <td>
+                                    <i class="circle icon {{ if eq .Status "Online" }}green{{ else }}red{{ end }} large"></i>
+                                    {{.Status}}
+                                </td>
+                                <td>
+                                    <span class="{{ if eq .IsActive "Yes" }}green{{ else }}red{{ end }} text">
+                                        {{ if eq .IsActive "Yes" }}Active{{ else }}Inactive{{ end }}
+                                    </span>
+                                </td>
+                                <td>{{.CreatedAt}}</td>
+                                <td>
+                                    <a href="/users/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                        <i class="eye blue icon"></i>
+                                    </a>
+                                    <a href="/users/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                        <i class="pencil icon"></i>
+                                    </a>
+                                    <a href="/users/{{.UniqueId}}/reset-password" class="ui icon button" data-tooltip="Reset Password" data-position="top center">
+                                        <i class="refresh blue icon"></i>
+                                    </a>
+                                    {{ if eq .IsActive "No" }}
+                                        <a href="/users/{{.UniqueId}}/activate" class="ui icon button" data-tooltip="Activate" data-position="top center">
+                                            <i class="checkmark green icon"></i>
+                                        </a>
+                                    {{ end }}
+                                    {{ if eq .IsActive "Yes" }}
+                                        <a href="/users/{{.UniqueId}}/deactivate" class="ui icon button" data-tooltip="Deactivate" data-position="top center">
+                                            <i class="ban red icon"></i>
+                                        </a>
+                                    {{ end }}
+                                </td>
+                            </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+                <div class="ui pagination menu">
+                    <div class="item">Page {{.CurrentPage}} of {{.TotalPages}}</div>
+                    <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.FirstPageUrl}}">
+                      First
+                    </a>
+                    <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.PreviousPageUrl}}">
+                      <i class="angle double left icon"></i>Previous
+                    </a>
+                    <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.NextPageUrl}}">
+                      Next <i class="angle double right icon"></i>
+                    </a>
+                    <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.LastPageUrl}}">
+                      Last
+                    </a>
+                </div>
+            {{ else }}
+                <div class="ui warning message">
+                    No records found
+                </div>
+            {{ end }}
+        </div>
+    </div>
+        
+{{ template "_partials/footer-back" .}}

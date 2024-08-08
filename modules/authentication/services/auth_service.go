@@ -101,6 +101,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 		loginAct.Host = fiberCtx.Hostname()
 		loginAct.Browser = string(fiberCtx.Context().UserAgent())
 		loginAct.LastLogin = time.Now().UTC()
+		loginAct.TotalLogin = loginAct.TotalLogin + 1
 		loginAct.IPAddress = fiberCtx.IP()
 		loginAct.Device = fiberCtx.Get("Device")
 		loginAct.Location = fiberCtx.Get("Location")
@@ -133,6 +134,7 @@ func (s *AuthService) Logout(ctx context.Context, fiberCtx *fiber.Ctx) error {
 	loginAct.Host = fiberCtx.Hostname()
 	loginAct.Browser = string(fiberCtx.Context().UserAgent())
 	loginAct.LastLogout = time.Now().UTC()
+	loginAct.TotalLogout = loginAct.TotalLogout + 1
 	loginAct.IPAddress = fiberCtx.IP() 
 	loginAct.Device = fiberCtx.Get("Device") 
 	loginAct.Location = fiberCtx.Get("Location") 

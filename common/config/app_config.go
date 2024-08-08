@@ -17,7 +17,15 @@ func GetTemplateEngine() *html.Engine {
 }
 
 func ListenAddr() string {
-	return GetEnv("APP_HOST") +":"+ GetEnv("APP_PORT")
+	return AppHost() +":"+ AppPort()
+}
+
+func AppHost() string {
+	return GetEnv("APP_HOST")
+}
+
+func AppPort() string {
+	return GetEnv("APP_PORT")
 }
 
 func ShutdownTimeout() int {

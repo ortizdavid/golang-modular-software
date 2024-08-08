@@ -258,12 +258,12 @@ func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, para
 func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.CountUsersByStatus(ctx, true)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No users found")
+		return nil, apperrors.NewNotFoundError("No active users found")
 	}
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	users, err := s.repository.FindAllByStatus(ctx, true, params.Limit, params.CurrentPage)
+	users, err := s.repository.FindAllByStatus(ctx, "Yes", params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
@@ -277,12 +277,50 @@ func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx
 func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.CountUsersByStatus(ctx, false)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No users found")
+		return nil, apperrors.NewNotFoundError("No inactive users found")
 	}
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	users, err := s.repository.FindAllByStatus(ctx, false, params.Limit, params.CurrentPage)
+	users, err := s.repository.FindAllByStatus(ctx, "No", params.Limit, params.CurrentPage)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, params.CurrentPage, params.Limit)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+	}
+	return pagination, nil
+}
+
+func (s *UserService) GetAllOnlineUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+	count, err := s.CountUsersByActivityStatus(ctx, entities.ActivityStatusOnline)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No online users found")
+	}
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
+	}
+	users, err := s.repository.FindAllByActivityStatus(ctx, entities.ActivityStatusOnline, params.Limit, params.CurrentPage)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, params.CurrentPage, params.Limit)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+	}
+	return pagination, nil
+}
+
+func (s *UserService) GetAllOfflineUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+	count, err := s.CountUsersByActivityStatus(ctx, entities.ActivityStatusOffline)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No offline users found")
+	}
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
+	}
+	users, err := s.repository.FindAllByActivityStatus(ctx, entities.ActivityStatusOffline, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
@@ -376,4 +414,13 @@ func (s *UserService) CountUsersByStatus(ctx context.Context, status bool) (int6
 	}
 	return count, nil
 }
+
+func (s *UserService) CountUsersByActivityStatus(ctx context.Context, status entities.LoginActivityStatus) (int64, error) {
+	count, err := s.repository.CountByActivityStatus(ctx, status)
+	if err != nil {
+		return 0, apperrors.NewNotFoundError("No users found")
+	}
+	return count, nil
+}
+
 

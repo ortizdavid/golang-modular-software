@@ -21,7 +21,9 @@ SELECT
     COALESCE(la.device, 'Unknown') AS device, 
     COALESCE(la.location, 'Unknown') AS location, 
     COALESCE(TO_CHAR(la.last_login, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_login,
-    COALESCE(TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_logout
+    COALESCE(TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_logout,
+    la.total_login,
+    la.total_logout
 FROM authentication.users us
 LEFT JOIN authentication.login_activity la ON us.user_id = la.user_id
 ORDER BY us.created_at ASC;

@@ -53,8 +53,10 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 	group.Post("/:id/reset-password", ctrl.resetPassword)
 	group.Get("/search", ctrl.searchForm)
 	group.Get("/search-results", ctrl.search)
-	router.Get("/active-users", ctrl.getAllActiveUsers)
-	router.Post("/inactive-users", ctrl.getAllInactiveUsers)
+	group.Get("/active-users", ctrl.getAllActiveUsers)
+	group.Get("/inactive-users", ctrl.getAllInactiveUsers)
+	group.Get("/online-users", ctrl.getAllOnlineUsers)
+	group.Get("/offline-users", ctrl.getAllOfflineUsers)
 }
 
 func (ctrl *UserController) index(c *fiber.Ctx) error {
@@ -295,51 +297,64 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 }
 
 func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
-	var params helpers.PaginationParam
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	count, err := ctrl.service.CountUsers(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	if err := c.QueryParser(&params); err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	users, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/active-users", fiber.Map{
 		"Title": "Active Users",
-		"Users": users,
-		"Count": count,
+		"Pagination": pagination,
 		"LoggedUser": loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})
 }
 
 func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
-	var params helpers.PaginationParam
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	count, err := ctrl.service.CountUsers(c.Context())
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	if err := c.QueryParser(&params); err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	users, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/inactive-users", fiber.Map{
 		"Title": "Inactive Users",
-		"Users": users,
-		"Count": count,
+		"Pagination": pagination,
 		"LoggedUser": loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})
 }
 
+func (ctrl *UserController) getAllOnlineUsers(c *fiber.Ctx) error {
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.GetAllOnlineUsers(c.Context(), c, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/online-users", fiber.Map{
+		"Title": "Online Users",
+		"Pagination": pagination,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
+func (ctrl *UserController) getAllOfflineUsers(c *fiber.Ctx) error {
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.GetAllOfflineUsers(c.Context(), c, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/offline-users", fiber.Map{
+		"Title": "Offline Users",
+		"Pagination": pagination,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
 
 func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
 	id := c.Params("id")

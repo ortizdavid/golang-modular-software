@@ -1,0 +1,20 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/roles/{{.Role.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <div class="ui clearing divider"></div>
+    <p><strong>ID:</strong> {{.Role.RoleId}}</p>
+    <p><strong>Role Name:</strong> {{.Role.RoleName}}</p>
+    <p><strong>Code:</strong> {{.Role.Code}}</p>
+    <p><strong>Creation Date:</strong> {{.Role.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Role.UpdatedAt}}</p>
+    <div class="ui clearing divider"></div>
+    <p><strong>Description:</strong> {{.Role.Description}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

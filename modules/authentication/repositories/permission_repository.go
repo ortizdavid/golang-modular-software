@@ -57,7 +57,7 @@ func (repo *PermissionRepository) FindByName(ctx context.Context, name string) (
 
 func (repo *PermissionRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
-	result := repo.db.Table("authentication.permissions").Count(&count)
+	result := repo.db.WithContext(ctx).Table("authentication.permissions").Count(&count)
 	return count, result.Error
 }
 

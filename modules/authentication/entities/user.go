@@ -38,5 +38,7 @@ type UserData struct {
 	Location   		string `json:"location"`
 	LastLogin  		string `json:"last_login"`
 	LastLogout 		string `json:"last_logout"`
+	TotalLogin		int64 `json:"total_login"`
+	TotalLogout		int64 `json:"total_logout"`
 }
 

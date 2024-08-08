@@ -191,10 +191,24 @@ func (repo *UserRepository) GetDataByEmail(ctx context.Context, email string) (e
 	return userData, result.Error
 }
 
-func (repo *UserRepository) FindAllByStatus(ctx context.Context, status bool, limit int, offset int) ([]entities.UserData, error) {
+func (repo *UserRepository) FindAllByStatus(ctx context.Context, status string, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
-	repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE is_active=? LIMIT ?, OFFSET ?",  status, limit, offset).Find(&users)
-	return users, nil
+	result := repo.db.WithContext(ctx).
+		Table("authentication.view_user_data").
+		Where("is_active=?", status).
+		Limit(limit).
+		Offset(offset).Find(&users)
+	return users, result.Error
+}
+
+func (repo *UserRepository) FindAllByActivityStatus(ctx context.Context, status entities.LoginActivityStatus, limit int, offset int) ([]entities.UserData, error) {
+	var users []entities.UserData
+	result := repo.db.WithContext(ctx).
+		Table("authentication.view_user_data").
+		Where("status=?", status).
+		Limit(limit).
+		Offset(offset).Find(&users)
+	return users, result.Error
 }
 
 func (repo *UserRepository) FindAllByRole(ctx context.Context, roleName string) ([]entities.UserData, error) {
@@ -224,6 +238,12 @@ func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles ..
 func (repo *UserRepository) CountByStatus(ctx context.Context, status bool) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.users").Where("is_active = ?", status).Count(&count)
+	return count, result.Error
+}
+
+func (repo *UserRepository) CountByActivityStatus(ctx context.Context, status entities.LoginActivityStatus) (int64, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_data").Where("status = ?", status).Count(&count)
 	return count, result.Error
 }
 

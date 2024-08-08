@@ -50,21 +50,21 @@ func (repo *UserRoleRepository) FindById(ctx context.Context, id int) (entities.
 	return role, result.Error
 }
 
-func (repo *UserRoleRepository) FindByRoleId(roleId int) (entities.UserRole, error) {
+func (repo *UserRoleRepository) FindByRoleId(ctx context.Context, roleId int) (entities.UserRole, error) {
 	var role entities.UserRole
-	result := repo.db.Where("role_id=?", roleId).First(&role)
+	result := repo.db.WithContext(ctx).Where("role_id=?", roleId).First(&role)
 	return role, result.Error
 }
 
-func (repo *UserRoleRepository) FindByUserId(userId int) (entities.UserRole, error) {
+func (repo *UserRoleRepository) FindByUserId(ctx context.Context, userId int) (entities.UserRole, error) {
 	var role entities.UserRole
-	result := repo.db.Where("user_id=?", userId).First(&role)
+	result := repo.db.WithContext(ctx).Where("user_id=?", userId).First(&role)
 	return role, result.Error
 }
 
-func (repo *UserRoleRepository) Count() (int64, error) {
+func (repo *UserRoleRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
-	result := repo.db.Table("authentication.user_roles").Count(&count)
+	result := repo.db.WithContext(ctx).Table("authentication.user_roles").Count(&count)
 	return count, result.Error
 }
 

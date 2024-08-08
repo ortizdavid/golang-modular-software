@@ -57,7 +57,7 @@ func (repo *RoleRepository) FindByName(ctx context.Context, name string) (entiti
 
 func (repo *RoleRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
-	result := repo.db.Table("authentication.roles").Count(&count)
+	result := repo.db.WithContext(ctx).Table("authentication.roles").Count(&count)
 	return count, result.Error
 }
 
