@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/go-nopain/encryption"
@@ -26,8 +25,8 @@ type AuthService struct {
 
 func NewAuthService(db *database.Database) *AuthService {
 	return &AuthService{
-		repository: repositories.NewUserRepository(db),
-		emailService: configurations.NewEmailConfigurationService(db),
+		repository:         repositories.NewUserRepository(db),
+		emailService:       configurations.NewEmailConfigurationService(db),
 		loginActRepository: repositories.NewLoginActivityRepository(db),
 	}
 }

@@ -13,8 +13,8 @@ func (req CreateRoleRequest) Validate() error {
 
 // --------- UPDATE---------------------------
 type UpdateRoleRequest struct {
-	RoleName string `json:"role_name"`
-	Description string `json:"description"`
+	RoleName string `json:"role_name" form:"role_name"`
+	Description string `json:"description"  form:"description"`
 }
 
 func (req UpdateRoleRequest) Validate() error {

@@ -21,6 +21,7 @@ func NewRootController(db *database.Database) *RootController {
 		statisticsService: services.NewStatisticsService(db),
 	}
 }
+
 func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
 	group := router.Group("/users-management", authMiddleware.CheckLoggedUser)

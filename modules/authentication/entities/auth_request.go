@@ -12,8 +12,8 @@ func (req LoginRequest) Validate() error {
 
 // --RecoverPassword
 type RecoverPasswordRequest struct {
-	Password		string `json:"password"`
-	PasswordConfiration	string `json:"password_confirmation"`
+	Password		string `json:"password" form:"password"`
+	PasswordConf	string `json:"password_conf" form:"password_conf"`
 }
 
 func (req RecoverPasswordRequest) Validate() error {
@@ -22,7 +22,7 @@ func (req RecoverPasswordRequest) Validate() error {
 
 // GetRecoverLink
 type GetRecoverLinkRequest struct {
-	Email		string `json:"email"`
+	Email		string `json:"email" form:"email"`
 }
 
 func (req GetRecoverLinkRequest) Validate() error {

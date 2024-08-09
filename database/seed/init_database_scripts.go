@@ -77,6 +77,16 @@ func execCompanyScripts(db *database.Database) error {
 	return execDatabaseScript(db, companyDir, "views.sql")
 }
 
+// execEmployeeScripts executes all company scripts.
+func execEmployeeScripts(db *database.Database) error {
+	log.Println("Executing employee schema scripts...")
+	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
+		return err
+	}
+	return execDatabaseScript(db, companyDir, "views.sql")
+}
+
+
 // execReferenceScripts executes all reference scripts.
 func execReferenceScripts(db *database.Database) error {
 	log.Println("Executing reference schema scripts...")
@@ -101,6 +111,9 @@ func InitDatabaseScripts(db *database.Database) error {
 		return err
 	}
 	if err := execCompanyScripts(db); err != nil {
+		return err
+	}
+	if err := execEmployeeScripts(db); err != nil {
 		return err
 	}
 	return execReferenceScripts(db)

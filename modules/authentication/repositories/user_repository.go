@@ -140,6 +140,12 @@ func (repo *UserRepository) ExistsByName(ctx context.Context, userName string) (
 	return user.UserId !=0 , result.Error
 }
 
+func (repo *UserRepository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
+	var user entities.User
+	result := repo.db.WithContext(ctx).Where("email=?", email).Find(&user)
+	return user.UserId !=0 , result.Error
+}
+
 func (repo *UserRepository) ExistsActive(ctx context.Context, userName string, password string) (bool, error) {
 	var user entities.User
 	result := repo.db.WithContext(ctx).Where("user_name=? AND password=? AND id_active=true", userName, password).Find(&user)
