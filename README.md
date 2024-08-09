@@ -25,7 +25,7 @@ Example of a complete modular sofware, written in Golang
 
 
 ## Module Structure
-![Structure](docs/Module-Structure.png)
+![Structure](docs/Module%20Structure.png)
 
 
 ## Module Comunication
@@ -37,9 +37,11 @@ Example of a complete modular sofware, written in Golang
 
 
 ## Database 
-![Database Schemas](docs/Database.jpg)
+![Database Schemas](docs/Modular%20Database.jpg)
 ![Schema Objects](docs/Schema-Objects.png)
 
+## Module Creation
+![Module Creation](docs/Module%20Creation.png)
 
 ## How to Run App
 - Configure Database:
