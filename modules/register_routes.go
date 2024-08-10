@@ -12,8 +12,8 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/reports"
 )
 
-// RegisterControllers initializes and registers controllers (routes) from different modules
-func RegisterControllers(router *fiber.App, db *database.Database) {
+// RegisterRoutes initializes and registers controllers (routes) from different modules
+func RegisterRoutes(router *fiber.App, db *database.Database) {
 	
 	// Register routes for configurations module
 	configurations.RegisterModuleRoutes(router, db)

@@ -41,7 +41,7 @@ func NewApplication() (*Application, error) {
 	middlewares.InitializeMiddlewares(app, db)
 	
 	// initialize all controllers containing routes of application
-	modules.RegisterControllers(app, db)
+	modules.RegisterRoutes(app, db)
 	
 	return &Application{
 		App: app,

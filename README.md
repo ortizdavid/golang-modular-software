@@ -21,7 +21,7 @@ Example of a complete modular sofware, written in Golang
 
 
 ## Architecture
-![Modular Arquitecure](docs/Modular-Architecture.png)
+![Modular Arquitecure](docs/Modular%20Architecture.png)
 
 
 ## Module Structure

@@ -2,8 +2,10 @@
 
 ## Features
 - Basic Configuration
-    - Company data
+    - App Name
     - Pagination
     - Style
 - Email Configuration
+
+- Company Configuration
 
