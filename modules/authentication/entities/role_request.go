@@ -21,3 +21,7 @@ type UpdateRoleRequest struct {
 func (req UpdateRoleRequest) Validate() error {
 	return nil
 }
+
+type SearchRoleRequest struct {
+	SearchParam		string `json:"search_param" form:"search_param"`
+}

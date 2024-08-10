@@ -78,3 +78,21 @@ func (repo *RoleRepository) ExistsByName(ctx context.Context, name string) (bool
 	result := repo.db.WithContext(ctx).Table("authentication.roles").Where("role_name = ?", name).Count(&count)
 	return count > 0 , result.Error
 }
+
+func (repo *RoleRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.RoleData, error) {
+	var users []entities.RoleData
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT * FROM authentication.view_user_role_data WHERE role_name=? OR role_code=?", param, param).
+		Limit(limit).
+		Offset(offset).
+		Scan(&users)
+	return users, result.Error
+}
+
+func (repo *RoleRepository) CountByParam(ctx context.Context, param string) (int64, error) {
+    var count int64
+    result := repo.db.WithContext(ctx).
+        Raw("SELECT COUNT(*) FROM authentication.view_user_role_data WHERE role_name=? OR role_code=?", param, param).
+        Scan(&count)
+    return count, result.Error
+}

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
@@ -39,6 +41,8 @@ func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 	group.Post("/:id/edit", ctrl.edit)
 	group.Get("/:id/delete", ctrl.deleteForm)
 	group.Post("/:id/delete", ctrl.delete)
+	group.Get("/search", ctrl.searchForm)
+	group.Get("/search-results", ctrl.search)
 }
 
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
@@ -159,4 +163,34 @@ func (ctrl *RoleController) delete(c *fiber.Ctx) error {
 	}
 	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' deleted role "+role.RoleName)
 	return c.Redirect("/roles")
+}
+
+func (ctrl *RoleController) searchForm(c *fiber.Ctx) error {
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	return c.Render("authentication/role/search", fiber.Map{
+		"Title": "Search Roles",
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
+func (ctrl *RoleController) search(c *fiber.Ctx) error {
+	searcParam := c.FormValue("search_param")
+	request := entities.SearchRoleRequest{SearchParam: searcParam}
+    loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+    params := helpers.GetPaginationParams(c)
+    pagination, err := ctrl.service.SearchRoles(c.Context(), c, request, params)
+    if err != nil {
+        return helpers.HandleHttpErrors(c, err)
+    }
+    ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
+    return c.Render("authentication/role/search-results", fiber.Map{
+        "Title":        "Search Results",
+        "Pagination":   pagination,
+        "Param":        request.SearchParam,
+        "CurrentPage":  pagination.MetaData.CurrentPage + 1,
+        "TotalPages":   pagination.MetaData.TotalPages + 1,
+        "LoggedUser":   loggedUser,
+        "AppConfig":  ctrl.appConfig,
+    })
 }

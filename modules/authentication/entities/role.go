@@ -22,6 +22,6 @@ type RoleData struct {
 	RoleName    string `json:"role_name"`
 	Code        string `json:"code"`
 	Description string `json:"description"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	CreatedAt   string `json:"created_at"`
+	UpdatedAt   string `json:"updated_at"`
 }

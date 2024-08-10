@@ -67,6 +67,13 @@ func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entiti
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
 	}
+	exists, err := s.userRoleRepository.ExistsByRoleId(ctx, roleId)
+    if err != nil {
+        return err
+    }
+    if exists {
+        return apperrors.NewConflictError("Role '" + role.RoleName + "' is currently assigned to users and cannot be updated")
+    }
 	//--------------------------------
 	role.RoleName = request.RoleName
 	role.Code = request.Code
@@ -128,6 +135,25 @@ func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) 
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
 	return roles, nil
+}
+
+func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchRoleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.RoleData], error) {
+	count, err := s.repository.CountByParam(ctx, request.SearchParam)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No roles found")
+	}
+	if err := paginationParams.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
+	}
+	users, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	pagination, err := helpers.NewPagination(fiberCtx, users, count, paginationParams.CurrentPage, paginationParams.Limit)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+	}
+	return pagination, nil
 }
 
 func (s *RoleService) GetRoleByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
