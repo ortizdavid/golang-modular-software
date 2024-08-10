@@ -56,6 +56,9 @@ func execAuthenticationScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, authDir, "tables.sql"); err != nil {
 		return err
 	}
+	if err := execDatabaseScript(db, authDir, "triggers.sql"); err != nil {
+		return err
+	}
 	return execDatabaseScript(db, authDir, "views.sql")
 }
 

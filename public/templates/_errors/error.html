@@ -1,10 +1,13 @@
-{{ template "_partials/header-auth" .}}
+{{ template "_partials/header-back" .}}
 
 <div class="ui negative message">
     <div class="header">
-        <strong>{{.Title}}</strong>: {{.Message}}
+        <strong><i class="cancel icon"></i>{{.Title}}</strong>
+        <div class="ui divider"></div>
     </div>
+    {{.Message}}
+    <div class="ui divider"></div>
     <p><a href="javascript:history.back()">Go back to the previous page</a>.</p>
 </div>
 
-{{ template "_partials/footer-auth" .}}
+{{ template "_partials/footer-back" .}}

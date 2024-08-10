@@ -90,8 +90,8 @@ func (ctrl *AuthController) recoverPasswordForm(c *fiber.Ctx) error {
 }
 
 func (ctrl *AuthController) recoverPassword(c *fiber.Ctx) error {
-	var request entities.RecoverPasswordRequest
 	token := c.Params("token")
+	var request entities.RecoverPasswordRequest
 	if err := c.BodyParser(&request); err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}

@@ -116,7 +116,7 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
 	}
-	exists, err := s.userRoleRepository.ExistsByUserId(ctx, userId, request.RoleId)
+	exists, err := s.userRoleRepository.ExistsByUserAndRole(ctx, userId, request.RoleId)
 	if err != nil {
 		return err
 	}

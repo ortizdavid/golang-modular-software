@@ -68,13 +68,19 @@ func (repo *UserRoleRepository) Count(ctx context.Context) (int64, error) {
 	return count, result.Error
 }
 
-func (repo *UserRoleRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
+func (repo *UserRoleRepository) ExistsByRoleCode(ctx context.Context, code string) (bool, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("view_user_role_data").Where("role_code = ?", code).Count(&count)
 	return count > 0 , result.Error
 }
 
-func (repo *UserRoleRepository) ExistsByUserId(ctx context.Context, userId int64, roleId int) (bool, error) {
+func (repo *UserRoleRepository) ExistsByRoleId(ctx context.Context, roleId int) (bool, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).Table("authentication.user_roles").Where("role_id = ?", roleId).Count(&count)
+	return count > 0 , result.Error
+}
+
+func (repo *UserRoleRepository) ExistsByUserAndRole(ctx context.Context, userId int64, roleId int) (bool, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.user_roles").Where("user_id = ? AND role_id = ?", userId, roleId).Count(&count)
 	return count > 0 , result.Error

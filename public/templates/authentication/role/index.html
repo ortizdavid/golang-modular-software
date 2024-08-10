@@ -23,7 +23,7 @@
                             <th>Id</th>
                             <th>Role Name</th>
                             <th>Code</th>
-                            <th>Creation Date</th>
+                            <th>Description</th>
                             <th>Options</th>
                         </tr>
                     </thead>
@@ -33,13 +33,16 @@
                                 <td class="collapsing">{{.RoleId}}</td>
                                 <td>{{.RoleName}}</td>
                                 <td>{{.Code}}</td>
-                                <td>{{.CreatedAt}}</td>
+                                <td>{{.Description}}</td>
                                 <td>
                                     <a href="/roles/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
                                     <a href="/roles/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                         <i class="pencil icon"></i>
+                                    </a>
+                                    <a href="/roles/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                        <i class="trash alternate red icon"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -48,10 +51,10 @@
                 </table>
                 <div class="ui pagination menu">
                     <div class="item">Page {{.CurrentPage}} of {{.TotalPages}}</div>
-                    <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.FirstPageUrl}}">
+                    <a class="item {{ if not .Pagination.HasPreviousPage }}disabled{{ end }}" href="{{.Pagination.MetaData.FirstPageUrl}}">
                       First
                     </a>
-                    <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.PreviousPageUrl}}">
+                    <a class="item {{ if not .Pagination.HasPreviousPage }}disabled{{ end }}" href="{{.Pagination.MetaData.PreviousPageUrl}}">
                       <i class="angle double left icon"></i>Previous
                     </a>
                     <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.NextPageUrl}}">

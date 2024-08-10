@@ -15,11 +15,13 @@ import (
 
 type RoleService struct {
 	repository *repositories.RoleRepository
+	userRoleRepository *repositories.UserRoleRepository
 }
 
 func NewRoleService(db *database.Database) *RoleService {
 	return &RoleService{
-		repository: repositories.NewRoleRepository(db),
+		repository:         repositories.NewRoleRepository(db),
+		userRoleRepository: repositories.NewUserRoleRepository(db),
 	}
 }
 
@@ -57,7 +59,7 @@ func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRol
 }
 
 
-func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entities.CreateRoleRequest) error {
+func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entities.UpdateRoleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -65,7 +67,9 @@ func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entiti
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
 	}
+	//--------------------------------
 	role.RoleName = request.RoleName
+	role.Code = request.Code
 	role.Description = request.Description
 	role.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, role)
@@ -76,16 +80,24 @@ func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entiti
 }
 
 func (s *RoleService) DeleteRole(ctx context.Context, roleId int) error {
-	role, err := s.repository.FindById(ctx, roleId)
-	if err != nil {
-		return apperrors.NewNotFoundError("role not found")
-	}
-	err = s.repository.Delete(ctx, role)
-	if err != nil {
-		return apperrors.NewInternalServerError("error while deleting role: "+ err.Error())
-	}
-	return nil
+    role, err := s.repository.FindById(ctx, roleId)
+    if err != nil {
+        return apperrors.NewNotFoundError("role not found")
+    }
+    exists, err := s.userRoleRepository.ExistsByRoleId(ctx, roleId)
+    if err != nil {
+        return err
+    }
+    if exists {
+        return apperrors.NewConflictError("Role '" + role.RoleName + "' is currently assigned to users and cannot be deleted")
+    }
+    err = s.repository.Delete(ctx, role)
+    if err != nil {
+        return apperrors.NewInternalServerError("error while deleting role: " + err.Error())
+    }
+    return nil
 }
+
 
 func (s *RoleService) GetAllRolesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Role], error) {
 	if err := params.Validate(); err != nil {

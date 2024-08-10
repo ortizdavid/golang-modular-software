@@ -16,10 +16,10 @@ func (UserRole) TableName() string {
 }
 
 type UserRoleData struct {
-	UserRoleId int64     `json:"user_role_id"`
-	UniqueId   string    `json:"unique_id"`
+	UserRoleId int64  `json:"user_role_id"`
+	UniqueId   string `json:"unique_id"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
-	UserId     int64     `json:"user_id"`
-	UserName   string    `json:"user_name"`
+	UserId     int64  `json:"user_id"`
+	UserName   string `json:"user_name"`
 }

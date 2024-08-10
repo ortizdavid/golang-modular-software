@@ -38,7 +38,7 @@ SELECT  ro.role_id, ro.unique_id,
     ro.created_at,
     ro.updated_at
 FROM authentication.roles ro
-ORDER BY created_at DESC;
+ORDER BY created_at ASC;
 
 
 -- View: view_user_role_data
