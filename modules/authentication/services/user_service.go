@@ -88,7 +88,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	return nil
 }
 
-func (s *UserService) EditUser(ctx context.Context, userId int64, request entities.EditUserRequest) error {
+func (s *UserService) UpdateUser(ctx context.Context, userId int64, request entities.UpdateUserRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -99,7 +99,7 @@ func (s *UserService) EditUser(ctx context.Context, userId int64, request entiti
 	user.UserName = request.UserName
 	err = s.repository.Update(ctx, user)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while assign role: "+ err.Error())
+		return apperrors.NewInternalServerError("error while update user: "+ err.Error())
 	}
 	return nil
 }
@@ -133,6 +133,18 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	err = s.userRoleRepository.Create(ctx, userRole)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while assigning role: "+ err.Error())
+	}
+	return nil
+}
+
+func (s *UserService) RemoveUserRole(ctx context.Context, uniqueId string) error {
+	userRole, err := s.userRoleRepository.FindByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return apperrors.NewNotFoundError("user role not found")
+	}
+	err = s.userRoleRepository.Delete(ctx, userRole)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while removing role: "+ err.Error())
 	}
 	return nil
 }

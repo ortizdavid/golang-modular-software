@@ -1,0 +1,27 @@
+{{ template "_partials/header-back" .}}
+{{.UserRole}}
+<div class="ui segment">
+    <form class="ui form" action="/users/{{.UserRole.UserUniqueId}}/remove-role/{{.UserRole.UniqueId}}" method="POST">
+        <div class="field">
+            <label for="user"><strong>User:</strong></label>
+            <input class="ui input" type="text" value="{{.UserRole.UserName}}" name="user_name" readonly>
+        </div>
+        <div class="field">
+            <label for="role"><strong>Role:</strong></label>
+            <input class="ui input" type="text" value="{{.UserRole.RoleName}}" name="role_name" readonly>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="trash alternate icon"></i>
+                Confirm Deletion
+            </button>
+            <div class="or"></div>
+            <a href="/users/{{.User.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

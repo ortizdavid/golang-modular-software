@@ -49,6 +49,12 @@ func (repo *RoleRepository) FindById(ctx context.Context, id int) (entities.Role
 	return role, result.Error
 }
 
+func (repo *RoleRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Role, error) {
+	var role entities.Role
+	result := repo.db.WithContext(ctx).Where("unique_id=?").First(&role)
+	return role, result.Error
+}
+
 func (repo *RoleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
 	var role entities.RoleData
 	result := repo.db.WithContext(ctx).Table("authentication.view_role_data").Where("unique_id=?", uniqueId).First(&role)

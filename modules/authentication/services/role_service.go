@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,12 +17,16 @@ import (
 type RoleService struct {
 	repository *repositories.RoleRepository
 	userRoleRepository *repositories.UserRoleRepository
+	permissionRepository *repositories.PermissionRepository
+	permissionRoleRepository *repositories.PermissionRoleRepository
 }
 
 func NewRoleService(db *database.Database) *RoleService {
 	return &RoleService{
-		repository:         repositories.NewRoleRepository(db),
-		userRoleRepository: repositories.NewUserRoleRepository(db),
+		repository:               repositories.NewRoleRepository(db),
+		userRoleRepository:       repositories.NewUserRoleRepository(db),
+		permissionRepository:     repositories.NewPermissionRepository(db),
+		permissionRoleRepository: repositories.NewPermissionRoleRepository(db),
 	}
 }
 
@@ -58,7 +63,6 @@ func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRol
 	return nil
 }
 
-
 func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entities.UpdateRoleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -86,6 +90,39 @@ func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entiti
 	return nil
 }
 
+func (s *RoleService) AssignRolePermission(ctx context.Context, roleId int, request entities.AssignRolePermissionRequest) error {
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	role, err := s.repository.FindById(ctx, roleId)
+	if err != nil {
+		return apperrors.NewNotFoundError("role not found")
+	}
+	permission, err := s.permissionRepository.FindById(ctx, request.PermissionId)
+	if err != nil {
+		return apperrors.NewNotFoundError("permission not found")
+	}
+	exists, err := s.permissionRoleRepository.ExistsByRoleAndPermission(ctx, roleId, request.PermissionId)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return apperrors.NewConflictError(fmt.Sprintf("permission '%s' already assigned to role '%s'", permission.PermissionName, role.RoleName))
+	}
+	permissionRole := entities.PermissionRole{
+		PermissionId:     int64(request.PermissionId),
+		RoleId:           roleId,
+		UniqueId:         encryption.GenerateUUID(),
+		CreatedAt:        time.Now().UTC(),
+		UpdatedAt:        time.Now().UTC(),
+	}
+	err = s.permissionRoleRepository.Create(ctx, permissionRole)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while assigning permission: "+ err.Error())
+	}
+	return nil
+}
+
 func (s *RoleService) DeleteRole(ctx context.Context, roleId int) error {
     role, err := s.repository.FindById(ctx, roleId)
     if err != nil {
@@ -104,7 +141,6 @@ func (s *RoleService) DeleteRole(ctx context.Context, roleId int) error {
     }
     return nil
 }
-
 
 func (s *RoleService) GetAllRolesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Role], error) {
 	if err := params.Validate(); err != nil {
@@ -157,11 +193,11 @@ func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, requ
 }
 
 func (s *RoleService) GetRoleByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
-	role, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.RoleData{}, apperrors.NewNotFoundError("role not found")
 	}
-	return role, nil
+	return user, nil
 }
 
 func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {
@@ -170,4 +206,20 @@ func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {
 		return 0, apperrors.NewNotFoundError("No users found")
 	}
 	return count, nil
+}
+
+func (s *RoleService) GetUserRole(ctx context.Context, uniqueId string) (entities.UserRoleData, error) {
+	userRole, err := s.userRoleRepository.GetDataByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.UserRoleData{}, apperrors.NewInternalServerError("user role not found: "+err.Error())
+	}
+	return userRole, nil
+}
+
+func (s *RoleService) GetAssignedRolesByUser(ctx context.Context, userId int64) ([]entities.UserRoleData, error) {
+	userRoles, err := s.userRoleRepository.FindAllByUserId(ctx, userId)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	return userRoles, nil
 }

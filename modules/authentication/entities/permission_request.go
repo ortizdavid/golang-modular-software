@@ -21,6 +21,16 @@ func (req UpdatePermissionRequest) Validate() error {
 	return nil
 }
 
+// -- Add Role Permission
+type AssignRolePermissionRequest struct {
+	PermissionId	int `json:"permission_id" form:"permission_id"`
+}
+
+func (req AssignRolePermissionRequest) Validate() error {
+	return nil
+}
+
+
 type SearchPermissionRequest struct {
 	SearchParam		string `json:"search_param" form:"search_param"`
 }

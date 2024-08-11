@@ -21,10 +21,6 @@
             <i class="pencil icon"></i>
             Edit
         </a>
-        <a href="/users/{{.User.UniqueId}}/assign-role" class="ui primary button">
-            <i class="plus icon"></i>
-            Assign Role
-        </a>
     </div>
 
     <div class="ui image">
@@ -46,6 +42,7 @@
     </p>
     <p><strong>Creation Date:</strong> {{.User.CreatedAt}}</p>
     <p><strong>Last Update:</strong> {{.User.UpdatedAt}}</p>
+
     <div class="ui clearing divider"></div>
     <p><strong>Status:</strong> {{.User.Status}}</p>
     <p><strong>Device:</strong> {{.User.Device}}</p>
@@ -55,6 +52,38 @@
     <p><strong>Total Login:</strong> {{.User.TotalLogin}}</p>
     <p><strong>Total Logout:</strong> {{.User.TotalLogout}}</p>
 
+    <div class="ui clearing divider"></div>
+    <p><strong>Assigned Roles: {{.CountRoles}}</strong></p>
+    <div class="ui right aligned container">
+        <a href="/users/{{.User.UniqueId}}/assign-role" class="ui primary button small">
+            <i class="plus icon"></i>
+            Add Role
+        </a>
+    </div>
+    <table class="ui selectable small table blue">
+        <thead>
+            <tr>
+                <th>Role Name</th>
+                <th>Role Code</th>
+                <th>Assign Date</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .UserRoles }}
+                <tr>
+                    <td>{{.RoleName}}</td>
+                    <td>{{.RoleCode}}</td>
+                    <td>{{.CreatedAt}}</td>
+                    <td>
+                        <a href="/users/{{.UserUniqueId}}/remove-role/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Role">
+                            <i class="trash alternate red icon"></i>
+                        </a>
+                    </td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
 </div>
 
 {{ template "_partials/footer-back" .}}

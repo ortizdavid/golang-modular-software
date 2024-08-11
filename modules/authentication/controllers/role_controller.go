@@ -15,6 +15,7 @@ import (
 type RoleController struct {
 	service *services.RoleService
 	authService *services.AuthService
+	permissionService *services.PermissionService
 	appConfig *configurations.AppConfiguration
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
@@ -22,11 +23,12 @@ type RoleController struct {
 
 func NewRoleController(db *database.Database) *RoleController {
 	return &RoleController{
-		service:     services.NewRoleService(db),
-		authService: services.NewAuthService(db),
-		appConfig:   configurations.LoadAppConfigurations(db),
-		infoLogger:  helpers.NewInfoLogger("users-info.log"),
-		errorLogger: helpers.NewInfoLogger("users-error.log"),
+		service:           services.NewRoleService(db),
+		authService:       services.NewAuthService(db),
+		permissionService: services.NewPermissionService(db),
+		appConfig:         configurations.LoadAppConfigurations(db),
+		infoLogger:        helpers.NewInfoLogger("users-info.log"),
+		errorLogger:       helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
@@ -43,6 +45,8 @@ func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 	group.Post("/:id/delete", ctrl.delete)
 	group.Get("/search", ctrl.searchForm)
 	group.Get("/search-results", ctrl.search)
+	group.Get("/:id/assign-permission", ctrl.assignPermissionForm)
+	group.Post("/:id/assign-permission", ctrl.assignPermission)
 }
 
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
@@ -193,4 +197,43 @@ func (ctrl *RoleController) search(c *fiber.Ctx) error {
         "LoggedUser":   loggedUser,
         "AppConfig":  ctrl.appConfig,
     })
+}
+
+func (ctrl *RoleController) assignPermissionForm(c *fiber.Ctx) error {
+	id := c.Params("id")
+	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	permissions, err := ctrl.permissionService.GetAllPermissions(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/role/assign-permission", fiber.Map{
+		"Title": "Assign Role",
+		"Permissions": permissions,
+		"Role": role,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
+func (ctrl *RoleController) assignPermission(c *fiber.Ctx) error {
+	id := c.Params("id")
+	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	var request entities.AssignRolePermissionRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.service.AssignRolePermission(c.Context(), role.RoleId, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("Role '%s' assigned permission %d", role.RoleName, request.PermissionId))
+	return c.Redirect("/roles")
 }

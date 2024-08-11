@@ -26,15 +26,20 @@ func (repo *UserRoleRepository) Update(ctx context.Context, userRole entities.Us
 	return result.Error
 }
 
+func (repo *UserRoleRepository) Delete(ctx context.Context, userRole entities.UserRole) error {
+	result := repo.db.WithContext(ctx).Delete(&userRole)
+	return result.Error
+}
+
 func (repo *UserRoleRepository) FindAll(ctx context.Context) ([]entities.UserRole, error) {
 	var roles []entities.UserRole
 	result := repo.db.WithContext(ctx).Find(&roles)
 	return roles, result.Error
 }
 
-func (repo *UserRoleRepository) FindAllByUserId(ctx context.Context, userId int64) ([]entities.UserRole, error) {
-	var roles []entities.UserRole
-	result := repo.db.WithContext(ctx).Where("user_id = ?", userId).Find(&roles)
+func (repo *UserRoleRepository) FindAllByUserId(ctx context.Context, userId int64) ([]entities.UserRoleData, error) {
+	var roles []entities.UserRoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_id = ?", userId).Find(&roles)
 	return roles, result.Error
 }
 
@@ -44,10 +49,16 @@ func (repo *UserRoleRepository) FindAllDataByUserId(ctx context.Context, userId 
 	return roles, result.Error
 }
 
-func (repo *UserRoleRepository) FindById(ctx context.Context, id int) (entities.UserRole, error) {
-	var role entities.UserRole
-	result := repo.db.WithContext(ctx).First(&role, id)
-	return role, result.Error
+func (repo *UserRoleRepository) FindById(ctx context.Context, id int) (entities.UserRoleData, error) {
+	var userRole entities.UserRoleData
+	result := repo.db.WithContext(ctx).First(&userRole, id)
+	return userRole, result.Error
+}
+
+func (repo *UserRoleRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.UserRole, error) {
+	var userRole entities.UserRole
+	result := repo.db.WithContext(ctx).Where("unique_id = ?", uniqueId).First(&userRole)
+	return userRole, result.Error
 }
 
 func (repo *UserRoleRepository) FindByRoleId(ctx context.Context, roleId int) (entities.UserRole, error) {
@@ -56,11 +67,18 @@ func (repo *UserRoleRepository) FindByRoleId(ctx context.Context, roleId int) (e
 	return role, result.Error
 }
 
-func (repo *UserRoleRepository) FindByUserId(ctx context.Context, userId int) (entities.UserRole, error) {
-	var role entities.UserRole
-	result := repo.db.WithContext(ctx).Where("user_id=?", userId).First(&role)
-	return role, result.Error
+func (repo *UserRoleRepository) GetDataById(ctx context.Context, userRoleId int) (entities.UserRoleData, error) {
+	var userRole entities.UserRoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_role_id=?", userRoleId).First(&userRole)
+	return userRole, result.Error
 }
+
+func (repo *UserRoleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.UserRoleData, error) {
+	var userRole entities.UserRoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("unique_id=?", uniqueId).First(&userRole)
+	return userRole, result.Error
+}
+
 
 func (repo *UserRoleRepository) Count(ctx context.Context) (int64, error) {
 	var count int64

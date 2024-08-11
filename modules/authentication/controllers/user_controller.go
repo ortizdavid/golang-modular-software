@@ -38,13 +38,15 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 
 	group := router.Group("/users", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
+	group.Get("/:id/details", ctrl.details)
 	group.Get("/create", ctrl.createForm)
 	group.Post("/create", ctrl.create)
 	group.Get("/:id/edit", ctrl.editForm)
 	group.Post("/:id/edit", ctrl.edit)
-	group.Get("/:id/details", ctrl.details)
 	group.Get("/:id/assign-role", ctrl.assignRoleForm)
 	group.Post("/:id/assign-role", ctrl.assignRole)
+	group.Get("/:userId/remove-role/:userRoleId", ctrl.removeRoleForm)
+	group.Post("/:userId/remove-role/:userRoleId", ctrl.removeRole)
 	group.Get("/:id/deactivate", ctrl.deactivateForm)
 	group.Post("/:id/deactivate", ctrl.deactivate)
 	group.Get("/:id/activate", ctrl.activateForm)
@@ -71,6 +73,24 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 		"Pagination": pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
 		"TotalPages": pagination.MetaData.TotalPages + 1,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
+func (ctrl *UserController) details(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	userRoles, _ := ctrl.roleService.GetAssignedRolesByUser(c.Context(), user.UserId)
+	return c.Render("authentication/user/details", fiber.Map{
+		"Title": "User Details",
+		"User": user,
+		"UserRoles": userRoles,
+		"CountRoles": len(userRoles),
 		"LoggedUser": loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})
@@ -125,32 +145,17 @@ func (ctrl *UserController) edit(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	var request entities.EditUserRequest
+	var request entities.UpdateUserRequest
 	if err := c.BodyParser(&request); err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	err = ctrl.service.EditUser(c.Context(), user.UserId, request)
+	err = ctrl.service.UpdateUser(c.Context(), user.UserId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+user.UserName+"' edited successfuly")
 	return c.Redirect("/users")
-}
-
-func (ctrl *UserController) details(c *fiber.Ctx) error {
-	id := c.Params("id")
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
-	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
-	}
-	return c.Render("authentication/user/details", fiber.Map{
-		"Title": "User Details",
-		"User": user,
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
-	})
 }
 
 func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
@@ -189,7 +194,48 @@ func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' assigned role %d", user.UserName, request.RoleId))
-	return c.Redirect("/users")
+	return c.Redirect("/users/"+id+"/details")
+}
+
+func (ctrl *UserController) removeRoleForm(c *fiber.Ctx) error {
+	userId := c.Params("userId")
+	userRoleId := c.Params("userRoleId")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), userId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	userRole, err := ctrl.roleService.GetUserRole(c.Context(), userRoleId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("authentication/user/remove-role", fiber.Map{
+		"Title": "Remove Role",
+		"UserRole": userRole,
+		"User": user,
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
+	})
+}
+
+func (ctrl *UserController) removeRole(c *fiber.Ctx) error {
+	userId := c.Params("userId")
+	userRoleId := c.Params("userRoleId")
+	user, err := ctrl.service.GetUserByUniqueId(c.Context(), userId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	userRole, err := ctrl.roleService.GetUserRole(c.Context(), userRoleId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.service.RemoveUserRole(c.Context(), userRole.UniqueId)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed role %d", user.UserName, userRole.RoleName))
+	return c.Redirect("/users/"+userId+"/details")
 }
 
 func (ctrl *UserController) searchForm(c *fiber.Ctx) error {

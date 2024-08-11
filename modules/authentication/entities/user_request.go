@@ -51,11 +51,11 @@ func (req AssignUserRoleRequest) Validate() error {
 }
 
 // 
-type EditUserRequest struct {
+type UpdateUserRequest struct {
 	UserName	string `json:"user_name" form:"user_name"`
 }
 
-func (req EditUserRequest) Validate() error {
+func (req UpdateUserRequest) Validate() error {
 	return nil
 }
 
