@@ -1,4 +1,4 @@
--- Schema: configuration 
+-- tables for 'configurations' schema 
 
 DROP TABLE IF EXISTS configurations.email_configuration;
 CREATE TABLE configurations.email_configuration (

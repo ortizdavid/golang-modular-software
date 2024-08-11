@@ -1,4 +1,4 @@
--- Schema: reference.
+-- tables for 'reference' schema 
 
 DROP TYPE IF EXISTS TYPE_GENDER;
 CREATE TYPE TYPE_GENDER AS ENUM('Masculino', 'Feminino');

@@ -1,3 +1,31 @@
 {{ template "_partials/header-back" .}}
 
+<div class="ui segment">
+    <form class="ui form" action="/permissions/create" method="POST">
+        <div class="field">
+            <label for="permission_name"><strong>Permission Name:</strong></label>
+            <input class="ui input" type="text" name="permission_name" autofocus>
+        </div>
+        <div class="field">
+            <label for="permission_name"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code">
+        </div>
+        <div class="field">
+            <label for="description"><strong>Description:</strong></label>
+            <textarea class="ui input" cols="20" rows="5" name="description"></textarea>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/permissions" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
 {{ template "_partials/footer-back" .}}

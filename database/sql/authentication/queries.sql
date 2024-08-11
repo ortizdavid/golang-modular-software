@@ -1,2 +1,2 @@
--- Schema: authentication
+-- queries for 'authentication' schema 
 

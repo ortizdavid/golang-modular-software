@@ -14,6 +14,7 @@ const (
 	configDir      = "configuration"
 	companyDir     = "company"
 	referenceDir   = "reference"
+	employeeDir    = "employees"
 	sqlScriptsBase = "./database/sql"
 )
 
@@ -59,6 +60,9 @@ func execAuthenticationScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, authDir, "triggers.sql"); err != nil {
 		return err
 	}
+	if err := execDatabaseScript(db, authDir, "procedures.sql"); err != nil {
+		return err
+	}
 	return execDatabaseScript(db, authDir, "views.sql")
 }
 
@@ -66,6 +70,12 @@ func execAuthenticationScripts(db *database.Database) error {
 func execConfigurationScripts(db *database.Database) error {
 	log.Println("Executing configuration schema scripts...")
 	if err := execDatabaseScript(db, configDir, "tables.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, configDir, "triggers.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, configDir, "procedures.sql"); err != nil {
 		return err
 	}
 	return execDatabaseScript(db, configDir, "views.sql")
@@ -77,16 +87,28 @@ func execCompanyScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
 		return err
 	}
+	if err := execDatabaseScript(db, companyDir, "triggers.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, companyDir, "procedures.sql"); err != nil {
+		return err
+	}
 	return execDatabaseScript(db, companyDir, "views.sql")
 }
 
 // execEmployeeScripts executes all company scripts.
 func execEmployeeScripts(db *database.Database) error {
 	log.Println("Executing employee schema scripts...")
-	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
+	if err := execDatabaseScript(db, employeeDir, "tables.sql"); err != nil {
 		return err
 	}
-	return execDatabaseScript(db, companyDir, "views.sql")
+	if err := execDatabaseScript(db, employeeDir, "triggers.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, employeeDir, "procedures.sql"); err != nil {
+		return err
+	}
+	return execDatabaseScript(db, employeeDir, "views.sql")
 }
 
 
@@ -94,6 +116,12 @@ func execEmployeeScripts(db *database.Database) error {
 func execReferenceScripts(db *database.Database) error {
 	log.Println("Executing reference schema scripts...")
 	if err := execDatabaseScript(db, referenceDir, "tables.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, referenceDir, "triggers.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, referenceDir, "procedures.sql"); err != nil {
 		return err
 	}
 	return execDatabaseScript(db, referenceDir, "views.sql")

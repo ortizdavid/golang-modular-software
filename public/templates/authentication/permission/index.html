@@ -1,7 +1,6 @@
 {{ template "_partials/header-back" .}}
 
     <div class="ui segment">
-       
         <div class="ui right aligned container">
             <div class="ui buttons">
                 <a href="/permissions/create" class="ui blue button">
@@ -23,7 +22,7 @@
                             <th>Id</th>
                             <th>Permission Name</th>
                             <th>Code</th>
-                            <th>Creation Date</th>
+                            <th>Description</th>
                             <th>Options</th>
                         </tr>
                     </thead>
@@ -33,13 +32,16 @@
                                 <td class="collapsing">{{.PermissionId}}</td>
                                 <td>{{.PermissionName}}</td>
                                 <td>{{.Code}}</td>
-                                <td>{{.CreatedAt}}</td>
+                                <td>{{.Description}}</td>
                                 <td>
                                     <a href="/permissions/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
                                     <a href="/permissions/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                         <i class="pencil icon"></i>
+                                    </a>
+                                    <a href="/permissions/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                        <i class="trash alternate red icon"></i>
                                     </a>
                                 </td>
                             </tr>

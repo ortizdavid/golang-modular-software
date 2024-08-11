@@ -1,4 +1,6 @@
--- Schema: authentication
+-- tables for 'authentication' schema 
+
+
 DROP TABLE IF EXISTS authentication.roles;
 CREATE TABLE authentication.roles (
     role_id SERIAL PRIMARY KEY,

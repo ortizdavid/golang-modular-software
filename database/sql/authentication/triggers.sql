@@ -1,3 +1,6 @@
+-- triggers for 'reference' schema 
+
+
 -- Lock delete assigned roles-------------------------------------------------------------------------------------
 -- Drop the trigger if it already exists
 DROP TRIGGER IF EXISTS lock_delete_assigned_roles ON authentication.roles;
@@ -37,7 +40,7 @@ BEGIN
     -- Check if the permission is assigned to any role
     IF EXISTS (
         SELECT 1
-        FROM authentication.role_permissions
+        FROM authentication.permission_roles
         WHERE permission_id = OLD.permission_id
     ) THEN
         -- Raise an exception to prevent deletion

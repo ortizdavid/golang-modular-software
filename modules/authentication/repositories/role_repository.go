@@ -81,8 +81,9 @@ func (repo *RoleRepository) ExistsByName(ctx context.Context, name string) (bool
 
 func (repo *RoleRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.RoleData, error) {
 	var users []entities.RoleData
+	likeParam := "%"+param+"%"
 	result := repo.db.WithContext(ctx).
-		Raw("SELECT * FROM authentication.view_user_role_data WHERE role_name=? OR role_code=?", param, param).
+		Raw("SELECT * FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
 		Limit(limit).
 		Offset(offset).
 		Scan(&users)
@@ -91,8 +92,9 @@ func (repo *RoleRepository) Search(ctx context.Context, param string, limit int,
 
 func (repo *RoleRepository) CountByParam(ctx context.Context, param string) (int64, error) {
     var count int64
+	likeParam := "%"+param+"%"
     result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM authentication.view_user_role_data WHERE role_name=? OR role_code=?", param, param).
+        Raw("SELECT COUNT(*) FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
         Scan(&count)
     return count, result.Error
 }

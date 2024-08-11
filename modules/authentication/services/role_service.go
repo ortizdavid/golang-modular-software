@@ -145,11 +145,11 @@ func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, requ
 	if err := paginationParams.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	users, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
+	roles, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, users, count, paginationParams.CurrentPage, paginationParams.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, roles, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
 	}
@@ -157,11 +157,11 @@ func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, requ
 }
 
 func (s *RoleService) GetRoleByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
-	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	role, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.RoleData{}, apperrors.NewNotFoundError("role not found")
 	}
-	return user, nil
+	return role, nil
 }
 
 func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {

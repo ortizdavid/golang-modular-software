@@ -1,4 +1,4 @@
--- Schema: reference
+-- views for 'reference' schema 
 
 -- view: view_personal_data
 DROP VIEW IF EXISTS reference.view_personal_data;

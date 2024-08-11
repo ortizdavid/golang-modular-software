@@ -15,11 +15,13 @@ import (
 
 type PermissionService struct {
 	repository *repositories.PermissionRepository
+	permissionRoleRepository *repositories.PermissionRoleRepository
 }
 
 func NewPermissionService(db *database.Database) *PermissionService {
 	return &PermissionService{
-		repository: repositories.NewPermissionRepository(db),
+		repository:               repositories.NewPermissionRepository(db),
+		permissionRoleRepository: repositories.NewPermissionRoleRepository(db),
 	}
 }
 
@@ -50,6 +52,13 @@ func (s *PermissionService) UpdatePermission(ctx context.Context, permissionId i
 	if err != nil {
 		return apperrors.NewNotFoundError("permission not found")
 	}
+	exists, err := s.permissionRoleRepository.ExistsByPermissionId(ctx, permissionId)
+    if err != nil {
+        return err
+    }
+    if exists {
+        return apperrors.NewConflictError("Permission '" + permission.PermissionName+ "' is currently assigned to users and cannot be updated")
+    }
 	permission.PermissionName = request.PermissionName
 	permission.Description = request.Description
 	permission.UpdatedAt = time.Now().UTC()
@@ -65,6 +74,13 @@ func (s *PermissionService) DeletePermission(ctx context.Context, permissionId i
 	if err != nil {
 		return apperrors.NewNotFoundError("permission not found")
 	}
+	exists, err := s.permissionRoleRepository.ExistsByPermissionId(ctx, permissionId)
+    if err != nil {
+        return err
+    }
+    if exists {
+        return apperrors.NewConflictError("Permission '" + permission.PermissionName + "' is currently assigned to roles and cannot be deleted")
+    }
 	err = s.repository.Delete(ctx, permission)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while deleting permission: "+ err.Error())
@@ -72,7 +88,7 @@ func (s *PermissionService) DeletePermission(ctx context.Context, permissionId i
 	return nil
 }
 
-func (s *PermissionService) GetAllPermissionsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Permission], error) {
+func (s *PermissionService) GetAllPermissionsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.PermissionData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -103,10 +119,37 @@ func (s *PermissionService) GetAllPermissions(ctx context.Context) ([]entities.P
 	return permissions, nil
 }
 
+func (s *PermissionService) SearchPermissions(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchPermissionRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.PermissionData], error) {
+	count, err := s.repository.CountByParam(ctx, request.SearchParam)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No permissions found")
+	}
+	if err := paginationParams.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
+	}
+	permissions, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	pagination, err := helpers.NewPagination(fiberCtx, permissions, count, paginationParams.CurrentPage, paginationParams.Limit)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+	}
+	return pagination, nil
+}
+
+func (s *PermissionService) GetPermissionByUniqueId(ctx context.Context, uniqueId string) (entities.PermissionData, error) {
+	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.PermissionData{}, apperrors.NewNotFoundError("permission not found")
+	}
+	return user, nil
+}
+
 func (s *PermissionService) CountPermissions(ctx context.Context) (int64, error) {
 	count, err := s.repository.Count(ctx)
 	if err != nil {
-		return 0, apperrors.NewNotFoundError("No users found")
+		return 0, apperrors.NewNotFoundError("No permissions found")
 	}
 	return count, nil
 }

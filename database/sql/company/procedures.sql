@@ -1,0 +1,1 @@
+-- stored procedures for 'component' schema 

@@ -1,1 +1,1 @@
--- Schema: configuration 
+-- views for 'reference' schema 

@@ -1,1 +1,1 @@
--- Schema: configuration 
+-- queries for 'configurations' schema 

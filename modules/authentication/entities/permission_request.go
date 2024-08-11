@@ -20,3 +20,7 @@ type UpdatePermissionRequest struct {
 func (req UpdatePermissionRequest) Validate() error {
 	return nil
 }
+
+type SearchPermissionRequest struct {
+	SearchParam		string `json:"search_param" form:"search_param"`
+}

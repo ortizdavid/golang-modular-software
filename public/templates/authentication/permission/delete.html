@@ -1,0 +1,24 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    
+    <form class="ui form" action="/permissions/{{.Permission.UniqueId}}/delete" method="POST">
+        <div class="field">
+            <label for="username"><strong>Permission:</strong></label>
+            <input class="ui input" type="text" value="{{.Permission.PermissionName}}" name="user_name" readonly>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="trash alternate icon"></i>
+                Confirm Deletion
+            </button>
+            <div class="or"></div>
+            <a href="/permissions/{{.Permission.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

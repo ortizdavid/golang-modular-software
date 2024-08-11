@@ -1,4 +1,5 @@
--- Schema: authentication
+-- views for 'reference' schema 
+
 
 -- View: view_user_data
 DROP VIEW IF EXISTS authentication.view_user_data;
@@ -54,6 +55,18 @@ FROM authentication.user_roles ur
 JOIN authentication.roles ro ON(ro.role_id = ur.role_id)
 JOIN authentication.users us ON(us.user_id = ur.user_id)
 ORDER BY created_at DESC;
+
+
+-- View: view_permission_data
+DROP VIEW IF EXISTS authentication.view_permission_data;
+CREATE VIEW authentication.view_permission_data AS 
+SELECT  pe.permission_id, pe.unique_id,
+    pe.permission_name, pe.code,
+    pe.description,
+    pe.created_at,
+    pe.updated_at
+FROM authentication.permissions pe
+ORDER BY created_at ASC;
 
 
 -- View: view_role_permission
