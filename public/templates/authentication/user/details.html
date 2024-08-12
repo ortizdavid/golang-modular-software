@@ -1,6 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
+
     <div class="ui right floated buttons">
         {{ if eq .User.IsActive "Yes" }}
             <a href="/users/{{.User.UniqueId}}/deactivate" class="ui red button">
@@ -60,30 +61,37 @@
             Add Role
         </a>
     </div>
-    <table class="ui selectable small table blue">
-        <thead>
-            <tr>
-                <th>Role Name</th>
-                <th>Role Code</th>
-                <th>Assign Date</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{ range .UserRoles }}
+    {{ if .CountRoles }}
+        <table class="ui selectable small table blue">
+            <thead>
                 <tr>
-                    <td>{{.RoleName}}</td>
-                    <td>{{.RoleCode}}</td>
-                    <td>{{.CreatedAt}}</td>
-                    <td>
-                        <a href="/users/{{.UserUniqueId}}/remove-role/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Role">
-                            <i class="trash alternate red icon"></i>
-                        </a>
-                    </td>
+                    <th>Role Name</th>
+                    <th>Role Code</th>
+                    <th>Assigned Date</th>
+                    <th>Options</th>
                 </tr>
-            {{ end }}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {{ range .UserRoles }}
+                    <tr>
+                        <td>{{.RoleName}}</td>
+                        <td>{{.RoleCode}}</td>
+                        <td>{{.CreatedAt}}</td>
+                        <td>
+                            <a href="/users/{{.UserUniqueId}}/remove-role/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Role">
+                                <i class="trash alternate red icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <div class="ui warning message">
+            No roles found
+        </div>
+    {{ end }}
+
 </div>
 
 {{ template "_partials/footer-back" .}}

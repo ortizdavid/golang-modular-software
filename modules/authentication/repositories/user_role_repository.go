@@ -79,7 +79,6 @@ func (repo *UserRoleRepository) GetDataByUniqueId(ctx context.Context, uniqueId 
 	return userRole, result.Error
 }
 
-
 func (repo *UserRoleRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.user_roles").Count(&count)

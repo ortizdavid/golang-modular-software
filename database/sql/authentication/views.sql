@@ -70,20 +70,18 @@ FROM authentication.permissions pe
 ORDER BY created_at ASC;
 
 
--- View: view_role_permission
-DROP VIEW IF EXISTS authentication.view_user_permissions_data;
-CREATE VIEW authentication.view_user_permissions_data AS 
-SELECT  pe.permission_id, pe.unique_id,
-    pe.permission_name, pe.code,
-    pe.description,
-    TO_CHAR(pe.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
-    TO_CHAR(pe.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-    ro.role_id, ro.role_name,
-    ro.code AS role_code,
-    us.user_id, us.user_name
+-- View: view_permission_role_data
+DROP VIEW IF EXISTS authentication.view_permission_role_data;
+CREATE VIEW authentication.view_permission_role_data AS 
+SELECT pr.permission_role_id, pr.unique_id,  
+    TO_CHAR(pr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(pr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    pe.permission_id, pe.permission_name, 
+    pe.code AS permission_code,
+    ro.role_id, ro.unique_id AS role_unique_id,
+    ro.role_name
 FROM authentication.permissions pe
 JOIN authentication.permission_roles pr ON(pr.permission_id = pe.permission_id)
 JOIN authentication.roles ro ON(ro.role_id = pr.role_id)
-JOIN authentication.users us ON(us.user_id = pr.role_id)
 ORDER BY created_at DESC;
 

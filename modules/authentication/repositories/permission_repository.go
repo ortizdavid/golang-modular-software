@@ -98,3 +98,12 @@ func (repo *PermissionRepository) CountByParam(ctx context.Context, param string
         Scan(&count)
     return count, result.Error
 }
+
+func (repo *PermissionRepository) FindUnassignedPermissionsByRole(ctx context.Context, roleId int) ([]entities.Permission, error) {
+	var permissions []entities.Permission
+	result := repo.db.WithContext(ctx).
+		Table("authentication.permissions").
+		Where("permission_id NOT IN(SELECT permission_id FROM authentication.permission_roles WHERE role_id = ?)", roleId).
+		Find(&permissions)
+	return permissions, result.Error
+}

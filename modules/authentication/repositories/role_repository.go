@@ -104,3 +104,12 @@ func (repo *RoleRepository) CountByParam(ctx context.Context, param string) (int
         Scan(&count)
     return count, result.Error
 }
+
+func (repo *RoleRepository) FindUnassignedRolesByUser(ctx context.Context, userId int64) ([]entities.Role, error) {
+	var roles []entities.Role
+	result := repo.db.WithContext(ctx).
+		Table("authentication.roles").
+		Where("role_id NOT IN(SELECT role_id FROM authentication.user_roles WHERE user_id = ?)", userId).
+		Find(&roles)
+	return roles, result.Error
+}

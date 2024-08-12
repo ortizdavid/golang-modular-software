@@ -165,7 +165,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	roles, err := ctrl.roleService.GetAllRoles(c.Context())
+	roles, err := ctrl.roleService.GetUnassignedRolesByUser(c.Context(), user.UserId)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -234,7 +234,7 @@ func (ctrl *UserController) removeRole(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed role %d", user.UserName, userRole.RoleName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed role %s", user.UserName, userRole.RoleName))
 	return c.Redirect("/users/"+userId+"/details")
 }
 
@@ -434,7 +434,6 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 	if loggedUser.UserId == user.UserId {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
 	}
-	fmt.Printf("\nRESET PASSWORD\nNew Password: %s\nPassword Conf: %s", request.NewPassword, request.PasswordConf)
 	err = ctrl.service.ResetUserPassword(c.Context(), user.UserId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())

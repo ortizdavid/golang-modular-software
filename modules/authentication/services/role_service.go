@@ -173,6 +173,18 @@ func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) 
 	return roles, nil
 }
 
+func (s *RoleService) GetUnassignedRolesByUser(ctx context.Context, userId int64) ([]entities.Role, error) {
+	_, err := s.repository.Count(ctx)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No roles found")
+	}
+	roles, err := s.repository.FindUnassignedRolesByUser(ctx, userId)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	return roles, nil
+}
+
 func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchRoleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.RoleData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {

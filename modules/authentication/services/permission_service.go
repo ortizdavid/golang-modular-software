@@ -153,3 +153,43 @@ func (s *PermissionService) CountPermissions(ctx context.Context) (int64, error)
 	}
 	return count, nil
 }
+
+func (s *PermissionService) GetPermissionRole(ctx context.Context, uniqueId string) (entities.PermissionRoleData, error) {
+	userRole, err := s.permissionRoleRepository.GetDataByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.PermissionRoleData{}, apperrors.NewInternalServerError("permission role not found: "+err.Error())
+	}
+	return userRole, nil
+}
+
+func (s *PermissionService) RemovePermissionRole(ctx context.Context, uniqueId string) error {
+	permissionRole, err := s.permissionRoleRepository.FindByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return apperrors.NewNotFoundError("permission role not found")
+	}
+	err = s.permissionRoleRepository.Delete(ctx, permissionRole)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while removing permission: "+ err.Error())
+	}
+	return nil
+}
+
+func (s *PermissionService) GetAssignedPermissionsByRole(ctx context.Context, roleId int) ([]entities.PermissionRoleData, error) {
+	permissionRoles, err := s.permissionRoleRepository.FindAllByRoleId(ctx, roleId)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	return permissionRoles, nil
+}
+
+func (s *PermissionService) GetUnassignedPermissionsByRole(ctx context.Context, roleId int) ([]entities.Permission, error) {
+	_, err := s.repository.Count(ctx)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No permissions found")
+	}
+	roles, err := s.repository.FindUnassignedPermissionsByRole(ctx, roleId)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	return roles, nil
+}

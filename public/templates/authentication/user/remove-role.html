@@ -1,5 +1,5 @@
 {{ template "_partials/header-back" .}}
-{{.UserRole}}
+
 <div class="ui segment">
     <form class="ui form" action="/users/{{.UserRole.UserUniqueId}}/remove-role/{{.UserRole.UniqueId}}" method="POST">
         <div class="field">
