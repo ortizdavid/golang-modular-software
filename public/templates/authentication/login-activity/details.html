@@ -1,0 +1,19 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <p><strong>ID:</strong> {{.LoginActivity.LoginId}}</p>
+    <p><strong>User Name:</strong> {{.LoginActivity.UserName}}</p>
+    <p><strong>Email:</strong> {{.LoginActivity.Email}}</p>
+    <p><strong>Status:</strong> {{.LoginActivity.Status}}</p>
+    <div class="ui divider"></div>
+    <p><strong>Host:</strong> {{.LoginActivity.Host}}</p>
+    <p><strong>IP Address:</strong> {{.LoginActivity.IPAddress}}</p>
+    <p><strong>Device:</strong> {{.LoginActivity.Device}}</p>
+    <p><strong>Browser:</strong> {{.LoginActivity.Browser}}</p>
+    <p><strong>Last Login:</strong> {{.LoginActivity.LastLogout}}</p>
+    <p><strong>Last Logout:</strong> {{.LoginActivity.LastLogin}}</p>
+    <p><strong>Total Login:</strong> {{.LoginActivity.TotalLogin}}</p>
+    <p><strong>Total Logout:</strong> {{.LoginActivity.TotalLogout}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

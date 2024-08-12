@@ -30,7 +30,6 @@ func (req AssignRolePermissionRequest) Validate() error {
 	return nil
 }
 
-
 type SearchPermissionRequest struct {
 	SearchParam		string `json:"search_param" form:"search_param"`
 }

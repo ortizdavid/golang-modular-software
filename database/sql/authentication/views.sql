@@ -85,3 +85,22 @@ JOIN authentication.permission_roles pr ON(pr.permission_id = pe.permission_id)
 JOIN authentication.roles ro ON(ro.role_id = pr.role_id)
 ORDER BY created_at DESC;
 
+
+-- View: view_login_activity_data
+DROP VIEW IF EXISTS authentication.view_login_activity_data;
+CREATE VIEW authentication.view_login_activity_data AS
+SELECT la.login_id, la.unique_id,
+    la.status, la.host,
+    la.browser, la.ip_address,
+    la.device,
+    TO_CHAR(la.last_login, 'YYYY-MM-DD HH24:MI:SS') AS last_login, 
+    TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS') AS last_logout,
+    la.total_login, la.total_logout,
+    TO_CHAR(la.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(la.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    us.user_id, us.user_name,
+    us.email
+FROM authentication.login_activity la
+JOIN authentication.users us ON(la.user_id = us.user_id)
+ORDER BY created_at DESC;
+
