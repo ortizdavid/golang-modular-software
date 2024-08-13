@@ -73,7 +73,7 @@ CREATE TYPE TYPE_ACTIVITY_STATUS AS ENUM('Online', 'Offline');
 DROP TABLE IF EXISTS authentication.login_activity;
 CREATE TABLE authentication.login_activity (
     login_id SERIAL PRIMARY KEY,
-    user_id INT UNIQUE NOT NULL,
+    user_id INT NOT NULL,
     status TYPE_ACTIVITY_STATUS DEFAULT 'Offline',
     host VARCHAR(150),
     browser VARCHAR(150),
@@ -89,6 +89,28 @@ CREATE TABLE authentication.login_activity (
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
 );
+-- Index
+DROP INDEX IF EXISTS idx_login_user_id;
+CREATE INDEX idx_login_user_id ON authentication.login_activity(user_id);
+
+-- Table: user_api_key
+DROP TABLE IF EXISTS authentication.user_api_key;
+CREATE TABLE authentication.user_api_key (
+    api_key_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    key VARCHAR(150) UNIQUE,
+    expiration_date DATE NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_by INT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_user_key FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id),
+    CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES authentication.users (user_id)
+);
+-- Index
+DROP INDEX IF EXISTS idx_user_id;
+CREATE INDEX idx_user_id ON authentication.user_api_key(user_id);
+
 
 -- Initial inserts
 -- roles
