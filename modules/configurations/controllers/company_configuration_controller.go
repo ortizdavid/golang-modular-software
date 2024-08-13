@@ -31,7 +31,7 @@ func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurat
 }
 
 func (ctrl *CompanyConfigurationController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("/configurations/company-configurations", authMiddleware.CheckLoggedUser)
 	group.Get("", ctrl.index)
 	group.Get("/edit", ctrl.editForm)

@@ -23,7 +23,7 @@ func NewRootController(db *database.Database) *RootController {
 }
 
 func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("/users-management", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
   

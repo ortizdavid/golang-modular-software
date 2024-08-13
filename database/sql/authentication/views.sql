@@ -1,6 +1,5 @@
 -- views for 'reference' schema 
 
-
 -- View: view_user_data
 DROP VIEW IF EXISTS authentication.view_user_data;
 CREATE VIEW authentication.view_user_data AS 

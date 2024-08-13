@@ -32,7 +32,7 @@ func NewBasicConfigurationController(db *database.Database) *BasicConfigurationC
 
 
 func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("/configurations/basic-configurations", authMiddleware.CheckLoggedUser)
 	group.Get("", ctrl.index)
 	group.Get("/edit", ctrl.editForm)

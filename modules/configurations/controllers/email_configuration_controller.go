@@ -31,7 +31,7 @@ func NewEmailConfigurationController(db *database.Database) *EmailConfigurationC
 }
 
 func (ctrl *EmailConfigurationController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("/configurations/email-configurations", authMiddleware.CheckLoggedUser)
 	group.Get("", ctrl.index)
 	group.Get("/edit", ctrl.editForm)

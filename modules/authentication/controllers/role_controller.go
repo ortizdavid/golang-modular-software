@@ -33,7 +33,7 @@ func NewRoleController(db *database.Database) *RoleController {
 }
 
 func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("/roles", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 	group.Get("/create", ctrl.createForm)

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
@@ -31,7 +30,7 @@ func NewLoginActivityController(db *database.Database) *LoginActivityController 
 }
 
 func (ctrl *LoginActivityController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("login-activities", authMiddleware.CheckLoggedUser)
 	group.Get("", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
@@ -53,7 +52,6 @@ func (ctrl *LoginActivityController) index(c *fiber.Ctx) error {
 		"Pagination": pagination,
 		"CurrentPage":  pagination.MetaData.CurrentPage + 1,
         "TotalPages":   pagination.MetaData.TotalPages + 1,
-		
 	})
 }
 

@@ -31,7 +31,7 @@ func NewAccountController(db *database.Database) *AccountController {
 	}
 }
 func (ctrl *AccountController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("account", authMiddleware.CheckLoggedUser)
 	group.Get("/user-data", authMiddleware.CheckLoggedUser, ctrl.userData)
 	group.Get("/change-data", authMiddleware.CheckLoggedUser, ctrl.changeUserDataForm)

@@ -21,7 +21,7 @@ func NewBackOfficeController(db *database.Database) *BackOfficeController {
 }
 
 func (ctrl *BackOfficeController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	router.Get("/home", authMiddleware.CheckLoggedUser, ctrl.home)
 	router.Get("/notifications", authMiddleware.CheckLoggedUser, ctrl.notifications)
 }

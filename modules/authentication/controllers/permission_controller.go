@@ -31,7 +31,7 @@ func NewPermissionController(db *database.Database) *PermissionController {
 }
 
 func (ctrl *PermissionController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewAuthenticationMiddleware(db)
+	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("/permissions", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
