@@ -36,7 +36,6 @@ func (cors *CorsMiddleware) Handle(c *fiber.Ctx) error {
 	if cors.ExposedHeaders != "" {
 		c.Set("Access-Control-Expose-Headers", cors.ExposedHeaders)
 	}
-
 	if cors.AllowCredentials {
 		c.Set("Access-Control-Allow-Credentials", "true")
 		// When AllowCredentials is true, Access-Control-Allow-Origin must not be "*"
@@ -44,15 +43,12 @@ func (cors *CorsMiddleware) Handle(c *fiber.Ctx) error {
 			c.Set("Access-Control-Allow-Origin", c.Get("Origin"))
 		}
 	}
-
 	if cors.MaxAge > 0 {
 		c.Set("Access-Control-Max-Age", strconv.Itoa(cors.MaxAge))
 	}
-
 	// Handle preflight requests
 	if c.Method() == fiber.MethodOptions {
 		return c.SendStatus(fiber.StatusNoContent)
 	}
-
 	return c.Next()
 }
