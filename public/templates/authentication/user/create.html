@@ -1,50 +1,45 @@
 {{ template "_partials/header-back" .}}
 
-    <div class="card">
-        <div class="card-header">
-            *All fields are mandatory
-        </div>
-        <div class="card-body">
-            <form class="" action="/users/create" method="POST">
-                <div class="mb-3">
-                    <label for="form-label"><strong>User Name:</strong></label>
-                    <input class="form-control" type="text" name="user_name" id="" autofocus>
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>Email:</strong></label>
-                    <input class="form-control" type="email" name="email" id="">
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>Role:</strong></label>
-                    <select class="form-control" name="role_id" id="">
-                        {{ range .Roles}}
-                            <option value="{{.RoleId}}">{{.RoleName}}</option>
-                        {{ end }}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>Password:</strong></label>
-                    <input class="form-control" type="password" name="password" id="">
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>Password Confirmation:</strong></label>
-                    <input class="form-control" type="password" name="password_conf" id="">
-                </div>
-                <br>
-                <div>
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="bi bi-send"></i>
-                        Submit
-                    </button>
-                    <a href="/users" class="btn btn-danger btn-sm">
-                        <i class="bi bi-x"></i>
-                        Cancel
-                    </a>
-                </div>
-            </form>  
-        </div>
-        <div class="card-footer">
-        </div>
+<div class="ui segment">
+    <div class="ui bottom attached segment">
+        <form class="ui form" action="/users/create" method="POST">
+            <div class="field">
+                <label for="user_name"><strong>User Name:</strong></label>
+                <input class="ui input" type="text" name="user_name" id="user_name" autofocus>
+            </div>
+            <div class="field">
+                <label for="email"><strong>Email:</strong></label>
+                <input class="ui input" type="email" name="email" id="email">
+            </div>
+            <div class="field">
+                <label for="role_id"><strong>Role:</strong></label>
+                <select class="ui dropdown" name="role_id" id="role_id">
+                    {{ range .Roles }}
+                        <option value="{{ .RoleId }}">{{ .RoleName }}</option>
+                    {{ end }}
+                </select>
+            </div>
+            <div class="field">
+                <label for="password"><strong>Password:</strong></label>
+                <input class="ui input" type="password" name="password" id="password">
+            </div>
+            <div class="field">
+                <label for="password_conf"><strong>Password Confirmation:</strong></label>
+                <input class="ui input" type="password" name="password_conf" id="password_conf">
+            </div>
+            <div class="ui buttons">
+                <button type="submit" class="ui primary button">
+                    <i class="ui send icon"></i>
+                    Submit
+                </button>
+                <div class="or"></div>
+                <a href="/users" class="ui red button">
+                    <i class="ui cancel icon"></i>
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
+</div>
 
 {{ template "_partials/footer-back" .}}

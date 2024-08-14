@@ -232,7 +232,7 @@ func (repo *UserRepository) FindInactiveByRole(ctx context.Context, roleName str
 func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles ...string) (bool, error) {
     var count int64
     result := repo.db.WithContext(ctx).
-        Table("view_user_role_data").
+        Table("authentication.view_user_role_data").
         Where("user_id = ? AND role_code IN (?)", userId, roles).
         Count(&count)
     if result.Error != nil {

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
@@ -27,8 +28,9 @@ func NewEmailConfigurationApi(db *database.Database) *EmailConfigurationApi {
 	}
 }
 
-func (api *EmailConfigurationApi) Routes(router *fiber.App) {
-	group := router.Group("/api/configurations/email-configurations")
+func (api *EmailConfigurationApi) Routes(router *fiber.App, db *database.Database) {
+	apiKeyMiddleware := middlewares.NewApiKeyMiddleware(db)
+	group := router.Group("/api/configurations/email-configurations", apiKeyMiddleware.AllowRoles("super-admin"))
 	group.Get("", api.getEmailConfiguration)
 	group.Put("", api.edit)
 }

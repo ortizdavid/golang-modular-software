@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterRoutes(router *fiber.App, db *database.Database) {
-	NewBasicConfigurationApi(db).Routes(router)
-	NewCompanyConfigurationApi(db).Routes(router)
-	NewEmailConfigurationApi(db).Routes(router)
+	NewBasicConfigurationApi(db).Routes(router, db)
+	NewCompanyConfigurationApi(db).Routes(router, db)
+	NewEmailConfigurationApi(db).Routes(router, db)
 }

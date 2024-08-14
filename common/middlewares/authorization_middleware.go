@@ -43,33 +43,8 @@ func (mid *AuthorizationMiddleware) AllowRoles(roles ...string) fiber.Handler {
 				"Message": "You do not have the necessary roles to access this resource.",
 			})
 		}
-		// Proceed to the next middleware or route handler
+		
 		return c.Next()
 	}
 }
 
-// AllowRolesApi creates a middleware handler for role-based access control for API responses.
-func (mid *AuthorizationMiddleware) AllowRolesApi(roles ...string) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		loggedUser, err := mid.authService.GetLoggedUser(c.Context(), c)
-		if err != nil {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "User not authenticated",
-				"details": err.Error(),
-			})
-		}
-		hasRoles, err := mid.userService.UserHasRoles(c.Context(), loggedUser.UserId, roles...)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Error checking user roles",
-				"details": err.Error(),
-			})
-		}
-		if !hasRoles {
-			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
-				"error": "Access denied",
-			})
-		}
-		return c.Next()
-	}
-}

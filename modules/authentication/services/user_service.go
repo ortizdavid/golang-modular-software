@@ -20,14 +20,16 @@ type UserService struct {
 	roleRepository *repositories.RoleRepository
 	userRoleRepository *repositories.UserRoleRepository
 	loginActRepository *repositories.LoginActivityRepository
+	userApiKeyRepository *repositories.UserApiKeyRepository
 }
 
 func NewUserService(db *database.Database) *UserService {
 	return &UserService{
-		repository: repositories.NewUserRepository(db),
-		roleRepository: repositories.NewRoleRepository(db),
-		userRoleRepository: repositories.NewUserRoleRepository(db),
-		loginActRepository: repositories.NewLoginActivityRepository(db),
+		repository:           repositories.NewUserRepository(db),
+		roleRepository:       repositories.NewRoleRepository(db),
+		userRoleRepository:   repositories.NewUserRoleRepository(db),
+		loginActRepository:   repositories.NewLoginActivityRepository(db),
+		userApiKeyRepository: repositories.NewUserApiKeyRepository(db),
 	}
 }
 
@@ -42,6 +44,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if exists {
 		return apperrors.NewConflictError("user "+request.UserName+" already exists")
 	}
+	//--- Create User ----------------------------------------------------------------------
 	user := entities.User{
 		UserId:    0,
 		UserName:  request.UserName,
@@ -63,6 +66,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
 	}
+	//--- Insert Role ----------------------------------------------------------------------
 	userRole := entities.UserRole{
 		UserId:     userId,
 		RoleId:     request.RoleId,
@@ -74,6 +78,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err != nil {
 		return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
 	}
+	//---- Create Login Activity ----------------------------------------------------------------------
 	loginAct := entities.LoginActivity{
 		UserId:   userId,
 		Status: entities.ActivityStatusOffline,
@@ -83,7 +88,21 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	}
 	err = s.loginActRepository.Create(ctx, loginAct)
 	if err != nil {
-		return err
+		return apperrors.NewInternalServerError("error while creating login activity: "+err.Error())
+	}
+	//--- Create API Key ----------------------------------------------------------------------
+	userApiKey := entities.UserApiKey{
+		UserId:    userId,
+		Key:       encryption.GenerateRandomToken(),
+		IsActive:  true,
+		ExpiresAt: time.Now().AddDate(0, 1, 0),  // Add 1 month to the current time
+		UniqueId:  encryption.GenerateUUID(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	err = s.userApiKeyRepository.Create(ctx, userApiKey)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while creating api key: "+err.Error())
 	}
 	return nil
 }
@@ -378,6 +397,14 @@ func (s *UserService) GetUserByUniqueId(ctx context.Context, uniqueId string) (e
 	return user, nil
 }
 
+func (s *UserService) GetUserApiKey(ctx context.Context, userId int64) (entities.UserApiKey, error) {
+	user, err := s.userApiKeyRepository.FindByUserId(ctx, userId)
+	if err != nil {
+		return entities.UserApiKey{}, apperrors.NewNotFoundError("user api key not found")
+	}
+	return user, nil
+}
+
 func (s *UserService) GetUserByToken(ctx context.Context, token string) (entities.User, error) {
 	user, err := s.repository.FindByToken(ctx, token)
 	if err != nil {
@@ -395,18 +422,18 @@ func (s *UserService) GetUserByEmail(ctx context.Context, token string) (entitie
 }
 
 func (s *UserService) UserHasRoles(ctx context.Context, userId int64, comparedRoles ...string) (bool, error) {
-	for _, user := range comparedRoles {
-		exists, err := s.roleRepository.ExistsByCode(ctx, user)
+	for _, role := range comparedRoles {
+		exists, err := s.roleRepository.ExistsByCode(ctx, role)
 		if err != nil {
-			return false, fmt.Errorf("error validating user '%s': %w", user, err)
+			return false, fmt.Errorf("error validating role '%s': %w", role, err)
 		}
 		if !exists {
-			return false, fmt.Errorf("user '%s' does not exist", user)
+			return false, fmt.Errorf("role '%s' does not exist", role)
 		}
 	}
 	hasRole, err := s.repository.HasRoles(ctx, userId, comparedRoles...)
 	if err != nil {
-		return false, fmt.Errorf("error checking users for user ID %d: %w", userId, err)
+		return false, fmt.Errorf("error checking roles for user ID %d: %w", userId, err)
 	}
 	return hasRole, nil
 }

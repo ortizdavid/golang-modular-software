@@ -54,6 +54,11 @@
     <p><strong>Total Logout:</strong> {{.User.TotalLogout}}</p>
 
     <div class="ui clearing divider"></div>
+    <p><strong>API Key:</strong> {{.UserApiKey.Key}}</p>
+    <p><strong>Expiration Date:</strong> {{.UserApiKey.ExpiresAt}}</p>
+    <p><strong>Is Active:</strong> {{.UserApiKey.IsActive}}</p>
+
+    <div class="ui clearing divider"></div>
     <p><strong>Assigned Roles: {{.CountRoles}}</strong></p>
     <div class="ui right aligned container">
         <a href="/users/{{.User.UniqueId}}/assign-role" class="ui primary button small">

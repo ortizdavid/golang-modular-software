@@ -99,17 +99,17 @@ CREATE TABLE authentication.user_api_key (
     api_key_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     key VARCHAR(150) UNIQUE,
-    expiration_date DATE NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_active BOOLEAN DEFAULT TRUE,
     created_by INT,
+    expires_at TIMESTAMP NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT fk_user_key FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id),
-    CONSTRAINT fk_created_by FOREIGN KEY (created_by) REFERENCES authentication.users (user_id)
+    CONSTRAINT fk_user_key FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
 );
 -- Index
-DROP INDEX IF EXISTS idx_user_id;
-CREATE INDEX idx_user_id ON authentication.user_api_key(user_id);
+DROP INDEX IF EXISTS idx_apikey_user_id;
+CREATE INDEX idx_apikey_user_id ON authentication.user_api_key(user_id);
 
 
 -- Initial inserts
