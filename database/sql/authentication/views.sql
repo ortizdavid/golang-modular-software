@@ -14,7 +14,7 @@ SELECT
     us.token,
     TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-    COALESCE(la.status, 'Offline') AS status, 
+    la.status,
     COALESCE(la.host, 'Unknown') AS host,
     COALESCE(la.browser, 'Unknown') AS browser,
     COALESCE(la.ip_address, 'Unknown') AS ip_address,

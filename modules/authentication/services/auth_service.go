@@ -21,6 +21,7 @@ type AuthService struct {
 	repository *repositories.UserRepository
 	emailService *configurations.EmailConfigurationService
 	loginActRepository *repositories.LoginActivityRepository
+	jwtService *JwtService
 }
 
 func NewAuthService(db *database.Database) *AuthService {
@@ -28,6 +29,7 @@ func NewAuthService(db *database.Database) *AuthService {
 		repository:         repositories.NewUserRepository(db),
 		emailService:       configurations.NewEmailConfigurationService(db),
 		loginActRepository: repositories.NewLoginActivityRepository(db),
+		jwtService:         NewJwtService(config.GetEnv("JWT_SECRET_KEY")),
 	}
 }
 
@@ -40,7 +42,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	// check if exists
 	exists, err := s.repository.ExistsActiveUser(ctx, userName)
 	if err != nil {
-		return err
+		return apperrors.NewInternalServerError("Error checking user existence")
 	}
 	if !exists {
 		return apperrors.NewNotFoundError("User does not exists")
@@ -52,7 +54,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	hashedPassword := user.Password
 	// check password
 	if !encryption.CheckPassword(hashedPassword, password) {
-		return apperrors.NewUnauthorizedError("Invalid credentials")
+		return apperrors.NewUnauthorizedError("Invalid User Name or Password")
 	}
 	// create session
 	store := config.GetSessionStore()
@@ -110,6 +112,38 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 		}
 	}
 	return nil
+}
+
+// Authenticate API
+func (s *AuthService) AuthenticateAPI(ctx context.Context, request entities.LoginRequest) (string, error) {
+	if err := request.Validate(); err != nil {
+		return "", apperrors.NewBadRequestError(err.Error())
+	}
+	userName := request.UserName
+	password := request.Password
+	// check if exists
+	exists, err := s.repository.ExistsActiveUser(ctx, userName)
+	if err != nil {
+		return "", apperrors.NewInternalServerError("Error checking user existence")
+	}
+	if !exists {
+		return "", apperrors.NewNotFoundError("User does not exists")
+	}
+	user, err := s.repository.FindByUserName(ctx, userName)
+	if err != nil {
+		return "", apperrors.NewNotFoundError(err.Error())
+	}
+	hashedPassword := user.Password
+	// check password
+	if !encryption.CheckPassword(hashedPassword, password) {
+		return "", apperrors.NewUnauthorizedError("Invalid User Name or Password")
+	}
+	// Generate JWT token
+	token, err := s.jwtService.GenerateJwtToken(user.UserId)
+	if err != nil {
+		return "", fiber.NewError(fiber.StatusInternalServerError, "Error generating token")
+	}
+	return token, nil
 }
 
 func (s *AuthService) Logout(ctx context.Context, fiberCtx *fiber.Ctx) error {
