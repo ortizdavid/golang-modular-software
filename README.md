@@ -18,6 +18,7 @@ Example of a complete modular sofware, written in Golang
 - [ ] Company
 - [ ] Employees
 - [ ] Reference
+- [ ] Reports
 
 
 ## Architecture
@@ -42,6 +43,7 @@ Example of a complete modular sofware, written in Golang
 
 ## Module Creation
 ![Module Creation](docs/Module%20Creation.png)
+
 
 ## How to Run App
 - Configure Database:
