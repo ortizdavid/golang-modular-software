@@ -5,7 +5,7 @@ import (
 )
 
 type Company struct {
-    CompanyId    uint           `gorm:"primaryKey;autoIncrement"`
+    CompanyId    int           `gorm:"primaryKey;autoIncrement"`
     CompanyName  string         `gorm:"column:company_name"`
     CompanyAcronym string       `gorm:"column:company_acronym"`
     CompanyType  string         `gorm:"column:company_type"`
@@ -15,7 +15,7 @@ type Company struct {
     Phone        string         `gorm:"column:phone"`
     Email        string         `gorm:"column:email"`
     WebsiteURL   string         `gorm:"column:website_url"`
-    UniqueID     string         `gorm:"column:unique_id"`
+    UniqueId     string         `gorm:"column:unique_id"`
     CreatedAt    time.Time      `gorm:"column:created_at"`
     UpdatedAt    time.Time      `gorm:"column:updated_at"`
 }
