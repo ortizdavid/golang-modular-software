@@ -2,10 +2,11 @@ package services
 
 import (
 	"errors"
-	"log"
+	"fmt"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/ortizdavid/golang-modular-software/common/config"
 )
 
 type JwtService struct {
@@ -20,15 +21,15 @@ func NewJwtService(secretKey string) *JwtService {
 
 // GenerateJwtToken creates a new JWT token for the given user ID
 func (s *JwtService) GenerateJwtToken(userId int64) (string, error) {
+	expiration := config.JwtExpiration()
 	claims := jwt.MapClaims{
 		"user_id": userId,
-		"exp":     time.Now().Add(time.Hour * 1).Unix(), // Token expires in 1 hour
+		"exp":     time.Now().Add(time.Hour * time.Duration(expiration)).Unix(), // Token expires in 1 hour
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(s.secretKey))
 	if err != nil {
-		log.Printf("Error signing JWT token: %v", err)
-		return "", err
+		return "", fmt.Errorf("failed to sign JWT token: %w", err)
 	}
 	return signedToken, nil
 }
@@ -42,8 +43,7 @@ func (s *JwtService) GenerateRefreshToken(userId int64) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(s.secretKey))
 	if err != nil {
-		log.Printf("Error signing refresh token: %v", err)
-		return "", err
+		return "", fmt.Errorf("failed to sign refresh token: %w", err)
 	}
 	return signedToken, nil
 }
@@ -54,8 +54,7 @@ func (s *JwtService) ParseToken(tokenString string) (*jwt.Token, jwt.MapClaims, 
 		return []byte(s.secretKey), nil
 	})
 	if err != nil {
-		log.Printf("Error parsing JWT token: %v", err)
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("failed to parse JWT token: %w", err)
 	}
 
 	claims, ok := token.Claims.(*jwt.MapClaims)
@@ -65,4 +64,3 @@ func (s *JwtService) ParseToken(tokenString string) (*jwt.Token, jwt.MapClaims, 
 
 	return token, *claims, nil
 }
-

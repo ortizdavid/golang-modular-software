@@ -29,7 +29,7 @@ func NewAuthService(db *database.Database) *AuthService {
 		repository:         repositories.NewUserRepository(db),
 		emailService:       configurations.NewEmailConfigurationService(db),
 		loginActRepository: repositories.NewLoginActivityRepository(db),
-		jwtService:         NewJwtService(config.GetEnv("JWT_SECRET_KEY")),
+		jwtService:         NewJwtService(config.JwtSecretKey()),
 	}
 }
 

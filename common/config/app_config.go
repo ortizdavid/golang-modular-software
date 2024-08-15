@@ -48,13 +48,3 @@ func MaxUploadImageSize() int {
 func MaxUploadDocumentSize() int {
 	return conversion.StringToInt(GetEnv("MAX_UPLOAD_DOCUMENT_SIZE"))
 }
-
-// ---- Requests
-func RequestsPerSecond() int {
-	return conversion.StringToInt(GetEnv("REQUESTS_PER_SECONDS"))
-}
-
-func RequestsExpiration() int {
-	return conversion.StringToInt(GetEnv("REQUESTS_EXPIRATION"))
-}
-

@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
@@ -33,7 +34,7 @@ func NewAuthApi(db *database.Database) *AuthApi {
 func (ctrl *AuthApi) Routes(router *fiber.App) {
 	group := router.Group("/api/auth")
 	group.Post("/login", ctrl.login)
-	group.Post("/refresh-token", ctrl.refreshToken)
+	group.Post("/refresh", ctrl.refresh)
 }
 
 func (ctrl *AuthApi) login(c *fiber.Ctx) error {
@@ -53,9 +54,11 @@ func (ctrl *AuthApi) login(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl *AuthApi) refreshToken(c *fiber.Ctx) error {
-	// Extract refresh token from request (assuming it's in the Authorization header)
-	tokenString := c.Get("Authorization")
+func (ctrl *AuthApi) refresh(c *fiber.Ctx) error {
+	// Extract refresh token from the Authorization header (assuming it's in the format "Bearer {token}")
+	authHeader := c.Get("Authorization")
+	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+	
 	if tokenString == "" {
 		return helpers.HandleHttpErrorsApi(c, apperrors.NewBadRequestError("Refresh token is required"))
 	}
@@ -82,6 +85,6 @@ func (ctrl *AuthApi) refreshToken(c *fiber.Ctx) error {
 	// Return new token in response
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status": "success",
-		"token":  newToken,
+		"refresh_token":  newToken,
 	})
 }

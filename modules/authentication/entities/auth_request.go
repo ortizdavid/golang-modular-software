@@ -29,3 +29,11 @@ func (req GetRecoverLinkRequest) Validate() error {
 	return nil
 }
 
+// RefreshToken
+type RefreshTokenRequest struct {
+	RefreshToken	string `json:"refresh_token"`
+}
+
+func (req RefreshTokenRequest) Validate() error {
+	return nil
+}

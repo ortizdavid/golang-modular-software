@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
+	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
@@ -28,18 +29,15 @@ func NewUserApi(db *database.Database) *UserApi {
 	}
 }
 
-func (api *UserApi) Routes(router *fiber.App) {
-	group := router.Group("/api/users")
+func (api *UserApi) Routes(router *fiber.App, db *database.Database) {
+	jwtMiddleware := middlewares.NewJwtMiddleware(db)
+	group := router.Group("/api/users", jwtMiddleware.AllowRoles("super-admin"))
 	group.Get("", api.getAllUsers)
-	router.Get("/active-users", api.getAllActiveUsers)
-	router.Post("/inactive-users", api.getAllInactiveUsers)
+	group.Get("/active-users", api.getAllActiveUsers)
+	group.Get("/inactive-users", api.getAllInactiveUsers)
 }
 
 func (ctrl *UserApi) getAllUsers(c *fiber.Ctx) error {
-	_, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
-	}
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllUsers(c.Context(), c, params)
 	if err != nil {
@@ -48,16 +46,8 @@ func (ctrl *UserApi) getAllUsers(c *fiber.Ctx) error {
 	return c.JSON(pagination)
 }
 
-
 func (ctrl *UserApi) getAllActiveUsers(c *fiber.Ctx) error {
-	var params helpers.PaginationParam
-	_, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
-	}
-	if err := c.QueryParser(&params); err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
-	}
+	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrorsApi(c, err)
@@ -66,14 +56,7 @@ func (ctrl *UserApi) getAllActiveUsers(c *fiber.Ctx) error {
 }
 
 func (ctrl *UserApi) getAllInactiveUsers(c *fiber.Ctx) error {
-	var params helpers.PaginationParam
-	_, err := ctrl.authService.GetLoggedUser(c.Context(), c)
-	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
-	}
-	if err := c.QueryParser(&params); err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
-	}
+	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrorsApi(c, err)

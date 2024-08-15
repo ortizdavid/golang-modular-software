@@ -21,7 +21,7 @@ func NewRoleApi(db *database.Database) *RoleApi {
 	}
 }
 
-func (api *RoleApi) Routes(router *fiber.App) {
+func (api *RoleApi) Routes(router *fiber.App, db *database.Database) {
 	group := router.Group("/api/roles")
 	group.Get("/", api.getAllRoles)
 	group.Post("/", api.createRole)
