@@ -22,7 +22,7 @@ func (ctrl ApiRootController) index(c *fiber.Ctx) error {
 }
 
 func (ctrl *ApiRootController) downloadCollections(c * fiber.Ctx) error {
-	path := "./_api_collections/"
+	path := "./docs/_api/"
 	fileName := "Golang Modular Software.postman_collection.json"
 	c.Set("Content-Disposition", "attachment; filename="+fileName)
 	c.Set("Content-Type", "application/json")
