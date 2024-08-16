@@ -37,3 +37,8 @@ type UpdateCompanyRequest struct {
 func (UpdateCompanyRequest) Validate() error {
 	return nil
 }
+
+// --- Search
+type SearchCompanyRequest struct {
+	SearchParam		string `json:"search_param" form:"search_param"`
+}

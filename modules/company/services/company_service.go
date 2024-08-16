@@ -104,3 +104,30 @@ func (s *CompanyService) GetAllCompanys(ctx context.Context) ([]entities.Company
 	}
 	return companys, nil
 }
+
+func (s *CompanyService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCompanyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CompanyData], error) {
+	count, err := s.repository.CountByParam(ctx, request.SearchParam)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No companies found")
+	}
+	if err := paginationParams.Validate(); err != nil {
+		return nil, apperrors.NewBadRequestError(err.Error())
+	}
+	companies, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	pagination, err := helpers.NewPagination(fiberCtx, companies, count, paginationParams.CurrentPage, paginationParams.Limit)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+	}
+	return pagination, nil
+}
+
+func (s *CompanyService) GetCompanyByUniqueId(ctx context.Context, uniqueId string) (entities.CompanyData, error) {
+	company, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.CompanyData{}, apperrors.NewNotFoundError("company not found")
+	}
+	return company, nil
+}

@@ -139,11 +139,11 @@ func (s *PermissionService) SearchPermissions(ctx context.Context, fiberCtx *fib
 }
 
 func (s *PermissionService) GetPermissionByUniqueId(ctx context.Context, uniqueId string) (entities.PermissionData, error) {
-	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	permission, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.PermissionData{}, apperrors.NewNotFoundError("permission not found")
 	}
-	return user, nil
+	return permission, nil
 }
 
 func (s *PermissionService) CountPermissions(ctx context.Context) (int64, error) {

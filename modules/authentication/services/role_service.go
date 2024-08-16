@@ -205,17 +205,17 @@ func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, requ
 }
 
 func (s *RoleService) GetRoleByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
-	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	role, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.RoleData{}, apperrors.NewNotFoundError("role not found")
 	}
-	return user, nil
+	return role, nil
 }
 
 func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {
 	count, err := s.repository.Count(ctx)
 	if err != nil {
-		return 0, apperrors.NewNotFoundError("No users found")
+		return 0, apperrors.NewNotFoundError("No roles found")
 	}
 	return count, nil
 }
