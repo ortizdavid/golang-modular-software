@@ -1,4 +1,55 @@
 {{ template "_partials/header-back" .}}
-    
-    
+
+<div class="ui segment">
+    <form class="ui form" action="/company/create" method="POST">
+        <div class="field">
+            <label for="company_name"><strong>Company Name:</strong></label>
+            <input class="ui input" type="text" name="company_name" placeholder="Enter company name" autofocus required>
+        </div>
+        <div class="field">
+            <label for="company_acronym"><strong>Company Acronym:</strong></label>
+            <input class="ui input" type="text" name="company_acronym" placeholder="Enter company acronym">
+        </div>
+        <div class="field">
+            <label for="company_type"><strong>Company Type:</strong></label>
+            <input class="ui input" type="text" name="company_type" placeholder="Enter company type">
+        </div>
+        <div class="field">
+            <label for="industry"><strong>Industry:</strong></label>
+            <input class="ui input" type="text" name="industry" placeholder="Enter industry">
+        </div>
+        <div class="field">
+            <label for="founded_date"><strong>Founded Date:</strong></label>
+            <input class="ui input" type="date" name="founded_date">
+        </div>
+        <div class="field">
+            <label for="address"><strong>Address:</strong></label>
+            <input class="ui input" type="text" name="address" placeholder="Enter address">
+        </div>
+        <div class="field">
+            <label for="phone"><strong>Phone:</strong></label>
+            <input class="ui input" type="text" name="phone" placeholder="Enter phone number">
+        </div>
+        <div class="field">
+            <label for="email"><strong>Email:</strong></label>
+            <input class="ui input" type="email" name="email" placeholder="Enter email">
+        </div>
+        <div class="field">
+            <label for="website_url"><strong>Website URL:</strong></label>
+            <input class="ui input" type="url" name="website_url" placeholder="Enter website URL">
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/company" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
 {{ template "_partials/footer-back" .}}

@@ -1,4 +1,59 @@
 {{ template "_partials/header-back" .}}
-    
-    
+
+<div class="ui segment">
+    <form class="ui form" action="/company/company-info/{{.Company.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="company_name"><strong>Company Name:</strong></label>
+            <input class="ui input" type="text" name="company_name" value="{{.Company.CompanyName}}" autofocus>
+        </div>
+        <div class="field">
+            <label for="company_acronym"><strong>Company Acronym:</strong></label>
+            <input class="ui input" type="text" name="company_acronym" value="{{.Company.CompanyAcronym}}">
+        </div>
+        <div class="field">
+            <label for="company_type"><strong>Company Type:</strong></label>
+            <input class="ui input" type="text" name="company_type" value="{{.Company.CompanyType}}">
+        </div>
+        <div class="field">
+            <label for="industry"><strong>Industry:</strong></label>
+            <input class="ui input" type="text" name="industry" value="{{.Company.Industry}}">
+        </div>
+        <div class="field">
+            <label for="founded_date"><strong>Founded Date:</strong></label>
+            <input class="ui input" type="date" name="founded_date" value="{{.Company.FoundedDate}}">
+        </div>
+        <div class="field">
+            <label for="address"><strong>Address:</strong></label>
+            <input class="ui input" type="text" name="address" value="{{.Company.Address}}">
+        </div>
+        <div class="field">
+            <label for="phone"><strong>Phone:</strong></label>
+            <input class="ui input" type="text" name="phone" value="{{.Company.Phone}}">
+        </div>
+        <div class="field">
+            <label for="email"><strong>Email:</strong></label>
+            <input class="ui input" type="email" name="email" value="{{.Company.Email}}">
+        </div>
+        <div class="field">
+            <label for="website_url"><strong>Website URL:</strong></label>
+            <input class="ui input" type="url" name="website_url" value="{{.Company.WebsiteUrl}}">
+        </div>
+        <div class="field">
+            <label for="unique_id"><strong>Unique ID:</strong></label>
+            <input class="ui input" type="text" name="unique_id" value="{{.Company.UniqueId}}" readonly>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/company/company-info/{{.Company.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
 {{ template "_partials/footer-back" .}}

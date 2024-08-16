@@ -23,3 +23,19 @@ type Company struct {
 func (Company) TableName() string {
     return "company.companies"
 }
+
+type CompanyData struct {
+    CompanyId    int `gorm:"primaryKey;autoIncrement"`
+    UniqueId     string `json:"unique_id"`
+    CompanyName  string `json:"company_name"`
+    CompanyAcronym string `json:"company_acronym"`
+    CompanyType  string `json:"company_type"`
+    Industry     string `json:"industry"`
+    FoundedDate  string `json:"founded_date"`
+    Address      string `json:"address"`
+    Phone        string `json:"phone"`
+    Email        string `json:"email"`
+    WebsiteURL   string `json:"website_url"`
+    CreatedAt    string `json:"created_at"`
+    UpdatedAt    string `json:"updated_at"`
+}
