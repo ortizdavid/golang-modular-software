@@ -29,7 +29,7 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("company/_root/index", fiber.Map{
-		"Title": "Company",
+		"Title": "Company Management",
 		"LoggedUser": loggedUser,
 		"AppConfig": ctrl.appConfig,
 	})

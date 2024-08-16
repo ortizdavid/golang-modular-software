@@ -92,4 +92,21 @@ CREATE TABLE company.policies (
     FOREIGN KEY (company_id) REFERENCES company.companies(company_id)
 );
 
+-- Table: offices
+DROP TABLE IF EXISTS company.offices;
+CREATE TABLE company.offices (
+    office_id SERIAL PRIMARY KEY,
+    branch_id INT NOT NULL,
+    office_name VARCHAR(100) NOT NULL,
+    office_type VARCHAR(50),
+    floor VARCHAR(10), 
+    address VARCHAR(200),  
+    phone VARCHAR(20),  
+    email VARCHAR(100),  
+    unique_id VARCHAR(50) UNIQUE,  
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_branch_office FOREIGN KEY (branch_id) REFERENCES company.branches(branch_id)
+);
+CREATE INDEX idx_office_name ON company.offices(office_name);
 

@@ -2,12 +2,12 @@ package repositories
 
 import "github.com/ortizdavid/golang-modular-software/database"
 
-type DepartmantRepository struct {
+type DepartmentRepository struct {
 	db *database.Database
 }
 
-func NewDepartmantRepository(db *database.Database) *DepartmantRepository {
-	return &DepartmantRepository{
+func NewDepartmentRepository(db *database.Database) *DepartmentRepository {
+	return &DepartmentRepository{
 		db: db,
 	}
 }

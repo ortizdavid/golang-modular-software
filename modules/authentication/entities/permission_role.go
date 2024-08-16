@@ -16,14 +16,14 @@ func (PermissionRole) TableName() string {
 }
 
 type PermissionRoleData struct {
-	PermissionRoleId 	int  `json:"permission_role_id"`
+	PermissionRoleId 	int `json:"permission_role_id"`
 	UniqueId   			string `json:"unique_id"`
 	Code  				string `json:"code_at"`
 	CreatedAt  			string `json:"created_at"`
 	UpdateAt  			string `json:"updated_at"`
-	PermissionId     	int  `json:"permission_id"`
+	PermissionId     	int `json:"permission_id"`
 	PermissionName   	string `json:"permission_name"`
-	PermissionCode     	string  `json:"permission_code"`
+	PermissionCode     	string `json:"permission_code"`
 	RoleId				int `json:"role_id"`
 	RoleUniqueId 		string `json:"role_unique_id"`
 	RoleName			string `json:"role_name"`

@@ -1,4 +1,196 @@
 {{ template "_partials/header-back" .}}
-    
-    
+
+<div class="ui grid stackable padded">
+
+    <!-- Company Info Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header blue">
+                    <i class="icon building outline"></i>
+                </div>
+                <div class="header">
+                    <div class="ui blue header" id="company-info">
+                        {{.Statistics.CompanyInfo}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Company Info</strong>
+                </div>
+                <div class="description">
+                    Overview of the company's general information.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/company-info" class="ui primary button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Branches Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header green">
+                    <i class="icon sitemap"></i>
+                </div>
+                <div class="header">
+                    <div class="ui green header" id="branches">
+                        {{.Statistics.Branches}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Branches</strong>
+                </div>
+                <div class="description">
+                    Number of company branches across regions.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/branches" class="ui green button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Offices Card -->
+     <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header red">
+                    <i class="building icon"></i>
+                </div>
+                <div class="header">
+                    <div class="ui red header" id="offices">
+                        {{.Statistics.Offices}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Offices</strong>
+                </div>
+                <div class="description">
+                    Total number of offices
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/offices" class="ui red button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Departments Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header teal">
+                    <i class="icon users"></i>
+                </div>
+                <div class="header">
+                    <div class="ui teal header" id="departments">
+                        {{.Statistics.Departments}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Departments</strong>
+                </div>
+                <div class="description">
+                    Total number of departments within the company.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/departments" class="ui teal button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rooms Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header yellow">
+                    <i class="icon cube"></i>
+                </div>
+                <div class="header">
+                    <div class="ui yellow header" id="rooms">
+                        {{.Statistics.Rooms}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Rooms</strong>
+                </div>
+                <div class="description">
+                    Total number of rooms available in the company.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/rooms" class="ui yellow button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header orange">
+                    <i class="icon folder open"></i>
+                </div>
+                <div class="header">
+                    <div class="ui orange header" id="projects">
+                        {{.Statistics.Projects}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Projects</strong>
+                </div>
+                <div class="description">
+                    Total number of projects handled by the company.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/projects" class="ui orange button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Policies Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header purple">
+                    <i class="icon clipboard outline"></i>
+                </div>
+                <div class="header">
+                    <div class="ui purple header" id="policies">
+                        {{.Statistics.Policies}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Policies</strong>
+                </div>
+                <div class="description">
+                    Total number of policies enforced by the company.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/company/policies" class="ui purple button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {{ template "_partials/footer-back" .}}

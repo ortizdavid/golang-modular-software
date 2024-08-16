@@ -105,8 +105,8 @@ ORDER BY created_at DESC;
 
 
 --- View: view_user_api_key_data
-DROP VIEW IF EXISTS view_user_api_key_data;
-CREATE VIEW view_user_api_key_data AS 
+DROP VIEW IF EXISTS authentication.view_user_api_key_data;
+CREATE VIEW authentication.view_user_api_key_data AS 
 SELECT uak.api_key_id, uak.unique_id,
     uak.key, 
     CASE WHEN uak.is_active THEN 'Yes' ELSE 'No' END AS is_active,

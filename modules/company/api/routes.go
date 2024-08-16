@@ -6,5 +6,5 @@ import (
 )
 
 func RegisterApiRoutes(router *fiber.App, db *database.Database) {
-	NewCompanyApi(db).Routes(router)
+	NewCompanyApi(db).Routes(router, db)
 }
