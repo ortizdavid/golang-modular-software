@@ -1,7 +1,5 @@
 package entities
 
-import "time"
-
 // ------ Create --
 // CreateCompanyRequest represents the request structure for creating a new company.
 type CreateCompanyRequest struct {
@@ -9,7 +7,7 @@ type CreateCompanyRequest struct {
     CompanyAcronym string    `json:"company_acronym" form:"company_acronym"`
     CompanyType    string    `json:"company_type" form:"company_type"`
     Industry       string    `json:"industry" form:"industry"`
-    FoundedDate    time.Time `json:"founded_date" form:"founded_date"`
+    FoundedDate    string `json:"founded_date" form:"founded_date" `
     Address        string    `json:"address" form:"address"`
     Phone          string    `json:"phone" form:"phone"`
     Email          string    `json:"email" form:"email"`
@@ -27,7 +25,7 @@ type UpdateCompanyRequest struct {
     CompanyAcronym string    `json:"company_acronym" form:"company_acronym"`
     CompanyType    string    `json:"company_type" form:"company_type"`
     Industry       string    `json:"industry" form:"industry"`
-    FoundedDate    time.Time `json:"founded_date" form:"founded_date"`
+    FoundedDate    string `json:"founded_date" form:"founded_date"`
     Address        string    `json:"address" form:"address"`
     Phone          string    `json:"phone" form:"phone"`
     Email          string    `json:"email" form:"email"`

@@ -8,4 +8,5 @@ import (
 func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
 	NewRootController(db).Routes(router, db)
 	NewCompanyController(db).Routes(router, db)
+	NewBranchController(db).Routes(router, db)
 }

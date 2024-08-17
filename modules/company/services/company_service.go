@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/ortizdavid/go-nopain/datetime"
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
@@ -32,7 +33,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, request entities.Cre
         CompanyAcronym: request.CompanyAcronym,
         CompanyType:    request.CompanyType,
         Industry:       request.Industry,
-        FoundedDate:    request.FoundedDate,
+        FoundedDate:    datetime.StringToDate(request.FoundedDate),
         Address:        request.Address,
         Phone:          request.Phone,
         Email:          request.Email,
@@ -56,12 +57,11 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, companyId int, reque
     if err != nil {
         return apperrors.NewNotFoundError("company not found")
     }
-    // Update company fields with request data
     company.CompanyName = request.CompanyName
     company.CompanyAcronym = request.CompanyAcronym
     company.CompanyType = request.CompanyType
     company.Industry = request.Industry
-    company.FoundedDate = request.FoundedDate
+    company.FoundedDate = datetime.StringToDate(request.FoundedDate)
     company.Address = request.Address
     company.Phone = request.Phone
     company.Email = request.Email

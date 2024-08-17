@@ -70,11 +70,11 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 	}
 	return c.Render("authentication/user/index", fiber.Map{
 		"Title": "Users",
+		"LoggedUser": loggedUser,
+		"AppConfig": ctrl.appConfig,
 		"Pagination": pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
 		"TotalPages": pagination.MetaData.TotalPages + 1,
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
 	})
 }
 

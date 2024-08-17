@@ -1,0 +1,39 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/company/branches/create" method="POST">
+        <div class="field">
+            <label for="branch_name"><strong>Branch Name:</strong></label>
+            <input class="ui input" type="text" name="branch_name" placeholder="Enter branch name" autofocus required>
+        </div>
+        <div class="field">
+            <label for="address"><strong>Address:</strong></label>
+            <input class="ui input" type="text" name="address" placeholder="Enter address">
+        </div>
+        <div class="field">
+            <label for="phone"><strong>Phone:</strong></label>
+            <input class="ui input" type="text" name="phone" placeholder="Enter phone number">
+        </div>
+        <div class="field">
+            <label for="email"><strong>Email:</strong></label>
+            <input class="ui input" type="email" name="email" placeholder="Enter email">
+        </div>
+        <div class="field">
+            <label for="unique_id"><strong>Unique ID:</strong></label>
+            <input class="ui input" type="text" name="unique_id" placeholder="Enter unique ID">
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/company" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

@@ -1,0 +1,19 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/company/branches/{{.Branch.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Branch.BranchId}}</p>
+    <p><strong>Branch Name:</strong> {{.Branch.BranchName}}</p>
+    <p><strong>Address:</strong> {{.Branch.Address}}</p>
+    <p><strong>Phone:</strong> {{.Branch.Phone}}</p>
+    <p><strong>Email:</strong> {{.Branch.Email}}</p>
+    <p><strong>Creation Date:</strong> {{.Branch.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Branch.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

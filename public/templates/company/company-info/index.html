@@ -3,19 +3,17 @@
 <div class="ui segment">
     <div class="ui right aligned container">
         <div class="ui buttons">
-            <a href="/company/company-info/create" class="ui blue button">
-                <i class="plus circle icon"></i>
-                Add Company
-            </a>
-            <a href="/company/company-info/search" class="ui blue button">
-                <i class="search icon"></i>
-                Search Companies
-            </a>
+            {{ if eq .Pagination.MetaData.TotalItems 0 }}
+                <a href="/company/company-info/create" class="ui blue button">
+                    <i class="plus circle icon"></i>
+                    Add Company Info
+                </a>
+            {{ end }}
         </div>
     </div>
     <div class="">
         {{ if .Pagination.MetaData.TotalItems }}
-            <p><strong>{{.Pagination.MetaData.TotalItems}}</strong> records</p>
+            <p><strong>{{.Pagination.MetaData.TotalItems}}</strong> record</p>
             <table class="ui celled striped selectable blue table">
                 <thead class="">
                     <tr>
@@ -36,16 +34,10 @@
                             <td>{{.CompanyAcronym}}</td>
                             <td>{{.CompanyType}}</td>
                             <td>{{.Industry}}</td>
-                            <td>{{.FoundedDate | dateFormat}}</td>
+                            <td>{{.FoundedDate}}</td>
                             <td>
-                                <a href="/company/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                <a href="/company/company-info/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                     <i class="eye blue icon"></i>
-                                </a>
-                                <a href="/company/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
-                                    <i class="pencil icon"></i>
-                                </a>
-                                <a href="/company/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
-                                    <i class="trash alternate red icon"></i>
                                 </a>
                             </td>
                         </tr>
