@@ -14,7 +14,7 @@ type CreateCompanyRequest struct {
     WebsiteURL     string    `json:"website_url" form:"website_url"`
 }
 
-func (CreateCompanyRequest) Validate() error {
+func (req CreateCompanyRequest) Validate() error {
 	return nil
 }
 
@@ -32,7 +32,7 @@ type UpdateCompanyRequest struct {
     WebsiteURL     string    `json:"website_url" form:"website_url"`
 }
 
-func (UpdateCompanyRequest) Validate() error {
+func (req UpdateCompanyRequest) Validate() error {
 	return nil
 }
 

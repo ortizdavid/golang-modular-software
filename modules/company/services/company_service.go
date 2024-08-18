@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/datetime"
 	"github.com/ortizdavid/go-nopain/encryption"
@@ -93,16 +92,16 @@ func (s *CompanyService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx 
 	return pagination, nil
 }
 
-func (s *CompanyService) GetAllCompanys(ctx context.Context) ([]entities.Company, error) {
+func (s *CompanyService) GetAllCompanies(ctx context.Context) ([]entities.Company, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No companys found")
+		return nil, apperrors.NewNotFoundError("No companies found")
 	}
-	companys, err := s.repository.FindAll(ctx)
+	companies, err := s.repository.FindAll(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
-	return companys, nil
+	return companies, nil
 }
 
 func (s *CompanyService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCompanyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CompanyData], error) {

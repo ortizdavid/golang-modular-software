@@ -7,6 +7,19 @@
             <input class="ui input" type="text" name="branch_name" id="branch_name" value="{{.Branch.BranchName}}" autofocus required>
         </div>
         <div class="field">
+            <label for="code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="{{.Branch.Code}}" required>
+        </div>
+        <div class="field">
+            <label for="company"><strong>Company Owner:</strong></label>
+            <select class="ui dropdown" id="company_id" name="company_id" required>
+                <option value="{{.Branch.CompanyId}}">{{.Branch.CompanyName}}</option>
+                {{ range .Companies }}
+                    <option value="{{.CompanyId}}">{{.CompanyName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
             <label for="address"><strong>Address:</strong></label>
             <input class="ui input" type="text" name="address" id="address" value="{{.Branch.Address}}">
         </div>
@@ -17,10 +30,6 @@
         <div class="field">
             <label for="email"><strong>Email:</strong></label>
             <input class="ui input" type="email" name="email" id="email" value="{{.Branch.Email}}">
-        </div>
-        <div class="field">
-            <label for="website_url"><strong>Website URL:</strong></label>
-            <input class="ui input" type="url" name="website_url" id="website_url" value="{{.Branch.WebsiteURL}}">
         </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">

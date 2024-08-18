@@ -15,3 +15,18 @@ SELECT co.company_id, co.unique_id,
 FROM company.companies co
 ORDER BY created_at DESC;
 
+
+-- View: view_branch_data
+DROP VIEW IF EXISTS company.view_branch_data;
+CREATE VIEW company.view_branch_data AS
+SELECT br.branch_id, br.unique_id,
+    br.branch_name, br.code,
+    br.address,br.phone, 
+    br.email,
+    TO_CHAR(br.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(br.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    co.company_id, co.company_name
+FROM company.branches br 
+JOIN company.companies co ON(co.company_id = br.company_id)
+ORDER BY created_at DESC;
+

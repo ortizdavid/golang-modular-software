@@ -22,7 +22,8 @@ DROP TABLE IF EXISTS company.branches;
 CREATE TABLE company.branches (
     branch_id SERIAL PRIMARY KEY,
     company_id INT NOT NULL,
-    branch_name VARCHAR(255) NOT NULL,
+    branch_name VARCHAR(100) NOT NULL,
+    code VARCHAR(20) UNIQUE,
     address VARCHAR(200),
     phone VARCHAR(20),
     email VARCHAR(255),

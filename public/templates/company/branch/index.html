@@ -15,7 +15,7 @@
     </div>
     <div class="">
         {{ if .Pagination.MetaData.TotalItems }}
-            <p><strong>{{.Pagination.MetaData.TotalItems}}</strong> record</p>
+            <p><strong>{{.Pagination.MetaData.TotalItems}}</strong> records</p>
             <table class="ui celled striped selectable blue table">
                 <thead>
                     <tr>
@@ -40,7 +40,7 @@
                                     <i class="eye blue icon"></i>
                                 </a>
                                 <a href="/company/branches/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
-                                    <i class="pencil blue icon"></i>
+                                    <i class="pencil icon"></i>
                                 </a>
                             </td>
                         </tr>

@@ -61,28 +61,34 @@ func (repo *CompanyRepository) GetDataByUniqueId(ctx context.Context, uniqueId s
 	return company, result.Error
 }
 
-func (repo *CompanyRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.CompanyData, error) {
-	var companies []entities.CompanyData
-	likeParam := "%"+param+"%"
-	result := repo.db.WithContext(ctx).
-		Raw("SELECT * FROM company.view_company_data WHERE company_name LIKE ? OR code LIKE ?", likeParam, likeParam).
-		Limit(limit).
-		Offset(offset).
-		Scan(&companies)
-	return companies, result.Error
-}
-
 func (repo *CompanyRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("company.companies").Count(&count)
 	return count, result.Error
 }
 
+func (repo *CompanyRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.CompanyData, error) {
+	var companies []entities.CompanyData
+	likeParam := "%"+param+"%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT * FROM company.view_company_data WHERE company_name LIKE ? OR company_acronym LIKE ?", likeParam, likeParam).
+		Limit(limit).
+		Offset(offset).
+		Scan(&companies)
+	return companies, result.Error
+}
+
 func (repo *CompanyRepository) CountByParam(ctx context.Context, param string) (int64, error) {
     var count int64
 	likeParam := "%"+param+"%"
     result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_company_data WHERE company_name LIKE ? OR code LIKE ?", likeParam, likeParam).
+        Raw("SELECT COUNT(*) FROM company.view_company_data WHERE company_name LIKE ? OR company_acronym LIKE ?", likeParam, likeParam).
         Scan(&count)
     return count, result.Error
+}
+
+func (repo *BranchRepository) ExistsByName(ctx context.Context, companyId int, branchName string) (bool, error) {
+	var branch entities.Branch
+	result := repo.db.WithContext(ctx).Where("company_id=? AND branch_name=?", companyId, branchName).Find(&branch)
+	return branch.BranchId !=0 , result.Error
 }

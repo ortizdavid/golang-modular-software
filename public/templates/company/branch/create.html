@@ -7,6 +7,19 @@
             <input class="ui input" type="text" name="branch_name" placeholder="Enter branch name" autofocus required>
         </div>
         <div class="field">
+            <label for="code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="{{.BranchCode}}" required>
+        </div>
+        <div class="field">
+            <label for="company"><strong>Company Owner:</strong></label>
+            <select class="ui dropdown" id="company_id" name="company_id" required>
+                <option value="">Select Company</option>
+                {{ range .Companies }}
+                    <option value="{{.CompanyId}}">{{.CompanyName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
             <label for="address"><strong>Address:</strong></label>
             <input class="ui input" type="text" name="address" placeholder="Enter address">
         </div>
@@ -18,17 +31,13 @@
             <label for="email"><strong>Email:</strong></label>
             <input class="ui input" type="email" name="email" placeholder="Enter email">
         </div>
-        <div class="field">
-            <label for="unique_id"><strong>Unique ID:</strong></label>
-            <input class="ui input" type="text" name="unique_id" placeholder="Enter unique ID">
-        </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">
                 <i class="send icon"></i>
                 Submit
             </button>
             <div class="or"></div>
-            <a href="/company" class="ui red button">
+            <a href="/company/branches" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>
