@@ -26,7 +26,6 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 	if err != nil {
 		// Create a new configuration if none exists
 		conf = entities.BasicConfiguration{
-			ConfigurationId:     0,
 			AppName:             request.AppName,
 			AppAcronym:          request.AppAcronym,
 			MaxRecordsPerPage:   request.MaxRecordPerPage,

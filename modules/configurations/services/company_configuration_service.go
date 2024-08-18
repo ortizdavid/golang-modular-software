@@ -26,7 +26,6 @@ func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Con
     conf, err := s.repository.FindFirst(ctx)
     if err != nil {
 		conf = entities.CompanyConfiguration{
-			ConfigurationId:  0,
 			CompanyName:      request.CompanyName,
 			CompanyAcronym:   request.CompanyAcronym,
 			CompanyMainColor: request.CompanyMainColor,

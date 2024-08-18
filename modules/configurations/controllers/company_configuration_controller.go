@@ -49,7 +49,7 @@ func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 
 func (ctrl *CompanyConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configuration/company/edit", fiber.Map{
+	return c.Render("configurations/company/edit", fiber.Map{
 		"Title": "Edit Company Configuarions",
 		"AppConfig": ctrl.appConfig,
 		"LoggedUser": loggedUser,

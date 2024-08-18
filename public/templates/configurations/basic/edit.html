@@ -1,45 +1,39 @@
 {{ template "_partials/header-back" .}}
-
-    <div class="card">
-        <div class="card-header">
-            *These settings are necessary for Basic things
+{{.AppConfig.BasicConfig}}
+<div class="ui segment">
+    <form class="ui form" action="/configurations/basic-configurations/edit" method="POST">
+        <div class="field">
+            <label for="app_name"><strong>Application Name:</strong></label>
+            <input class="ui input" type="text" name="app_name" value="{{.AppConfig.BasicConfig.AppName}}" autofocus required>
         </div>
-        <div class="card-body">
-            <form class="" action="/configurations/basic-configurations/edit" method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for=""><strong>SMTP Server:</strong></label>
-                    <input type="text" class="form-control" name="SMTPServer" value="{{.Configuracao.SMTPServer}}" autofocus required>
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>SMTP Port:</strong></label>
-                    <input type="number" class="form-control" name="SMTPPort" value="{{.Configuracao.SMTPPort}}" required>
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>Sender Email:</strong></label>
-                    <input type="text" class="form-control" name="SenderEmail" value="{{.Configuracao.SenderEmail}}" required>
-                </div>
-                <div class="mb-3">
-                    <label for=""><strong>Sender Password:</strong></label>
-                    <input type="text" class="form-control" name="SenderPassword" min="5" max="50" value="{{.Configuracao.SenderPassword}}" required>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary mr-2 btn-sm">
-                        <i class="bi bi-send"></i>
-                        Submit
-                    </button>
-                    <button type="reset" class="btn btn-secondary btn-sm">
-                        <i class="bi bi-eraser"></i>
-                        Clear
-                    </button>
-                    <a href="/configurations/basic-configurations/" class="btn btn-danger btn-sm">
-                        <i class="bi bi-x"></i>
-                        Cancel
-                    </a>
-                </div>
-            </form>
+        <div class="field">
+            <label for="app_acronym"><strong>Application Acronym:</strong></label>
+            <input class="ui input" type="text" name="app_acronym" value="{{.AppConfig.BasicConfig.AppAcronym}}" required>
         </div>
-        <div class="card-footer text-muted">
+        <div class="field">
+            <label for="max_admin_users"><strong>Maximum Admin Users:</strong></label>
+            <input class="ui input" type="number" name="max_admin_users" value="{{.AppConfig.BasicConfig.MaxAdmninUsers}}" required>
         </div>
-    </div>
+        <div class="field">
+            <label for="max_super_admin_users"><strong>Maximum Super Admin Users:</strong></label>
+            <input class="ui input" type="number" name="max_super_admin_users" value="{{.AppConfig.BasicConfig.MaxSuperAdmninUsers}}" required>
+        </div>
+        <div class="field">
+            <label for="max_records_per_page"><strong>Maximum Records per Page:</strong></label>
+            <input class="ui input" type="number" name="max_records_per_page" value="{{.AppConfig.BasicConfig.MaxRecordsPerPage}}" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/configurations/basic-configurations" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
 
 {{ template "_partials/footer-back" .}}

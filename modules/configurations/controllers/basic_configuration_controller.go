@@ -41,7 +41,7 @@ func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database
 
 func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/email/index", fiber.Map{
+	return c.Render("configurations/basic/index", fiber.Map{
 		"Title": "Email Configurations",
 		"AppConfig": ctrl.appConfig,
 		"LoggedUser": loggedUser,
@@ -50,7 +50,7 @@ func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
 
 func (ctrl *BasicConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/email/edit", fiber.Map{
+	return c.Render("configurations/basic/edit", fiber.Map{
 		"Title": "Edit Basic Configuration",
 		"AppConfig": ctrl.appConfig,
 		"LoggedUser":loggedUser,
