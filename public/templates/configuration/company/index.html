@@ -1,0 +1,24 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/configurations/company-configurations/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <div class="ui small image">
+        <img src="{{.AppConfig.CompanyConfig.CompanyLogo}}" alt="Company Logo" class="ui rounded small image">
+    </div>
+    <p><strong>ID:</strong> {{.AppConfig.CompanyConfig.ConfigurationId}}</p>
+    <p><strong>Company Name:</strong> {{.AppConfig.CompanyConfig.CompanyName}}</p>
+    <p><strong>Company Acronym:</strong> {{.AppConfig.CompanyConfig.CompanyAcronym}}</p>
+    <p><strong>Company Main Color:</strong> <span style="color: {{.AppConfig.CompanyConfig.CompanyMainColor}}">{{.AppConfig.CompanyConfig.CompanyMainColor}}</span></p>
+    <p><strong>Company Phone:</strong> {{.AppConfig.CompanyConfig.CompanyPhone}}</p>
+    <p><strong>Company Email:</strong> {{.AppConfig.CompanyConfig.CompanyEmail}}</p>
+    <p><strong>Unique ID:</strong> {{.AppConfig.CompanyConfig.UniqueId}}</p>
+    <p><strong>Creation Date:</strong> {{.AppConfig.CompanyConfig.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.AppConfig.CompanyConfig.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

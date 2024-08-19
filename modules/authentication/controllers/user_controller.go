@@ -14,22 +14,22 @@ import (
 )
 
 type UserController struct {
-	service *services.UserService
+	service     *services.UserService
 	authService *services.AuthService
 	roleService *services.RoleService
-	appConfig *configurations.AppConfiguration
-	infoLogger *helpers.Logger
+	configService *configurations.AppConfigurationService
+	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
 }
 
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
-		service:       services.NewUserService(db),
-		authService:   services.NewAuthService(db),
-		roleService:   services.NewRoleService(db),
-		appConfig: 		configurations.LoadAppConfigurations(db),
-		infoLogger:    helpers.NewInfoLogger("users-info.log"),
-		errorLogger:   helpers.NewInfoLogger("users-error.log"),
+		service:     services.NewUserService(db),
+		authService: services.NewAuthService(db),
+		roleService: services.NewRoleService(db),
+		configService: configurations.NewAppConfigurationService(db),
+		infoLogger:  helpers.NewInfoLogger("users-info.log"),
+		errorLogger: helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
@@ -69,12 +69,12 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/index", fiber.Map{
-		"Title": "Users",
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
-		"Pagination": pagination,
+		"Title":       "Users",
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages": pagination.MetaData.TotalPages + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
 	})
 }
 
@@ -88,11 +88,11 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 	userRoles, _ := ctrl.roleService.GetAssignedRolesByUser(c.Context(), user.UserId)
 	userApiKey, _ := ctrl.service.GetUserApiKey(c.Context(), user.UserId)
 	return c.Render("authentication/user/details", fiber.Map{
-		"Title": "User Details",
+		"Title":      "User Details",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
-		"User": user,
-		"UserRoles": userRoles,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"User":       user,
+		"UserRoles":  userRoles,
 		"CountRoles": len(userRoles),
 		"UserApiKey": userApiKey,
 	})
@@ -105,10 +105,10 @@ func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/create", fiber.Map{
-		"Title": "Add User",
-		"Roles": roles,
+		"Title":      "Add User",
+		"Roles":      roles,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -134,10 +134,10 @@ func (ctrl *UserController) editForm(c *fiber.Ctx) error {
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/user/edit", fiber.Map{
-		"Title": "Edit User",
-		"User": user,
+		"Title":      "Edit User",
+		"User":       user,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -172,11 +172,11 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/assign-role", fiber.Map{
-		"Title": "Assign Role",
-		"Roles": roles,
-		"User": user,
+		"Title":      "Assign Role",
+		"Roles":      roles,
+		"User":       user,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -196,7 +196,7 @@ func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' assigned role %d", user.UserName, request.RoleId))
-	return c.Redirect("/users/"+id+"/details")
+	return c.Redirect("/users/" + id + "/details")
 }
 
 func (ctrl *UserController) removeRoleForm(c *fiber.Ctx) error {
@@ -212,11 +212,11 @@ func (ctrl *UserController) removeRoleForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/remove-role", fiber.Map{
-		"Title": "Remove Role",
-		"UserRole": userRole,
-		"User": user,
+		"Title":      "Remove Role",
+		"UserRole":   userRole,
+		"User":       user,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -237,37 +237,37 @@ func (ctrl *UserController) removeRole(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed role %s", user.UserName, userRole.RoleName))
-	return c.Redirect("/users/"+userId+"/details")
+	return c.Redirect("/users/" + userId + "/details")
 }
 
 func (ctrl *UserController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/user/search", fiber.Map{
-		"Title": "Search Users",
+		"Title":      "Search Users",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
 func (ctrl *UserController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchUserRequest{SearchParam: searcParam}
-    loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-    params := helpers.GetPaginationParams(c)
-    pagination, err := ctrl.service.SearchUsers(c.Context(), c, request, params)
-    if err != nil {
-        return helpers.HandleHttpErrors(c, err)
-    }
-    ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-    return c.Render("authentication/user/search-results", fiber.Map{
-        "Title":        "Search Results",
-        "Pagination":   pagination,
-        "Param":        request.SearchParam,
-        "CurrentPage":  pagination.MetaData.CurrentPage + 1,
-        "TotalPages":   pagination.MetaData.TotalPages + 1,
-        "LoggedUser":   loggedUser,
-        "AppConfig":  ctrl.appConfig,
-    })
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.SearchUsers(c.Context(), c, request, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
+	return c.Render("authentication/user/search-results", fiber.Map{
+		"Title":       "Search Results",
+		"Pagination":  pagination,
+		"Param":       request.SearchParam,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+	})
 }
 
 func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
@@ -281,10 +281,10 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot deactivate your own account"))
 	}
 	return c.Render("authentication/user/deactivate", fiber.Map{
-		"Title": "Deactivate User",
-		"User": user,
+		"Title":      "Deactivate User",
+		"User":       user,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -304,7 +304,7 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' deactivated successfully!", user.UserName))
-	return c.Redirect("/users/"+id+"/details")
+	return c.Redirect("/users/" + id + "/details")
 }
 
 func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
@@ -318,10 +318,10 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot activate your own account"))
 	}
 	return c.Render("authentication/user/activate", fiber.Map{
-		"Title": "Activate User",
-		"User": user,
+		"Title":      "Activate User",
+		"User":       user,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -341,7 +341,7 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' activated successfully!", user.UserName))
-	return c.Redirect("/users/"+id+"/details")
+	return c.Redirect("/users/" + id + "/details")
 }
 
 func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
@@ -352,10 +352,10 @@ func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/active-users", fiber.Map{
-		"Title": "Active Users",
+		"Title":      "Active Users",
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -367,10 +367,10 @@ func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/inactive-users", fiber.Map{
-		"Title": "Inactive Users",
+		"Title":      "Inactive Users",
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -382,10 +382,10 @@ func (ctrl *UserController) getAllOnlineUsers(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/online-users", fiber.Map{
-		"Title": "Online Users",
+		"Title":      "Online Users",
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -397,10 +397,10 @@ func (ctrl *UserController) getAllOfflineUsers(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/user/offline-users", fiber.Map{
-		"Title": "Offline Users",
+		"Title":      "Offline Users",
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -415,10 +415,10 @@ func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
 	}
 	return c.Render("authentication/user/reset-password", fiber.Map{
-		"Title":  "Reset Password",
+		"Title":      "Reset Password",
 		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.appConfig,
-		"User": user,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"User":       user,
 	})
 }
 
@@ -442,5 +442,5 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' password reseted", loggedUser.UserName))
-	return c.Redirect("/users/"+user.UniqueId+"/details")
+	return c.Redirect("/users/" + user.UniqueId + "/details")
 }

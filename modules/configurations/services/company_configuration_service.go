@@ -23,7 +23,7 @@ func NewCompanyConfigurationService(db *database.Database) *CompanyConfiguration
 
 func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Context, request entities.UpdateCompanyConfigurationRequest) error {
     // Attempt to retrieve the existing configuration
-    conf, err := s.repository.FindFirst(ctx)
+    conf, err := s.repository.FindLast(ctx)
     if err != nil {
 		conf = entities.CompanyConfiguration{
 			CompanyName:      request.CompanyName,
@@ -36,7 +36,7 @@ func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Con
 			CreatedAt:        time.Now().UTC(),
 			UpdatedAt:        time.Now().UTC(),
 		}
-		err := s.repository.Create(ctx, conf)
+		err = s.repository.Create(ctx, conf)
 		if err != nil {
 			return fmt.Errorf("failed to create company configuration: %w", err)
 		}
@@ -57,7 +57,7 @@ func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Con
 }
 
 func (s *CompanyConfigurationService) GetCompanyConfiguration(ctx context.Context) (entities.CompanyConfiguration, error) {
-	conf, err := s.repository.FindFirst(ctx)
+	conf, err := s.repository.FindLast(ctx)
 	if err != nil {
 		return entities.CompanyConfiguration{}, fmt.Errorf("failed to retrieve company configuration: %s", err.Error())
 	}

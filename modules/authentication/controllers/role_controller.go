@@ -13,12 +13,12 @@ import (
 )
 
 type RoleController struct {
-	service *services.RoleService
-	authService *services.AuthService
+	service           *services.RoleService
+	authService       *services.AuthService
 	permissionService *services.PermissionService
-	appConfig *configurations.AppConfiguration
-	infoLogger *helpers.Logger
-	errorLogger *helpers.Logger
+	configService *configurations.AppConfigurationService
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewRoleController(db *database.Database) *RoleController {
@@ -26,7 +26,7 @@ func NewRoleController(db *database.Database) *RoleController {
 		service:           services.NewRoleService(db),
 		authService:       services.NewAuthService(db),
 		permissionService: services.NewPermissionService(db),
-		appConfig:         configurations.LoadAppConfigurations(db),
+		configService: configurations.NewAppConfigurationService(db),
 		infoLogger:        helpers.NewInfoLogger("users-info.log"),
 		errorLogger:       helpers.NewInfoLogger("users-error.log"),
 	}
@@ -59,10 +59,10 @@ func (ctrl *RoleController) index(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/index", fiber.Map{
-		"Title": "Roles",
+		"Title":      "Roles",
 		"Pagination": pagination,
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -75,11 +75,11 @@ func (ctrl *RoleController) details(c *fiber.Ctx) error {
 	}
 	permissionRoles, _ := ctrl.permissionService.GetAssignedPermissionsByRole(c.Context(), role.RoleId)
 	return c.Render("authentication/role/details", fiber.Map{
-		"Title":       "Details",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
-		"Role": role,
-		"PermissionRoles": permissionRoles,
+		"Title":            "Details",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Role":             role,
+		"PermissionRoles":  permissionRoles,
 		"CountPermissions": len(permissionRoles),
 	})
 }
@@ -87,9 +87,9 @@ func (ctrl *RoleController) details(c *fiber.Ctx) error {
 func (ctrl *RoleController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/role/create", fiber.Map{
-		"Title":       "Create Role",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Create Role",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -116,10 +116,10 @@ func (ctrl *RoleController) editForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/edit", fiber.Map{
-		"Title":       "Edit Role",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
-		"Role": role,
+		"Title":      "Edit Role",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Role":       role,
 	})
 }
 
@@ -151,10 +151,10 @@ func (ctrl *RoleController) deleteForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/delete", fiber.Map{
-		"Title":       "Delete Role",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
-		"Role": role,
+		"Title":      "Delete Role",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Role":       role,
 	})
 }
 
@@ -177,31 +177,31 @@ func (ctrl *RoleController) delete(c *fiber.Ctx) error {
 func (ctrl *RoleController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/role/search", fiber.Map{
-		"Title": "Search Roles",
+		"Title":      "Search Roles",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
 func (ctrl *RoleController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchRoleRequest{SearchParam: searcParam}
-    loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-    params := helpers.GetPaginationParams(c)
-    pagination, err := ctrl.service.SearchRoles(c.Context(), c, request, params)
-    if err != nil {
-        return helpers.HandleHttpErrors(c, err)
-    }
-    ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-    return c.Render("authentication/role/search-results", fiber.Map{
-        "Title":        "Search Results",
-        "Pagination":   pagination,
-        "Param":        request.SearchParam,
-        "CurrentPage":  pagination.MetaData.CurrentPage + 1,
-        "TotalPages":   pagination.MetaData.TotalPages + 1,
-        "LoggedUser":   loggedUser,
-        "AppConfig":  ctrl.appConfig,
-    })
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.SearchRoles(c.Context(), c, request, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
+	return c.Render("authentication/role/search-results", fiber.Map{
+		"Title":       "Search Results",
+		"Pagination":  pagination,
+		"Param":       request.SearchParam,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+	})
 }
 
 func (ctrl *RoleController) assignPermissionForm(c *fiber.Ctx) error {
@@ -216,11 +216,11 @@ func (ctrl *RoleController) assignPermissionForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/assign-permission", fiber.Map{
-		"Title": "Assign Role",
+		"Title":       "Assign Role",
 		"Permissions": permissions,
-		"Role": role,
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Role":        role,
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -240,7 +240,7 @@ func (ctrl *RoleController) assignPermission(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("Role '%s' assigned permission %d", role.RoleName, request.PermissionId))
-	return c.Redirect("/roles/"+id+"/details")
+	return c.Redirect("/roles/" + id + "/details")
 }
 
 func (ctrl *RoleController) removePermissionForm(c *fiber.Ctx) error {
@@ -256,11 +256,11 @@ func (ctrl *RoleController) removePermissionForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/remove-permission", fiber.Map{
-		"Title": "Remove Permission",
+		"Title":          "Remove Permission",
 		"PermissionRole": permissionRole,
-		"Role": role,
-		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Role":           role,
+		"LoggedUser":     loggedUser,
+		"AppConfig":      ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -282,5 +282,5 @@ func (ctrl *RoleController) removePermission(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed permission '%s' from role '%s'", loggedUser.UserName, permissionRole.PermissionName, role.RoleName))
-	return c.Redirect("/roles/"+roleId+"/details")
+	return c.Redirect("/roles/" + roleId + "/details")
 }

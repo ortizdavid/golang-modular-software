@@ -28,12 +28,19 @@ func (repo *EmailConfigurationRepository) Update(ctx context.Context, configurat
 }
 
 func (repo *EmailConfigurationRepository) FindById(ctx context.Context, id int) (entities.EmailConfiguration, error) {
-	var confuracao entities.EmailConfiguration
-	result := repo.db.WithContext(ctx).First(&confuracao, id)
-	return confuracao, result.Error
+	var conf entities.EmailConfiguration
+	result := repo.db.WithContext(ctx).First(&conf, id)
+	return conf, result.Error
 }
 
 func (repo *EmailConfigurationRepository) FindFirst(ctx context.Context) (entities.EmailConfiguration, error) {
-	configuration, err := repo.FindById(ctx, 1)
-	return configuration, err
+	var conf entities.EmailConfiguration
+	result := repo.db.WithContext(ctx).First(&conf)
+	return conf, result.Error
+}
+
+func (repo *EmailConfigurationRepository) FindLast(ctx context.Context) (entities.EmailConfiguration, error) {
+	var conf entities.EmailConfiguration
+	result := repo.db.WithContext(ctx).Last(&conf)
+	return conf, result.Error
 }

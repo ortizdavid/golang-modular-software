@@ -1,0 +1,20 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/configurations/basic-configurations/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.AppConfig.BasicConfig.ConfigurationId}}</p>
+    <p><strong>App Name:</strong> {{.AppConfig.BasicConfig.AppName}}</p>
+    <p><strong>App Acronym:</strong> {{.AppConfig.BasicConfig.AppAcronym}}</p>
+    <p><strong>Max Records Per Page:</strong> {{.AppConfig.BasicConfig.MaxRecordsPerPage}}</p>
+    <p><strong>Max Admin Users:</strong> {{.AppConfig.BasicConfig.MaxAdmninUsers}}</p>
+    <p><strong>Max Super Admin Users:</strong> {{.AppConfig.BasicConfig.MaxSuperAdmninUsers}}</p>
+    <p><strong>Creation Date:</strong> {{.AppConfig.BasicConfig.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.AppConfig.BasicConfig.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

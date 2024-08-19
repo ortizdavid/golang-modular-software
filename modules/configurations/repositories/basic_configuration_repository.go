@@ -34,6 +34,13 @@ func (repo *BasicConfigurationRepository) FindById(ctx context.Context, id int) 
 }
 
 func (repo *BasicConfigurationRepository) FindFirst(ctx context.Context) (entities.BasicConfiguration, error) {
-	conf, err := repo.FindById(ctx, 1)
-	return conf, err
+	var conf entities.BasicConfiguration
+	result := repo.db.WithContext(ctx).First(&conf)
+	return conf, result.Error
+}
+
+func (repo *BasicConfigurationRepository) FindLast(ctx context.Context) (entities.BasicConfiguration, error) {
+	var conf entities.BasicConfiguration
+	result := repo.db.WithContext(ctx).Last(&conf)
+	return conf, result.Error
 }

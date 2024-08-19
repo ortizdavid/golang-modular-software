@@ -15,18 +15,18 @@ import (
 type BasicConfigurationController struct {
 	service *services.BasicConfigurationService
 	authService *authentication.AuthService
-	appConfig *services.AppConfiguration
+	configService *services.AppConfigurationService
 	infoLogger *helpers.Logger
 	errorLogger *helpers.Logger
 }
 
 func NewBasicConfigurationController(db *database.Database) *BasicConfigurationController {
 	return &BasicConfigurationController{
-		service:     services.NewBasicConfigurationService(db),
-		authService: authentication.NewAuthService(db),
-		appConfig:   services.LoadAppConfigurations(db),
-		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
+		service:       services.NewBasicConfigurationService(db),
+		authService:   authentication.NewAuthService(db),
+		configService: services.NewAppConfigurationService(db),
+		infoLogger:    helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:   helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -41,18 +41,18 @@ func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database
 
 func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/basic/index", fiber.Map{
-		"Title": "Email Configurations",
-		"AppConfig": ctrl.appConfig,
+	return c.Render("configuration/basic/index", fiber.Map{
+		"Title": "Basic Configurations",
+		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 	})
 }
 
 func (ctrl *BasicConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/basic/edit", fiber.Map{
+	return c.Render("configuration/basic/edit", fiber.Map{
 		"Title": "Edit Basic Configuration",
-		"AppConfig": ctrl.appConfig,
+		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":loggedUser,
 	})
 }

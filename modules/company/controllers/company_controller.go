@@ -8,14 +8,14 @@ import (
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/services"
-	configuration "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type CompanyController struct {
-	service *services.CompanyService
+	service     *services.CompanyService
 	authService *authentication.AuthService
-	appConfig *configuration.AppConfiguration
-	infoLogger *helpers.Logger
+	configService *configurations.AppConfigurationService
+	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
 }
 
@@ -23,7 +23,7 @@ func NewCompanyController(db *database.Database) *CompanyController {
 	return &CompanyController{
 		service:     services.NewCompanyService(db),
 		authService: authentication.NewAuthService(db),
-		appConfig:   configuration.LoadAppConfigurations(db),
+		configService: configurations.NewAppConfigurationService(db),
 		infoLogger:  helpers.NewInfoLogger("company-info.log"),
 		errorLogger: helpers.NewErrorLogger("company-error.log"),
 	}
@@ -40,7 +40,7 @@ func (ctrl *CompanyController) Routes(router *fiber.App, db *database.Database) 
 	group.Post("/:id/edit", ctrl.edit)
 }
 
-func (ctrl *CompanyController) index(c *fiber.Ctx) error  {
+func (ctrl *CompanyController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
@@ -48,12 +48,12 @@ func (ctrl *CompanyController) index(c *fiber.Ctx) error  {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/company-info/index", fiber.Map{
-		"Title": "Company Info",
-		"AppConfig": ctrl.appConfig,
-		"LoggedUser": loggedUser,
-		"Pagination": pagination,
+		"Title":       "Company Info",
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":  loggedUser,
+		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages": pagination.MetaData.TotalPages + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
 	})
 }
 
@@ -65,18 +65,18 @@ func (ctrl *CompanyController) details(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/company-info/details", fiber.Map{
-		"Title": "Company Details",
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Company Details",
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
-		"Company": company,
+		"Company":    company,
 	})
 }
 
-func (ctrl *CompanyController) createForm(c *fiber.Ctx) error  {
+func (ctrl *CompanyController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("company/company-info/create", fiber.Map{
-		"Title": "Create Company",
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Create Company",
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 	})
 }
@@ -96,7 +96,7 @@ func (ctrl *CompanyController) create(c *fiber.Ctx) error {
 	return c.Redirect("/company/company-info")
 }
 
-func (ctrl *CompanyController) editForm(c *fiber.Ctx) error  {
+func (ctrl *CompanyController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	company, err := ctrl.service.GetCompanyByUniqueId(c.Context(), id)
@@ -104,10 +104,10 @@ func (ctrl *CompanyController) editForm(c *fiber.Ctx) error  {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/company-info/edit", fiber.Map{
-		"Title": "Edit Company Info",
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Edit Company Info",
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
-		"Company": company,
+		"Company":    company,
 	})
 }
 
@@ -128,5 +128,5 @@ func (ctrl *CompanyController) edit(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated Company '"+request.CompanyName+"' successfully")
-	return c.Redirect("/company/company-info/"+id+"/details")
+	return c.Redirect("/company/company-info/" + id + "/details")
 }

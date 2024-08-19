@@ -1,0 +1,39 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/configurations/basic-configurations/edit" method="POST">
+        <div class="field">
+            <label for="app_name"><strong>Application Name:</strong></label>
+            <input class="ui input" type="text" name="app_name" value="{{.AppConfig.BasicConfig.AppName}}" autofocus required>
+        </div>
+        <div class="field">
+            <label for="app_acronym"><strong>Application Acronym:</strong></label>
+            <input class="ui input" type="text" name="app_acronym" value="{{.AppConfig.BasicConfig.AppAcronym}}" required>
+        </div>
+        <div class="field">
+            <label for="max_admin_users"><strong>Maximum Admin Users:</strong></label>
+            <input class="ui input" type="number" name="max_admin_users" value="{{.AppConfig.BasicConfig.MaxAdmninUsers}}" required>
+        </div>
+        <div class="field">
+            <label for="max_super_admin_users"><strong>Maximum Super Admin Users:</strong></label>
+            <input class="ui input" type="number" name="max_super_admin_users" value="{{.AppConfig.BasicConfig.MaxSuperAdmninUsers}}" required>
+        </div>
+        <div class="field">
+            <label for="max_records_per_page"><strong>Maximum Records per Page:</strong></label>
+            <input class="ui input" type="number" name="max_records_per_page" value="{{.AppConfig.BasicConfig.MaxRecordsPerPage}}" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/configurations/basic-configurations" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

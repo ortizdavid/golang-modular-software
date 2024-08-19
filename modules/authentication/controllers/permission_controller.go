@@ -13,10 +13,10 @@ import (
 )
 
 type PermissionController struct {
-	service *services.PermissionService
+	service     *services.PermissionService
 	authService *services.AuthService
-	appConfig *configurations.AppConfiguration
-	infoLogger *helpers.Logger
+	configService *configurations.AppConfigurationService
+	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
 }
 
@@ -24,7 +24,7 @@ func NewPermissionController(db *database.Database) *PermissionController {
 	return &PermissionController{
 		service:     services.NewPermissionService(db),
 		authService: services.NewAuthService(db),
-		appConfig:   configurations.LoadAppConfigurations(db),
+		configService: configurations.NewAppConfigurationService(db),
 		infoLogger:  helpers.NewInfoLogger("users-info.log"),
 		errorLogger: helpers.NewInfoLogger("users-error.log"),
 	}
@@ -53,10 +53,10 @@ func (ctrl *PermissionController) index(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/permission/index", fiber.Map{
-		"Title": "Permissions",
+		"Title":      "Permissions",
 		"Pagination": pagination,
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -68,9 +68,9 @@ func (ctrl *PermissionController) details(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/permission/details", fiber.Map{
-		"Title":       "Details",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Details",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"Permission": permission,
 	})
 }
@@ -78,9 +78,9 @@ func (ctrl *PermissionController) details(c *fiber.Ctx) error {
 func (ctrl *PermissionController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/permission/create", fiber.Map{
-		"Title":       "Create Permission",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Create Permission",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -107,9 +107,9 @@ func (ctrl *PermissionController) editForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/permission/edit", fiber.Map{
-		"Title":       "Edit Permission",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Edit Permission",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"Permission": permission,
 	})
 }
@@ -142,9 +142,9 @@ func (ctrl *PermissionController) deleteForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/permission/delete", fiber.Map{
-		"Title":       "Delete Permission",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Title":      "Delete Permission",
+		"LoggedUser": loggedUser,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"Permission": permission,
 	})
 }
@@ -168,29 +168,29 @@ func (ctrl *PermissionController) delete(c *fiber.Ctx) error {
 func (ctrl *PermissionController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/permission/search", fiber.Map{
-		"Title": "Search Permissions",
+		"Title":      "Search Permissions",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
 func (ctrl *PermissionController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchPermissionRequest{SearchParam: searcParam}
-    loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-    params := helpers.GetPaginationParams(c)
-    pagination, err := ctrl.service.SearchPermissions(c.Context(), c, request, params)
-    if err != nil {
-        return helpers.HandleHttpErrors(c, err)
-    }
-    ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-    return c.Render("authentication/permission/search-results", fiber.Map{
-        "Title":        "Search Results",
-        "Pagination":   pagination,
-        "Param":        request.SearchParam,
-        "CurrentPage":  pagination.MetaData.CurrentPage + 1,
-        "TotalPages":   pagination.MetaData.TotalPages + 1,
-        "LoggedUser":   loggedUser,
-        "AppConfig":  ctrl.appConfig,
-    })
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.SearchPermissions(c.Context(), c, request, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
+	return c.Render("authentication/permission/search-results", fiber.Map{
+		"Title":       "Search Results",
+		"Pagination":  pagination,
+		"Param":       request.SearchParam,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+	})
 }

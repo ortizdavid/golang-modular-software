@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
@@ -12,22 +13,22 @@ import (
 )
 
 type AccountController struct {
-	service *services.UserService
-	authService *services.AuthService
-	roleService *services.RoleService
-	appConfig *configurations.AppConfiguration
-	infoLogger *helpers.Logger
-	errorLogger *helpers.Logger
+	service       *services.UserService
+	authService   *services.AuthService
+	roleService   *services.RoleService
+	configService *configurations.AppConfigurationService
+	infoLogger    *helpers.Logger
+	errorLogger   *helpers.Logger
 }
 
 func NewAccountController(db *database.Database) *AccountController {
 	return &AccountController{
-		service:       services.NewUserService(db),
-		authService:   services.NewAuthService(db),
-		roleService:   services.NewRoleService(db),
-		appConfig: 		configurations.LoadAppConfigurations(db),
-		infoLogger:    helpers.NewInfoLogger("users-info.log"),
-		errorLogger:   helpers.NewInfoLogger("users-error.log"),
+		service:     services.NewUserService(db),
+		authService: services.NewAuthService(db),
+		roleService: services.NewRoleService(db),
+		configService: configurations.NewAppConfigurationService(db),
+		infoLogger:  helpers.NewInfoLogger("users-info.log"),
+		errorLogger: helpers.NewInfoLogger("users-error.log"),
 	}
 }
 func (ctrl *AccountController) Routes(router *fiber.App, db *database.Database) {
@@ -46,13 +47,13 @@ func (ctrl *AccountController) uploadUserImageForm(c *fiber.Ctx) error {
 	return c.Render("authentication/account/upload-image", fiber.Map{
 		"Title":      "Upload Image",
 		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
 func (ctrl *AccountController) uploadUserImage(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	err:= ctrl.service.UploadUserImage(c.Context(), c, loggedUser.UserId)
+	err := ctrl.service.UploadUserImage(c.Context(), c, loggedUser.UserId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
@@ -64,9 +65,9 @@ func (ctrl *AccountController) uploadUserImage(c *fiber.Ctx) error {
 func (ctrl *AccountController) changePasswordForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/account/change-password", fiber.Map{
-		"Title":  "Change Password",
+		"Title":      "Change Password",
 		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
@@ -89,7 +90,7 @@ func (ctrl *AccountController) userData(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/account/user-data", fiber.Map{
 		"Title":      "User Data",
-		"AppConfig":  ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 	})
 }
@@ -98,7 +99,7 @@ func (ctrl *AccountController) changeUserDataForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/account/change-data", fiber.Map{
 		"Title":      "Change Data",
-		"AppConfig":  ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 	})
 }

@@ -10,13 +10,13 @@ import (
 
 type RootController struct {
 	authService *authentication.AuthService
-	appConfig *configurations.AppConfiguration
+	configService *configurations.AppConfigurationService
 }
 
 func NewRootController(db *database.Database) *RootController {
 	return &RootController{
 		authService: authentication.NewAuthService(db),
-		appConfig:   configurations.LoadAppConfigurations(db),
+		configService: configurations.NewAppConfigurationService(db),
 	}
 }
 
@@ -29,8 +29,8 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("employee/_root/index", fiber.Map{
-		"Title": "Employees Management",
+		"Title":      "Employees Management",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }

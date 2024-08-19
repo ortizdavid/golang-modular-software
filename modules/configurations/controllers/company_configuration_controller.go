@@ -13,20 +13,20 @@ import (
 )
 
 type CompanyConfigurationController struct {
-	service *services.CompanyConfigurationService
-	authService *authentication.AuthService
-	appConfig *services.AppConfiguration
-	infoLogger *helpers.Logger
-	errorLogger *helpers.Logger
+	service       *services.CompanyConfigurationService
+	authService   *authentication.AuthService
+	configService *services.AppConfigurationService
+	infoLogger    *helpers.Logger
+	errorLogger   *helpers.Logger
 }
 
 func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurationController {
 	return &CompanyConfigurationController{
-		service:            services.NewCompanyConfigurationService(db),
-		authService:        authentication.NewAuthService(db),
-		appConfig: 			services.LoadAppConfigurations(db),
-		infoLogger:         helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:        helpers.NewErrorLogger("configurations-error.log"),
+		service:     services.NewCompanyConfigurationService(db),
+		authService: authentication.NewAuthService(db),
+		configService: services.NewAppConfigurationService(db),
+		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -40,18 +40,18 @@ func (ctrl *CompanyConfigurationController) Routes(router *fiber.App, db *databa
 
 func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/company/index", fiber.Map{
-		"Title": "Company Configurations",
-		"AppConfog": ctrl.appConfig,
+	return c.Render("configuration/company/index", fiber.Map{
+		"Title":      "Company Configurations",
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 	})
 }
 
 func (ctrl *CompanyConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/company/edit", fiber.Map{
-		"Title": "Edit Company Configuarions",
-		"AppConfig": ctrl.appConfig,
+	return c.Render("configuration/company/edit", fiber.Map{
+		"Title":      "Edit Company Configuarions",
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 	})
 }
@@ -68,5 +68,5 @@ func (ctrl *CompanyConfigurationController) edit(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName))
-	return c.Redirect("/configurations/email-configurations")
+	return c.Redirect("/configurations/company-configurations")
 }

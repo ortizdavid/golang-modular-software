@@ -24,7 +24,7 @@ func NewEmailConfigurationService(db *database.Database) *EmailConfigurationServ
 
 func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context, request entities.UpdateEmailConfigurationRequest) error {
     // Attempt to retrieve the existing configuration
-    conf, err := s.repository.FindFirst(ctx)
+    conf, err := s.repository.FindLast(ctx)
     if err != nil {
 		// Create a new configuration if none exists
 		conf = entities.EmailConfiguration{
@@ -36,7 +36,7 @@ func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context
 			CreatedAt:        time.Now().UTC(),
 			UpdatedAt:        time.Now().UTC(),
 		}
-		err := s.repository.Create(ctx, conf)
+		err = s.repository.Create(ctx, conf)
 		if err != nil {
 			return fmt.Errorf("failed to create email configuration: %w", err)
 		}
@@ -56,7 +56,7 @@ func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context
 
 
 func (s *EmailConfigurationService) GetEmailConfiguration(ctx context.Context) (entities.EmailConfiguration, error) {
-	conf, err := s.repository.FindFirst(ctx)
+	conf, err := s.repository.FindLast(ctx)
 	if err != nil {
 		return entities.EmailConfiguration{}, fmt.Errorf("failed to retrieve email configuration: %s", err.Error())
 	}

@@ -1,0 +1,16 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/configurations/email-configurations/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>SMTP Server:</strong> {{.AppConfig.EmailConfig.SMTPServer}}</p>
+    <p><strong>SMTP Port:</strong> {{.AppConfig.EmailConfig.SMTPPort}}</p>
+    <p><strong>Sender Email:</strong> {{.AppConfig.EmailConfig.SenderEmail}}</p>
+    <p><strong>Sender Password:</strong> {{.AppConfig.EmailConfig.SenderPassword}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

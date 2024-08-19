@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
@@ -12,10 +13,10 @@ import (
 )
 
 type LoginActivityController struct {
-	service *services.LoginActivityService
+	service     *services.LoginActivityService
 	authService *services.AuthService
-	appConfig *configurations.AppConfiguration
-	infoLogger *helpers.Logger
+	configService *configurations.AppConfigurationService
+	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
 }
 
@@ -23,7 +24,7 @@ func NewLoginActivityController(db *database.Database) *LoginActivityController 
 	return &LoginActivityController{
 		service:     services.NewLoginActivityService(db),
 		authService: services.NewAuthService(db),
-		appConfig:   configurations.LoadAppConfigurations(db),
+		configService: configurations.NewAppConfigurationService(db),
 		infoLogger:  helpers.NewInfoLogger("auth-info.log"),
 		errorLogger: helpers.NewInfoLogger("auth-error.log"),
 	}
@@ -46,12 +47,12 @@ func (ctrl *LoginActivityController) index(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/login-activity/index", fiber.Map{
-		"Title": "Login Activities",
+		"Title":       "Login Activities",
 		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
-		"Pagination": pagination,
-		"CurrentPage":  pagination.MetaData.CurrentPage + 1,
-        "TotalPages":   pagination.MetaData.TotalPages + 1,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Pagination":  pagination,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
 	})
 }
 
@@ -63,9 +64,9 @@ func (ctrl *LoginActivityController) details(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/login-activity/details", fiber.Map{
-		"Title":       "Details",
-		"LoggedUser":  loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"Title":         "Details",
+		"LoggedUser":    loggedUser,
+		"AppConfig":     ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoginActivity": loginActivity,
 	})
 }
@@ -73,29 +74,29 @@ func (ctrl *LoginActivityController) details(c *fiber.Ctx) error {
 func (ctrl *LoginActivityController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	return c.Render("authentication/login-activity/search", fiber.Map{
-		"Title": "Search Login Activities",
+		"Title":      "Search Login Activities",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
 
 func (ctrl *LoginActivityController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchLoginActivityRequest{SearchParam: searcParam}
-    loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-    params := helpers.GetPaginationParams(c)
-    pagination, err := ctrl.service.SearchLoginActivities(c.Context(), c, request, params)
-    if err != nil {
-        return helpers.HandleHttpErrors(c, err)
-    }
-    ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-    return c.Render("authentication/login-activity/search-results", fiber.Map{
-        "Title":        "Search Results",
-        "Pagination":   pagination,
-        "Param":        request.SearchParam,
-        "CurrentPage":  pagination.MetaData.CurrentPage + 1,
-        "TotalPages":   pagination.MetaData.TotalPages + 1,
-        "LoggedUser":   loggedUser,
-        "AppConfig":  ctrl.appConfig,
-    })
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	params := helpers.GetPaginationParams(c)
+	pagination, err := ctrl.service.SearchLoginActivities(c.Context(), c, request, params)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
+	return c.Render("authentication/login-activity/search-results", fiber.Map{
+		"Title":       "Search Results",
+		"Pagination":  pagination,
+		"Param":       request.SearchParam,
+		"CurrentPage": pagination.MetaData.CurrentPage + 1,
+		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+	})
 }

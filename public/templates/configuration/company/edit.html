@@ -1,0 +1,44 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/configurations/company-configurations/edit" method="POST" enctype="multipart/form-data">
+        <div class="field">
+            <label for="company_name"><strong>Company Name:</strong></label>
+            <input class="ui input" type="text" name="company_name" value="{{.AppConfig.CompanyConfig.CompanyName}}" autofocus required>
+        </div>
+        <div class="field">
+            <label for="company_acronym"><strong>Company Acronym:</strong></label>
+            <input class="ui input" type="text" name="company_acronym" value="{{.AppConfig.CompanyConfig.CompanyAcronym}}" required>
+        </div>
+        <div class="field">
+            <label for="company_main_color"><strong>Company Main Color:</strong></label>
+            <input class="ui input" type="text" name="company_main_color" value="{{.AppConfig.CompanyConfig.CompanyMainColor}}" required>
+        </div>
+        <div class="field">
+            <label for="company_logo"><strong>Company Logo:</strong></label>
+            <input class="ui input" type="file" name="company_logo" accept="image/*">
+            <img src="{{.AppConfig.CompanyConfig.CompanyLogo}}" alt="Current Logo" class="ui small image" style="margin-top: 10px;">
+        </div>
+        <div class="field">
+            <label for="company_phone"><strong>Company Phone:</strong></label>
+            <input class="ui input" type="tel" name="company_phone" value="{{.AppConfig.CompanyConfig.CompanyPhone}}" required>
+        </div>
+        <div class="field">
+            <label for="company_email"><strong>Company Email:</strong></label>
+            <input class="ui input" type="email" name="company_email" value="{{.AppConfig.CompanyConfig.CompanyEmail}}" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/configurations/company-configurations" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

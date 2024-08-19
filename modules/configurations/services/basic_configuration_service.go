@@ -22,7 +22,7 @@ func NewBasicConfigurationService(db *database.Database) *BasicConfigurationServ
 }
 
 func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context, request entities.UpdateBasicConfigurationRequest) error {
-	conf, err := s.repository.FindFirst(ctx)
+	conf, err := s.repository.FindLast(ctx)
 	if err != nil {
 		// Create a new configuration if none exists
 		conf = entities.BasicConfiguration{
@@ -35,7 +35,7 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 			CreatedAt:           time.Now().UTC(),
 			UpdatedAt:           time.Now().UTC(),
 		}
-		err := s.repository.Create(ctx, conf)
+		err = s.repository.Create(ctx, conf)
 		if err != nil {
 			return fmt.Errorf("failed to create basic configuration: %w", err)
 		}
@@ -57,7 +57,7 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 
 
 func (s *BasicConfigurationService) GetBasicConfiguration(ctx context.Context) (entities.BasicConfiguration, error) {
-	conf, err := s.repository.FindFirst(ctx)
+	conf, err := s.repository.FindLast(ctx)
 	maxRecords := 20
 	if conf.MaxRecordsPerPage < maxRecords {
 		conf.MaxRecordsPerPage = maxRecords

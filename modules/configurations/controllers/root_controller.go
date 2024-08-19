@@ -5,18 +5,18 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type RootController struct {
-	authService *authentication.AuthService
-	appConfig *configurations.AppConfiguration
+	authService   *authentication.AuthService
+	configService *services.AppConfigurationService
 }
 
 func NewRootController(db *database.Database) *RootController {
 	return &RootController{
-		authService:authentication.NewAuthService(db),
-		appConfig:   configurations.LoadAppConfigurations(db),
+		authService: authentication.NewAuthService(db),
+		configService: services.NewAppConfigurationService(db),
 	}
 }
 
@@ -28,9 +28,9 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("configurations/_root/index", fiber.Map{
-		"Title": "Configurations",
+	return c.Render("configuration/_root/index", fiber.Map{
+		"Title":      "Configurations",
 		"LoggedUser": loggedUser,
-		"AppConfig": ctrl.appConfig,
+		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
 }
