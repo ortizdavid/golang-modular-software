@@ -1,2 +1,1 @@
 -- queries for 'company' schema 
-

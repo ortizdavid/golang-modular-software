@@ -17,7 +17,6 @@ func NewDepartmentRepository(db *database.Database) *DepartmentRepository {
 	}
 }
 
-
 func (repo *DepartmentRepository) Create(ctx context.Context, company entities.Department) error {
 	result := repo.db.WithContext(ctx).Create(&company)
 	return result.Error

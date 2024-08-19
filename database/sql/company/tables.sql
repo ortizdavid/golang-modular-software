@@ -72,6 +72,7 @@ CREATE INDEX idx_department_name ON company.departments(department_name);
 DROP TABLE IF EXISTS company.rooms;
 CREATE TABLE company.rooms (
     room_id SERIAL PRIMARY KEY,
+    company_id INT NOT NULL,
     branch_id INT NOT NULL,
     room_name VARCHAR(50),
     number VARCHAR(10),  -- Increased size to accommodate more room numbering formats
@@ -79,8 +80,10 @@ CREATE TABLE company.rooms (
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT fk_branch_room FOREIGN KEY (branch_id) REFERENCES company.branches(branch_id)
+    CONSTRAINT fk_branch_room FOREIGN KEY (branch_id) REFERENCES company.branches(branch_id),
+    CONSTRAINT fk_company_room FOREIGN KEY (company_id) REFERENCES company.companies(company_id)
 );
+CREATE INDEX idx_room_name ON company.rooms(room_name);
 
 -- Table: projects
 DROP TABLE IF EXISTS company.projects;

@@ -59,3 +59,16 @@ JOIN company.companies co ON(co.company_id = dpt.company_id)
 ORDER BY created_at DESC;
 
 
+-- View: view_room_data
+DROP VIEW IF EXISTS company.view_room_data;
+CREATE VIEW company.view_room_data AS
+SELECT rm.room_id, rm.unique_id,
+    rm.room_name, rm.number,
+    rm.capacity,
+    TO_CHAR(rm.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(rm.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    br.branch_id, br.branch_name
+FROM company.rooms rm 
+JOIN company.branches br ON(br.branch_id = rm.branch_id)
+ORDER BY created_at DESC;
+
