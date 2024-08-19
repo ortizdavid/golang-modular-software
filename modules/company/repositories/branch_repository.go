@@ -87,3 +87,9 @@ func (repo *BranchRepository) CountByParam(ctx context.Context, param string) (i
         Scan(&count)
     return count, result.Error
 }
+
+func (repo *BranchRepository) ExistsByName(ctx context.Context, companyId int, branchName string) (bool, error) {
+	var branch entities.Branch
+	result := repo.db.WithContext(ctx).Where("company_id=? AND branch_name=?", companyId, branchName).Find(&branch)
+	return branch.BranchId !=0 , result.Error
+}

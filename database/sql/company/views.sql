@@ -30,3 +30,18 @@ FROM company.branches br
 JOIN company.companies co ON(co.company_id = br.company_id)
 ORDER BY created_at DESC;
 
+
+-- View: view_office_data
+DROP VIEW IF EXISTS company.view_office_data;
+CREATE VIEW company.view_office_data AS
+SELECT of.office_id, of.unique_id,
+    of.office_name, of.address,
+    of.phone, of.email,
+    TO_CHAR(of.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(of.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    co.company_id, co.company_name
+FROM company.offices of 
+JOIN company.companies co ON(co.company_id = of.company_id)
+ORDER BY created_at DESC;
+
+

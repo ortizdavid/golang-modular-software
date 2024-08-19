@@ -1,0 +1,20 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/company/offices/{{.Office.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Office.OfficeId}}</p>
+    <p><strong>Office Name:</strong> {{.Office.OfficeName}}</p>
+    <p><strong>Code:</strong> {{.Office.Code}}</p>
+    <p><strong>Address:</strong> {{.Office.Address}}</p>
+    <p><strong>Phone:</strong> {{.Office.Phone}}</p>
+    <p><strong>Email:</strong> {{.Office.Email}}</p>
+    <p><strong>Creation Date:</strong> {{.Office.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Office.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

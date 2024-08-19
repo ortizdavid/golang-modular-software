@@ -1,0 +1,48 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/company/offices/create" method="POST">
+        <div class="field">
+            <label for="office_name"><strong>Office Name:</strong></label>
+            <input class="ui input" type="text" name="office_name" placeholder="Enter office name" autofocus required>
+        </div>
+        <div class="field">
+            <label for="code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="{{.OfficeCode}}" required>
+        </div>
+        <div class="field">
+            <label for="company"><strong>Company Owner:</strong></label>
+            <select class="ui dropdown" id="company_id" name="company_id" required>
+                <option value="">Select Company</option>
+                {{ range .Companies }}
+                    <option value="{{.CompanyId}}">{{.CompanyName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="address"><strong>Address:</strong></label>
+            <input class="ui input" type="text" name="address" placeholder="Enter address">
+        </div>
+        <div class="field">
+            <label for="phone"><strong>Phone:</strong></label>
+            <input class="ui input" type="text" name="phone" placeholder="Enter phone number">
+        </div>
+        <div class="field">
+            <label for="email"><strong>Email:</strong></label>
+            <input class="ui input" type="email" name="email" placeholder="Enter email">
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/company/offices" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

@@ -29,7 +29,7 @@ func NewBranchController(db *database.Database) *BranchController {
 		companyService: services.NewCompanyService(db),
 		authService:    authentication.NewAuthService(db),
 		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:     helpers.NewInfoLogger("branch.log"),
+		infoLogger:     helpers.NewInfoLogger("company-info.log"),
 		errorLogger:    helpers.NewErrorLogger("company-error.log"),
 	}
 }
