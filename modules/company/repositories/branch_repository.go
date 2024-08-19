@@ -72,7 +72,7 @@ func (repo *BranchRepository) Search(ctx context.Context, param string, limit in
 	var branches []entities.BranchData
 	likeParam := "%"+param+"%"
 	result := repo.db.WithContext(ctx).
-		Raw("SELECT * FROM company.view_branch_data WHERE branch_name LIKE ? OR email LIKE ?", likeParam, likeParam).
+		Raw("SELECT * FROM company.view_branch_data WHERE branch_name LIKE ? OR code LIKE ?", likeParam, likeParam).
 		Limit(limit).
 		Offset(offset).
 		Scan(&branches)
@@ -83,7 +83,7 @@ func (repo *BranchRepository) CountByParam(ctx context.Context, param string) (i
     var count int64
 	likeParam := "%"+param+"%"
     result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_branch_data WHERE branch_name LIKE ? OR email LIKE ?", likeParam, likeParam).
+        Raw("SELECT COUNT(*) FROM company.view_branch_data WHERE branch_name LIKE ? OR code LIKE ?", likeParam, likeParam).
         Scan(&count)
     return count, result.Error
 }

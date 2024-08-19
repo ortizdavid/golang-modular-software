@@ -115,34 +115,6 @@ func (s *BranchService) GetAllBranchs(ctx context.Context) ([]entities.Branch, e
 	return branchs, nil
 }
 
-func (s *BranchService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchBranchRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
-	count, err := s.repository.CountByParam(ctx, request.SearchParam)
-	if err != nil {
-		return nil, apperrors.NewNotFoundError("No branches found")
-	}
-	if err := paginationParams.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
-	}
-	branches, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
-	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
-	}
-	pagination, err := helpers.NewPagination(fiberCtx, branches, count, paginationParams.CurrentPage, paginationParams.Limit)
-	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
-	}
-	return pagination, nil
-}
-
-func (s *BranchService) GetBranchByUniqueId(ctx context.Context, uniqueId string) (entities.BranchData, error) {
-	branch, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return entities.BranchData{}, apperrors.NewNotFoundError("branch not found")
-	}
-	return branch, nil
-}
-
-
 func (s *BranchService) SearchBranches(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchBranchRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
@@ -160,4 +132,12 @@ func (s *BranchService) SearchBranches(ctx context.Context, fiberCtx *fiber.Ctx,
 		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
 	}
 	return pagination, nil
+}
+
+func (s *BranchService) GetBranchByUniqueId(ctx context.Context, uniqueId string) (entities.BranchData, error) {
+	branch, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.BranchData{}, apperrors.NewNotFoundError("branch not found")
+	}
+	return branch, nil
 }

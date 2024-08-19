@@ -16,3 +16,15 @@ type Department struct {
 func (Department) TableName() string {
 	return "company.departments"
 }
+
+type DepartmentData struct {
+	DepartmentId   int `json:"department_id"`
+	DepartmentName string `json:"department_name"`
+	Acronym        string `json:"acronym"`
+	Description    string `json:"description"`
+	UniqueId       string `json:"unique_id"`
+	CreatedAt      string `json:"created_at"`
+	UpdatedAt      string `json:"updated_at"`
+	CompanyId      int `json:"company_id"`
+	CompanyName 	string `json:"company_name"`
+}

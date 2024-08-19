@@ -45,3 +45,17 @@ JOIN company.companies co ON(co.company_id = of.company_id)
 ORDER BY created_at DESC;
 
 
+-- View: view_department_data
+DROP VIEW IF EXISTS company.view_department_data;
+CREATE VIEW company.view_department_data AS
+SELECT dpt.department_id, dpt.unique_id,
+    dpt.department_name, dpt.acronym,
+    dpt.description,
+    TO_CHAR(dpt.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(dpt.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    co.company_id, co.company_name
+FROM company.departments dpt 
+JOIN company.companies co ON(co.company_id = dpt.company_id)
+ORDER BY created_at DESC;
+
+

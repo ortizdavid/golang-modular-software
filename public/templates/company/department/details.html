@@ -1,0 +1,18 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/company/departments/{{.Department.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Department.DepartmentId}}</p>
+    <p><strong>Department Name:</strong> {{.Department.DepartmentName}}</p>
+    <p><strong>Acronym:</strong> {{.Department.Acronym}}</p>
+    <p><strong>Description:</strong> {{.Department.Description}}</p>
+    <p><strong>Creation Date:</strong> {{.Department.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Department.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}
