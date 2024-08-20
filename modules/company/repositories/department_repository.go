@@ -52,7 +52,7 @@ func (repo *DepartmentRepository) FindById(ctx context.Context, id int) (entitie
 
 func (repo *DepartmentRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Department, error) {
 	var company entities.Department
-	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&company)
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
 	return company, result.Error
 }
 
@@ -70,7 +70,7 @@ func (repo *DepartmentRepository) Count(ctx context.Context) (int64, error) {
 
 func (repo *DepartmentRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.DepartmentData, error) {
 	var departments []entities.DepartmentData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM company.view_department_data WHERE department_name LIKE ? OR acronym LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -80,16 +80,16 @@ func (repo *DepartmentRepository) Search(ctx context.Context, param string, limi
 }
 
 func (repo *DepartmentRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_department_data WHERE department_name LIKE ? OR acronym LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM company.view_department_data WHERE department_name LIKE ? OR acronym LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
 
 func (repo *DepartmentRepository) ExistsByName(ctx context.Context, companyId int, departmentName string) (bool, error) {
 	var department entities.Department
 	result := repo.db.WithContext(ctx).Where("company_id=? AND department_name=?", companyId, departmentName).Find(&department)
-	return department.DepartmentId !=0 , result.Error
+	return department.DepartmentId != 0, result.Error
 }

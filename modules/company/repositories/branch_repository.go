@@ -52,7 +52,7 @@ func (repo *BranchRepository) FindById(ctx context.Context, id int) (entities.Br
 
 func (repo *BranchRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Branch, error) {
 	var company entities.Branch
-	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&company)
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
 	return company, result.Error
 }
 
@@ -70,7 +70,7 @@ func (repo *BranchRepository) Count(ctx context.Context) (int64, error) {
 
 func (repo *BranchRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.BranchData, error) {
 	var branches []entities.BranchData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM company.view_branch_data WHERE branch_name LIKE ? OR code LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -80,16 +80,16 @@ func (repo *BranchRepository) Search(ctx context.Context, param string, limit in
 }
 
 func (repo *BranchRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_branch_data WHERE branch_name LIKE ? OR code LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM company.view_branch_data WHERE branch_name LIKE ? OR code LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
 
 func (repo *BranchRepository) ExistsByName(ctx context.Context, companyId int, branchName string) (bool, error) {
 	var branch entities.Branch
 	result := repo.db.WithContext(ctx).Where("company_id=? AND branch_name=?", companyId, branchName).Find(&branch)
-	return branch.BranchId !=0 , result.Error
+	return branch.BranchId != 0, result.Error
 }

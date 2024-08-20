@@ -45,6 +45,8 @@ func (ctrl *PolicyController) Routes(router *fiber.App, db *database.Database) {
 	group.Post("/:id/edit", ctrl.edit)
 	group.Get("/search", ctrl.searchForm)
 	group.Get("/search-results", ctrl.search)
+	group.Get("/:id/delete", ctrl.removeForm)
+	group.Post("/:id/delete", ctrl.remove)
 }
 
 func (ctrl *PolicyController) index(c *fiber.Ctx) error {
@@ -177,4 +179,34 @@ func (ctrl *PolicyController) search(c *fiber.Ctx) error {
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
 		"TotalPages":  pagination.MetaData.TotalPages + 1,
 	})
+}
+
+func (ctrl *PolicyController) removeForm(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("company/policy/delete", fiber.Map{
+		"Title":  "Remove Policy",
+		"Policy": 	policy,
+		"LoggedUser":  loggedUser,
+		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+	})
+}
+
+func (ctrl *PolicyController) remove(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.service.RemovePolicy(c.Context(), id)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed policy '%s'", loggedUser.UserName, policy.PolicyName))
+	return c.Redirect("/company/policies")
 }

@@ -52,7 +52,7 @@ func (repo *PolicyRepository) FindById(ctx context.Context, id int) (entities.Po
 
 func (repo *PolicyRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Policy, error) {
 	var company entities.Policy
-	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&company)
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
 	return company, result.Error
 }
 
@@ -70,7 +70,7 @@ func (repo *PolicyRepository) Count(ctx context.Context) (int64, error) {
 
 func (repo *PolicyRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.PolicyData, error) {
 	var policies []entities.PolicyData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM company.view_policy_data WHERE policy_name LIKE ? OR company_name LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -80,16 +80,16 @@ func (repo *PolicyRepository) Search(ctx context.Context, param string, limit in
 }
 
 func (repo *PolicyRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_policy_data WHERE policy_name LIKE ? OR company_name LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM company.view_policy_data WHERE policy_name LIKE ? OR company_name LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
 
 func (repo *PolicyRepository) ExistsByName(ctx context.Context, companyId int, policyName string) (bool, error) {
 	var policy entities.Policy
 	result := repo.db.WithContext(ctx).Where("company_id=? AND policy_name=?", companyId, policyName).Find(&policy)
-	return policy.PolicyId !=0 , result.Error
+	return policy.PolicyId != 0, result.Error
 }

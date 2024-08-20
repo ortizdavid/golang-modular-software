@@ -140,3 +140,15 @@ func (s *PolicyService) GetPolicyByUniqueId(ctx context.Context, uniqueId string
 	}
 	return policy, nil
 }
+
+func (s *PolicyService) RemovePolicy(ctx context.Context, uniqueId string) error {
+	policy, err := s.repository.FindByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return apperrors.NewNotFoundError("policy not found")
+	}
+	err = s.repository.Delete(ctx, policy)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while removing policy: "+ err.Error())
+	}
+	return nil
+}

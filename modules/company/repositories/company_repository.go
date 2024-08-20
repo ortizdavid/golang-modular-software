@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 )
@@ -51,7 +52,7 @@ func (repo *CompanyRepository) FindById(ctx context.Context, id int) (entities.C
 
 func (repo *CompanyRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Company, error) {
 	var company entities.Company
-	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&company)
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
 	return company, result.Error
 }
 
@@ -69,7 +70,7 @@ func (repo *CompanyRepository) Count(ctx context.Context) (int64, error) {
 
 func (repo *CompanyRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.CompanyData, error) {
 	var companies []entities.CompanyData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM company.view_company_data WHERE company_name LIKE ? OR company_acronym LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -79,11 +80,10 @@ func (repo *CompanyRepository) Search(ctx context.Context, param string, limit i
 }
 
 func (repo *CompanyRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_company_data WHERE company_name LIKE ? OR company_acronym LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM company.view_company_data WHERE company_name LIKE ? OR company_acronym LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
-

@@ -14,6 +14,7 @@ body {
 body ::-webkit-scrollbar {
   width: 6px;
 }
+                                                                     */
 
 .ui.vertical.menu.sidebar-menu {
   margin-top: 40px !important;
@@ -44,4 +45,16 @@ body ::-webkit-scrollbar {
     display: none !important;
   }
 }
-/*# sourceMappingURL=style.css.map */
+
+
+/* --------------------------------------------------------------- */
+.policy-description {
+  border: 1px solid #ddd; /* Adds a border around the description */
+  padding: 10px;          /* Adds padding for better readability */
+  max-height: 300px;      /* Limits the height of the description container */
+  overflow-y: auto;       /* Adds a vertical scrollbar if content exceeds max-height */
+  background-color: #f9f9f9; /* Optional: adds a background color for better contrast */
+  border-radius: 4px;     /* Optional: adds rounded corners */
+}
+
+/* --------------------------------------------------------------- */

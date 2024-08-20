@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 )
@@ -11,7 +12,7 @@ type PermissionRepository struct {
 }
 
 func NewPermissionRepository(db *database.Database) *PermissionRepository {
-	return &PermissionRepository {
+	return &PermissionRepository{
 		db: db,
 	}
 }
@@ -51,7 +52,7 @@ func (repo *PermissionRepository) FindById(ctx context.Context, id int) (entitie
 
 func (repo *PermissionRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Permission, error) {
 	var permission entities.Permission
-	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&permission)
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&permission)
 	return permission, result.Error
 }
 
@@ -76,12 +77,12 @@ func (repo *PermissionRepository) Count(ctx context.Context) (int64, error) {
 func (repo *PermissionRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.permissions").Where("code = ?", code).Count(&count)
-	return count > 0 , result.Error
+	return count > 0, result.Error
 }
 
 func (repo *PermissionRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.PermissionData, error) {
 	var permissions []entities.PermissionData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM authentication.view_permission_data WHERE permission_name LIKE ? OR code LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -91,12 +92,12 @@ func (repo *PermissionRepository) Search(ctx context.Context, param string, limi
 }
 
 func (repo *PermissionRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM authentication.view_permission_data WHERE permission_name LIKE ? OR code LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM authentication.view_permission_data WHERE permission_name LIKE ? OR code LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
 
 func (repo *PermissionRepository) FindUnassignedPermissionsByRole(ctx context.Context, roleId int) ([]entities.Permission, error) {

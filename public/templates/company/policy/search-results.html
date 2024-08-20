@@ -24,7 +24,6 @@
                         <th>ID</th>
                         <th>Policy Name</th>
                         <th>Effective Date</th>
-                        <th>Description</th>
                         <th>Options</th>
                     </tr>
                 </thead>
@@ -41,6 +40,9 @@
                                 </a>
                                 <a href="/company/policies/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                     <i class="pencil icon"></i>
+                                </a>
+                                <a href="/company/policies/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                    <i class="trash alternate red icon"></i>
                                 </a>
                             </td>
                         </tr>

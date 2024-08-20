@@ -17,7 +17,6 @@ func NewOfficeRepository(db *database.Database) *OfficeRepository {
 	}
 }
 
-
 func (repo *OfficeRepository) Create(ctx context.Context, company entities.Office) error {
 	result := repo.db.WithContext(ctx).Create(&company)
 	return result.Error
@@ -53,7 +52,7 @@ func (repo *OfficeRepository) FindById(ctx context.Context, id int) (entities.Of
 
 func (repo *OfficeRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Office, error) {
 	var company entities.Office
-	result := repo.db.WithContext(ctx).Where("unqiue_id=?", uniqueId).First(&company)
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
 	return company, result.Error
 }
 
@@ -71,7 +70,7 @@ func (repo *OfficeRepository) Count(ctx context.Context) (int64, error) {
 
 func (repo *OfficeRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.OfficeData, error) {
 	var offices []entities.OfficeData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM company.view_office_data WHERE office_name LIKE ? OR email LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -81,16 +80,16 @@ func (repo *OfficeRepository) Search(ctx context.Context, param string, limit in
 }
 
 func (repo *OfficeRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM company.view_office_data WHERE office_name LIKE ? OR email LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM company.view_office_data WHERE office_name LIKE ? OR email LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
 
 func (repo *OfficeRepository) ExistsByName(ctx context.Context, companyId int, officeName string) (bool, error) {
 	var office entities.Office
 	result := repo.db.WithContext(ctx).Where("company_id=? AND office_name=?", companyId, officeName).Find(&office)
-	return office.OfficeId !=0 , result.Error
+	return office.OfficeId != 0, result.Error
 }

@@ -22,7 +22,6 @@
                         <th>ID</th>
                         <th>Policy Name</th>
                         <th>Effective Date</th>
-                        <th>Description</th>
                         <th>Options</th>
                     </tr>
                 </thead>
@@ -32,13 +31,15 @@
                             <td class="collapsing">{{.PolicyId}}</td>
                             <td>{{.PolicyName}}</td>
                             <td>{{.EffectiveDate}}</td>
-                            <td>{{.Description}}</td>
                             <td>
                                 <a href="/company/policies/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                     <i class="eye blue icon"></i>
                                 </a>
                                 <a href="/company/policies/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                     <i class="pencil icon"></i>
+                                </a>
+                                <a href="/company/policies/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                    <i class="trash alternate red icon"></i>
                                 </a>
                             </td>
                         </tr>
