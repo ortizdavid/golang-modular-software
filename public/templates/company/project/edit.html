@@ -1,27 +1,45 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/company/departments/{{.Department.UniqueId}}/edit" method="POST">
+    <form class="ui form" action="/company/projects/{{.Project.UniqueId}}/edit" method="POST">
         <div class="field">
-            <label for="department_name"><strong>Department Name:</strong></label>
-            <input class="ui input" type="text" name="department_name" id="department_name" value="{{.Department.DepartmentName}}" autofocus required>
-        </div>
-        <div class="field">
-            <label for="acronym"><strong>Acronym:</strong></label>
-            <input class="ui input" type="text" name="acronym" id="acronym" value="{{.Department.Acronym}}" required>
-        </div>
-        <div class="field">
-            <label for="company"><strong>Company Owner:</strong></label>
+            <label for="company_id"><strong>Company:</strong></label>
             <select class="ui dropdown" id="company_id" name="company_id" required>
-                <option value="{{.Department.CompanyId}}">{{.Department.CompanyName}}</option>
+                <option value="{{.Project.CompanyId}}">{{.Project.CompanyName}}</option>
                 {{ range .Companies }}
                     <option value="{{.CompanyId}}">{{.CompanyName}}</option>
                 {{ end }}
             </select>
         </div>
         <div class="field">
+            <label for="project_name"><strong>Project Name:</strong></label>
+            <input class="ui input" type="text" name="project_name" id="project_name" value="{{.Project.ProjectName}}" placeholder="Enter project name" required>
+        </div>
+        <div class="field">
+            <label for="start_date"><strong>Start Date:</strong></label>
+            <input class="ui input" type="date" name="start_date" id="start_date" value="{{.Project.StartDate}}" required>
+        </div>
+        <div class="field">
+            <label for="end_date"><strong>End Date:</strong></label>
+            <input class="ui input" type="date" name="end_date" id="end_date" value="{{.Project.EndDate}}">
+        </div>
+        <div class="field">
+            <label for="status"><strong>Status:</strong></label>
+            <select class="ui dropdown" id="status" name="status" required>
+                <option value="{{.Project.Status}}" selected>{{.Project.Status}}</option>
+                <option value="Pending">Pending</option>
+                <option value="Not Started">Not Started</option>
+                <option value="Planning">Planning</option>
+                <option value="In Progress">In Progress</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Completed">Completed</option>
+                <option value="Archived">Archived</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="field">
             <label for="description"><strong>Description:</strong></label>
-            <textarea class="ui input" name="description" id="description">{{.Department.Description}}</textarea>
+            <textarea class="ui input" name="description" id="description" placeholder="Enter project description" required>{{.Project.Description}}</textarea>
         </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">
@@ -29,7 +47,7 @@
                 Submit
             </button>
             <div class="or"></div>
-            <a href="/company/departments/{{.Department.UniqueId}}/details" class="ui red button">
+            <a href="/company/projects/{{.Project.UniqueId}}/details" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

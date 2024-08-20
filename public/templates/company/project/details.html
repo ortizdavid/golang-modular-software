@@ -2,17 +2,25 @@
 
 <div class="ui segment">
     <div class="ui right floated buttons">
-        <a href="/company/departments/{{.Department.UniqueId}}/edit" class="ui primary button">
+        <a href="/company/projects/{{.Project.UniqueId}}/edit" class="ui primary button">
             <i class="pencil icon"></i>
             Edit
         </a>
+        <a href="/company/projects/{{.Project.UniqueId}}/delete" class="ui red button">
+            <i class="trash alternate icon"></i>
+            Delete
+        </a>
     </div>
-    <p><strong>ID:</strong> {{.Department.DepartmentId}}</p>
-    <p><strong>Department Name:</strong> {{.Department.DepartmentName}}</p>
-    <p><strong>Acronym:</strong> {{.Department.Acronym}}</p>
-    <p><strong>Description:</strong> {{.Department.Description}}</p>
-    <p><strong>Creation Date:</strong> {{.Department.CreatedAt}}</p>
-    <p><strong>Last Update:</strong> {{.Department.UpdatedAt}}</p>
+    <p><strong>ID:</strong> {{.Project.ProjectId}}</p>
+    <p><strong>Project Name:</strong> {{.Project.ProjectName}}</p>
+    <p><strong>Status:</strong> {{.Project.Status}}</p>
+    <p><strong>Start Date:</strong> {{.Project.StartDate}}</p>
+    <p><strong>End Date:</strong> {{.Project.EndDate}}</p>
+    <p><strong>Company:</strong> {{.Project.CompanyName}}</p>
+    <p><strong>Creation Date:</strong> {{.Project.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Project.UpdatedAt}}</p>
+    <p><strong>Description:</strong> {{.Project.Description}}</p>
+    
 </div>
 
 {{ template "_partials/footer-back" .}}

@@ -5,7 +5,7 @@
             <form class="ui form" action="/company/departments/search-results" method="GET" style="padding-bottom: 2%">
                 <table>
                     <tr>
-                        <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Name or Acronym" required autofocus></td>
+                        <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Name or Status" required autofocus></td>
                         <td>
                             <button class="ui blue icon button">
                                 <i class="search icon"></i>
@@ -22,25 +22,30 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Department Name</th>
-                            <th>Acronym</th>
-                            <th>Description</th>
+                            <th>Project Name</th>
+                            <th>Status</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
                             <th>Options</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{ range .Pagination.Items }}
                             <tr>
-                                <td class="collapsing">{{.DepartmentId}}</td>
-                                <td>{{.DepartmentName}}</td>
-                                <td>{{.Acronym}}</td>
-                                <td>{{.Description}}</td>
+                                <td class="collapsing">{{.ProjectId}}</td>
+                                <td>{{.ProjectName}}</td>
+                                <td>{{.Status}}</td>
+                                <td>{{.StartDate}}</td>
+                                <td>{{.EndDate}}</td>
                                 <td>
-                                    <a href="/company/departments/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <a href="/company/projects/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
-                                    <a href="/company/departments/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                    <a href="/company/projects/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                         <i class="pencil icon"></i>
+                                    </a>
+                                    <a href="/company/projects/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                        <i class="trash alternate red icon"></i>
                                     </a>
                                 </td>
                             </tr>

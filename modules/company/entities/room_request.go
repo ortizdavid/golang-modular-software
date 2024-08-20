@@ -26,7 +26,6 @@ func (req UpdateRoomRequest) Validate() error  {
 	return nil
 }
 
-
 // --- Search
 type SearchRoomRequest struct {
 	SearchParam		string `json:"search_param" form:"search_param"`

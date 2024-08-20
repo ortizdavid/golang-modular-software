@@ -88,3 +88,19 @@ FROM company.policies pl
 JOIN company.companies co ON(co.company_id = pl.company_id)
 ORDER BY created_at DESC;
 
+
+-- View: view_project_data
+DROP VIEW IF EXISTS company.view_project_data;
+CREATE VIEW company.view_project_data AS
+SELECT pr.project_id, pr.unique_id,
+    pr.project_name, pr.description,
+    TO_CHAR(pr.start_date, 'YYYY-MM-DD') AS start_date,
+    TO_CHAR(pr.end_date, 'YYYY-MM-DD') AS end_date,
+    pr.status,
+    TO_CHAR(pr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(pr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    co.company_id, co.company_name
+FROM company.projects pr 
+JOIN company.companies co ON(co.company_id = pr.company_id)
+ORDER BY created_at DESC;
+
