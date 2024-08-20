@@ -14,7 +14,7 @@ import (
 )
 
 type DepartmentService struct {
-	repository *repositories.DepartmentRepository
+	repository        *repositories.DepartmentRepository
 	companyRepository *repositories.CompanyRepository
 }
 
@@ -26,9 +26,9 @@ func NewDepartmentService(db *database.Database) *DepartmentService {
 }
 
 func (s *DepartmentService) CreateDepartment(ctx context.Context, request entities.CreateDepartmentRequest) error {
-    if err := request.Validate(); err != nil {
-        return apperrors.NewBadRequestError(err.Error())
-    }
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
@@ -38,48 +38,48 @@ func (s *DepartmentService) CreateDepartment(ctx context.Context, request entiti
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("Department already exists for compay "+company.CompanyName)
+		return apperrors.NewBadRequestError("Department already exists for company " + company.CompanyName)
 	}
-    department := entities.Department{
-    	DepartmentId:   0,
-    	CompanyId:      company.CompanyId,
-    	DepartmentName: request.DepartmentName,
-    	Acronym:        request.Acronym,
-    	Description:    request.Description,
-    	UniqueId:       encryption.GenerateUUID(),
-    	CreatedAt:      time.Now().UTC(),
-    	UpdatedAt:      time.Now().UTC(),
-    }
-    err = s.repository.Create(ctx, department)
-    if err != nil {
-        return apperrors.NewInternalServerError("error while creating department: " + err.Error())
-    }
-    return nil
+	department := entities.Department{
+		DepartmentId:   0,
+		CompanyId:      company.CompanyId,
+		DepartmentName: request.DepartmentName,
+		Acronym:        request.Acronym,
+		Description:    request.Description,
+		UniqueId:       encryption.GenerateUUID(),
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
+	}
+	err = s.repository.Create(ctx, department)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while creating department: " + err.Error())
+	}
+	return nil
 }
 
 func (s *DepartmentService) UpdateDepartment(ctx context.Context, departmentId int, request entities.UpdateDepartmentRequest) error {
-    if err := request.Validate(); err != nil {
-        return apperrors.NewBadRequestError(err.Error())
-    }
-    department, err := s.repository.FindById(ctx, departmentId)
-    if err != nil {
-        return apperrors.NewNotFoundError("department not found")
-    }
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	department, err := s.repository.FindById(ctx, departmentId)
+	if err != nil {
+		return apperrors.NewNotFoundError("department not found")
+	}
 	_, err = s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
 	}
 	department.CompanyId = request.CompanyId
-    department.DepartmentName = request.DepartmentName
+	department.DepartmentName = request.DepartmentName
 	department.CompanyId = request.CompanyId
 	department.Acronym = request.Acronym
 	department.Description = request.Description
-    department.UpdatedAt = time.Now().UTC()
-    err = s.repository.Update(ctx, department)
-    if err != nil {
-        return apperrors.NewInternalServerError("error while updating department: " + err.Error())
-    }
-    return nil
+	department.UpdatedAt = time.Now().UTC()
+	err = s.repository.Update(ctx, department)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while updating department: " + err.Error())
+	}
+	return nil
 }
 
 func (s *DepartmentService) GetAllDepartmentsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DepartmentData], error) {
@@ -92,11 +92,11 @@ func (s *DepartmentService) GetAllDepartmentsPaginated(ctx context.Context, fibe
 	}
 	departments, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, departments, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -108,7 +108,7 @@ func (s *DepartmentService) GetAllDepartments(ctx context.Context) ([]entities.D
 	}
 	departments, err := s.repository.FindAll(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	return departments, nil
 }
@@ -123,11 +123,11 @@ func (s *DepartmentService) SearchDepartments(ctx context.Context, fiberCtx *fib
 	}
 	departments, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, departments, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }

@@ -14,7 +14,7 @@ import (
 )
 
 type BranchService struct {
-	repository *repositories.BranchRepository
+	repository        *repositories.BranchRepository
 	companyRepository *repositories.CompanyRepository
 }
 
@@ -26,9 +26,9 @@ func NewBranchService(db *database.Database) *BranchService {
 }
 
 func (s *BranchService) CreateBranch(ctx context.Context, request entities.CreateBranchRequest) error {
-    if err := request.Validate(); err != nil {
-        return apperrors.NewBadRequestError(err.Error())
-    }
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
@@ -38,50 +38,50 @@ func (s *BranchService) CreateBranch(ctx context.Context, request entities.Creat
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("Branch already exists for compay "+company.CompanyName)
+		return apperrors.NewBadRequestError("Branch already exists for company " + company.CompanyName)
 	}
-    branch := entities.Branch{
-    	BranchId:   0,
-    	CompanyId:  company.CompanyId,
-    	BranchName: request.BranchName,
-    	Code:       request.Code,
-    	Address:    request.Address,
-    	Phone:      request.Phone,
-    	Email:      request.Email,
-    	UniqueId:   encryption.GenerateUUID(),
-    	CreatedAt:  time.Now().UTC(),
-    	UpdatedAt:  time.Now().UTC(),
-    }
-    err = s.repository.Create(ctx, branch)
-    if err != nil {
-        return apperrors.NewInternalServerError("error while creating branch: " + err.Error())
-    }
-    return nil
+	branch := entities.Branch{
+		BranchId:   0,
+		CompanyId:  company.CompanyId,
+		BranchName: request.BranchName,
+		Code:       request.Code,
+		Address:    request.Address,
+		Phone:      request.Phone,
+		Email:      request.Email,
+		UniqueId:   encryption.GenerateUUID(),
+		CreatedAt:  time.Now().UTC(),
+		UpdatedAt:  time.Now().UTC(),
+	}
+	err = s.repository.Create(ctx, branch)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while creating branch: " + err.Error())
+	}
+	return nil
 }
 
 func (s *BranchService) UpdateBranch(ctx context.Context, branchId int, request entities.UpdateBranchRequest) error {
-    if err := request.Validate(); err != nil {
-        return apperrors.NewBadRequestError(err.Error())
-    }
-    branch, err := s.repository.FindById(ctx, branchId)
-    if err != nil {
-        return apperrors.NewNotFoundError("branch not found")
-    }
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	branch, err := s.repository.FindById(ctx, branchId)
+	if err != nil {
+		return apperrors.NewNotFoundError("branch not found")
+	}
 	_, err = s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
 	}
 	branch.CompanyId = request.CompanyId
-    branch.BranchName = request.BranchName
-    branch.Address = request.Address
-    branch.Phone = request.Phone
-    branch.Email = request.Email
-    branch.UpdatedAt = time.Now().UTC()
-    err = s.repository.Update(ctx, branch)
-    if err != nil {
-        return apperrors.NewInternalServerError("error while updating branch: " + err.Error())
-    }
-    return nil
+	branch.BranchName = request.BranchName
+	branch.Address = request.Address
+	branch.Phone = request.Phone
+	branch.Email = request.Email
+	branch.UpdatedAt = time.Now().UTC()
+	err = s.repository.Update(ctx, branch)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while updating branch: " + err.Error())
+	}
+	return nil
 }
 
 func (s *BranchService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
@@ -94,23 +94,23 @@ func (s *BranchService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *
 	}
 	branches, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, branches, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
 
-func (s *BranchService) GetAllBranchs(ctx context.Context) ([]entities.Branch, error) {
+func (s *BranchService) GetAllBranches(ctx context.Context) ([]entities.Branch, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No branchs found")
 	}
 	branchs, err := s.repository.FindAll(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	return branchs, nil
 }
@@ -125,11 +125,11 @@ func (s *BranchService) SearchBranches(ctx context.Context, fiberCtx *fiber.Ctx,
 	}
 	branchs, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, branchs, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }

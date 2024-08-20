@@ -14,9 +14,9 @@ import (
 )
 
 type RoomService struct {
-	repository *repositories.RoomRepository
+	repository        *repositories.RoomRepository
 	companyRepository *repositories.CompanyRepository
-	branchRepository *repositories.BranchRepository
+	branchRepository  *repositories.BranchRepository
 }
 
 func NewRoomService(db *database.Database) *RoomService {
@@ -28,9 +28,9 @@ func NewRoomService(db *database.Database) *RoomService {
 }
 
 func (s *RoomService) CreateRoom(ctx context.Context, request entities.CreateRoomRequest) error {
-    if err := request.Validate(); err != nil {
-        return apperrors.NewBadRequestError(err.Error())
-    }
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
@@ -40,52 +40,52 @@ func (s *RoomService) CreateRoom(ctx context.Context, request entities.CreateRoo
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("Room already exists for compay "+company.CompanyName)
+		return apperrors.NewBadRequestError("Room already exists for company " + company.CompanyName)
 	}
 	branch, err := s.branchRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("branch not found")
 	}
-    room := entities.Room{
-    	CompanyId: company.CompanyId,
-    	BranchId:  branch.BranchId,
-    	RoomName:  request.RoomName,
-    	Number:    request.Number,
-    	Capacity:  request.Capacity,
-    	UniqueId:  encryption.GenerateUUID(),
-    	CreatedAt: time.Now().UTC(),
-    	UpdatedAt: time.Now().UTC(),
-    }
-    err = s.repository.Create(ctx, room)
-    if err != nil {
-        return apperrors.NewInternalServerError("error while creating room: " + err.Error())
-    }
-    return nil
+	room := entities.Room{
+		CompanyId: company.CompanyId,
+		BranchId:  branch.BranchId,
+		RoomName:  request.RoomName,
+		Number:    request.Number,
+		Capacity:  request.Capacity,
+		UniqueId:  encryption.GenerateUUID(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+	}
+	err = s.repository.Create(ctx, room)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while creating room: " + err.Error())
+	}
+	return nil
 }
 
 func (s *RoomService) UpdateRoom(ctx context.Context, roomId int, request entities.UpdateRoomRequest) error {
-    if err := request.Validate(); err != nil {
-        return apperrors.NewBadRequestError(err.Error())
-    }
-    room, err := s.repository.FindById(ctx, roomId)
-    if err != nil {
-        return apperrors.NewNotFoundError("room not found")
-    }
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	room, err := s.repository.FindById(ctx, roomId)
+	if err != nil {
+		return apperrors.NewNotFoundError("room not found")
+	}
 	_, err = s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
 	}
 	room.CompanyId = request.CompanyId
-    room.RoomName = request.RoomName
-    room.BranchId = request.BranchId
-    room.Number = request.Number
-    room.Capacity = request.Capacity
-    room.UpdatedAt = time.Now().UTC()
-    err = s.repository.Update(ctx, room)
-    if err != nil {
-        return apperrors.NewInternalServerError("error while updating room: " + err.Error())
-    }
-    return nil
+	room.RoomName = request.RoomName
+	room.BranchId = request.BranchId
+	room.Number = request.Number
+	room.Capacity = request.Capacity
+	room.UpdatedAt = time.Now().UTC()
+	err = s.repository.Update(ctx, room)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while updating room: " + err.Error())
+	}
+	return nil
 }
 
 func (s *RoomService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.RoomData], error) {
@@ -98,11 +98,11 @@ func (s *RoomService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fi
 	}
 	rooms, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, rooms, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -114,7 +114,7 @@ func (s *RoomService) GetAllRooms(ctx context.Context) ([]entities.Room, error) 
 	}
 	rooms, err := s.repository.FindAll(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	return rooms, nil
 }
@@ -129,11 +129,11 @@ func (s *RoomService) SearchRooms(ctx context.Context, fiberCtx *fiber.Ctx, requ
 	}
 	rooms, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, rooms, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: "+err.Error())
+		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }

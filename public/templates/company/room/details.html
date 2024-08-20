@@ -1,0 +1,19 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/company/rooms/{{.Room.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Room.RoomId}}</p>
+    <p><strong>Room Name:</strong> {{.Room.RoomName}}</p>
+    <p><strong>Number:</strong> {{.Room.Number}}</p>
+    <p><strong>Capacity:</strong> {{.Room.Capacity}}</p>
+    <p><strong>Branch:</strong> {{.Room.BranchName}}</p>
+    <p><strong>Creation Date:</strong> {{.Room.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Room.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

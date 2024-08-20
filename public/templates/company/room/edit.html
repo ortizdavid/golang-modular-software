@@ -1,0 +1,49 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/company/rooms/{{.Room.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="company_id"><strong>Company:</strong></label>
+            <select class="ui dropdown" id="company_id" name="company_id" required>
+                <option value="{{.Room.CompanyId}}">{{.Room.CompanyName}}</option>
+                {{ range .Companies }}
+                    <option value="{{.CompanyId}}">{{.CompanyName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="branch_id"><strong>Branch:</strong></label>
+            <select class="ui dropdown" id="branch_id" name="branch_id" required>
+                <option value="{{.Room.BranchId}}">{{.Room.BranchName}}</option>
+                {{ range .Branches }}
+                    <option value="{{.BranchId}}">{{.BranchName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="room_name"><strong>Room Name:</strong></label>
+            <input class="ui input" type="text" name="room_name" id="room_name" value="{{.Room.RoomName}}" placeholder="Enter room name" required>
+        </div>
+        <div class="field">
+            <label for="number"><strong>Number:</strong></label>
+            <input class="ui input" type="text" name="number" id="number" value="{{.Room.Number}}" placeholder="Enter room number" required>
+        </div>
+        <div class="field">
+            <label for="capacity"><strong>Capacity:</strong></label>
+            <input class="ui input" type="number" name="capacity" id="capacity" value="{{.Room.Capacity}}" placeholder="Enter capacity" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/company/rooms/{{.Room.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

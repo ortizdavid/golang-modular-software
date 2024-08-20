@@ -67,8 +67,10 @@ SELECT rm.room_id, rm.unique_id,
     rm.capacity,
     TO_CHAR(rm.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(rm.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    co.company_id, co.company_name,
     br.branch_id, br.branch_name
 FROM company.rooms rm 
+JOIN company.companies co ON(co.company_id = rm.company_id)
 JOIN company.branches br ON(br.branch_id = rm.branch_id)
 ORDER BY created_at DESC;
 
