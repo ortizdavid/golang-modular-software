@@ -1,1 +1,1 @@
--- triggers for 'reference' schema 
+-- triggers for 'company' schema 

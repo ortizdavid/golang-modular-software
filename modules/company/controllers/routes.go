@@ -12,4 +12,5 @@ func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
 	NewOfficeController(db).Routes(router, db)
 	NewRoomController(db).Routes(router, db)
 	NewDepartmentController(db).Routes(router, db)
+	NewPolicyController(db).Routes(router, db)
 }

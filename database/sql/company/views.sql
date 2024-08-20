@@ -1,4 +1,4 @@
--- views for 'reference' schema 
+-- views for 'company' schema 
 
 -- View: view_company_data
 DROP VIEW IF EXISTS company.view_company_data;
@@ -72,5 +72,19 @@ SELECT rm.room_id, rm.unique_id,
 FROM company.rooms rm 
 JOIN company.companies co ON(co.company_id = rm.company_id)
 JOIN company.branches br ON(br.branch_id = rm.branch_id)
+ORDER BY created_at DESC;
+
+
+-- View: view_policy_data
+DROP VIEW IF EXISTS company.view_policy_data;
+CREATE VIEW company.view_policy_data AS
+SELECT pl.policy_id, pl.unique_id,
+    pl.policy_name, pl.description,
+    TO_CHAR(pl.effective_date, 'YYYY-MM-DD') AS effective_date,
+    TO_CHAR(pl.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(pl.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    co.company_id, co.company_name
+FROM company.policies pl 
+JOIN company.companies co ON(co.company_id = pl.company_id)
 ORDER BY created_at DESC;
 

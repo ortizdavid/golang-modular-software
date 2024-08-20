@@ -1,1 +1,1 @@
--- stored procedures for 'component' schema 
+-- stored procedures for 'company' schema 

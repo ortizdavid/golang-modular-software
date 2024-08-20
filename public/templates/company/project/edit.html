@@ -1,0 +1,40 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/company/departments/{{.Department.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="department_name"><strong>Department Name:</strong></label>
+            <input class="ui input" type="text" name="department_name" id="department_name" value="{{.Department.DepartmentName}}" autofocus required>
+        </div>
+        <div class="field">
+            <label for="acronym"><strong>Acronym:</strong></label>
+            <input class="ui input" type="text" name="acronym" id="acronym" value="{{.Department.Acronym}}" required>
+        </div>
+        <div class="field">
+            <label for="company"><strong>Company Owner:</strong></label>
+            <select class="ui dropdown" id="company_id" name="company_id" required>
+                <option value="{{.Department.CompanyId}}">{{.Department.CompanyName}}</option>
+                {{ range .Companies }}
+                    <option value="{{.CompanyId}}">{{.CompanyName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="description"><strong>Description:</strong></label>
+            <textarea class="ui input" name="description" id="description">{{.Department.Description}}</textarea>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/company/departments/{{.Department.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

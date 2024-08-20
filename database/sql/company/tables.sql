@@ -105,10 +105,10 @@ CREATE TABLE company.projects (
 DROP TABLE IF EXISTS company.policies;
 CREATE TABLE company.policies (
     policy_id SERIAL PRIMARY KEY,
+    company_id INT,
     policy_name VARCHAR(100) NOT NULL,
     description TEXT,
     effective_date DATE,
-    company_id INT,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),

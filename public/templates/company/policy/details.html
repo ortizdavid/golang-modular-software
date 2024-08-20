@@ -1,0 +1,18 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/company/policies/{{.Policy.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Policy.PolicyId}}</p>
+    <p><strong>Policy Name:</strong> {{.Policy.PolicyName}}</p>
+    <p><strong>Description:</strong> {{.Policy.Description}}</p>
+    <p><strong>Effective Date:</strong> {{.Policy.EffectiveDate}}</p>
+    <p><strong>Creation Date:</strong> {{.Policy.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Policy.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}
