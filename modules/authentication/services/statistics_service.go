@@ -15,17 +15,6 @@ type StatisticsService struct {
 	loginRepository       *repositories.LoginActivityRepository
 }
 
-type Statistics struct {
-	Users         int64 `json:"users"`
-	ActiveUsers   int64 `json:"active_users"`
-	InactiveUsers int64 `json:"inactive_users"`
-	OnlineUsers   int64 `json:"online_users"`
-	OfflineUsers  int64 `json:"offline_users"`
-	Roles         int64 `json:"roles"`
-	Permissions   int64 `json:"permissions"`
-	LoginActivity int64 `json:"login_activity"`
-}
-
 func NewStatisticsService(db *database.Database) *StatisticsService {
 	return &StatisticsService{
 		userRepository:        repositories.NewUserRepository(db),
@@ -35,40 +24,40 @@ func NewStatisticsService(db *database.Database) *StatisticsService {
 	}
 }
 
-func (s *StatisticsService) GetStatistics(ctx context.Context) (Statistics, error) {
+func (s *StatisticsService) GetStatistics(ctx context.Context)  (entities.Statistics, error) {
 	users, err := s.users(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	activeUsers, err := s.activeUsers(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	inactiveUsers, err := s.inactiveUsers(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	onlineUsers, err := s.onlineUsers(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	offlineUsers, err := s.offlineUsers(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	roles, err := s.roles(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	permissions, err := s.permissions(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	loginActivity, err := s.loginActivity(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
-	return Statistics{
+	return entities.Statistics{
 		Users:         users,
 		ActiveUsers:   activeUsers,
 		InactiveUsers: inactiveUsers,

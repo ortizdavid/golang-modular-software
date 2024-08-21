@@ -51,6 +51,13 @@ func execCreateSchemas(db *database.Database) error {
 	return execDatabaseScript(db, structureDir, "schemas.sql")
 }
 
+// execCreateExtensions creates database extensions.
+func execCreateExtensions(db *database.Database) error {
+	log.Println("Executing extensions creation scripts...")
+	return execDatabaseScript(db, structureDir, "extensions.sql")
+}
+
+
 // execAuthenticationScripts executes all authentication scripts.
 func execAuthenticationScripts(db *database.Database) error {
 	log.Println("Executing authentication schema scripts...")
@@ -133,6 +140,9 @@ func InitDatabaseScripts(db *database.Database) error {
 	log.Println("Executing database scripts...")
 
 	if err := execCreateSchemas(db); err != nil {
+		return err
+	}
+	if err := execCreateExtensions(db); err != nil {
 		return err
 	}
 	if err := execAuthenticationScripts(db); err != nil {

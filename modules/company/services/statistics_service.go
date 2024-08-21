@@ -4,17 +4,9 @@ import (
 	"context"
 
 	"github.com/ortizdavid/golang-modular-software/database"
+	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
 )
-
-type Statistics struct {
-	Branches    int64  `json:"branches"`
-	Offices     int64  `json:"offices"`
-	Departments int64  `json:"departments"`
-	Rooms       int64  `json:"rooms"`
-	Projects    int64  `json:"projects"`
-	Policies    int64  `json:"policies"`
-}
 
 type StatisticsService struct {
 	branchRepository     *repositories.BranchRepository
@@ -36,32 +28,32 @@ func NewStatisticsService(db *database.Database) *StatisticsService {
 	}
 }
 
-func (s *StatisticsService) GetStatistics(ctx context.Context) (Statistics, error) {
+func (s *StatisticsService) GetStatistics(ctx context.Context) (entities.Statistics, error) {
 	branches, err := s.branches(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	offices, err := s.offices(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	departments, err := s.departments(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	rooms, err := s.rooms(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	projects, err := s.projects(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
 	policies, err := s.policies(ctx)
 	if err != nil {
-		return Statistics{}, err
+		return entities.Statistics{}, err
 	}
-	return Statistics{
+	return entities.Statistics{
 		Branches:     branches,
 		Offices:      offices,
 		Departments:  departments,

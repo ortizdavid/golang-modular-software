@@ -6,7 +6,7 @@ CREATE TABLE authentication.roles (
     role_id SERIAL PRIMARY KEY,
     code VARCHAR(50) UNIQUE NOT NULL,
     role_name VARCHAR(100) UNIQUE NOT NULL,
-    description VARCHAR(200),
+    description TEXT,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
@@ -18,7 +18,7 @@ CREATE TABLE authentication.users (
     user_id SERIAL PRIMARY KEY,
     user_name VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
-    password VARCHAR(200) NOT NULL,
+    password TEXT NOT NULL,
     user_image VARCHAR(100), 
     is_active BOOLEAN DEFAULT TRUE,
     token VARCHAR(150) UNIQUE,
@@ -46,7 +46,7 @@ CREATE TABLE authentication.permissions (
     permission_id SERIAL PRIMARY KEY,
     code VARCHAR(50) UNIQUE NOT NULL,
     permission_name VARCHAR(100) UNIQUE NOT NULL,
-    description VARCHAR(200),
+    description TEXT,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
@@ -114,9 +114,9 @@ CREATE INDEX idx_apikey_user_id ON authentication.user_api_key(user_id);
 
 -- Initial inserts
 -- roles
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('PERM_SUPER_ADMIN', 'Super Administrator', '0c4e2b1f-79ba-49b6-ba4f-81622f33732d');
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('PERM_ADMIN', 'Administrator', '0c8e2b1f-89ba-49b6-ba4f-81634f33732d');
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('PERM_SUPER_EMPLOYEE', 'Employee', '0c8e2b1f-89ba-49b6-ba4f-81622f33732d');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('SUPER_ADMIN', 'Super Administrator', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('ADMIN', 'Administrator', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('EMPLOYEE', 'Employee', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d');
 
 -- test users
 -- Inserting the users into the 'authentication.users' table
