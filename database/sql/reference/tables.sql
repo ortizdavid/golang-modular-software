@@ -4,20 +4,23 @@ CREATE TABLE reference.task_statuses (
     id SERIAL PRIMARY KEY,
     status_name VARCHAR(100) NOT NULL,
     code VARCHAR(30) NOT NULL UNIQUE,
+    lbl_color VARCHAR(20),
+    bg_color VARCHAR(20),
     description TEXT NOT NULL,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO reference.task_statuses (status_name, code, description) VALUES
-('Pending', 'PENDING', 'The task has been created but not yet started.'),
-('In Progress', 'IN_PROGRESS', 'The task is currently being worked on.'),
-('Completed', 'COMPLETED', 'The task has been completed.'),
-('On Hold', 'ON_HOLD', 'The task is temporarily paused.'),
-('Cancelled', 'CANCELLED', 'The task has been cancelled.'),
-('Review', 'REVIEW', 'The task is completed and under review.'),
-('Failed', 'FAILED', 'The task was attempted but did not succeed.');
+INSERT INTO reference.task_statuses (status_name, code, lbl_color, bg_color, description) VALUES
+('Pending', 'PENDING', 'yellow', 'ui yellow', 'The task has been created but not yet started.'),
+('In Progress', 'IN_PROGRESS', 'blue', 'ui blue', 'The task is currently being worked on.'),
+('Completed', 'COMPLETED', 'green', 'ui positive', 'The task has been completed.'),
+('On Hold', 'ON_HOLD', 'orange', 'ui orange', 'The task is temporarily paused.'),
+('Cancelled', 'CANCELLED', 'red', 'ui negative', 'The task has been cancelled.'),
+('Review', 'REVIEW', 'teal', 'ui teal', 'The task is completed and under review.'),
+('Failed', 'FAILED', 'red', 'ui negative', 'The task was attempted but did not succeed.');
+
 
 -- Table: approval_statuses 
 DROP TABLE IF EXISTS reference.approval_statuses;
@@ -25,24 +28,26 @@ CREATE TABLE reference.approval_statuses (
     id SERIAL PRIMARY KEY,
     status_name VARCHAR(100) NOT NULL,
     code VARCHAR(30) NOT NULL UNIQUE,
+    lbl_color VARCHAR(20),
+    bg_color VARCHAR(20),
     description TEXT NOT NULL,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO reference.approval_statuses (status_name, code, description) VALUES
-('Pending Approval', 'PENDING_APPROVAL', 'Waiting for approval from the designated authority.'),
-('Approved', 'APPROVED', 'The item has been approved and can proceed.'),
-('Rejected', 'REJECTED', 'The item has been rejected and requires changes.'),
-('Under Review', 'UNDER_REVIEW', 'The item is under review and awaiting a decision.'),
-('Escalated', 'ESCALATED', 'The approval request has been escalated for further review.'),
-('Deferred', 'DEFERRED', 'The approval decision has been postponed.'),
-('Awaiting Input', 'AWAITING_INPUT', 'The item is awaiting additional information or input before proceeding with the approval.'),
-('Final Review', 'FINAL_REVIEW', 'The item is in the final review stage before the final approval or rejection decision.'),
-('Resubmitted', 'RESUBMITTED', 'The item has been resubmitted after a previous rejection or request for changes.'),
-('Reviewed', 'REVIEWED', 'The item has been reviewed but not yet approved or rejected.'),
-('Pending Documentation', 'PENDING_DOCUMENTATION', 'The approval is pending the submission of required documentation.');
+INSERT INTO reference.approval_statuses (status_name, code, lbl_color, bg_color, description) VALUES
+('Pending Approval', 'PENDING_APPROVAL', 'yellow', 'ui yellow', 'Waiting for approval from the designated authority.'),
+('Approved', 'APPROVED', 'green', 'ui positive', 'The item has been approved and can proceed.'),
+('Rejected', 'REJECTED', 'red', 'ui negative', 'The item has been rejected and requires changes.'),
+('Under Review', 'UNDER_REVIEW', 'teal', 'ui teal', 'The item is under review and awaiting a decision.'),
+('Escalated', 'ESCALATED', 'orange', 'ui orange', 'The approval request has been escalated for further review.'),
+('Deferred', 'DEFERRED', 'grey', 'ui grey', 'The approval decision has been postponed.'),
+('Awaiting Input', 'AWAITING_INPUT', 'yellow', 'ui yellow', 'The item is awaiting additional information or input before proceeding with the approval.'),
+('Final Review', 'FINAL_REVIEW', 'blue', 'ui blue', 'The item is in the final review stage before the final approval or rejection decision.'),
+('Resubmitted', 'RESUBMITTED', 'purple', 'ui purple', 'The item has been resubmitted after a previous rejection or request for changes.'),
+('Reviewed', 'REVIEWED', 'teal', 'ui teal', 'The item has been reviewed but not yet approved or rejected.'),
+('Pending Documentation', 'PENDING_DOCUMENTATION', 'orange', 'ui orange', 'The approval is pending the submission of required documentation.');
 
 
 -- Table: workflow_statuses
@@ -51,19 +56,21 @@ CREATE TABLE reference.workflow_statuses (
     id SERIAL PRIMARY KEY,
     status_name VARCHAR(100) NOT NULL UNIQUE,
     code VARCHAR(30) NOT NULL UNIQUE,
+    lbl_color VARCHAR(20),
+    bg_color VARCHAR(20),
     description TEXT,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO reference.workflow_statuses (status_name, code, description) VALUES
-('Not Started', 'NOT_STARTED', 'The task or process has not yet begun.'),
-('In Review', 'IN_REVIEW', 'The task or process is under review.'),
-('Approved', 'APPROVED', 'The task or process has been approved to move forward.'),
-('Rejected', 'REJECTED', 'The task or process has been rejected and may require correction.'),
-('Completed', 'COMPLETED', 'The task or process has been fully completed.'),
-('Archived', 'ARCHIVED', 'The task or process has been archived.');
+INSERT INTO reference.workflow_statuses (status_name, code, lbl_color, bg_color, description) VALUES
+('Not Started', 'NOT_STARTED', 'grey', 'ui grey', 'The task or process has not yet begun.'),
+('In Review', 'IN_REVIEW', 'teal', 'ui teal', 'The task or process is under review.'),
+('Approved', 'APPROVED', 'green', 'ui positive', 'The task or process has been approved to move forward.'),
+('Rejected', 'REJECTED', 'red', 'ui negative', 'The task or process has been rejected and may require correction.'),
+('Completed', 'COMPLETED', 'green', 'ui positive', 'The task or process has been fully completed.'),
+('Archived', 'ARCHIVED', 'grey', 'ui grey', 'The task or process has been archived.');
 
 
 -- Table: document_statuses
@@ -72,22 +79,24 @@ CREATE TABLE reference.document_statuses (
     id SERIAL PRIMARY KEY,
     status_name VARCHAR(100) NOT NULL UNIQUE,
     code VARCHAR(30) UNIQUE NOT NULL,
+    lbl_color VARCHAR(20),
+    bg_color VARCHAR(20),
     description TEXT,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Insert document statuses
-INSERT INTO reference.document_statuses (status_name, code, description) VALUES
-('Draft', 'DRAFT', 'The document is in the draft stage and is not yet finalized.'),
-('Submitted', 'SUBMITTED', 'The document has been submitted for review or approval.'),
-('Under Review', 'UNDER_REVIEW', 'The document is currently being reviewed by the designated authority.'),
-('Approved', 'APPROVED', 'The document has been approved and is finalized.'),
-('Rejected', 'REJECTED', 'The document has been rejected and may require changes.'),
-('Archived', 'ARCHIVED', 'The document has been archived and is no longer actively used.'),
-('Expired', 'EXPIRED', 'The document is no longer valid due to expiration.'),
-('Canceled', 'CANCELED', 'The document process has been canceled and will not proceed.');
+-- Update document_statuses with Semantic UI bg_color classes
+INSERT INTO reference.document_statuses (status_name, code, lbl_color, bg_color, description) VALUES
+('Draft', 'DRAFT', 'blue', 'ui blue', 'The document is in the draft stage and is not yet finalized.'),
+('Submitted', 'SUBMITTED', 'yellow', 'ui yellow', 'The document has been submitted for review or approval.'),
+('Under Review', 'UNDER_REVIEW', 'teal', 'ui teal', 'The document is currently being reviewed by the designated authority.'),
+('Approved', 'APPROVED', 'green', 'ui positive', 'The document has been approved and is finalized.'),
+('Rejected', 'REJECTED', 'red', 'ui negative', 'The document has been rejected and may require changes.'),
+('Archived', 'ARCHIVED', 'grey', 'ui grey', 'The document has been archived and is no longer actively used.'),
+('Expired', 'EXPIRED', 'orange', 'ui orange', 'The document is no longer valid due to expiration.'),
+('Canceled', 'CANCELED', 'red', 'ui negative', 'The document process has been canceled and will not proceed.');
 
 
 -- Table: user_statuses
@@ -96,18 +105,20 @@ CREATE TABLE reference.user_statuses (
     id SERIAL PRIMARY KEY,
     status_name VARCHAR(100) NOT NULL UNIQUE,
     code VARCHAR(30) NOT NULL UNIQUE,
+    lbl_color VARCHAR(20),
+    bg_color VARCHAR(20),
     description TEXT,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO reference.user_statuses (status_name, code, description) VALUES
-('Active', 'ACTIVE', 'The user is currently active and using the system.'),
-('Inactive', 'INACTIVE', 'The user is not currently active but retains an account.'),
-('Locked', 'LOCKED', 'The user’s account is locked due to security reasons.'),
-('Suspended', 'SUSPENDED', 'The user’s account is temporarily suspended.'),
-('Deleted', 'DELETED', 'The user’s account has been deleted from the system.');
+INSERT INTO reference.user_statuses (status_name, code, lbl_color, bg_color, description) VALUES
+('Active', 'ACTIVE', 'green', 'ui positive', 'The user is currently active and using the system.'),
+('Inactive', 'INACTIVE', 'grey', 'ui grey', 'The user is not currently active but retains an account.'),
+('Locked', 'LOCKED', 'red', 'ui negative', 'The user’s account is locked due to security reasons.'),
+('Suspended', 'SUSPENDED', 'orange', 'ui orange', 'The user’s account is temporarily suspended.'),
+('Deleted', 'DELETED', 'red', 'ui negative', 'The user’s account has been deleted from the system.');
 
 
 -- Table: marital_statuses
@@ -129,6 +140,7 @@ INSERT INTO reference.marital_statuses (code, status_name) VALUES
 ('SEPARATED', 'Separated'),  
 ('WIDOWED', 'Widowed'),  
 ('OTHER', 'Other');
+
 
 -- Table: identification_types
 DROP TABLE IF EXISTS reference.identification_types;
@@ -152,6 +164,7 @@ INSERT INTO reference.identification_types (code, type_name) VALUES
 ('FOREIGN_ID_CARD', 'Foreign Identity Card'),
 ('OTHER', 'Other');
 
+
 -- Table: contact_types
 DROP TABLE IF EXISTS reference.contact_types;
 CREATE TABLE IF NOT EXISTS reference.contact_types (
@@ -169,8 +182,6 @@ INSERT INTO reference.contact_types (code, type_name) VALUES
 ('BUSINESS', 'Business'),
 ('FAMILY', 'Family'),
 ('OTHER', 'Other');
-
-
 
 -- -------------------------------------------------------------------------------------------
 -- Table countries
