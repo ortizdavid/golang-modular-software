@@ -5,7 +5,7 @@
         <form class="ui form" action="/references/countries/search-results" method="GET" style="padding-bottom: 2%">
             <table>
                 <tr>
-                    <td><input style="width: 400px;" type="text" name="search_param" placeholder="Search by Policy Name" required autofocus></td>
+                    <td><input style="width: 400px;" type="text" name="search_param" placeholder="Search by Country Name or ISO code" required autofocus></td>
                     <td>
                         <button class="ui blue icon button">
                             <i class="search icon"></i>
@@ -21,19 +21,20 @@
             <table class="ui celled striped selectable blue table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Policy Name</th>
-                        <th>Effective Date</th>
+                        <th>Flag</th>
+                        <th>Country Name</th>
+                        <th>ISO Code</th>
+                        <th>Dialing Code</th>
                         <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{ range .Pagination.Items }}
                         <tr>
-                            <td class="collapsing">{{.PolicyId}}</td>
-                            <td>{{.PolicyName}}</td>
-                            <td>{{.EffectiveDate}}</td>
-                            <td>{{.Description}}</td>
+                            <td class="collapsing"><i class="{{.IsoCodeLower}} flag"></i></td>
+                            <td>{{.CountryName}}</td>
+                            <td>{{.IsoCode}}</td>
+                            <td>{{.DialingCode}}</td>
                             <td>
                                 <a href="/references/countries/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                     <i class="eye blue icon"></i>

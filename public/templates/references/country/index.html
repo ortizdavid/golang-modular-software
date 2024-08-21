@@ -5,7 +5,7 @@
         <div class="ui buttons">
             <a href="/references/countries/create" class="ui blue button">
                 <i class="plus circle icon"></i>
-                Add Policy
+                Add Country
             </a>
             <a href="/references/countries/search" class="ui blue button">
                 <i class="search icon"></i>
@@ -19,18 +19,20 @@
             <table class="ui celled striped selectable blue table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Policy Name</th>
-                        <th>Effective Date</th>
+                        <th>Flag</th>
+                        <th>Country Name</th>
+                        <th>ISO Code</th>
+                        <th>Dialing Code</th>
                         <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{ range .Pagination.Items }}
                         <tr>
-                            <td class="collapsing">{{.PolicyId}}</td>
-                            <td>{{.PolicyName}}</td>
-                            <td>{{.EffectiveDate}}</td>
+                            <td class="collapsing"><i class="{{.IsoCodeLower}} flag"></i></td>
+                            <td>{{.CountryName}}</td>
+                            <td>{{.IsoCode}}</td>
+                            <td>{{.DialingCode}}</td>
                             <td>
                                 <a href="/references/countries/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                     <i class="eye blue icon"></i>

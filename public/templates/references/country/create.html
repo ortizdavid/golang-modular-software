@@ -1,0 +1,34 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/references/countries/create" method="POST">
+        <div class="field">
+            <label for="country_name"><strong>Country Name:</strong></label>
+            <input class="ui input" type="text" name="country_name" id="country_name" placeholder="Enter country name" required>
+        </div>
+
+        <div class="field">
+            <label for="iso_code"><strong>ISO Code:</strong></label>
+            <input class="ui input" type="text" name="iso_code" id="iso_code" placeholder="Enter ISO code" required>
+        </div>
+
+        <div class="field">
+            <label for="dialing_code"><strong>Dialing Code:</strong></label>
+            <input class="ui input" type="text" name="dialing_code" id="dialing_code" placeholder="Enter dialing code" required>
+        </div>
+
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/references/countries" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

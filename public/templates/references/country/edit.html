@@ -1,35 +1,29 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/company/policies/{{.Policy.UniqueId}}/edit" method="POST">
+    <form class="ui form" action="/references/countries/{{.Country.UniqueId}}/edit" method="POST">
         <div class="field">
-            <label for="company_id"><strong>Company:</strong></label>
-            <select class="ui dropdown" id="company_id" name="company_id" required>
-                <option value="{{.Policy.CompanyId}}" selected>{{.Policy.CompanyName}}</option>
-                {{ range .Companies }}
-                    <option value="{{.CompanyId}}">{{.CompanyName}}</option>
-                {{ end }}
-            </select>
+            <label for="country_name"><strong>Country Name:</strong></label>
+            <input class="ui input" type="text" name="country_name" id="country_name" value="{{.Country.CountryName}}" placeholder="Enter country name" required>
         </div>
+
         <div class="field">
-            <label for="policy_name"><strong>Policy Name:</strong></label>
-            <input class="ui input" type="text" name="policy_name" id="policy_name" value="{{.Policy.PolicyName}}" placeholder="Enter policy name" required>
+            <label for="iso_code"><strong>ISO Code:</strong></label>
+            <input class="ui input" type="text" name="iso_code" id="iso_code" value="{{.Country.IsoCode}}" placeholder="Enter ISO code" required>
         </div>
+
         <div class="field">
-            <label for="effective_date"><strong>Effective Date:</strong></label>
-            <input class="ui input" type="date" name="effective_date" id="effective_date" value="{{.Policy.EffectiveDate}}" required>
+            <label for="dialing_code"><strong>Dialing Code:</strong></label>
+            <input class="ui input" type="text" name="dialing_code" id="dialing_code" value="{{.Country.DialingCode}}" placeholder="Enter dialing code" required>
         </div>
-        <div class="field">
-            <label for="description"><strong>Description:</strong></label>
-            <textarea class="ui input" name="description" id="description" placeholder="Enter policy description" required>{{.Policy.Description}}</textarea>
-        </div>
+
         <div class="ui buttons">
             <button type="submit" class="ui primary button">
                 <i class="send icon"></i>
                 Submit
             </button>
             <div class="or"></div>
-            <a href="/company/policies/{{.Policy.UniqueId}}/details" class="ui red button">
+            <a href="/references/countries/{{.Country.UniqueId}}/details" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

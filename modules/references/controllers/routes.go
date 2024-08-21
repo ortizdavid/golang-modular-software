@@ -7,4 +7,5 @@ import (
 
 func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
 	NewRootController(db).Routes(router, db)
+	NewCountryController(db).Routes(router, db)
 }

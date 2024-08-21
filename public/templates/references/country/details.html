@@ -2,17 +2,18 @@
 
 <div class="ui segment">
     <div class="ui right floated buttons">
-        <a href="/references/countries/{{.Policy.UniqueId}}/edit" class="ui primary button">
+        <a href="/references/countries/{{.Country.UniqueId}}/edit" class="ui primary button">
             <i class="pencil icon"></i>
             Edit
         </a>
     </div>
-    <p><strong>ID:</strong> {{.Policy.PolicyId}}</p>
-    <p><strong>Policy Name:</strong> {{.Policy.PolicyName}}</p>
-    <p><strong>Effective Date:</strong> {{.Policy.EffectiveDate}}</p>
-    <p><strong>Creation Date:</strong> {{.Policy.CreatedAt}}</p>
-    <p><strong>Last Update:</strong> {{.Policy.UpdatedAt}}</p>
-    <p><strong>Description:</strong> {{.Policy.Description}}</p>
+    <p><strong>Flag:</strong>  <i class="{{.Country.IsoCodeLower}} flag "></i></p>
+    <p><strong>ID:</strong> {{.Country.CountryId}}</p>
+    <p><strong>Country Name:</strong> {{.Country.CountryName}}</p>
+    <p><strong>ISO Code:</strong> {{.Country.IsoCode}}</p>
+    <p><strong>Dialing Code:</strong> {{.Country.DialingCode}}</p>
+    <p><strong>Creation Date:</strong> {{.Country.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Country.UpdatedAt}}</p>
 </div>
 
 {{ template "_partials/footer-back" .}}
