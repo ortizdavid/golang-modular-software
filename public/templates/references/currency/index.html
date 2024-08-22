@@ -1,0 +1,69 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right aligned container">
+        <div class="ui buttons">
+            <a href="/references/currencies/create" class="ui blue button">
+                <i class="plus circle icon"></i>
+                Add Currency
+            </a>
+            <a href="/references/currencies/search" class="ui blue button">
+                <i class="search icon"></i>
+                Search
+            </a>
+        </div>
+    </div>
+    <div class="">
+        {{ if .Pagination.MetaData.TotalItems }}
+            <p><strong>{{.Pagination.MetaData.TotalItems}}</strong> records</p>
+            <table class="ui celled striped selectable blue table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Currency Name</th>
+                        <th>Code</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .Pagination.Items }}
+                        <tr>
+                            <td class="collapsing">{{.CurrencyId}}</td>
+                            <td>{{.CurrencyName}}</td>
+                            <td>{{.Code}}</td>
+                            <td>
+                                <a href="/references/currencies/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <i class="eye blue icon"></i>
+                                </a>
+                                <a href="/references/currencies/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                    <i class="pencil icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+            <div class="ui pagination menu">
+                <div class="item">Page {{.CurrentPage}} of {{.TotalPages}}</div>
+                <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.FirstPageUrl}}">
+                    First
+                </a>
+                <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.PreviousPageUrl}}">
+                    <i class="angle double left icon"></i>Previous
+                </a>
+                <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.NextPageUrl}}">
+                    Next <i class="angle double right icon"></i>
+                </a>
+                <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.LastPageUrl}}">
+                    Last
+                </a>
+            </div>
+        {{ else }}
+            <div class="ui warning message">
+                No records found
+            </div>
+        {{ end }}
+    </div>
+</div>
+
+{{ template "_partials/footer-back" .}}

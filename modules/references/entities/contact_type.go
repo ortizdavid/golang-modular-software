@@ -3,12 +3,12 @@ package entities
 import "time"
 
 type ContactType struct {
-	TypeId    int       `gorm:"autoIncrement;primaryKey;column:type_id"`
-	TypeName  string    `gorm:"column:type_name;unique"`
-	Code      string    `gorm:"column:code;unique"`
-	UniqueId  string    `gorm:"column:unique_id;unique;default:uuid_generate_v4()::text"`
-	CreatedAt time.Time `gorm:"column:created_at;default:now()"`
-	UpdatedAt time.Time `gorm:"column:updated_at;default:now()"`
+	TypeId    int       `gorm:"autoIncrement;primaryKey"`
+	TypeName  string    `gorm:"column:type_name"`
+	Code      string    `gorm:"column:code"`
+	UniqueId  string    `gorm:"column:unique_id"`
+	CreatedAt time.Time `gorm:"column:created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
 
 func (ContactType) TableName() string {

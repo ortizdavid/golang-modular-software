@@ -1,0 +1,18 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/currencies/{{.Currency.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.Currency.CurrencyId}}</p>
+    <p><strong>Currency Name:</strong> {{.Currency.CurrencyName}}</p>
+    <p><strong>Code:</strong> {{.Currency.Code}}</p>
+    <p><strong>Symbol:</strong> {{.Currency.Symbol}}</p>
+    <p><strong>Creation Date:</strong> {{.Currency.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.Currency.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

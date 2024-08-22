@@ -1,0 +1,31 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/references/currencies/{{.Currency.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="currency_name"><strong>Currency Name:</strong></label>
+            <input class="ui input" type="text" name="currency_name" id="currency_name" value="{{.Currency.CurrencyName}}" placeholder="Enter currency name" required>
+        </div>
+        <div class="field">
+            <label for="iso_code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="{{.Currency.Code}}" placeholder="Enter code" required>
+        </div>
+        <div class="field">
+            <label for="iso_code"><strong>Symbol:</strong></label>
+            <input class="ui input" type="text" name="symbol" id="symbol" value="{{.Currency.Symbol}}" placeholder="Enter symbol">
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/references/currencies/{{.Currency.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}
