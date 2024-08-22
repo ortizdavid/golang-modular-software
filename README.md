@@ -15,9 +15,9 @@ Example of a complete modular sofware, written in Golang
 ## Modules
 - [x] Configurations 
 - [x] Authentication
-- [ ] Company
-- [ ] Employees
+- [x] Company
 - [ ] Reference
+- [ ] Employees
 - [ ] Reports
 
 
