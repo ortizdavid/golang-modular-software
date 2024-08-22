@@ -1,0 +1,20 @@
+{{ template "_partials/header-back" .}}
+
+    <div class="ui segment">
+        <div class="card-header">
+            <form class="ui form" action="/references/task-statuses/search-results" method="GET">
+                <table>
+                    <tr>
+                        <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Currency Name and ISO code" required autofocus></td>
+                        <td>
+                            <button class="ui blue icon button">
+                                <i class="search icon"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+{{ template "_partials/footer-back" .}}

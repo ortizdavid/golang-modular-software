@@ -17,18 +17,18 @@ func NewMaritalStatusRepository(db *database.Database) *MaritalStatusRepository 
 	}
 }
 
-func (repo *MaritalStatusRepository) Create(ctx context.Context, company entities.MaritalStatus) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *MaritalStatusRepository) Create(ctx context.Context, maritalStatus entities.MaritalStatus) error {
+	result := repo.db.WithContext(ctx).Create(&maritalStatus)
 	return result.Error
 }
 
-func (repo *MaritalStatusRepository) Update(ctx context.Context, company entities.MaritalStatus) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *MaritalStatusRepository) Update(ctx context.Context, maritalStatus entities.MaritalStatus) error {
+	result := repo.db.WithContext(ctx).Save(&maritalStatus)
 	return result.Error
 }
 
-func (repo *MaritalStatusRepository) Delete(ctx context.Context, company entities.MaritalStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *MaritalStatusRepository) Delete(ctx context.Context, maritalStatus entities.MaritalStatus) error {
+	result := repo.db.WithContext(ctx).Delete(&maritalStatus)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *MaritalStatusRepository) FindAllLimit(ctx context.Context, limit int
 }
 
 func (repo *MaritalStatusRepository) FindById(ctx context.Context, id int) (entities.MaritalStatus, error) {
-	var company entities.MaritalStatus
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var maritalStatus entities.MaritalStatus
+	result := repo.db.WithContext(ctx).First(&maritalStatus, id)
+	return maritalStatus, result.Error
 }
 
 func (repo *MaritalStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.MaritalStatus, error) {
@@ -57,9 +57,9 @@ func (repo *MaritalStatusRepository) GetDataByUniqueId(ctx context.Context, uniq
 }
 
 func (repo *MaritalStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.MaritalStatus, error) {
-	var company entities.MaritalStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var maritalStatus entities.MaritalStatus
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&maritalStatus)
+	return maritalStatus, result.Error
 }
 
 func (repo *MaritalStatusRepository) Count(ctx context.Context) (int64, error) {

@@ -17,18 +17,18 @@ func NewDocumentStatusRepository(db *database.Database) *DocumentStatusRepositor
 	}
 }
 
-func (repo *DocumentStatusRepository) Create(ctx context.Context, company entities.DocumentStatus) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *DocumentStatusRepository) Create(ctx context.Context, documentStatus entities.DocumentStatus) error {
+	result := repo.db.WithContext(ctx).Create(&documentStatus)
 	return result.Error
 }
 
-func (repo *DocumentStatusRepository) Update(ctx context.Context, company entities.DocumentStatus) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *DocumentStatusRepository) Update(ctx context.Context, documentStatus entities.DocumentStatus) error {
+	result := repo.db.WithContext(ctx).Save(&documentStatus)
 	return result.Error
 }
 
-func (repo *DocumentStatusRepository) Delete(ctx context.Context, company entities.DocumentStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *DocumentStatusRepository) Delete(ctx context.Context, documentStatus entities.DocumentStatus) error {
+	result := repo.db.WithContext(ctx).Delete(&documentStatus)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *DocumentStatusRepository) FindAllLimit(ctx context.Context, limit in
 }
 
 func (repo *DocumentStatusRepository) FindById(ctx context.Context, id int) (entities.DocumentStatus, error) {
-	var company entities.DocumentStatus
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var documentStatus entities.DocumentStatus
+	result := repo.db.WithContext(ctx).First(&documentStatus, id)
+	return documentStatus, result.Error
 }
 
 func (repo *DocumentStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentStatus, error) {
@@ -57,9 +57,9 @@ func (repo *DocumentStatusRepository) GetDataByUniqueId(ctx context.Context, uni
 }
 
 func (repo *DocumentStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentStatus, error) {
-	var company entities.DocumentStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var documentStatus entities.DocumentStatus
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&documentStatus)
+	return documentStatus, result.Error
 }
 
 func (repo *DocumentStatusRepository) Count(ctx context.Context) (int64, error) {

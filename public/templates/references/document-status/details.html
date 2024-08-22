@@ -1,0 +1,23 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/document-statuses" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/document-statuses/{{.DocumentStatus.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.DocumentStatus.StatusId}}</p>
+    <p><strong>Status Name:</strong> {{.DocumentStatus.StatusName}}</p>
+    <p><strong>Code:</strong> {{.DocumentStatus.Code}}</p>
+    <p><strong>Label Color:</strong> {{.DocumentStatus.LblColor}} <i class="ui square icon {{.DocumentStatus.LblColor}}"></i></p>
+    <p><strong>Background color:</strong> {{.DocumentStatus.BgColor}} <i class="ui square icon {{.DocumentStatus.BgColor}}"></i></p>
+    <p><strong>Creation Date:</strong> {{.DocumentStatus.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.DocumentStatus.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

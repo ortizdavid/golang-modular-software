@@ -17,18 +17,18 @@ func NewApprovalStatusRepository(db *database.Database) *ApprovalStatusRepositor
 	}
 }
 
-func (repo *ApprovalStatusRepository) Create(ctx context.Context, company entities.ApprovalStatus) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *ApprovalStatusRepository) Create(ctx context.Context, approvalStatus entities.ApprovalStatus) error {
+	result := repo.db.WithContext(ctx).Create(&approvalStatus)
 	return result.Error
 }
 
-func (repo *ApprovalStatusRepository) Update(ctx context.Context, company entities.ApprovalStatus) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *ApprovalStatusRepository) Update(ctx context.Context, approvalStatus entities.ApprovalStatus) error {
+	result := repo.db.WithContext(ctx).Save(&approvalStatus)
 	return result.Error
 }
 
-func (repo *ApprovalStatusRepository) Delete(ctx context.Context, company entities.ApprovalStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *ApprovalStatusRepository) Delete(ctx context.Context, approvalStatus entities.ApprovalStatus) error {
+	result := repo.db.WithContext(ctx).Delete(&approvalStatus)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *ApprovalStatusRepository) FindAllLimit(ctx context.Context, limit in
 }
 
 func (repo *ApprovalStatusRepository) FindById(ctx context.Context, id int) (entities.ApprovalStatus, error) {
-	var company entities.ApprovalStatus
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var approvalStatus entities.ApprovalStatus
+	result := repo.db.WithContext(ctx).First(&approvalStatus, id)
+	return approvalStatus, result.Error
 }
 
 func (repo *ApprovalStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.ApprovalStatus, error) {
@@ -57,9 +57,9 @@ func (repo *ApprovalStatusRepository) GetDataByUniqueId(ctx context.Context, uni
 }
 
 func (repo *ApprovalStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.ApprovalStatus, error) {
-	var company entities.ApprovalStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var approvalStatus entities.ApprovalStatus
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&approvalStatus)
+	return approvalStatus, result.Error
 }
 
 func (repo *ApprovalStatusRepository) Count(ctx context.Context) (int64, error) {

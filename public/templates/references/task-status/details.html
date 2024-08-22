@@ -1,0 +1,23 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/task-statuses" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/task-statuses/{{.TaskStatus.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.TaskStatus.StatusId}}</p>
+    <p><strong>Status Name:</strong> {{.TaskStatus.StatusName}}</p>
+    <p><strong>Code:</strong> {{.TaskStatus.Code}}</p>
+    <p><strong>Label Color:</strong> {{.TaskStatus.LblColor}} <i class="ui square icon {{.TaskStatus.LblColor}}"></i></p>
+    <p><strong>Background color:</strong> {{.TaskStatus.BgColor}} <i class="ui square icon {{.TaskStatus.BgColor}}"></i></p>
+    <p><strong>Creation Date:</strong> {{.TaskStatus.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.TaskStatus.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

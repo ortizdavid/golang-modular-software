@@ -83,6 +83,33 @@
         </div>
     </div>
 
+    <!-- Contact Types Card -->
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+        <div class="ui fluid card">
+            <div class="content">
+                <div class="ui right floated header red">
+                    <i class="icon address book"></i>
+                </div>
+                <div class="header">
+                    <div class="ui red header" id="contact-types">
+                        {{.Statistics.ContactTypes}}
+                    </div>
+                </div>
+                <div class="meta">
+                    <strong>Contact Types</strong>
+                </div>
+                <div class="description">
+                    Various types of contact information used in the system.
+                </div>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a href="/references/contact-types" class="ui red button">View More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Marital Statuses Card -->
     <div class="four wide computer eight wide tablet sixteen wide mobile column">
         <div class="ui fluid card">
@@ -218,32 +245,33 @@
         </div>
     </div>
 
-    <!-- Contact Types Card -->
+    <!-- User Statuses Card -->
     <div class="four wide computer eight wide tablet sixteen wide mobile column">
         <div class="ui fluid card">
             <div class="content">
-                <div class="ui right floated header red">
-                    <i class="icon address book"></i>
+                <div class="ui right floated header grey">
+                    <i class="icon user"></i>
                 </div>
                 <div class="header">
-                    <div class="ui red header" id="contact-types">
-                        {{.Statistics.ContactTypes}}
+                    <div class="ui grey header" id="user-statuses">
+                        {{.Statistics.UserStatuses}}
                     </div>
                 </div>
                 <div class="meta">
-                    <strong>Contact Types</strong>
+                    <strong>User Statuses</strong>
                 </div>
                 <div class="description">
-                    Various types of contact information used in the system.
+                    Various statuses for users within the company.
                 </div>
             </div>
             <div class="extra content">
                 <div class="ui two buttons">
-                    <a href="/references/contact-types" class="ui red button">View More</a>
+                    <a href="/references/user-statuses" class="ui grey button">View More</a>
                 </div>
             </div>
         </div>
     </div>
+   
 
 </div>
 

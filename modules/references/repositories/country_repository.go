@@ -17,18 +17,18 @@ func NewCountryRepository(db *database.Database) *CountryRepository {
 	}
 }
 
-func (repo *CountryRepository) Create(ctx context.Context, company entities.Country) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *CountryRepository) Create(ctx context.Context, country entities.Country) error {
+	result := repo.db.WithContext(ctx).Create(&country)
 	return result.Error
 }
 
-func (repo *CountryRepository) Update(ctx context.Context, company entities.Country) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *CountryRepository) Update(ctx context.Context, country entities.Country) error {
+	result := repo.db.WithContext(ctx).Save(&country)
 	return result.Error
 }
 
-func (repo *CountryRepository) Delete(ctx context.Context, company entities.Country) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *CountryRepository) Delete(ctx context.Context, country entities.Country) error {
+	result := repo.db.WithContext(ctx).Delete(&country)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *CountryRepository) FindAllLimit(ctx context.Context, limit int, offs
 }
 
 func (repo *CountryRepository) FindById(ctx context.Context, id int) (entities.Country, error) {
-	var company entities.Country
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var country entities.Country
+	result := repo.db.WithContext(ctx).First(&country, id)
+	return country, result.Error
 }
 
 func (repo *CountryRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.CountryData, error) {
@@ -57,9 +57,9 @@ func (repo *CountryRepository) GetDataByUniqueId(ctx context.Context, uniqueId s
 }
 
 func (repo *CountryRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Country, error) {
-	var company entities.Country
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var country entities.Country
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&country)
+	return country, result.Error
 }
 
 func (repo *CountryRepository) Count(ctx context.Context) (int64, error) {

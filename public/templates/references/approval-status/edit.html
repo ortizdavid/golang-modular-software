@@ -1,0 +1,35 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/references/approval-statuses/{{.ApprovalStatus.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="status_name"><strong>Status Name:</strong></label>
+            <input class="ui input" type="text" name="status_name" id="status_name" value="{{.ApprovalStatus.StatusName}}" required>
+        </div>
+        <div class="field">
+            <label for="iso_code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="{{.ApprovalStatus.Code}}"  required>
+        </div>
+        <div class="field">
+            <label for="lbl_color"><strong>Label Color (class): <i class="ui square icon {{.ApprovalStatus.LblColor}}"></i></strong></label>
+            <input class="ui input" type="text" name="lbl_color" id="lbl_color" value="{{.ApprovalStatus.LblColor}}"  required>
+        </div>
+        <div class="field">
+            <label for="bg_color"><strong>Background Color (class): <i class="ui square icon {{.ApprovalStatus.BgColor}}"></i></strong></label>
+            <input class="ui input" type="text" name="bg_color" id="bg_color" value="{{.ApprovalStatus.BgColor}}"  required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/references/approval-statuses/{{.ApprovalStatus.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

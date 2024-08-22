@@ -17,18 +17,18 @@ func NewUserStatusRepository(db *database.Database) *UserStatusRepository {
 	}
 }
 
-func (repo *UserStatusRepository) Create(ctx context.Context, company entities.UserStatus) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *UserStatusRepository) Create(ctx context.Context, userStatus entities.UserStatus) error {
+	result := repo.db.WithContext(ctx).Create(&userStatus)
 	return result.Error
 }
 
-func (repo *UserStatusRepository) Update(ctx context.Context, company entities.UserStatus) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *UserStatusRepository) Update(ctx context.Context, userStatus entities.UserStatus) error {
+	result := repo.db.WithContext(ctx).Save(&userStatus)
 	return result.Error
 }
 
-func (repo *UserStatusRepository) Delete(ctx context.Context, company entities.UserStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *UserStatusRepository) Delete(ctx context.Context, userStatus entities.UserStatus) error {
+	result := repo.db.WithContext(ctx).Delete(&userStatus)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *UserStatusRepository) FindAllLimit(ctx context.Context, limit int, o
 }
 
 func (repo *UserStatusRepository) FindById(ctx context.Context, id int) (entities.UserStatus, error) {
-	var company entities.UserStatus
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var userStatus entities.UserStatus
+	result := repo.db.WithContext(ctx).First(&userStatus, id)
+	return userStatus, result.Error
 }
 
 func (repo *UserStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.UserStatus, error) {
@@ -57,9 +57,9 @@ func (repo *UserStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueI
 }
 
 func (repo *UserStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.UserStatus, error) {
-	var company entities.UserStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var userStatus entities.UserStatus
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&userStatus)
+	return userStatus, result.Error
 }
 
 func (repo *UserStatusRepository) Count(ctx context.Context) (int64, error) {

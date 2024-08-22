@@ -1,0 +1,23 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/user-statuses" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/user-statuses/{{.UserStatus.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.UserStatus.StatusId}}</p>
+    <p><strong>Status Name:</strong> {{.UserStatus.StatusName}}</p>
+    <p><strong>Code:</strong> {{.UserStatus.Code}}</p>
+    <p><strong>Label Color:</strong> {{.UserStatus.LblColor}} <i class="ui square icon {{.UserStatus.LblColor}}"></i></p>
+    <p><strong>Background color:</strong> {{.UserStatus.BgColor}} <i class="ui square icon {{.UserStatus.BgColor}}"></i></p>
+    <p><strong>Creation Date:</strong> {{.UserStatus.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.UserStatus.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

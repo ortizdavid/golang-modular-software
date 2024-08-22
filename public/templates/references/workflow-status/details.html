@@ -1,0 +1,23 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/workflow-statuses" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/workflow-statuses/{{.WorkflowStatus.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.WorkflowStatus.StatusId}}</p>
+    <p><strong>Status Name:</strong> {{.WorkflowStatus.StatusName}}</p>
+    <p><strong>Code:</strong> {{.WorkflowStatus.Code}}</p>
+    <p><strong>Label Color:</strong> {{.WorkflowStatus.LblColor}} <i class="ui square icon {{.WorkflowStatus.LblColor}}"></i></p>
+    <p><strong>Background color:</strong> {{.WorkflowStatus.BgColor}} <i class="ui square icon {{.WorkflowStatus.BgColor}}"></i></p>
+    <p><strong>Creation Date:</strong> {{.WorkflowStatus.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.WorkflowStatus.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

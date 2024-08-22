@@ -17,18 +17,18 @@ func NewCurrencyRepository(db *database.Database) *CurrencyRepository {
 	}
 }
 
-func (repo *CurrencyRepository) Create(ctx context.Context, company entities.Currency) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *CurrencyRepository) Create(ctx context.Context, currency entities.Currency) error {
+	result := repo.db.WithContext(ctx).Create(&currency)
 	return result.Error
 }
 
-func (repo *CurrencyRepository) Update(ctx context.Context, company entities.Currency) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *CurrencyRepository) Update(ctx context.Context, currency entities.Currency) error {
+	result := repo.db.WithContext(ctx).Save(&currency)
 	return result.Error
 }
 
-func (repo *CurrencyRepository) Delete(ctx context.Context, company entities.Currency) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *CurrencyRepository) Delete(ctx context.Context, currency entities.Currency) error {
+	result := repo.db.WithContext(ctx).Delete(&currency)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *CurrencyRepository) FindAllLimit(ctx context.Context, limit int, off
 }
 
 func (repo *CurrencyRepository) FindById(ctx context.Context, id int) (entities.Currency, error) {
-	var company entities.Currency
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var currency entities.Currency
+	result := repo.db.WithContext(ctx).First(&currency, id)
+	return currency, result.Error
 }
 
 func (repo *CurrencyRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
@@ -57,9 +57,9 @@ func (repo *CurrencyRepository) GetDataByUniqueId(ctx context.Context, uniqueId 
 }
 
 func (repo *CurrencyRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
-	var company entities.Currency
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var currency entities.Currency
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&currency)
+	return currency, result.Error
 }
 
 func (repo *CurrencyRepository) Count(ctx context.Context) (int64, error) {

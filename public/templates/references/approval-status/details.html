@@ -1,0 +1,23 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/approval-statuses" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/approval-statuses/{{.ApprovalStatus.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.ApprovalStatus.StatusId}}</p>
+    <p><strong>Status Name:</strong> {{.ApprovalStatus.StatusName}}</p>
+    <p><strong>Code:</strong> {{.ApprovalStatus.Code}}</p>
+    <p><strong>Label Color:</strong> {{.ApprovalStatus.LblColor}} <i class="ui square icon {{.ApprovalStatus.LblColor}}"></i></p>
+    <p><strong>Background color:</strong> {{.ApprovalStatus.BgColor}} <i class="ui square icon {{.ApprovalStatus.BgColor}}"></i></p>
+    <p><strong>Creation Date:</strong> {{.ApprovalStatus.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.ApprovalStatus.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

@@ -1,0 +1,27 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/references/identification-types/{{.IdentificationType.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="type_name"><strong>Type Name:</strong></label>
+            <input class="ui input" type="text" name="type_name" id="type_name" value="{{.IdentificationType.TypeName}}" required>
+        </div>
+        <div class="field">
+            <label for="iso_code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="{{.IdentificationType.Code}}"  required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <a href="/references/identification-types/{{.IdentificationType.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

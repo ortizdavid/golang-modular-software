@@ -1,0 +1,21 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/identification-types" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/identification-types/{{.IdentificationType.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.IdentificationType.TypeId}}</p>
+    <p><strong>Type Name:</strong> {{.IdentificationType.TypeName}}</p>
+    <p><strong>Code:</strong> {{.IdentificationType.Code}}</p>
+    <p><strong>Creation Date:</strong> {{.IdentificationType.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.IdentificationType.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

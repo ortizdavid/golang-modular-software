@@ -17,18 +17,18 @@ func NewWorkflowStatusRepository(db *database.Database) *WorkflowStatusRepositor
 	}
 }
 
-func (repo *WorkflowStatusRepository) Create(ctx context.Context, company entities.WorkflowStatus) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *WorkflowStatusRepository) Create(ctx context.Context, workflowStatus entities.WorkflowStatus) error {
+	result := repo.db.WithContext(ctx).Create(&workflowStatus)
 	return result.Error
 }
 
-func (repo *WorkflowStatusRepository) Update(ctx context.Context, company entities.WorkflowStatus) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *WorkflowStatusRepository) Update(ctx context.Context, workflowStatus entities.WorkflowStatus) error {
+	result := repo.db.WithContext(ctx).Save(&workflowStatus)
 	return result.Error
 }
 
-func (repo *WorkflowStatusRepository) Delete(ctx context.Context, company entities.WorkflowStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *WorkflowStatusRepository) Delete(ctx context.Context, workflowStatus entities.WorkflowStatus) error {
+	result := repo.db.WithContext(ctx).Delete(&workflowStatus)
 	return result.Error
 }
 
@@ -45,9 +45,9 @@ func (repo *WorkflowStatusRepository) FindAllLimit(ctx context.Context, limit in
 }
 
 func (repo *WorkflowStatusRepository) FindById(ctx context.Context, id int) (entities.WorkflowStatus, error) {
-	var company entities.WorkflowStatus
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var workflowStatus entities.WorkflowStatus
+	result := repo.db.WithContext(ctx).First(&workflowStatus, id)
+	return workflowStatus, result.Error
 }
 
 func (repo *WorkflowStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.WorkflowStatus, error) {
@@ -57,9 +57,9 @@ func (repo *WorkflowStatusRepository) GetDataByUniqueId(ctx context.Context, uni
 }
 
 func (repo *WorkflowStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.WorkflowStatus, error) {
-	var company entities.WorkflowStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var workflowStatus entities.WorkflowStatus
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&workflowStatus)
+	return workflowStatus, result.Error
 }
 
 func (repo *WorkflowStatusRepository) Count(ctx context.Context) (int64, error) {
