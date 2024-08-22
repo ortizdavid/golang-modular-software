@@ -3,6 +3,10 @@
 <div class="ui segment">
 
     <div class="ui right floated buttons">
+        <a href="/users" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
         {{ if eq .User.IsActive "Yes" }}
             <a href="/users/{{.User.UniqueId}}/deactivate" class="ui red button">
                 <i class="ban icon"></i>

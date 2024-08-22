@@ -2,6 +2,10 @@
 
 <div class="ui segment">
     <div class="ui right floated buttons">
+        <a href="/company/company-info" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
         <a href="/company/company-info/{{.Company.UniqueId}}/edit" class="ui primary button">
             <i class="pencil icon"></i>
             Edit
@@ -16,7 +20,7 @@
     <p><strong>Address:</strong> {{.Company.Address}}</p>
     <p><strong>Phone:</strong> {{.Company.Phone}}</p>
     <p><strong>Email:</strong> {{.Company.Email}}</p>
-    <p><strong>Website URL:</strong> <a href="{{.Company.WebsiteUrl}}" target="_blank">{{.Company.WebsiteURL}}</a></p>
+    <p><strong>Website URL:</strong> <a href="{{.Company.WebsiteURL}}" target="_blank">{{.Company.WebsiteURL}}</a></p>
     <p><strong>Creation Date:</strong> {{.Company.CreatedAt}}</p>
     <p><strong>Last Update:</strong> {{.Company.UpdatedAt}}</p>
 </div>

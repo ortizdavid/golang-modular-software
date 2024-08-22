@@ -1,6 +1,12 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/login-activities" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+    </div>
     <p><strong>ID:</strong> {{.LoginActivity.LoginId}}</p>
     <p><strong>User Name:</strong> {{.LoginActivity.UserName}}</p>
     <p><strong>Email:</strong> {{.LoginActivity.Email}}</p>
