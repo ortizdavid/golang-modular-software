@@ -121,6 +121,34 @@ INSERT INTO reference.user_statuses (status_name, code, lbl_color, bg_color, des
 ('Deleted', 'DELETED', 'red', 'negative', 'The users account has been deleted from the system.');
 
 
+-- Table: evaluation_statuses
+DROP TABLE IF EXISTS reference.evaluation_statuses;
+CREATE TABLE reference.evaluation_statuses (
+    status_id SERIAL PRIMARY KEY,
+    status_name VARCHAR(100) NOT NULL,
+    code VARCHAR(30) NOT NULL UNIQUE,
+    lbl_color VARCHAR(20),
+    bg_color VARCHAR(20),
+    weight INT UNIQUE NOT NULL,
+    description TEXT NOT NULL,
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO reference.evaluation_statuses (status_name, code, lbl_color, bg_color, weight, description) VALUES
+('Defective', 'DEFECTIVE', 'darkred', 'red', 0, 'Fails to meet minimum quality standards.'),
+('Horrible', 'HORRIBLE', 'red', 'darkred', 1, 'Extremely poor condition or quality.'),
+('Very Bad', 'VERY_BAD', 'red', 'firebrick', 2, 'Very unsatisfactory condition or quality.'),
+('Bad', 'BAD', 'orange', 'darkorange', 3, 'Unsatisfactory condition or quality.'),
+('Fair', 'FAIR', 'yellow', 'lightyellow', 4, 'Acceptable but with some issues.'),
+('Normal/Acceptable', 'NORMAL_ACCEPTABLE', 'yellow', 'gold', 5, 'Average condition or quality.'),
+('Satisfactory', 'SATISFACTORY', 'lightgreen', 'lightgreen', 6, 'Slightly above average condition or quality.'),
+('Good', 'GOOD', 'green', 'lightgreen', 7, 'Satisfactory or pleasing condition or quality.'),
+('Very Good', 'VERY_GOOD', 'green', 'darkgreen', 8, 'Very satisfactory or pleasing condition or quality.'),
+('Excellent', 'EXCELLENT', 'blue', 'darkblue', 9, 'Extremely good condition or quality.'),
+('Exceptional', 'EXCEPTIONAL', 'purple', 'darkpurple', 10, 'Outstanding performance or quality.');
+
 
 -- Table: marital_statuses
 DROP TABLE IF EXISTS reference.marital_statuses;

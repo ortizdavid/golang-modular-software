@@ -1,0 +1,24 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/references/evaluation-statuses" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/references/evaluation-statuses/{{.EvaluationStatus.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.EvaluationStatus.StatusId}}</p>
+    <p><strong>Status Name:</strong> {{.EvaluationStatus.StatusName}}</p>
+    <p><strong>Code:</strong> {{.EvaluationStatus.Code}}</p>
+    <p><strong>Weight:</strong> {{.EvaluationStatus.Weight}}</p>
+    <p><strong>Label Color:</strong> {{.EvaluationStatus.LblColor}} <i class="ui square icon {{.EvaluationStatus.LblColor}}"></i></p>
+    <p><strong>Background color:</strong> {{.EvaluationStatus.BgColor}} <i class="ui square icon {{.EvaluationStatus.BgColor}}"></i></p>
+    <p><strong>Creation Date:</strong> {{.EvaluationStatus.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.EvaluationStatus.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}
