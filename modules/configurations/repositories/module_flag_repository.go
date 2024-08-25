@@ -88,8 +88,8 @@ func (repo *ModuleFlagRepository) CountByParam(ctx context.Context, param string
 	return count, result.Error
 }
 
-func (repo *ModuleFlagRepository) ExistsByName(ctx context.Context, moduleFlagId int, moduleFlagName string) (bool, error) {
-	var moduleFlag entities.ModuleFlag
-	result := repo.db.WithContext(ctx).Where("flag_id=? AND module_name=?", moduleFlagId, moduleFlagName).Find(&moduleFlag)
-	return moduleFlag.FlagId != 0, result.Error
+func (repo *ModuleFlagRepository) ExistsByModuleId(ctx context.Context, moduleId int) (bool, error) {
+	var module entities.ModuleFlag
+	result := repo.db.WithContext(ctx).Where("module_id=?", moduleId).Find(&module)
+	return module.FlagId != 0, result.Error
 }

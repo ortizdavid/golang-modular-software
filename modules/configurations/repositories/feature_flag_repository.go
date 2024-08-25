@@ -88,8 +88,8 @@ func (repo *FeatureFlagRepository) CountByParam(ctx context.Context, param strin
 	return count, result.Error
 }
 
-func (repo *FeatureFlagRepository) ExistsByName(ctx context.Context, featureFlagId int, featureName string) (bool, error) {
+func (repo *FeatureFlagRepository) ExistsByFeatureId(ctx context.Context, featureId int) (bool, error) {
 	var feature entities.FeatureFlag
-	result := repo.db.WithContext(ctx).Where("featureFlag_id=? AND feature_name=?", featureFlagId, featureName).Find(&feature)
+	result := repo.db.WithContext(ctx).Where("feature_id=?", featureId).Find(&feature)
 	return feature.FlagId != 0, result.Error
 }
