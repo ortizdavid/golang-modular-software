@@ -17,18 +17,18 @@ func NewBranchRepository(db *database.Database) *BranchRepository {
 	}
 }
 
-func (repo *BranchRepository) Create(ctx context.Context, company entities.Branch) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *BranchRepository) Create(ctx context.Context, branch entities.Branch) error {
+	result := repo.db.WithContext(ctx).Create(&branch)
 	return result.Error
 }
 
-func (repo *BranchRepository) Update(ctx context.Context, company entities.Branch) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *BranchRepository) Update(ctx context.Context, branch entities.Branch) error {
+	result := repo.db.WithContext(ctx).Save(&branch)
 	return result.Error
 }
 
-func (repo *BranchRepository) Delete(ctx context.Context, company entities.Branch) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *BranchRepository) Delete(ctx context.Context, branch entities.Branch) error {
+	result := repo.db.WithContext(ctx).Delete(&branch)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *BranchRepository) FindAllLimit(ctx context.Context, limit int, offse
 }
 
 func (repo *BranchRepository) FindById(ctx context.Context, id int) (entities.Branch, error) {
-	var company entities.Branch
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var branch entities.Branch
+	result := repo.db.WithContext(ctx).First(&branch, id)
+	return branch, result.Error
 }
 
 func (repo *BranchRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Branch, error) {
-	var company entities.Branch
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var branch entities.Branch
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&branch)
+	return branch, result.Error
 }
 
 func (repo *BranchRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.BranchData, error) {
-	var company entities.BranchData
-	result := repo.db.WithContext(ctx).Table("company.view_branch_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var branch entities.BranchData
+	result := repo.db.WithContext(ctx).Table("company.view_branch_data").Where("unique_id=?", uniqueId).First(&branch)
+	return branch, result.Error
 }
 
 func (repo *BranchRepository) Count(ctx context.Context) (int64, error) {

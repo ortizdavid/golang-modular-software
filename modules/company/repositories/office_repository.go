@@ -17,18 +17,18 @@ func NewOfficeRepository(db *database.Database) *OfficeRepository {
 	}
 }
 
-func (repo *OfficeRepository) Create(ctx context.Context, company entities.Office) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *OfficeRepository) Create(ctx context.Context, office entities.Office) error {
+	result := repo.db.WithContext(ctx).Create(&office)
 	return result.Error
 }
 
-func (repo *OfficeRepository) Update(ctx context.Context, company entities.Office) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *OfficeRepository) Update(ctx context.Context, office entities.Office) error {
+	result := repo.db.WithContext(ctx).Save(&office)
 	return result.Error
 }
 
-func (repo *OfficeRepository) Delete(ctx context.Context, company entities.Office) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *OfficeRepository) Delete(ctx context.Context, office entities.Office) error {
+	result := repo.db.WithContext(ctx).Delete(&office)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *OfficeRepository) FindAllLimit(ctx context.Context, limit int, offse
 }
 
 func (repo *OfficeRepository) FindById(ctx context.Context, id int) (entities.Office, error) {
-	var company entities.Office
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var office entities.Office
+	result := repo.db.WithContext(ctx).First(&office, id)
+	return office, result.Error
 }
 
 func (repo *OfficeRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Office, error) {
-	var company entities.Office
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var office entities.Office
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&office)
+	return office, result.Error
 }
 
 func (repo *OfficeRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
-	var company entities.OfficeData
-	result := repo.db.WithContext(ctx).Table("company.view_office_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var office entities.OfficeData
+	result := repo.db.WithContext(ctx).Table("company.view_office_data").Where("unique_id=?", uniqueId).First(&office)
+	return office, result.Error
 }
 
 func (repo *OfficeRepository) Count(ctx context.Context) (int64, error) {

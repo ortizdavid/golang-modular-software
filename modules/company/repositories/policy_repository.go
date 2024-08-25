@@ -17,18 +17,18 @@ func NewPolicyRepository(db *database.Database) *PolicyRepository {
 	}
 }
 
-func (repo *PolicyRepository) Create(ctx context.Context, company entities.Policy) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *PolicyRepository) Create(ctx context.Context, policy entities.Policy) error {
+	result := repo.db.WithContext(ctx).Create(&policy)
 	return result.Error
 }
 
-func (repo *PolicyRepository) Update(ctx context.Context, company entities.Policy) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *PolicyRepository) Update(ctx context.Context, policy entities.Policy) error {
+	result := repo.db.WithContext(ctx).Save(&policy)
 	return result.Error
 }
 
-func (repo *PolicyRepository) Delete(ctx context.Context, company entities.Policy) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *PolicyRepository) Delete(ctx context.Context, policy entities.Policy) error {
+	result := repo.db.WithContext(ctx).Delete(&policy)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *PolicyRepository) FindAllLimit(ctx context.Context, limit int, offse
 }
 
 func (repo *PolicyRepository) FindById(ctx context.Context, id int) (entities.Policy, error) {
-	var company entities.Policy
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var policy entities.Policy
+	result := repo.db.WithContext(ctx).First(&policy, id)
+	return policy, result.Error
 }
 
 func (repo *PolicyRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Policy, error) {
-	var company entities.Policy
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var policy entities.Policy
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&policy)
+	return policy, result.Error
 }
 
 func (repo *PolicyRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyData, error) {
-	var company entities.PolicyData
-	result := repo.db.WithContext(ctx).Table("company.view_policy_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var policy entities.PolicyData
+	result := repo.db.WithContext(ctx).Table("company.view_policy_data").Where("unique_id=?", uniqueId).First(&policy)
+	return policy, result.Error
 }
 
 func (repo *PolicyRepository) Count(ctx context.Context) (int64, error) {

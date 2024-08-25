@@ -17,18 +17,18 @@ func NewProjectRepository(db *database.Database) *ProjectRepository {
 	}
 }
 
-func (repo *ProjectRepository) Create(ctx context.Context, company entities.Project) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *ProjectRepository) Create(ctx context.Context, project entities.Project) error {
+	result := repo.db.WithContext(ctx).Create(&project)
 	return result.Error
 }
 
-func (repo *ProjectRepository) Update(ctx context.Context, company entities.Project) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *ProjectRepository) Update(ctx context.Context, project entities.Project) error {
+	result := repo.db.WithContext(ctx).Save(&project)
 	return result.Error
 }
 
-func (repo *ProjectRepository) Delete(ctx context.Context, company entities.Project) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *ProjectRepository) Delete(ctx context.Context, project entities.Project) error {
+	result := repo.db.WithContext(ctx).Delete(&project)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *ProjectRepository) FindAllLimit(ctx context.Context, limit int, offs
 }
 
 func (repo *ProjectRepository) FindById(ctx context.Context, id int) (entities.Project, error) {
-	var company entities.Project
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var project entities.Project
+	result := repo.db.WithContext(ctx).First(&project, id)
+	return project, result.Error
 }
 
 func (repo *ProjectRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Project, error) {
-	var company entities.Project
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var project entities.Project
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&project)
+	return project, result.Error
 }
 
 func (repo *ProjectRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectData, error) {
-	var company entities.ProjectData
-	result := repo.db.WithContext(ctx).Table("company.view_project_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var project entities.ProjectData
+	result := repo.db.WithContext(ctx).Table("company.view_project_data").Where("unique_id=?", uniqueId).First(&project)
+	return project, result.Error
 }
 
 func (repo *ProjectRepository) Count(ctx context.Context) (int64, error) {

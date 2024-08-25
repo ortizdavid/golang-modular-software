@@ -1,0 +1,95 @@
+package repositories
+
+import (
+	"context"
+
+	"github.com/ortizdavid/golang-modular-software/database"
+	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+)
+
+type ModuleFlagRepository struct {
+	db *database.Database
+}
+
+func NewModuleFlagRepository(db *database.Database) *ModuleFlagRepository {
+	return &ModuleFlagRepository{
+		db: db,
+	}
+}
+
+func (repo *ModuleFlagRepository) Create(ctx context.Context, moduleFlag entities.ModuleFlag) error {
+	result := repo.db.WithContext(ctx).Create(&moduleFlag)
+	return result.Error
+}
+
+func (repo *ModuleFlagRepository) Update(ctx context.Context, moduleFlag entities.ModuleFlag) error {
+	result := repo.db.WithContext(ctx).Save(&moduleFlag)
+	return result.Error
+}
+
+func (repo *ModuleFlagRepository) Delete(ctx context.Context, moduleFlag entities.ModuleFlag) error {
+	result := repo.db.WithContext(ctx).Delete(&moduleFlag)
+	return result.Error
+}
+
+func (repo *ModuleFlagRepository) FindAll(ctx context.Context) ([]entities.ModuleFlag, error) {
+	var moduleFlags []entities.ModuleFlag
+	result := repo.db.WithContext(ctx).Find(&moduleFlags)
+	return moduleFlags, result.Error
+}
+
+func (repo *ModuleFlagRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.ModuleFlagData, error) {
+	var moduleFlags []entities.ModuleFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Limit(limit).Offset(offset).Find(&moduleFlags)
+	return moduleFlags, result.Error
+}
+
+func (repo *ModuleFlagRepository) FindById(ctx context.Context, id int) (entities.ModuleFlag, error) {
+	var moduleFlag entities.ModuleFlag
+	result := repo.db.WithContext(ctx).First(&moduleFlag, id)
+	return moduleFlag, result.Error
+}
+
+func (repo *ModuleFlagRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlag, error) {
+	var moduleFlag entities.ModuleFlag
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&moduleFlag)
+	return moduleFlag, result.Error
+}
+
+func (repo *ModuleFlagRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlagData, error) {
+	var moduleFlag entities.ModuleFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("unique_id=?", uniqueId).First(&moduleFlag)
+	return moduleFlag, result.Error
+}
+
+func (repo *ModuleFlagRepository) Count(ctx context.Context) (int64, error) {
+	var count int64
+	result := repo.db.WithContext(ctx).Table("configurations.moduleFlags").Count(&count)
+	return count, result.Error
+}
+
+func (repo *ModuleFlagRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.ModuleFlagData, error) {
+	var moduleFlags []entities.ModuleFlagData
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT * FROM configurations.view_module_flag_data WHERE module_name LIKE ? OR email LIKE ?", likeParam, likeParam).
+		Limit(limit).
+		Offset(offset).
+		Scan(&moduleFlags)
+	return moduleFlags, result.Error
+}
+
+func (repo *ModuleFlagRepository) CountByParam(ctx context.Context, param string) (int64, error) {
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM configurations.view_module_flag_data WHERE module_name LIKE ? OR email LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
+}
+
+func (repo *ModuleFlagRepository) ExistsByName(ctx context.Context, moduleFlagId int, moduleFlagName string) (bool, error) {
+	var moduleFlag entities.ModuleFlag
+	result := repo.db.WithContext(ctx).Where("flag_id=? AND module_name=?", moduleFlagId, moduleFlagName).Find(&moduleFlag)
+	return moduleFlag.FlagId != 0, result.Error
+}

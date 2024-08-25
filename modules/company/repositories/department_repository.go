@@ -17,18 +17,18 @@ func NewDepartmentRepository(db *database.Database) *DepartmentRepository {
 	}
 }
 
-func (repo *DepartmentRepository) Create(ctx context.Context, company entities.Department) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *DepartmentRepository) Create(ctx context.Context, department entities.Department) error {
+	result := repo.db.WithContext(ctx).Create(&department)
 	return result.Error
 }
 
-func (repo *DepartmentRepository) Update(ctx context.Context, company entities.Department) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *DepartmentRepository) Update(ctx context.Context, department entities.Department) error {
+	result := repo.db.WithContext(ctx).Save(&department)
 	return result.Error
 }
 
-func (repo *DepartmentRepository) Delete(ctx context.Context, company entities.Department) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *DepartmentRepository) Delete(ctx context.Context, department entities.Department) error {
+	result := repo.db.WithContext(ctx).Delete(&department)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *DepartmentRepository) FindAllLimit(ctx context.Context, limit int, o
 }
 
 func (repo *DepartmentRepository) FindById(ctx context.Context, id int) (entities.Department, error) {
-	var company entities.Department
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var department entities.Department
+	result := repo.db.WithContext(ctx).First(&department, id)
+	return department, result.Error
 }
 
 func (repo *DepartmentRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Department, error) {
-	var company entities.Department
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var department entities.Department
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&department)
+	return department, result.Error
 }
 
 func (repo *DepartmentRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.DepartmentData, error) {
-	var company entities.DepartmentData
-	result := repo.db.WithContext(ctx).Table("company.view_department_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var department entities.DepartmentData
+	result := repo.db.WithContext(ctx).Table("company.view_department_data").Where("unique_id=?", uniqueId).First(&department)
+	return department, result.Error
 }
 
 func (repo *DepartmentRepository) Count(ctx context.Context) (int64, error) {

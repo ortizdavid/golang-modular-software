@@ -17,18 +17,18 @@ func NewRoomRepository(db *database.Database) *RoomRepository {
 	}
 }
 
-func (repo *RoomRepository) Create(ctx context.Context, company entities.Room) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *RoomRepository) Create(ctx context.Context, room entities.Room) error {
+	result := repo.db.WithContext(ctx).Create(&room)
 	return result.Error
 }
 
-func (repo *RoomRepository) Update(ctx context.Context, company entities.Room) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *RoomRepository) Update(ctx context.Context, room entities.Room) error {
+	result := repo.db.WithContext(ctx).Save(&room)
 	return result.Error
 }
 
-func (repo *RoomRepository) Delete(ctx context.Context, company entities.Room) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *RoomRepository) Delete(ctx context.Context, room entities.Room) error {
+	result := repo.db.WithContext(ctx).Delete(&room)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *RoomRepository) FindAllLimit(ctx context.Context, limit int, offset 
 }
 
 func (repo *RoomRepository) FindById(ctx context.Context, id int) (entities.Room, error) {
-	var company entities.Room
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var room entities.Room
+	result := repo.db.WithContext(ctx).First(&room, id)
+	return room, result.Error
 }
 
 func (repo *RoomRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Room, error) {
-	var company entities.Room
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var room entities.Room
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&room)
+	return room, result.Error
 }
 
 func (repo *RoomRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.RoomData, error) {
-	var company entities.RoomData
-	result := repo.db.WithContext(ctx).Table("company.view_room_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var room entities.RoomData
+	result := repo.db.WithContext(ctx).Table("company.view_room_data").Where("unique_id=?", uniqueId).First(&room)
+	return room, result.Error
 }
 
 func (repo *RoomRepository) Count(ctx context.Context) (int64, error) {
