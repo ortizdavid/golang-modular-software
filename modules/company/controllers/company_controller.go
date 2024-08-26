@@ -14,6 +14,7 @@ import (
 type CompanyController struct {
 	service     *services.CompanyService
 	authService *authentication.AuthService
+	flagStatusService *configurations.ModuleFlagStatusService
 	configService *configurations.AppConfigurationService
 	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
@@ -21,11 +22,12 @@ type CompanyController struct {
 
 func NewCompanyController(db *database.Database) *CompanyController {
 	return &CompanyController{
-		service:     services.NewCompanyService(db),
-		authService: authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:  helpers.NewInfoLogger("company-info.log"),
-		errorLogger: helpers.NewErrorLogger("company-error.log"),
+		service:           services.NewCompanyService(db),
+		authService:       authentication.NewAuthService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		infoLogger:        helpers.NewInfoLogger("company-info.log"),
+		errorLogger:       helpers.NewErrorLogger("company-error.log"),
 	}
 }
 
@@ -42,6 +44,7 @@ func (ctrl *CompanyController) Routes(router *fiber.App, db *database.Database) 
 
 func (ctrl *CompanyController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -50,6 +53,7 @@ func (ctrl *CompanyController) index(c *fiber.Ctx) error {
 	return c.Render("company/company-info/index", fiber.Map{
 		"Title":       "Company Info",
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser":  loggedUser,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -60,6 +64,7 @@ func (ctrl *CompanyController) index(c *fiber.Ctx) error {
 func (ctrl *CompanyController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	company, err := ctrl.service.GetCompanyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -67,6 +72,7 @@ func (ctrl *CompanyController) details(c *fiber.Ctx) error {
 	return c.Render("company/company-info/details", fiber.Map{
 		"Title":      "Company Details",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 		"Company":    company,
 	})
@@ -74,9 +80,11 @@ func (ctrl *CompanyController) details(c *fiber.Ctx) error {
 
 func (ctrl *CompanyController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("company/company-info/create", fiber.Map{
 		"Title":      "Create Company",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }
@@ -99,6 +107,7 @@ func (ctrl *CompanyController) create(c *fiber.Ctx) error {
 func (ctrl *CompanyController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	company, err := ctrl.service.GetCompanyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -106,6 +115,7 @@ func (ctrl *CompanyController) editForm(c *fiber.Ctx) error {
 	return c.Render("company/company-info/edit", fiber.Map{
 		"Title":      "Edit Company Info",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 		"Company":    company,
 	})

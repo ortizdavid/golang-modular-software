@@ -17,6 +17,7 @@ import (
 type BranchController struct {
 	service        *services.BranchService
 	companyService *services.CompanyService
+	flagStatusService *configurations.ModuleFlagStatusService
 	authService    *authentication.AuthService
 	configService *configurations.AppConfigurationService
 	infoLogger     *helpers.Logger
@@ -25,12 +26,13 @@ type BranchController struct {
 
 func NewBranchController(db *database.Database) *BranchController {
 	return &BranchController{
-		service:        services.NewBranchService(db),
-		companyService: services.NewCompanyService(db),
-		authService:    authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:     helpers.NewInfoLogger("company-info.log"),
-		errorLogger:    helpers.NewErrorLogger("company-error.log"),
+		service:           services.NewBranchService(db),
+		companyService:    services.NewCompanyService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		infoLogger:        helpers.NewInfoLogger("company-info.log"),
+		errorLogger:       helpers.NewErrorLogger("company-error.log"),
 	}
 }
 
@@ -49,6 +51,7 @@ func (ctrl *BranchController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *BranchController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -58,6 +61,7 @@ func (ctrl *BranchController) index(c *fiber.Ctx) error {
 		"Title":       "Branches",
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":  loggedUser,
+		"ModuleFlagStatus": flagStatus,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
 		"TotalPages":  pagination.MetaData.TotalPages + 1,
@@ -67,6 +71,7 @@ func (ctrl *BranchController) index(c *fiber.Ctx) error {
 func (ctrl *BranchController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -75,12 +80,14 @@ func (ctrl *BranchController) details(c *fiber.Ctx) error {
 		"Title":      "Details",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
+		"ModuleFlagStatus": flagStatus,
 		"Branch":     branch,
 	})
 }
 
 func (ctrl *BranchController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -89,6 +96,7 @@ func (ctrl *BranchController) createForm(c *fiber.Ctx) error {
 		"Title":      "Create Branch",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
+		"ModuleFlagStatus": flagStatus,
 		"Companies":  companies,
 		"BranchCode": encryption.GenerateCode("BRA-"),
 	})
@@ -112,6 +120,7 @@ func (ctrl *BranchController) create(c *fiber.Ctx) error {
 func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -120,6 +129,7 @@ func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 		"Title":      "Edit Branch",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
+		"ModuleFlagStatus": flagStatus,
 		"Branch":     branch,
 	})
 }
@@ -146,10 +156,12 @@ func (ctrl *BranchController) edit(c *fiber.Ctx) error {
 
 func (ctrl *BranchController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("company/branch/search", fiber.Map{
 		"Title":      "Search Branches",
-		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser": loggedUser,
+		"FlagStatus": flagStatus,
 	})
 }
 
@@ -157,6 +169,7 @@ func (ctrl *BranchController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchBranchRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchBranches(c.Context(), c, request, params)
 	if err != nil {
@@ -166,6 +179,7 @@ func (ctrl *BranchController) search(c *fiber.Ctx) error {
 	return c.Render("company/branch/search-results", fiber.Map{
 		"Title":       "Search Results",
 		"LoggedUser":  loggedUser,
+		"ModuleFlagStatus": flagStatus,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
 		"Pagination":  pagination,
 		"Param":       request.SearchParam,

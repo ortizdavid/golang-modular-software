@@ -6,8 +6,8 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/authentication"
 	"github.com/ortizdavid/golang-modular-software/modules/back_office"
 	"github.com/ortizdavid/golang-modular-software/modules/company"
-	"github.com/ortizdavid/golang-modular-software/modules/employees"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations"
+	"github.com/ortizdavid/golang-modular-software/modules/employees"
 	"github.com/ortizdavid/golang-modular-software/modules/references"
 	"github.com/ortizdavid/golang-modular-software/modules/reports"
 )
@@ -15,14 +15,14 @@ import (
 // RegisterRoutes initializes and registers controllers (routes) from different modules
 func RegisterRoutes(router *fiber.App, db *database.Database) {
 	
+	// Register routes for authentication module
+	authentication.RegisterModuleRoutes(router, db)
+	
 	// Register routes for configurations module
 	configurations.RegisterModuleRoutes(router, db)
 
 	// Register routes for reference module
 	references.RegisterModuleRoutes(router, db)
-
-	// Register routes for authentication module
-	authentication.RegisterModuleRoutes(router, db)
 
 	// Register routes for company module
 	company.RegisterModuleRoutes(router, db)

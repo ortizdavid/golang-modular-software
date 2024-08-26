@@ -69,13 +69,13 @@ CREATE TABLE configurations.modules (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO configurations.modules (module_name, code, description) VALUES 
-('Authentication', 'configurations', 'Handles user authentication and authorization.'),
-('Company', 'company', 'Manages company-related information and settings.'),
-('Employees', 'employees', 'Manages employee records and details.'),
-('References', 'references', 'Stores and manages reference data.'),
-('Reports', 'reports', 'Generates and manages various reports.'),
-('Configurations', 'configurations', 'Manages system configurations.');
+INSERT INTO configurations.modules (module_id, module_name, code, description) VALUES 
+(1, 'Authentication', 'configurations', 'Handles user authentication and authorization.'),
+(2, 'Company', 'company', 'Manages company-related information and settings.'),
+(3, 'Employees', 'employees', 'Manages employee records and details.'),
+(4, 'References', 'references', 'Stores and manages reference data.'),
+(5, 'Reports', 'reports', 'Generates and manages various reports.'),
+(6, 'Configurations', 'configurations', 'Manages system configurations.');
 
 
 -- Table: features
@@ -110,7 +110,7 @@ CREATE TABLE configurations.module_flag(
 );
 -- Insert module flags
 INSERT INTO configurations.module_flag (module_id, status) VALUES 
-(1, 'Disabled'),  -- Authentication
+(1, 'Enabled'),  -- Authentication
 (2, 'Disabled'),  -- Company
 (3, 'Disabled'),  -- Employees
 (4, 'Disabled'),  -- References

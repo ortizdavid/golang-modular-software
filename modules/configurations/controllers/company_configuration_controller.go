@@ -14,6 +14,7 @@ import (
 
 type CompanyConfigurationController struct {
 	service       *services.CompanyConfigurationService
+	flagStatusService *services.ModuleFlagStatusService
 	authService   *authentication.AuthService
 	configService *services.AppConfigurationService
 	infoLogger    *helpers.Logger
@@ -22,11 +23,12 @@ type CompanyConfigurationController struct {
 
 func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurationController {
 	return &CompanyConfigurationController{
-		service:     services.NewCompanyConfigurationService(db),
-		authService: authentication.NewAuthService(db),
-		configService: services.NewAppConfigurationService(db),
-		infoLogger:  helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger: helpers.NewErrorLogger("configurations-error.log"),
+		service:           services.NewCompanyConfigurationService(db),
+		flagStatusService: services.NewModuleFlagStatusService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     services.NewAppConfigurationService(db),
+		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -40,10 +42,12 @@ func (ctrl *CompanyConfigurationController) Routes(router *fiber.App, db *databa
 
 func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/company/index", fiber.Map{
 		"Title":      "Company Configurations",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 

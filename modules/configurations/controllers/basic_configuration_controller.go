@@ -14,6 +14,7 @@ import (
 
 type BasicConfigurationController struct {
 	service *services.BasicConfigurationService
+	flagStatusService *services.ModuleFlagStatusService
 	authService *authentication.AuthService
 	configService *services.AppConfigurationService
 	infoLogger *helpers.Logger
@@ -22,14 +23,14 @@ type BasicConfigurationController struct {
 
 func NewBasicConfigurationController(db *database.Database) *BasicConfigurationController {
 	return &BasicConfigurationController{
-		service:       services.NewBasicConfigurationService(db),
-		authService:   authentication.NewAuthService(db),
-		configService: services.NewAppConfigurationService(db),
-		infoLogger:    helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:   helpers.NewErrorLogger("configurations-error.log"),
+		service:           services.NewBasicConfigurationService(db),
+		flagStatusService: services.NewModuleFlagStatusService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     services.NewAppConfigurationService(db),
+		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
-
 
 func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
@@ -41,19 +42,23 @@ func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database
 
 func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/basic/index", fiber.Map{
 		"Title": "Basic Configurations",
 		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
 func (ctrl *BasicConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/basic/edit", fiber.Map{
 		"Title": "Edit Basic Configuration",
 		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":loggedUser,
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 

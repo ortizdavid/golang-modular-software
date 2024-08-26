@@ -11,13 +11,14 @@ import (
 type BackOfficeController struct {
 	authService *authentication.AuthService
 	configService *configurations.AppConfigurationService
-	
+    flagStatusService*configurations.ModuleFlagStatusService
 }
 
 func NewBackOfficeController(db *database.Database) *BackOfficeController {
 	return &BackOfficeController{
-		authService: authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
 	}
 }
 
@@ -29,9 +30,11 @@ func (ctrl *BackOfficeController) Routes(router *fiber.App, db *database.Databas
 
 func (ctrl *BackOfficeController) home(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("_back_office/home", fiber.Map{
 		"Title":      "Home",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }

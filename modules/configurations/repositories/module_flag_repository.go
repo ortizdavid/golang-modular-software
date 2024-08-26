@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-
+	
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 )
@@ -58,6 +58,12 @@ func (repo *ModuleFlagRepository) FindById(ctx context.Context, id int) (entitie
 func (repo *ModuleFlagRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlag, error) {
 	var moduleFlag entities.ModuleFlag
 	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&moduleFlag)
+	return moduleFlag, result.Error
+}
+
+func (repo *ModuleFlagRepository) FindByModule(ctx context.Context, module string) (entities.ModuleFlagData, error) {
+	var moduleFlag entities.ModuleFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("code=?", module)
 	return moduleFlag, result.Error
 }
 

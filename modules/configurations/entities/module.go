@@ -17,3 +17,12 @@ type Module struct {
 func (Module) TableName() string {
     return "configurations.modules"
 }
+
+const (
+    ModuleAuthentication = 1
+    ModuleCompany = 2
+    ModuleEmployees = 3
+    ModuleReferences = 4
+    ModuleReports = 5
+    ModuleConfigurations = 6
+)

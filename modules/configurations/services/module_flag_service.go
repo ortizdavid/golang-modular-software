@@ -3,8 +3,6 @@ package services
 import (
 	"context"
 	"time"
-	//"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
@@ -32,7 +30,6 @@ func (s *ModuleFlagService) ManageModuleFlags(ctx context.Context, requests []en
             return apperrors.NewBadRequestError(err.Error())
         }
     }
-
     // Retrieve and update each module flag
     var moduleFlags []entities.ModuleFlag
     for _, req := range requests {
@@ -44,7 +41,6 @@ func (s *ModuleFlagService) ManageModuleFlags(ctx context.Context, requests []en
         flag.UpdatedAt = time.Now().UTC() // Ensure time is in UTC
         moduleFlags = append(moduleFlags, flag)
     }
-
     // Perform bulk update
     if err := s.repository.UpdateBatch(ctx, moduleFlags); err != nil {
         return apperrors.NewInternalServerError("error while updating module flags: " + err.Error())
@@ -91,3 +87,4 @@ func (s *ModuleFlagService) GetModuleFlagByUniqueId(ctx context.Context, uniqueI
 	}
 	return module, nil
 }
+

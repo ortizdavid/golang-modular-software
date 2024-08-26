@@ -7,39 +7,57 @@
         Home
     </div>
 </a>
-<a href="/users-management" class="item">
-    <div>
-        <i class="users icon"></i>
-        Users Management
-    </div>
-</a>
-<a href="/company" class="item">
-    <div>
-        <i class="building icon"></i>
-        Company Management
-    </div>
-</a>
-<a href="/employees" class="item">
-    <div>
-        <i class="user icon"></i>
-        Employees
-    </div>
-</a>
-<a href="/references" class="item">
-    <div>
-        <i class="list icon"></i>
-        References
-    </div>
-</a>
-<a href="/reports" class="item">
-    <div>
-        <i class="chart bar icon"></i>
-        Reports
-    </div>
-</a>
-<a href="/configurations" class="item">
-    <div>
-        <i class="cogs icon"></i>
-        Configurations
-    </div>
-</a>
+
+{{ if eq .ModuleFlagStatus.Authentication "Enabled" }}
+    <a href="/users-management" class="item">
+        <div>
+            <i class="users icon"></i>
+            Users Management
+        </div>
+    </a>
+{{ end}}
+
+{{ if eq .ModuleFlagStatus.Company "Enabled" }}
+    <a href="/company" class="item">
+        <div>
+            <i class="building icon"></i>
+            Company Management
+        </div>
+    </a>
+{{ end}}
+
+{{ if eq .ModuleFlagStatus.Employees "Enabled" }}
+    <a href="/employees" class="item">
+        <div>
+            <i class="user icon"></i>
+            Employees
+        </div>
+    </a>
+{{ end}}
+
+{{ if eq .ModuleFlagStatus.References "Enabled" }}
+    <a href="/references" class="item">
+        <div>
+            <i class="list icon"></i>
+            References
+        </div>
+    </a>
+{{ end}}
+
+{{ if eq .ModuleFlagStatus.Reports "Enabled" }}
+    <a href="/reports" class="item">
+        <div>
+            <i class="chart bar icon"></i>
+            Reports
+        </div>
+    </a>
+{{ end}}
+
+{{ if eq .ModuleFlagStatus.Configurations "Enabled" }}
+    <a href="/configurations" class="item">
+        <div>
+            <i class="cogs icon"></i>
+            Configurations
+        </div>
+    </a>
+{{ end}}

@@ -11,7 +11,8 @@
                         <label for="flag_{{.FlagId}}"><strong>{{.ModuleName}}</strong></label>
                     </div>
                     <div class="eight wide column">
-                        <select class="ui dropdown" name="flag_{{.FlagId}}" id="flag_{{.FlagId}}">
+                        <select class="ui dropdown" name="flag_{{.FlagId}}" id="flag_{{.FlagId}}" 
+                            {{if or (eq .ModuleName "Authentication") (eq .ModuleName "Configurations")}}disabled{{end}}>
                             <option value="Enabled" {{if eq .Status "Enabled"}}selected{{end}}>Enabled</option>
                             <option value="Disabled" {{if eq .Status "Disabled"}}selected{{end}}>Disabled</option>
                         </select>

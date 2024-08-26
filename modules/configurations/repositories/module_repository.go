@@ -56,6 +56,12 @@ func (repo *ModuleRepository) FindByUniqueId(ctx context.Context, uniqueId strin
 	return company, result.Error
 }
 
+func (repo *ModuleRepository) FindByCode(ctx context.Context, code string) (entities.Module, error) {
+	var company entities.Module
+	result := repo.db.WithContext(ctx).Where("code=?", code).First(&company)
+	return company, result.Error
+}
+
 func (repo *ModuleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.Module, error) {
 	var company entities.Module
 	result := repo.db.WithContext(ctx).Table("configurations.modules").Where("unique_id=?", uniqueId).First(&company)

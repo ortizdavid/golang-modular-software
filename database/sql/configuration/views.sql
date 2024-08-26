@@ -11,5 +11,6 @@ SELECT mf.flag_id, mf.unique_id,
     md.module_id, md.module_name, 
     md.code
 FROM configurations.module_flag mf
-JOIN configurations.modules md ON (md.module_id = mf.module_id);
+JOIN configurations.modules md ON (md.module_id = mf.module_id)
+ORDER BY module_name;
 
