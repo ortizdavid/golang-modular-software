@@ -7,6 +7,7 @@ import (
 type Module struct {
     ModuleId    int       `gorm:"primaryKey;autoIncrement"`
     ModuleName  string    `gorm:"column:module_name"`
+    Code        string    `gorm:"column:code"`
     Description string    `gorm:"column:description"`
     UniqueId    string `gorm:"column:unique_id"`
     CreatedAt   time.Time `gorm:"column:created_at"`

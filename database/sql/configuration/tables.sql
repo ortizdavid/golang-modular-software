@@ -62,19 +62,20 @@ DROP TABLE IF EXISTS configurations.modules;
 CREATE TABLE configurations.modules (
     module_id SERIAL PRIMARY KEY,
     module_name VARCHAR(100) UNIQUE NOT NULL,
+    code VARCHAR(30) UNIQUE NOT NULL,
     description TEXT,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO configurations.modules (module_name, description) VALUES 
-('Authentication', 'Handles user authentication and authorization.'),
-('Company', 'Manages company-related information and settings.'),
-('Employees', 'Manages employee records and details.'),
-('References', 'Stores and manages reference data.'),
-('Reports', 'Generates and manages various reports.'),
-('Configuration', 'Manages system configurations.');
+INSERT INTO configurations.modules (module_name, code, description) VALUES 
+('Authentication', 'configurations', 'Handles user authentication and authorization.'),
+('Company', 'company', 'Manages company-related information and settings.'),
+('Employees', 'employees', 'Manages employee records and details.'),
+('References', 'references', 'Stores and manages reference data.'),
+('Reports', 'reports', 'Generates and manages various reports.'),
+('Configurations', 'configurations', 'Manages system configurations.');
 
 
 -- Table: features

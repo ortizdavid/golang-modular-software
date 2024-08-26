@@ -1,31 +1,33 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/configurations/module-flag/manage" method="POST" enctype="multipart/form-data">
-        <div class="field">
-            <label for="smtp_server"><strong>SMTP Server:</strong></label>
-            <input class="ui input" type="text" name="smtp_server" value="{{.AppConfig.EmailConfig.SMTPServer}}" autofocus required>
+    <h4 class="ui header">Manage Module Availability</h4>
+    <div class="ui divider"></div>
+    <form class="ui form" action="/configurations/module-flags/manage" method="POST">
+        <div class="ui grid">
+            {{ range .ModuleFlags }}
+                <div class="row">
+                    <div class="eight wide column">
+                        <label for="flag_{{.FlagId}}"><strong>{{.ModuleName}}</strong></label>
+                    </div>
+                    <div class="eight wide column">
+                        <select class="ui dropdown" name="flag_{{.FlagId}}" id="flag_{{.FlagId}}">
+                            <option value="Enabled" {{if eq .Status "Enabled"}}selected{{end}}>Enabled</option>
+                            <option value="Disabled" {{if eq .Status "Disabled"}}selected{{end}}>Disabled</option>
+                        </select>
+                    </div>
+                </div>
+            {{ end }}
         </div>
-        <div class="field">
-            <label for="smtp_port"><strong>SMTP Port:</strong></label>
-            <input class="ui input" type="number" name="smtp_port" value="{{.AppConfig.EmailConfig.SMTPPort}}" required>
-        </div>
-        <div class="field">
-            <label for="sender_email"><strong>Sender Email:</strong></label>
-            <input class="ui input" type="email" name="sender_email" value="{{.AppConfig.EmailConfig.SenderEmail}}" required>
-        </div>
-        <div class="field">
-            <label for="sender_password"><strong>Sender Password:</strong></label>
-            <input class="ui input" type="text" name="sender_password" value="{{.AppConfig.EmailConfig.SenderPassword}}" required>
-        </div>
+        <div class="ui divider"></div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">
-                <i class="send icon"></i>
-                Submit
+                <i class="save icon"></i>
+                Save Changes
             </button>
             <div class="or"></div>
-            <a href="/configurations/module-flag" class="ui red button">
-                <i class="x icon"></i>
+            <a href="/configurations/module-flags" class="ui red button">
+                <i class="cancel icon"></i>
                 Cancel
             </a>
         </div>

@@ -36,6 +36,7 @@ func (s *ModuleService) CreateModule(ctx context.Context, request entities.Creat
 	}
 	module := entities.Module{
 		ModuleName:  request.ModuleName,
+		Code: request.Code,
 		Description: request.Description,
 		UniqueId:    encryption.GenerateUUID(),
 		CreatedAt:   time.Now().UTC(),
@@ -57,6 +58,7 @@ func (s *ModuleService) UpdateModule(ctx context.Context, moduleId int, request 
 		return apperrors.NewNotFoundError("module not found")
 	}
 	module.ModuleName = request.ModuleName
+	module.Code = request.Code
 	module.Description = request.Description
 	module.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, module)
@@ -66,7 +68,7 @@ func (s *ModuleService) UpdateModule(ctx context.Context, moduleId int, request 
 	return nil
 }
 
-func (s *ModuleService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
+func (s *ModuleService) GetAllModulesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}

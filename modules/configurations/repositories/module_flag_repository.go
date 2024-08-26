@@ -27,14 +27,19 @@ func (repo *ModuleFlagRepository) Update(ctx context.Context, moduleFlag entitie
 	return result.Error
 }
 
+func (repo *ModuleFlagRepository) UpdateBatch(ctx context.Context, moduleFlags []entities.ModuleFlag) error {
+    result := repo.db.WithContext(ctx).Save(&moduleFlags)
+    return result.Error
+}
+
 func (repo *ModuleFlagRepository) Delete(ctx context.Context, moduleFlag entities.ModuleFlag) error {
 	result := repo.db.WithContext(ctx).Delete(&moduleFlag)
 	return result.Error
 }
 
-func (repo *ModuleFlagRepository) FindAll(ctx context.Context) ([]entities.ModuleFlag, error) {
-	var moduleFlags []entities.ModuleFlag
-	result := repo.db.WithContext(ctx).Find(&moduleFlags)
+func (repo *ModuleFlagRepository) FindAll(ctx context.Context) ([]entities.ModuleFlagData, error) {
+	var moduleFlags []entities.ModuleFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Find(&moduleFlags)
 	return moduleFlags, result.Error
 }
 
@@ -64,7 +69,7 @@ func (repo *ModuleFlagRepository) GetDataByUniqueId(ctx context.Context, uniqueI
 
 func (repo *ModuleFlagRepository) Count(ctx context.Context) (int64, error) {
 	var count int64
-	result := repo.db.WithContext(ctx).Table("configurations.moduleFlags").Count(&count)
+	result := repo.db.WithContext(ctx).Table("configurations.module_flag").Count(&count)
 	return count, result.Error
 }
 

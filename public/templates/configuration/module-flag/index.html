@@ -3,11 +3,34 @@
 <div class="ui segment">
     
     <div class="ui right floated buttons">
-        <a href="/configurations/module-flag/manage" class="ui primary button">
+        <a href="/configurations/module-flags/manage" class="ui primary button">
             <i class="pencil icon"></i>
             Manage
         </a>
     </div>
+    <table class="ui selectable small table blue">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Code</th>
+                <th>Status</th>
+                <th>Last Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .ModuleFlags }}
+                <tr>
+                    <td>{{.ModuleName}}</td>
+                    <td>{{.Code}}</td>
+                    <td>
+                        <i class="square icon {{ if eq .Status "Enabled" }}green{{ else }}red{{ end }}"></i>
+                        {{.Status}}
+                    </td>
+                    <td>{{.UpdatedAt}}</td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
    
 </div>
 

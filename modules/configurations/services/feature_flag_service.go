@@ -68,7 +68,7 @@ func (s *FeatureFlagService) UpdateFeatureFlag(ctx context.Context, featureId in
 	return nil
 }
 
-func (s *FeatureFlagService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.FeatureFlagData], error) {
+func (s *FeatureFlagService) GetAllFeatureFlagsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.FeatureFlagData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}

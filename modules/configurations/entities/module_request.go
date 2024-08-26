@@ -3,6 +3,7 @@ package entities
 //--CREATE
 type CreateModuleRequest struct {
     ModuleName  string    `json:":module_name" form:"module_name"`
+    Code        string    `json:":code" form:"code"`
     Description string    `json:":description" form:"description"`
 }
 
@@ -14,6 +15,7 @@ func (req CreateModuleRequest) Validate() error {
 //--CREATE
 type UpdateModuleRequest struct {
     ModuleName  string    `json:":module_name" form:"module_name"`
+    Code        string    `json:":code" form:"code"`
     Description string    `json:":description" form:"description"`
 }
 

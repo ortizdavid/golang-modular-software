@@ -11,4 +11,5 @@ func RegisterRoutes(router *fiber.App, db *database.Database) {
 	NewBasicConfigurationController(db).Routes(router, db)
 	NewCompanyConfigurationController(db).Routes(router, db)
 	NewEmailConfigurationController(db).Routes(router, db)
+	NewModuleFlagController(db).Routes(router, db)
 }

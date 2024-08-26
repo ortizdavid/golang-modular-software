@@ -23,6 +23,7 @@ type ModuleFlagData struct {
     Status      string    `json:"status"`
     CreatedAt   string `json:"created_at"`
     UpdatedAt   string `json:"updated_at"`
-    ModuleId   int       `json:"module_id"`
-    MoudleName   string       `json:"module_name"`
+    ModuleId    int       `json:"module_id"`
+    ModuleName   string       `json:"module_name"`
+    Code         string       `json:"code"`
 }

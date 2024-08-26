@@ -1,16 +1,15 @@
 package entities
 
-// -- Module Flag
+import "fmt"
+
 type ManageModuleFlagRequest struct {
-    ModuleId  int `json:"module_id" form:"module_id"`
-    Status    string `json:"status" form:"status"` 
+	FlagId int    `json:"flag_id" form:"flag_id"`
+	Status string `json:"statuses" form:"status"`
 }
 
 func (req ManageModuleFlagRequest) Validate() error {
-    return nil
-}
-
-// --- Search
-type SearchModuleFlagRequest struct {
-	SearchParam		string `json:"search_param" form:"search_param"`
+	if req.Status != "Enabled" && req.Status != "Disabled" {
+		return fmt.Errorf("invalid status: %s", req.Status)
+	}
+	return nil
 }
