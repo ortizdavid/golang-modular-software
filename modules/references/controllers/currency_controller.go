@@ -17,17 +17,19 @@ type CurrencyController struct {
 	service        *services.CurrencyService
 	authService    *authentication.AuthService
 	configService *configurations.AppConfigurationService
+	flagStatusService *configurations.ModuleFlagStatusService
 	infoLogger     *helpers.Logger
 	errorLogger    *helpers.Logger
 }
 
 func NewCurrencyController(db *database.Database) *CurrencyController {
 	return &CurrencyController{
-		service:        services.NewCurrencyService(db),
-		authService:    authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:     helpers.NewInfoLogger("references-info.log"),
-		errorLogger:    helpers.NewErrorLogger("references-error.log"),
+		service:           services.NewCurrencyService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:        helpers.NewInfoLogger("references-info.log"),
+		errorLogger:       helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,6 +50,7 @@ func (ctrl *CurrencyController) Routes(router *fiber.App, db *database.Database)
 
 func (ctrl *CurrencyController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCurrenciesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -56,6 +59,7 @@ func (ctrl *CurrencyController) index(c *fiber.Ctx) error {
 	return c.Render("references/currency/index", fiber.Map{
 		"Title":       "Currencies",
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser":  loggedUser,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -66,6 +70,7 @@ func (ctrl *CurrencyController) index(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -73,6 +78,7 @@ func (ctrl *CurrencyController) details(c *fiber.Ctx) error {
 	return c.Render("references/currency/details", fiber.Map{
 		"Title":      "Details",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 		"Currency":     currency,
 	})
@@ -80,9 +86,11 @@ func (ctrl *CurrencyController) details(c *fiber.Ctx) error {
 
 func (ctrl *CurrencyController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/currency/create", fiber.Map{
 		"Title":      "Create Currency",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }
@@ -105,6 +113,7 @@ func (ctrl *CurrencyController) create(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -112,6 +121,7 @@ func (ctrl *CurrencyController) editForm(c *fiber.Ctx) error {
 	return c.Render("references/currency/edit", fiber.Map{
 		"Title":      "Edit Currency",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 		"Currency":     currency,
 	})
@@ -139,10 +149,12 @@ func (ctrl *CurrencyController) edit(c *fiber.Ctx) error {
 
 func (ctrl *CurrencyController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/currency/search", fiber.Map{
 		"Title":      "Search Currencies",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -150,6 +162,7 @@ func (ctrl *CurrencyController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchCurrencyRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchCurrencies(c.Context(), c, request, params)
 	if err != nil {
@@ -160,6 +173,7 @@ func (ctrl *CurrencyController) search(c *fiber.Ctx) error {
 		"Title":       "Search Results",
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"Pagination":  pagination,
 		"Param":       request.SearchParam,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -170,6 +184,7 @@ func (ctrl *CurrencyController) search(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -179,6 +194,7 @@ func (ctrl *CurrencyController) removeForm(c *fiber.Ctx) error {
 		"Currency": 	currency,
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 

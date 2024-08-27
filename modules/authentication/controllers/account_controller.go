@@ -17,37 +17,41 @@ type AccountController struct {
 	authService   *services.AuthService
 	roleService   *services.RoleService
 	configService *configurations.AppConfigurationService
+	flagStatusService *configurations.ModuleFlagStatusService
 	infoLogger    *helpers.Logger
 	errorLogger   *helpers.Logger
 }
 
 func NewAccountController(db *database.Database) *AccountController {
 	return &AccountController{
-		service:     services.NewUserService(db),
-		authService: services.NewAuthService(db),
-		roleService: services.NewRoleService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:  helpers.NewInfoLogger("users-info.log"),
-		errorLogger: helpers.NewInfoLogger("users-error.log"),
+		service:           services.NewUserService(db),
+		authService:       services.NewAuthService(db),
+		roleService:       services.NewRoleService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:        helpers.NewInfoLogger("users-info.log"),
+		errorLogger:       helpers.NewInfoLogger("users-error.log"),
 	}
 }
 func (ctrl *AccountController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	group := router.Group("account", authMiddleware.CheckLoggedUser)
-	group.Get("/user-data", authMiddleware.CheckLoggedUser, ctrl.userData)
-	group.Get("/change-data", authMiddleware.CheckLoggedUser, ctrl.changeUserDataForm)
-	group.Get("/upload-image", authMiddleware.CheckLoggedUser, ctrl.uploadUserImageForm)
-	group.Post("/upload-image", authMiddleware.CheckLoggedUser, ctrl.uploadUserImage)
-	group.Get("/change-password", authMiddleware.CheckLoggedUser, ctrl.changePasswordForm)
-	group.Post("/change-password", authMiddleware.CheckLoggedUser, ctrl.changePassword)
+	group.Get("/user-data", ctrl.userData)
+	group.Get("/change-data", ctrl.changeUserDataForm)
+	group.Get("/upload-image", ctrl.uploadUserImageForm)
+	group.Post("/upload-image", ctrl.uploadUserImage)
+	group.Get("/change-password", ctrl.changePasswordForm)
+	group.Post("/change-password", ctrl.changePassword)
 }
 
 func (ctrl *AccountController) uploadUserImageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/upload-image", fiber.Map{
 		"Title":      "Upload Image",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -64,10 +68,12 @@ func (ctrl *AccountController) uploadUserImage(c *fiber.Ctx) error {
 
 func (ctrl *AccountController) changePasswordForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/change-password", fiber.Map{
 		"Title":      "Change Password",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -88,18 +94,22 @@ func (ctrl *AccountController) changePassword(c *fiber.Ctx) error {
 
 func (ctrl *AccountController) userData(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/user-data", fiber.Map{
 		"Title":      "User Data",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }
 
 func (ctrl *AccountController) changeUserDataForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/change-data", fiber.Map{
 		"Title":      "Change Data",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }

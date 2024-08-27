@@ -17,17 +17,19 @@ type EvaluationStatusController struct {
 	service        *services.EvaluationStatusService
 	authService    *authentication.AuthService
 	configService *configurations.AppConfigurationService
+	flagStatusService *configurations.ModuleFlagStatusService
 	infoLogger     *helpers.Logger
 	errorLogger    *helpers.Logger
 }
 
 func NewEvaluationStatusController(db *database.Database) *EvaluationStatusController {
 	return &EvaluationStatusController{
-		service:        services.NewEvaluationStatusService(db),
-		authService:    authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:     helpers.NewInfoLogger("references-info.log"),
-		errorLogger:    helpers.NewErrorLogger("references-error.log"),
+		service:           services.NewEvaluationStatusService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:        helpers.NewInfoLogger("references-info.log"),
+		errorLogger:       helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,6 +50,7 @@ func (ctrl *EvaluationStatusController) Routes(router *fiber.App, db *database.D
 
 func (ctrl *EvaluationStatusController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -56,6 +59,7 @@ func (ctrl *EvaluationStatusController) index(c *fiber.Ctx) error {
 	return c.Render("references/evaluation-status/index", fiber.Map{
 		"Title":       "Evaluation Statuses",
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser":  loggedUser,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -66,6 +70,7 @@ func (ctrl *EvaluationStatusController) index(c *fiber.Ctx) error {
 func (ctrl *EvaluationStatusController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -73,6 +78,7 @@ func (ctrl *EvaluationStatusController) details(c *fiber.Ctx) error {
 	return c.Render("references/evaluation-status/details", fiber.Map{
 		"Title":      "Details",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 		"EvaluationStatus":     status,
 	})
@@ -80,9 +86,11 @@ func (ctrl *EvaluationStatusController) details(c *fiber.Ctx) error {
 
 func (ctrl *EvaluationStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/evaluation-status/create", fiber.Map{
 		"Title":      "Create Evaluation Status",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }
@@ -105,6 +113,7 @@ func (ctrl *EvaluationStatusController) create(c *fiber.Ctx) error {
 func (ctrl *EvaluationStatusController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -112,6 +121,7 @@ func (ctrl *EvaluationStatusController) editForm(c *fiber.Ctx) error {
 	return c.Render("references/evaluation-status/edit", fiber.Map{
 		"Title":      "Edit Evaluation Status",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 		"EvaluationStatus":     status,
 	})
@@ -139,10 +149,12 @@ func (ctrl *EvaluationStatusController) edit(c *fiber.Ctx) error {
 
 func (ctrl *EvaluationStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/evaluation-status/search", fiber.Map{
 		"Title":      "Search Statuses",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -150,6 +162,7 @@ func (ctrl *EvaluationStatusController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchStatusRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
 	if err != nil {
@@ -160,6 +173,7 @@ func (ctrl *EvaluationStatusController) search(c *fiber.Ctx) error {
 		"Title":       "Search Results",
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"Pagination":  pagination,
 		"Param":       request.SearchParam,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -170,6 +184,7 @@ func (ctrl *EvaluationStatusController) search(c *fiber.Ctx) error {
 func (ctrl *EvaluationStatusController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -179,6 +194,7 @@ func (ctrl *EvaluationStatusController) removeForm(c *fiber.Ctx) error {
 		"EvaluationStatus": 	status,
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 

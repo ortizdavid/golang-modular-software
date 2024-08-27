@@ -17,17 +17,19 @@ type IdentificationTypeController struct {
 	service        *services.IdentificationTypeService
 	authService    *authentication.AuthService
 	configService *configurations.AppConfigurationService
+	flagStatusService *configurations.ModuleFlagStatusService
 	infoLogger     *helpers.Logger
 	errorLogger    *helpers.Logger
 }
 
 func NewIdentificationTypeController(db *database.Database) *IdentificationTypeController {
 	return &IdentificationTypeController{
-		service:        services.NewIdentificationTypeService(db),
-		authService:    authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:     helpers.NewInfoLogger("references-info.log"),
-		errorLogger:    helpers.NewErrorLogger("references-error.log"),
+		service:           services.NewIdentificationTypeService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:        helpers.NewInfoLogger("references-info.log"),
+		errorLogger:       helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,6 +50,7 @@ func (ctrl *IdentificationTypeController) Routes(router *fiber.App, db *database
 
 func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllTypesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -56,6 +59,7 @@ func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 	return c.Render("references/identification-type/index", fiber.Map{
 		"Title":       "Identification Types",
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser":  loggedUser,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -66,15 +70,17 @@ func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	iType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/identification-type/details", fiber.Map{
 		"Title":      "Details",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
-		"IdentificationType":     status,
+		"IdentificationType":     iType,
 	})
 }
 
@@ -105,7 +111,7 @@ func (ctrl *IdentificationTypeController) create(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
+	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -113,14 +119,14 @@ func (ctrl *IdentificationTypeController) editForm(c *fiber.Ctx) error {
 		"Title":      "Edit Identification Type",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
-		"IdentificationType":     status,
+		"IdentificationType":     identType,
 	})
 }
 
 func (ctrl *IdentificationTypeController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
+	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -128,7 +134,7 @@ func (ctrl *IdentificationTypeController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	err = ctrl.service.UpdateIdentificationType(c.Context(), status.TypeId, request)
+	err = ctrl.service.UpdateIdentificationType(c.Context(), identType.TypeId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
@@ -170,13 +176,13 @@ func (ctrl *IdentificationTypeController) search(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
+	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/identification-type/delete", fiber.Map{
 		"Title":  "Remove Identification Type",
-		"IdentificationType": 	status,
+		"IdentificationType": 	identType,
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
 	})
@@ -185,7 +191,7 @@ func (ctrl *IdentificationTypeController) removeForm(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
+	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -193,6 +199,6 @@ func (ctrl *IdentificationTypeController) remove(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed contact type '%s'", loggedUser.UserName, status.TypeName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed contact type '%s'", loggedUser.UserName, identType.TypeName))
 	return c.Redirect("/references/identification-types")
 }

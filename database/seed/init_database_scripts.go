@@ -13,7 +13,7 @@ const (
 	authDir        = "authentication"
 	configDir      = "configuration"
 	companyDir     = "company"
-	referenceDir   = "reference"
+	referenceDir   = "references"
 	employeeDir    = "employees"
 	sqlScriptsBase = "./database/sql"
 )

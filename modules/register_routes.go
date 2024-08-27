@@ -14,95 +14,11 @@ import (
 	entities "github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 )
 
-// routeGroup represents a route group with its prefix, module, and middlewares
-type routeGroup struct {
-	prefix      string
-	module      entities.ModuleInfo
-	middlewares []fiber.Handler
-}
-
-// createRouteGroups initializes and returns a slice of routeGroup
-func createRouteGroups(flagMiddleware *middlewares.ModuleFlagMiddleware) []routeGroup {
-	return []routeGroup{
-		{
-			prefix:      "/user-management",
-			module:      entities.ModuleAuthentication,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleAuthentication.Code)},
-		},
-		{
-			prefix:      "/api/user-management",
-			module:      entities.ModuleAuthentication,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleAuthentication.Code)},
-		},
-		{
-			prefix:      "/configurations",
-			module:      entities.ModuleConfigurations,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleConfigurations.Code)},
-		},
-		{
-			prefix:      "/api/configurations",
-			module:      entities.ModuleConfigurations,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleConfigurations.Code)},
-		},
-		{
-			prefix:      "/company",
-			module:      entities.ModuleCompany,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleCompany.Code)},
-		},
-		{
-			prefix:      "/api/company",
-			module:      entities.ModuleCompany,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleCompany.Code)},
-		},
-		{
-			prefix:      "/employees",
-			module:      entities.ModuleEmployees,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleEmployees.Code)},
-		},
-		{
-			prefix:      "/api/employees",
-			module:      entities.ModuleEmployees,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleEmployees.Code)},
-		},
-		{
-			prefix:      "/references",
-			module:      entities.ModuleReferences,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleReferences.Code)},
-		},
-		{
-			prefix:      "/api/references",
-			module:      entities.ModuleReferences,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleReferences.Code)},
-		},
-		{
-			prefix:      "/reports",
-			module:      entities.ModuleReports,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleReports.Code)},
-		},
-		{
-			prefix:      "/api/reports",
-			module:      entities.ModuleReports,
-			middlewares: []fiber.Handler{flagMiddleware.CheckModule(entities.ModuleReports.Code)},
-		},
-	}
-}
-
-// registerRouteGroups registers routes for each routeGroup
-func registerRouteGroups(router *fiber.App, routeGroups []routeGroup) {
-	for _, group := range routeGroups {
-		router.Group(group.prefix, group.middlewares...)
-		// Optionally register API version routes
-		router.Group("/api"+group.prefix, group.middlewares...)
-	}
-}
-
 // RegisterRoutes initializes and registers controllers (routes) from different modules
 func RegisterRoutes(router *fiber.App, db *database.Database) {
-	// Initialize the middleware
-	flagMiddleware := middlewares.NewModuleFlagMiddleware(db)
-
+	
 	// Create route groups
-	routeGroups := createRouteGroups(flagMiddleware)
+	routeGroups := createRouteGroups(db)
 
 	// Register middleware for each route group
 	registerRouteGroups(router, routeGroups)
@@ -115,4 +31,110 @@ func RegisterRoutes(router *fiber.App, db *database.Database) {
 	employees.RegisterModuleRoutes(router, db)
 	back_office.RegisterModuleRoutes(router, db)
 	reports.RegisterModuleRoutes(router, db)
+}
+
+// routeGroup represents a route group with its prefix, module, and middlewares
+type routeGroup struct {
+	prefix      string
+	module      entities.ModuleInfo
+	middlewares []fiber.Handler
+}
+
+// createRouteGroups initializes and returns a slice of routeGroup
+func createRouteGroups(db *database.Database) []routeGroup {
+	// Initialize the middlewares
+	flagMiddleware := middlewares.NewModuleFlagMiddleware(db)
+	//sessionMiddleware := middlewares.NewSessionAuthMiddleware(db)
+	//apiKeyMiddleware := middlewares.NewApiKeyMiddleware(db)
+	//jwtMiddleware := middlewares.NewJwtMiddleware(db)
+
+	return []routeGroup{
+		{
+			prefix: "/user-management",
+			module: entities.ModuleAuthentication,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleAuthentication.Code),
+			},
+		},
+		{
+			prefix: "/api/user-management",
+			module: entities.ModuleAuthentication,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleAuthentication.Code),
+			},
+		},
+		{
+			prefix: "/configurations",
+			module: entities.ModuleConfigurations,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleConfigurations.Code),
+				// Add other middlewares specific to configurations if needed
+			},
+		},
+		{
+			prefix: "/api/configurations",
+			module: entities.ModuleConfigurations,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleConfigurations.Code),
+				// Add other middlewares specific to configurations if needed
+			},
+		},
+		{
+			prefix: "/company",
+			module: entities.ModuleCompany,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleCompany.Code),
+				// Add other middlewares specific to company if needed
+			},
+		},
+		{
+			prefix: "/api/company",
+			module: entities.ModuleCompany,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleCompany.Code),
+				// Add other middlewares specific to company if needed
+			},
+		},
+		{
+			prefix: "/employees",
+			module: entities.ModuleEmployees,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleEmployees.Code),
+				// Add other middlewares specific to employees if needed
+			},
+		},
+		{
+			prefix: "/api/employees",
+			module: entities.ModuleEmployees,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleEmployees.Code),
+				// Add other middlewares specific to employees if needed
+			},
+		},
+		{
+			prefix: "/references",
+			module: entities.ModuleReferences,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleReferences.Code),
+				// Add other middlewares specific to references if needed
+			},
+		},
+		{
+			prefix: "/api/references",
+			module: entities.ModuleReferences,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(entities.ModuleReferences.Code),
+				// Add other middlewares specific to references if needed
+			},
+		},
+	}
+}
+
+// registerRouteGroups registers routes for each routeGroup
+func registerRouteGroups(router *fiber.App, routeGroups []routeGroup) {
+	for _, group := range routeGroups {
+		router.Group(group.prefix, group.middlewares...)
+		// Optionally register API version routes
+		router.Group("/api"+group.prefix, group.middlewares...)
+	}
 }

@@ -18,24 +18,25 @@ type UserController struct {
 	authService   *services.AuthService
 	roleService   *services.RoleService
 	configService *configurations.AppConfigurationService
+	flagStatusService *configurations.ModuleFlagStatusService
 	infoLogger    *helpers.Logger
 	errorLogger   *helpers.Logger
 }
 
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
-		service:       services.NewUserService(db),
-		authService:   services.NewAuthService(db),
-		roleService:   services.NewRoleService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:    helpers.NewInfoLogger("users-info.log"),
-		errorLogger:   helpers.NewInfoLogger("users-error.log"),
+		service:           services.NewUserService(db),
+		authService:       services.NewAuthService(db),
+		roleService:       services.NewRoleService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:        helpers.NewInfoLogger("users-info.log"),
+		errorLogger:       helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
 func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-
 	group := router.Group("/user-management/users", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
@@ -63,6 +64,7 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *UserController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllUsers(c.Context(), c, params)
 	if err != nil {
@@ -72,6 +74,7 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 		"Title":       "Users",
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
 		"TotalPages":  pagination.MetaData.TotalPages + 1,
@@ -81,6 +84,7 @@ func (ctrl *UserController) index(c *fiber.Ctx) error {
 func (ctrl *UserController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -91,6 +95,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 		"Title":      "User Details",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"User":       user,
 		"UserRoles":  userRoles,
 		"CountRoles": len(userRoles),
@@ -100,6 +105,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 
 func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	roles, err := ctrl.roleService.GetAllRoles(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -109,6 +115,7 @@ func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 		"Roles":      roles,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -129,6 +136,7 @@ func (ctrl *UserController) create(c *fiber.Ctx) error {
 func (ctrl *UserController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -138,6 +146,7 @@ func (ctrl *UserController) editForm(c *fiber.Ctx) error {
 		"User":       user,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -167,6 +176,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	roles, err := ctrl.roleService.GetUnassignedRolesByUser(c.Context(), user.UserId)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -177,6 +187,7 @@ func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
 		"User":       user,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -203,6 +214,7 @@ func (ctrl *UserController) removeRoleForm(c *fiber.Ctx) error {
 	userId := c.Params("userId")
 	userRoleId := c.Params("userRoleId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), userId)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -217,6 +229,7 @@ func (ctrl *UserController) removeRoleForm(c *fiber.Ctx) error {
 		"User":       user,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -242,10 +255,12 @@ func (ctrl *UserController) removeRole(c *fiber.Ctx) error {
 
 func (ctrl *UserController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/user/search", fiber.Map{
 		"Title":      "Search Users",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -253,6 +268,7 @@ func (ctrl *UserController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchUserRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchUsers(c.Context(), c, request, params)
 	if err != nil {
@@ -267,6 +283,7 @@ func (ctrl *UserController) search(c *fiber.Ctx) error {
 		"TotalPages":  pagination.MetaData.TotalPages + 1,
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -277,6 +294,7 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	if loggedUser.UserId == user.UserId {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot deactivate your own account"))
 	}
@@ -285,6 +303,7 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 		"User":       user,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -314,6 +333,7 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	if loggedUser.UserId == user.UserId {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot activate your own account"))
 	}
@@ -322,6 +342,7 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 		"User":       user,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -346,6 +367,7 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 
 func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
 	if err != nil {
@@ -356,11 +378,13 @@ func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
 func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
 	if err != nil {
@@ -371,11 +395,13 @@ func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
 func (ctrl *UserController) getAllOnlineUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllOnlineUsers(c.Context(), c, params)
 	if err != nil {
@@ -386,11 +412,13 @@ func (ctrl *UserController) getAllOnlineUsers(c *fiber.Ctx) error {
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
 func (ctrl *UserController) getAllOfflineUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllOfflineUsers(c.Context(), c, params)
 	if err != nil {
@@ -401,6 +429,7 @@ func (ctrl *UserController) getAllOfflineUsers(c *fiber.Ctx) error {
 		"Pagination": pagination,
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -411,6 +440,7 @@ func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	if loggedUser.UserId == user.UserId {
 		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
 	}
@@ -418,6 +448,7 @@ func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
 		"Title":      "Reset Password",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"User":       user,
 	})
 }

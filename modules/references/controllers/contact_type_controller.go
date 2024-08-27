@@ -17,17 +17,19 @@ type ContactTypeController struct {
 	service        *services.ContactTypeService
 	authService    *authentication.AuthService
 	configService *configurations.AppConfigurationService
+	flagStatusService *configurations.ModuleFlagStatusService
 	infoLogger     *helpers.Logger
 	errorLogger    *helpers.Logger
 }
 
 func NewContactTypeController(db *database.Database) *ContactTypeController {
 	return &ContactTypeController{
-		service:        services.NewContactTypeService(db),
-		authService:    authentication.NewAuthService(db),
-		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:     helpers.NewInfoLogger("references-info.log"),
-		errorLogger:    helpers.NewErrorLogger("references-error.log"),
+		service:           services.NewContactTypeService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     configurations.NewAppConfigurationService(db),
+		flagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:        helpers.NewInfoLogger("references-info.log"),
+		errorLogger:       helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,6 +50,7 @@ func (ctrl *ContactTypeController) Routes(router *fiber.App, db *database.Databa
 
 func (ctrl *ContactTypeController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllTypesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -56,6 +59,7 @@ func (ctrl *ContactTypeController) index(c *fiber.Ctx) error {
 	return c.Render("references/contact-type/index", fiber.Map{
 		"Title":       "Contact Types",
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser":  loggedUser,
 		"Pagination":  pagination,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -66,23 +70,27 @@ func (ctrl *ContactTypeController) index(c *fiber.Ctx) error {
 func (ctrl *ContactTypeController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	contType, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/contact-type/details", fiber.Map{
 		"Title":      "Details",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
-		"ContactType":     status,
+		"ContactType":     contType,
 	})
 }
 
 func (ctrl *ContactTypeController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/contact-type/create", fiber.Map{
 		"Title":      "Create Contact Type",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
 	})
 }
@@ -105,22 +113,24 @@ func (ctrl *ContactTypeController) create(c *fiber.Ctx) error {
 func (ctrl *ContactTypeController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	contType, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/contact-type/edit", fiber.Map{
 		"Title":      "Edit Contact Type",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"LoggedUser": loggedUser,
-		"ContactType":     status,
+		"ContactType":     contType,
 	})
 }
 
 func (ctrl *ContactTypeController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
+	contType, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -128,7 +138,7 @@ func (ctrl *ContactTypeController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	err = ctrl.service.UpdateContactType(c.Context(), status.TypeId, request)
+	err = ctrl.service.UpdateContactType(c.Context(), contType.TypeId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
@@ -139,10 +149,12 @@ func (ctrl *ContactTypeController) edit(c *fiber.Ctx) error {
 
 func (ctrl *ContactTypeController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/contact-type/search", fiber.Map{
 		"Title":      "Search Types",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
@@ -150,6 +162,7 @@ func (ctrl *ContactTypeController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchTypeRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchTypes(c.Context(), c, request, params)
 	if err != nil {
@@ -160,6 +173,7 @@ func (ctrl *ContactTypeController) search(c *fiber.Ctx) error {
 		"Title":       "Search Results",
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 		"Pagination":  pagination,
 		"Param":       request.SearchParam,
 		"CurrentPage": pagination.MetaData.CurrentPage + 1,
@@ -170,22 +184,24 @@ func (ctrl *ContactTypeController) search(c *fiber.Ctx) error {
 func (ctrl *ContactTypeController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
+	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	contType, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/contact-type/delete", fiber.Map{
 		"Title":  "Remove Contact Type",
-		"ContactType": 	status,
+		"ContactType": 	contType,
 		"LoggedUser":  loggedUser,
 		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": flagStatus,
 	})
 }
 
 func (ctrl *ContactTypeController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
+	contType, err := ctrl.service.GetContactTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -193,6 +209,6 @@ func (ctrl *ContactTypeController) remove(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed contact type '%s'", loggedUser.UserName, status.TypeName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed contact type '%s'", loggedUser.UserName, contType.TypeName))
 	return c.Redirect("/references/contact-types")
 }
