@@ -2,7 +2,7 @@
 
     <div class="ui segment">
         <div>
-            <form class="ui form" action="/roles/search-results" method="GET" style="padding-bottom: 2%">
+            <form class="ui form" action="/user-management/roles/search-results" method="GET" style="padding-bottom: 2%">
                 <table>
                     <tr>
                         <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by Role Name or Code" required autofocus></td>
@@ -36,13 +36,13 @@
                                 <td>{{.Code}}</td>
                                 <td>{{.Description}}</td>
                                 <td>
-                                    <a href="/roles/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <a href="/user-management/roles/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
-                                    <a href="/roles/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                    <a href="/user-management/roles/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                         <i class="pencil icon"></i>
                                     </a>
-                                    <a href="/roles/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                    <a href="/user-management/roles/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
                                         <i class="trash alternate red icon"></i>
                                     </a>
                                 </td>

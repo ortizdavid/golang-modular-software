@@ -14,29 +14,29 @@ import (
 )
 
 type UserController struct {
-	service     *services.UserService
-	authService *services.AuthService
-	roleService *services.RoleService
+	service       *services.UserService
+	authService   *services.AuthService
+	roleService   *services.RoleService
 	configService *configurations.AppConfigurationService
-	infoLogger  *helpers.Logger
-	errorLogger *helpers.Logger
+	infoLogger    *helpers.Logger
+	errorLogger   *helpers.Logger
 }
 
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
-		service:     services.NewUserService(db),
-		authService: services.NewAuthService(db),
-		roleService: services.NewRoleService(db),
+		service:       services.NewUserService(db),
+		authService:   services.NewAuthService(db),
+		roleService:   services.NewRoleService(db),
 		configService: configurations.NewAppConfigurationService(db),
-		infoLogger:  helpers.NewInfoLogger("users-info.log"),
-		errorLogger: helpers.NewInfoLogger("users-error.log"),
+		infoLogger:    helpers.NewInfoLogger("users-info.log"),
+		errorLogger:   helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
 func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
 
-	group := router.Group("/users", authMiddleware.CheckLoggedUser)
+	group := router.Group("/user-management/users", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/create", ctrl.createForm)
@@ -123,7 +123,7 @@ func (ctrl *UserController) create(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+request.UserName+"' added successfully")
-	return c.Redirect("/users")
+	return c.Redirect("/user-management/users")
 }
 
 func (ctrl *UserController) editForm(c *fiber.Ctx) error {
@@ -157,7 +157,7 @@ func (ctrl *UserController) edit(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+user.UserName+"' edited successfuly")
-	return c.Redirect("/users")
+	return c.Redirect("/user-management/users")
 }
 
 func (ctrl *UserController) assignRoleForm(c *fiber.Ctx) error {
@@ -196,7 +196,7 @@ func (ctrl *UserController) assignRole(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' assigned role %d", user.UserName, request.RoleId))
-	return c.Redirect("/users/" + id + "/details")
+	return c.Redirect("/user-management/users/" + id + "/details")
 }
 
 func (ctrl *UserController) removeRoleForm(c *fiber.Ctx) error {
@@ -237,7 +237,7 @@ func (ctrl *UserController) removeRole(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed role %s", user.UserName, userRole.RoleName))
-	return c.Redirect("/users/" + userId + "/details")
+	return c.Redirect("/user-management/users/" + userId + "/details")
 }
 
 func (ctrl *UserController) searchForm(c *fiber.Ctx) error {
@@ -304,7 +304,7 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' deactivated successfully!", user.UserName))
-	return c.Redirect("/users/" + id + "/details")
+	return c.Redirect("/user-management/users/" + id + "/details")
 }
 
 func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
@@ -341,7 +341,7 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' activated successfully!", user.UserName))
-	return c.Redirect("/users/" + id + "/details")
+	return c.Redirect("/user-management/users/" + id + "/details")
 }
 
 func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
@@ -442,5 +442,5 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' password reseted", loggedUser.UserName))
-	return c.Redirect("/users/" + user.UniqueId + "/details")
+	return c.Redirect("/user-management/users/" + user.UniqueId + "/details")
 }

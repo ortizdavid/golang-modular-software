@@ -1,7 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/permissions/{{.Permission.UniqueId}}/edit" method="POST">
+    <form class="ui form" action="/user-management/permissions/{{.Permission.UniqueId}}/edit" method="POST">
         <div class="field">
             <label for="permission_name"><strong>Permission Name:</strong></label>
             <input class="ui input" type="text" name="permission_name" value="{{.Permission.PermissionName}}" autofocus>
@@ -20,7 +20,7 @@
                 Submit
             </button>
             <div class="or"></div>
-            <a href="/permissions/{{.Permission.UniqueId}}" class="ui red button">
+            <a href="/user-management/permissions/{{.Permission.UniqueId}}" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

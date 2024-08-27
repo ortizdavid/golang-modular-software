@@ -2,7 +2,7 @@
 
 <div class="ui segment">
     
-    <form class="ui form" action="/users/{{.User.UniqueId}}/activate" method="POST">
+    <form class="ui form" action="/user-management/users/{{.User.UniqueId}}/activate" method="POST">
         <div class="field">
             <label for="username"><strong>User:</strong></label>
             <input class="ui input" type="text" value="{{.User.UserName}}" name="user_name" readonly>
@@ -13,7 +13,7 @@
                 Confirm Activation
             </button>
             <div class="or"></div>
-            <a href="/users/{{.User.UniqueId}}/details" class="ui red button">
+            <a href="/user-management/users/{{.User.UniqueId}}/details" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

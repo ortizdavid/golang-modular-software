@@ -16,7 +16,7 @@ type RoleController struct {
 	service           *services.RoleService
 	authService       *services.AuthService
 	permissionService *services.PermissionService
-	configService *configurations.AppConfigurationService
+	configService     *configurations.AppConfigurationService
 	infoLogger        *helpers.Logger
 	errorLogger       *helpers.Logger
 }
@@ -26,7 +26,7 @@ func NewRoleController(db *database.Database) *RoleController {
 		service:           services.NewRoleService(db),
 		authService:       services.NewAuthService(db),
 		permissionService: services.NewPermissionService(db),
-		configService: configurations.NewAppConfigurationService(db),
+		configService:     configurations.NewAppConfigurationService(db),
 		infoLogger:        helpers.NewInfoLogger("users-info.log"),
 		errorLogger:       helpers.NewInfoLogger("users-error.log"),
 	}
@@ -34,7 +34,7 @@ func NewRoleController(db *database.Database) *RoleController {
 
 func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/roles", authMiddleware.CheckLoggedUser)
+	group := router.Group("/user-management/roles", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 	group.Get("/create", ctrl.createForm)
 	group.Post("/create", ctrl.create)
@@ -105,7 +105,7 @@ func (ctrl *RoleController) create(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' created role "+request.RoleName)
-	return c.Redirect("/roles")
+	return c.Redirect("/user-management/roles")
 }
 
 func (ctrl *RoleController) editForm(c *fiber.Ctx) error {
@@ -140,7 +140,7 @@ func (ctrl *RoleController) edit(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' updated role "+request.RoleName)
-	return c.Redirect("/roles")
+	return c.Redirect("/user-management/roles")
 }
 
 func (ctrl *RoleController) deleteForm(c *fiber.Ctx) error {
@@ -171,7 +171,7 @@ func (ctrl *RoleController) delete(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' deleted role "+role.RoleName)
-	return c.Redirect("/roles")
+	return c.Redirect("/user-management/roles")
 }
 
 func (ctrl *RoleController) searchForm(c *fiber.Ctx) error {
@@ -240,7 +240,7 @@ func (ctrl *RoleController) assignPermission(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("Role '%s' assigned permission %d", role.RoleName, request.PermissionId))
-	return c.Redirect("/roles/" + id + "/details")
+	return c.Redirect("/user-management/roles/" + id + "/details")
 }
 
 func (ctrl *RoleController) removePermissionForm(c *fiber.Ctx) error {
@@ -282,5 +282,5 @@ func (ctrl *RoleController) removePermission(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed permission '%s' from role '%s'", loggedUser.UserName, permissionRole.PermissionName, role.RoleName))
-	return c.Redirect("/roles/" + roleId + "/details")
+	return c.Redirect("/user-management/roles/" + roleId + "/details")
 }

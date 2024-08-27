@@ -17,7 +17,7 @@ func NewModuleFlagMiddleware(db *database.Database) *ModuleFlagMiddleware {
 }
 
 // CheckModule dynamically checks if a module is enabled
-func (mid *ModuleFlagMiddleware) CheckModule(moduleName string) fiber.Handler {
+func (mid *ModuleFlagMiddleware) CheckModule(moduleCode string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		flagStatus, err := mid.flagService.LoadModuleFlagStatus(c.Context())
 		if err != nil {
@@ -26,18 +26,18 @@ func (mid *ModuleFlagMiddleware) CheckModule(moduleName string) fiber.Handler {
 		var isEnabled bool
 
 		// Check the status of the module based on its name
-		switch moduleName {
-		case "Authentication":
+		switch moduleCode {
+		case "authentication":
 			isEnabled = flagStatus.Authentication == "Enabled"
-		case "Configurations":
+		case "configurations":
 			isEnabled = flagStatus.Configurations == "Enabled"
-		case "Company":
+		case "company":
 			isEnabled = flagStatus.Company == "Enabled"
-		case "Employees":
+		case "employees":
 			isEnabled = flagStatus.Employees == "Enabled"
-		case "Reports":
+		case "reports":
 			isEnabled = flagStatus.Reports == "Enabled"
-		case "References":
+		case "references":
 			isEnabled = flagStatus.References == "Enabled"
 		default:
 			isEnabled = false
@@ -46,7 +46,7 @@ func (mid *ModuleFlagMiddleware) CheckModule(moduleName string) fiber.Handler {
 		if !isEnabled {
 			return c.Status(fiber.StatusForbidden).Render("_errors/error", fiber.Map{
 				"Title":   "Module Error",
-				"Message": "Module Disabled",
+				"Message": "Module '"+moduleCode+"' is Disabled",
 			})
 		}
 		return c.Next()

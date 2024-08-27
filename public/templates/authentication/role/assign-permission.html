@@ -1,7 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/roles/{{.Role.UniqueId}}/assign-permission" method="POST">
+    <form class="ui form" action="/user-management/roles/{{.Role.UniqueId}}/assign-permission" method="POST">
         <div class="field">
             <label for="role_name"><strong>Role Name:</strong></label>
             <input class="ui input" type="text" value="{{.Role.RoleName}}" name="role_name" readonly>
@@ -21,7 +21,7 @@
                 Submit
             </button>
             <div class="or"></div>
-            <a href="/roles/{{.Role.UniqueId}}/details" class="ui red button">
+            <a href="/user-management/roles/{{.Role.UniqueId}}/details" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

@@ -4,11 +4,11 @@
        
         <div class="ui right aligned container">
             <div class="ui buttons">
-                <a href="/roles/create" class="ui blue button">
+                <a href="/user-management/roles/create" class="ui blue button">
                     <i class="plus circle icon"></i>
                     Add Role
                 </a>
-                <a href="/roles/search" class="ui blue button">
+                <a href="/user-management/roles/search" class="ui blue button">
                     <i class="search icon"></i>
                     Search Roles
                 </a>
@@ -35,13 +35,13 @@
                                 <td>{{.Code}}</td>
                                 <td>{{.Description}}</td>
                                 <td>
-                                    <a href="/roles/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <a href="/user-management/roles/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
-                                    <a href="/roles/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                    <a href="/user-management/roles/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                         <i class="pencil icon"></i>
                                     </a>
-                                    <a href="/roles/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
+                                    <a href="/user-management/roles/{{.UniqueId}}/delete" class="ui icon button" data-tooltip="Delete" data-position="top center">
                                         <i class="trash alternate red icon"></i>
                                     </a>
                                 </td>

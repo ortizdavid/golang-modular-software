@@ -2,7 +2,7 @@
 
     <div class="ui segment">
         <div>
-            <form class="ui form" action="/login-activities/search-results" method="GET" style="padding-bottom: 2%">
+            <form class="ui form" action="/user-management/login-activities/search-results" method="GET" style="padding-bottom: 2%">
                 <table>
                     <tr>
                         <td><input style="width: 400px;" type="text" name="search_param" id="" placeholder="Search by User Name or Email" required autofocus></td>
@@ -43,7 +43,7 @@
                                 <td>{{.LastLogin}}</td>
                                 <td>{{.LastLogout}}</td>
                                 <td>
-                                    <a href="/login-activities/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <a href="/user-management/login-activities/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
                                 </td>

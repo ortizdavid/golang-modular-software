@@ -1,7 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/permissions/{{.Permission.UniqueId}}/delete" method="POST">
+    <form class="ui form" action="/user-management/permissions/{{.Permission.UniqueId}}/delete" method="POST">
         <div class="field">
             <label for="username"><strong>Permission:</strong></label>
             <input class="ui input" type="text" value="{{.Permission.PermissionName}}" name="user_name" readonly>
@@ -12,7 +12,7 @@
                 Confirm Deletion
             </button>
             <div class="or"></div>
-            <a href="/permissions/{{.Permission.UniqueId}}/details" class="ui red button">
+            <a href="/user-management/permissions/{{.Permission.UniqueId}}/details" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

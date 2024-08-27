@@ -10,7 +10,7 @@ import (
 
 type RootController struct {
 	authService       *services.AuthService
-	configService *configurations.AppConfigurationService
+	configService     *configurations.AppConfigurationService
 	flagStatusService *configurations.ModuleFlagStatusService
 	statisticsService *services.StatisticsService
 }
@@ -26,7 +26,7 @@ func NewRootController(db *database.Database) *RootController {
 
 func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/users-management", authMiddleware.CheckLoggedUser)
+	group := router.Group("/user-management", authMiddleware.CheckLoggedUser)
 	group.Get("/", ctrl.index)
 
 }
@@ -36,10 +36,10 @@ func (ctrl *RootController) index(c *fiber.Ctx) error {
 	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
 	return c.Render("authentication/_root/index", fiber.Map{
-		"Title":      "Users Management",
-		"LoggedUser": loggedUser,
+		"Title":            "User Management",
+		"LoggedUser":       loggedUser,
 		"ModuleFlagStatus": flagStatus,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"Statistics": statistics,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Statistics":       statistics,
 	})
 }

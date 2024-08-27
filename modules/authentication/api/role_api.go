@@ -8,21 +8,21 @@ import (
 )
 
 type RoleApi struct {
-	service *services.RoleService
-	infoLogger *helpers.Logger
+	service     *services.RoleService
+	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
 }
 
 func NewRoleApi(db *database.Database) *RoleApi {
 	return &RoleApi{
-		service:       services.NewRoleService(db),
-		infoLogger:    helpers.NewInfoLogger("users-info.log"),
-		errorLogger:   helpers.NewInfoLogger("users-error.log"),
+		service:     services.NewRoleService(db),
+		infoLogger:  helpers.NewInfoLogger("users-info.log"),
+		errorLogger: helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
 func (api *RoleApi) Routes(router *fiber.App, db *database.Database) {
-	group := router.Group("/api/roles")
+	group := router.Group("/api/user-management/roles")
 	group.Get("/", api.getAllRoles)
 	group.Post("/", api.createRole)
 }

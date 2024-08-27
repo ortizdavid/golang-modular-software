@@ -3,15 +3,15 @@
 <div class="ui segment">
 
     <div class="ui right floated buttons">
-        <a href="/roles" class="ui primary button">
+        <a href="/user-management/roles" class="ui primary button">
             <i class="left arrow icon"></i>
             Return to List
         </a>
-        <a href="/roles/{{.Role.UniqueId}}/edit" class="ui primary button">
+        <a href="/user-management/roles/{{.Role.UniqueId}}/edit" class="ui primary button">
             <i class="pencil icon"></i>
             Edit
         </a>
-        <a href="/roles/{{.Role.UniqueId}}/delete" class="ui red button">
+        <a href="/user-management/roles/{{.Role.UniqueId}}/delete" class="ui red button">
             <i class="trash alternate icon"></i>
             Delete
         </a>
@@ -27,7 +27,7 @@
     <div class="ui clearing divider"></div>
     <p><strong>Assigned Permissions: {{.CountPermissions}}</strong></p>
     <div class="ui right aligned container">
-        <a href="/roles/{{.Role.UniqueId}}/assign-permission" class="ui primary button small">
+        <a href="/user-management/roles/{{.Role.UniqueId}}/assign-permission" class="ui primary button small">
             <i class="plus icon"></i>
             Add Permission
         </a>
@@ -49,7 +49,7 @@
                         <td>{{.PermissionCode}}</td>
                         <td>{{.CreatedAt}}</td>
                         <td>
-                            <a href="/roles/{{.RoleUniqueId}}/remove-permission/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Permission">
+                            <a href="/user-management/roles/{{.RoleUniqueId}}/remove-permission/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Permission">
                                 <i class="trash alternate red icon"></i>
                             </a>
                         </td>

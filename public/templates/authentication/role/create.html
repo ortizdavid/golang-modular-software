@@ -1,7 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/roles/create" method="POST">
+    <form class="ui form" action="/user-management/roles/create" method="POST">
         <div class="field">
             <label for="role_name"><strong>Role Name:</strong></label>
             <input class="ui input" type="text" name="role_name" autofocus>
@@ -25,7 +25,7 @@
                 Clear
             </button>
             <div class="or"></div>
-            <a href="/roles" class="ui red button">
+            <a href="/user-management/roles" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

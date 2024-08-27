@@ -4,11 +4,11 @@
        
         <div class="ui right aligned container">
             <div class="ui buttons">
-                <a href="/users/create" class="ui blue button">
+                <a href="/user-management/users/create" class="ui blue button">
                     <i class="plus circle icon"></i>
                     Add User
                 </a>
-                <a href="/users/search" class="ui blue button">
+                <a href="/user-management/users/search" class="ui blue button">
                     <i class="search icon"></i>
                     Search Users
                 </a>
@@ -47,22 +47,22 @@
                                 </td>
                                 <td>{{.CreatedAt}}</td>
                                 <td>
-                                    <a href="/users/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <a href="/user-management/users/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                         <i class="eye blue icon"></i>
                                     </a>
-                                    <a href="/users/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                    <a href="/user-management/users/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
                                         <i class="pencil icon"></i>
                                     </a>
-                                    <a href="/users/{{.UniqueId}}/reset-password" class="ui icon button" data-tooltip="Reset Password" data-position="top center">
+                                    <a href="/user-management/users/{{.UniqueId}}/reset-password" class="ui icon button" data-tooltip="Reset Password" data-position="top center">
                                         <i class="refresh blue icon"></i>
                                     </a>
                                     {{ if eq .IsActive "No" }}
-                                        <a href="/users/{{.UniqueId}}/activate" class="ui icon button" data-tooltip="Activate" data-position="top center">
+                                        <a href="/user-management/users/{{.UniqueId}}/activate" class="ui icon button" data-tooltip="Activate" data-position="top center">
                                             <i class="checkmark green icon"></i>
                                         </a>
                                     {{ end }}
                                     {{ if eq .IsActive "Yes" }}
-                                        <a href="/users/{{.UniqueId}}/deactivate" class="ui icon button" data-tooltip="Deactivate" data-position="top center">
+                                        <a href="/user-management/users/{{.UniqueId}}/deactivate" class="ui icon button" data-tooltip="Deactivate" data-position="top center">
                                             <i class="ban red icon"></i>
                                         </a>
                                     {{ end }}

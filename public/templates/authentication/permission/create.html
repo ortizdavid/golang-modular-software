@@ -1,7 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/permissions/create" method="POST">
+    <form class="ui form" action="/user-management/permissions/create" method="POST">
         <div class="field">
             <label for="permission_name"><strong>Permission Name:</strong></label>
             <input class="ui input" type="text" name="permission_name" autofocus>
@@ -25,7 +25,7 @@
                 Clear
             </button>
             <div class="or"></div>
-            <a href="/permissions" class="ui red button">
+            <a href="/user-management/permissions" class="ui red button">
                 <i class="x icon"></i>
                 Cancel
             </a>

@@ -32,7 +32,7 @@ func NewLoginActivityController(db *database.Database) *LoginActivityController 
 
 func (ctrl *LoginActivityController) Routes(router *fiber.App, db *database.Database) {
 	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("login-activities", authMiddleware.CheckLoggedUser)
+	group := router.Group("/user-management/login-activities", authMiddleware.CheckLoggedUser)
 	group.Get("", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/search", ctrl.searchForm)
