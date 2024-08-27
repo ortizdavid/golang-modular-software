@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
@@ -34,8 +33,7 @@ func NewCurrencyController(db *database.Database) *CurrencyController {
 }
 
 func (ctrl *CurrencyController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/references/currencies", authMiddleware.CheckLoggedUser)
+	group := router.Group("/references/currencies")
 	group.Get("", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/create", ctrl.createForm)

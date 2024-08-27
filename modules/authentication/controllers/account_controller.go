@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -34,8 +33,7 @@ func NewAccountController(db *database.Database) *AccountController {
 	}
 }
 func (ctrl *AccountController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("account", authMiddleware.CheckLoggedUser)
+	group := router.Group("account")
 	group.Get("/user-data", ctrl.userData)
 	group.Get("/change-data", ctrl.changeUserDataForm)
 	group.Get("/upload-image", ctrl.uploadUserImageForm)

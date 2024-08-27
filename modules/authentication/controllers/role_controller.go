@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -35,8 +34,7 @@ func NewRoleController(db *database.Database) *RoleController {
 }
 
 func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/user-management/roles", authMiddleware.CheckLoggedUser)
+	group := router.Group("/user-management/roles")
 	group.Get("/", ctrl.index)
 	group.Get("/create", ctrl.createForm)
 	group.Post("/create", ctrl.create)

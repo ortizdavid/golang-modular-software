@@ -19,7 +19,7 @@ func NewApiKeyMiddleware(db *database.Database) *ApiKeyMiddleware {
 	}
 }
 
-func (mid *ApiKeyMiddleware) AllowRoles(roles ...string) fiber.Handler {
+func (mid *ApiKeyMiddleware) AllowRoles(roleCodes ...string) fiber.Handler {
 	return func (c *fiber.Ctx) error {
 		xUserId := c.Get("X-User-ID")
 		if xUserId == "" {
@@ -43,14 +43,13 @@ func (mid *ApiKeyMiddleware) AllowRoles(roles ...string) fiber.Handler {
 		if xApiKey != userApiKey.Key {
 			return unauthorizedResponse(c, "Unauthorized. Invalid API Key")
 		}
-		hasRoles, err := mid.userService.UserHasRoles(c.Context(), user.UserId, roles...) 
+		hasRoles, err := mid.userService.UserHasRoles(c.Context(), user.UserId, roleCodes...) 
 		if err != nil {
 			return unauthorizedResponse(c, "Unauthorized. "+err.Error())
 		}
 		if !hasRoles {
 			return unauthorizedResponse(c, "Access denied. You do not have the required role(s) to access this resource.")
 		}
-		
 		return c.Next()
 	}
 }

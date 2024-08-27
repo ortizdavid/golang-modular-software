@@ -11,18 +11,16 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/employees"
 	"github.com/ortizdavid/golang-modular-software/modules/references"
 	"github.com/ortizdavid/golang-modular-software/modules/reports"
-	entities "github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	configEntities "github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	authEntities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 )
 
 // RegisterRoutes initializes and registers controllers (routes) from different modules
 func RegisterRoutes(router *fiber.App, db *database.Database) {
-	
 	// Create route groups
 	routeGroups := createRouteGroups(db)
-
 	// Register middleware for each route group
 	registerRouteGroups(router, routeGroups)
-
 	// Register module routes
 	authentication.RegisterModuleRoutes(router, db)
 	configurations.RegisterModuleRoutes(router, db)
@@ -36,7 +34,7 @@ func RegisterRoutes(router *fiber.App, db *database.Database) {
 // routeGroup represents a route group with its prefix, module, and middlewares
 type routeGroup struct {
 	prefix      string
-	module      entities.ModuleInfo
+	module      configEntities.ModuleInfo
 	middlewares []fiber.Handler
 }
 
@@ -44,87 +42,120 @@ type routeGroup struct {
 func createRouteGroups(db *database.Database) []routeGroup {
 	// Initialize the middlewares
 	flagMiddleware := middlewares.NewModuleFlagMiddleware(db)
-	//sessionMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	//apiKeyMiddleware := middlewares.NewApiKeyMiddleware(db)
+	//authorization := middlewares.NewAuthorizationMiddleware(db)
+	sessionMiddleware := middlewares.NewSessionAuthMiddleware(db)
+	apiKeyMiddleware := middlewares.NewApiKeyMiddleware(db)
 	//jwtMiddleware := middlewares.NewJwtMiddleware(db)
 
 	return []routeGroup{
 		{
-			prefix: "/user-management",
-			module: entities.ModuleAuthentication,
+			prefix: "/account",
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleAuthentication.Code),
+				sessionMiddleware.CheckLoggedUser,
+
+			},
+		},
+		{
+			prefix: "/user-management",
+			module: configEntities.ModuleAuthentication,
+			middlewares: []fiber.Handler{
+				sessionMiddleware.CheckLoggedUser,
+				flagMiddleware.CheckModule(configEntities.ModuleAuthentication.Code),
+
 			},
 		},
 		{
 			prefix: "/api/user-management",
-			module: entities.ModuleAuthentication,
+			module: configEntities.ModuleAuthentication,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleAuthentication.Code),
+				flagMiddleware.CheckModule(configEntities.ModuleAuthentication.Code),
+
 			},
 		},
 		{
 			prefix: "/configurations",
-			module: entities.ModuleConfigurations,
+			module: configEntities.ModuleConfigurations,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleConfigurations.Code),
-				// Add other middlewares specific to configurations if needed
+				sessionMiddleware.CheckLoggedUser,
+				flagMiddleware.CheckModule(configEntities.ModuleConfigurations.Code),
+				
 			},
 		},
 		{
 			prefix: "/api/configurations",
-			module: entities.ModuleConfigurations,
+			module: configEntities.ModuleConfigurations,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleConfigurations.Code),
-				// Add other middlewares specific to configurations if needed
+				apiKeyMiddleware.AllowRoles(authEntities.RoleSuperAdmin),
+				flagMiddleware.CheckModule(configEntities.ModuleConfigurations.Code),
+
 			},
 		},
 		{
 			prefix: "/company",
-			module: entities.ModuleCompany,
+			module: configEntities.ModuleCompany,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleCompany.Code),
-				// Add other middlewares specific to company if needed
+				sessionMiddleware.CheckLoggedUser,
+				flagMiddleware.CheckModule(configEntities.ModuleCompany.Code),
+				
 			},
 		},
 		{
 			prefix: "/api/company",
-			module: entities.ModuleCompany,
+			module: configEntities.ModuleCompany,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleCompany.Code),
-				// Add other middlewares specific to company if needed
+				flagMiddleware.CheckModule(configEntities.ModuleCompany.Code),
+				
 			},
 		},
 		{
 			prefix: "/employees",
-			module: entities.ModuleEmployees,
+			module: configEntities.ModuleEmployees,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleEmployees.Code),
-				// Add other middlewares specific to employees if needed
+				sessionMiddleware.CheckLoggedUser,
+				flagMiddleware.CheckModule(configEntities.ModuleEmployees.Code),
+				
 			},
 		},
 		{
 			prefix: "/api/employees",
-			module: entities.ModuleEmployees,
+			module: configEntities.ModuleEmployees,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleEmployees.Code),
-				// Add other middlewares specific to employees if needed
+				flagMiddleware.CheckModule(configEntities.ModuleEmployees.Code),
+				
 			},
 		},
 		{
 			prefix: "/references",
-			module: entities.ModuleReferences,
+			module: configEntities.ModuleReferences,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleReferences.Code),
-				// Add other middlewares specific to references if needed
+				sessionMiddleware.CheckLoggedUser,
+				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
+				
 			},
 		},
 		{
 			prefix: "/api/references",
-			module: entities.ModuleReferences,
+			module: configEntities.ModuleReferences,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(entities.ModuleReferences.Code),
-				// Add other middlewares specific to references if needed
+				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
+				
+			},
+		},
+		{
+			prefix: "/reports",
+			module: configEntities.ModuleReferences,
+			middlewares: []fiber.Handler{
+				sessionMiddleware.CheckLoggedUser,
+				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
+				
+			},
+		},
+		{
+			prefix: "/api/reports",
+			module: configEntities.ModuleReferences,
+			middlewares: []fiber.Handler{
+				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
+				
 			},
 		},
 	}

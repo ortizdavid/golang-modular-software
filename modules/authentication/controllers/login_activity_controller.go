@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -33,8 +32,7 @@ func NewLoginActivityController(db *database.Database) *LoginActivityController 
 }
 
 func (ctrl *LoginActivityController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/user-management/login-activities", authMiddleware.CheckLoggedUser)
+	group := router.Group("/user-management/login-activities")
 	group.Get("", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/search", ctrl.searchForm)

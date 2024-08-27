@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
@@ -38,8 +37,7 @@ func NewRoomController(db *database.Database) *RoomController {
 }
 
 func (ctrl *RoomController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/company/rooms", authMiddleware.CheckLoggedUser)
+	group := router.Group("/company/rooms")
 	group.Get("", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/create", ctrl.createForm)

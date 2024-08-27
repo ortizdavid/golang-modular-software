@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/services"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -26,8 +25,7 @@ func NewRootController(db *database.Database) *RootController {
 }
 
 func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/references", authMiddleware.CheckLoggedUser)
+	group := router.Group("/references")
 	group.Get("/", ctrl.index)
 }
 

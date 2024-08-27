@@ -63,7 +63,7 @@ func (ctrl *AuthController) login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).Redirect("/auth/login")
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' authenticated sucessful!", request.UserName))
-	return c.Status(fiber.StatusOK).Redirect("/home")
+	return c.Status(fiber.StatusOK).Redirect("/account/home")
 }
 
 func (ctrl *AuthController) logout(c *fiber.Ctx) error {

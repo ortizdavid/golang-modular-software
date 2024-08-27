@@ -114,9 +114,10 @@ CREATE INDEX idx_apikey_user_id ON authentication.user_api_key(user_id);
 
 -- Initial inserts
 -- roles
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('SUPER_ADMIN', 'Super Administrator', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d');
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('ADMIN', 'Administrator', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d');
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES ('EMPLOYEE', 'Employee', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d');
+INSERT INTO authentication.roles (code, role_name, unique_id) VALUES 
+('role_super_admin', 'Super Administrator', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d'),
+('role_admin', 'Administrator', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d'),
+('role_employee', 'Employee', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d');
 
 -- test users
 -- Inserting the users into the 'authentication.users' table
