@@ -8,4 +8,5 @@ import (
 func InitializeMiddlewares(app *fiber.App, db *database.Database) {
 	app.Use(NewRequestLoggerMiddleware().Handle)
 	app.Use(NewCorsMiddleware().Handle)
+	app.Use(NewCsrfMiddleware().Handle)
 }
