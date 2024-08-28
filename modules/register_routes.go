@@ -68,6 +68,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			prefix: "/api/user-management",
 			module: configEntities.ModuleAuthentication,
 			middlewares: []fiber.Handler{
+				apiKeyMiddleware.AllowRoles(authEntities.RoleSuperAdmin.Code),
 				flagMiddleware.CheckModule(configEntities.ModuleAuthentication.Code),
 
 			},
@@ -85,7 +86,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			prefix: "/api/configurations",
 			module: configEntities.ModuleConfigurations,
 			middlewares: []fiber.Handler{
-				apiKeyMiddleware.AllowRoles(authEntities.RoleSuperAdmin),
+				apiKeyMiddleware.AllowRoles(authEntities.RoleSuperAdmin.Code),
 				flagMiddleware.CheckModule(configEntities.ModuleConfigurations.Code),
 
 			},
@@ -137,6 +138,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			prefix: "/api/references",
 			module: configEntities.ModuleReferences,
 			middlewares: []fiber.Handler{
+				apiKeyMiddleware.AllowRoles(authEntities.RoleSuperAdmin.Code),
 				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
 				
 			},

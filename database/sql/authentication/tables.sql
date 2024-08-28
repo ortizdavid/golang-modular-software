@@ -11,6 +11,11 @@ CREATE TABLE authentication.roles (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+-- Inserts
+INSERT INTO authentication.roles (role_id, code, role_name, unique_id) VALUES 
+(1, 'role_super_admin', 'Super Administrator', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d'),
+(2, 'role_admin', 'Administrator', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d'),
+(3, 'role_employee', 'Employee', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d');
 
 -- Table: users
 DROP TABLE IF EXISTS authentication.users;
@@ -26,6 +31,12 @@ CREATE TABLE authentication.users (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+-- inserts
+INSERT INTO authentication.users (user_name, email, password, user_image, is_active, token, unique_id, created_at, updated_at) VALUES
+('admin01', 'admin01@example.com', '$2a$10$WK73KU34gno.h1TqJFLrmux5uVIrNwS5TfgKxLcKxeSO15DP.McwO', NULL, TRUE, NULL, '0c8e2b1f-89ba-49b6-ba4f-81622f33732d', NOW(), NOW()),
+('admin02', 'admin02@example.com', '$2a$10$Rb44LaGqdM9R4Lx3zg59Z.bZGAlP05OGU5cR9Vni7W35EksJOuW/a', NULL, TRUE, NULL, '30823080-e83a-462d-ba41-88daff6e016d', NOW(), NOW()),
+('employee01', 'employee01@example.com', '$2a$10$AlQU9C64eQgiXGTcn2/gLuszJWfw31VkPkP4TI6OpgKjmzST6h1/a', NULL, TRUE, NULL, '1fbe2e02-8f87-4312-9059-1d14f3cef623', NOW(), NOW());
+
 
 -- Table: user_roles
 DROP TABLE IF EXISTS authentication.user_roles;
@@ -110,18 +121,3 @@ CREATE TABLE authentication.user_api_key (
 -- Index
 DROP INDEX IF EXISTS idx_apikey_user_id;
 CREATE INDEX idx_apikey_user_id ON authentication.user_api_key(user_id);
-
-
--- Initial inserts
--- roles
-INSERT INTO authentication.roles (code, role_name, unique_id) VALUES 
-('role_super_admin', 'Super Administrator', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d'),
-('role_admin', 'Administrator', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d'),
-('role_employee', 'Employee', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d');
-
--- test users
--- Inserting the users into the 'authentication.users' table
-INSERT INTO authentication.users (user_name, email, password, user_image, is_active, token, unique_id, created_at, updated_at) VALUES
-('admin01', 'admin01@example.com', '$2a$10$WK73KU34gno.h1TqJFLrmux5uVIrNwS5TfgKxLcKxeSO15DP.McwO', NULL, TRUE, NULL, '0c8e2b1f-89ba-49b6-ba4f-81622f33732d', NOW(), NOW()),
-('admin02', 'admin02@example.com', '$2a$10$Rb44LaGqdM9R4Lx3zg59Z.bZGAlP05OGU5cR9Vni7W35EksJOuW/a', NULL, TRUE, NULL, '30823080-e83a-462d-ba41-88daff6e016d', NOW(), NOW()),
-('employee01', 'employee01@example.com', '$2a$10$AlQU9C64eQgiXGTcn2/gLuszJWfw31VkPkP4TI6OpgKjmzST6h1/a', NULL, TRUE, NULL, '1fbe2e02-8f87-4312-9059-1d14f3cef623', NOW(), NOW());
