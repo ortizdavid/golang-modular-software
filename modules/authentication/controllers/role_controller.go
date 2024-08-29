@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
@@ -91,15 +92,22 @@ func (ctrl *RoleController) details(c *fiber.Ctx) error {
 func (ctrl *RoleController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	csrfToken := helpers.GenerateCsrfToken(c)
 	return c.Render("authentication/role/create", fiber.Map{
 		"Title":      "Create Role",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": flagStatus,
+		"CsrfToken": csrfToken,
 	})
 }
 
+
 func (ctrl *RoleController) create(c *fiber.Ctx) error {
+	csrfToken := c.FormValue("csrf_token")
+	if !helpers.ValidateCsrfToken(c, csrfToken) {
+		return helpers.HandleHttpErrors(c, apperrors.NewForbiddenError("Invalid CSRF token"))
+	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateRoleRequest
 	if err := c.BodyParser(&request); err != nil {

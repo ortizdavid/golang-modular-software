@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"strconv"
+	"github.com/ortizdavid/go-nopain/conversion"
 )
 
 // CorsMiddleware struct for CORS handling
@@ -44,7 +44,7 @@ func (cors *CorsMiddleware) Handle(c *fiber.Ctx) error {
 		}
 	}
 	if cors.MaxAge > 0 {
-		c.Set("Access-Control-Max-Age", strconv.Itoa(cors.MaxAge))
+		c.Set("Access-Control-Max-Age", conversion.IntToString(cors.MaxAge))
 	}
 	// Handle preflight requests
 	if c.Method() == fiber.MethodOptions {

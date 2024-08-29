@@ -4,15 +4,15 @@
     <form class="ui form" action="/user-management/roles/{{.Role.UniqueId}}/edit" method="POST">
         <div class="field">
             <label for="role_name"><strong>Role Name:</strong></label>
-            <input class="ui input" type="text" name="role_name" value="{{.Role.RoleName}}" autofocus>
+            <input class="ui input" type="text" name="role_name" value="{{.Role.RoleName}}" required autofocus>
         </div>
         <div class="field">
             <label for="role_name"><strong>Code:</strong></label>
-            <input class="ui input" type="text" name="code" value="{{.Role.Code}}">
+            <input class="ui input" type="text" name="code" value="{{.Role.Code}}" required>
         </div>
         <div class="field">
             <label for="description"><strong>Description:</strong></label>
-            <textarea class="ui input" cols="20" rows="5"  name="description">{{.Role.Description}}</textarea>
+            <textarea class="ui input" cols="20" rows="5"  name="description" required>{{.Role.Description}}</textarea>
         </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">

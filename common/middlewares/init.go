@@ -5,8 +5,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 )
 
-func InitializeMiddlewares(app *fiber.App, db *database.Database) {
-	app.Use(NewRequestLoggerMiddleware().Handle)
-	app.Use(NewCorsMiddleware().Handle)
-	app.Use(NewCsrfMiddleware().Handle)
+func InitializeMiddlewares(router *fiber.App, db *database.Database) {
+	router.Use(NewRequestLoggerMiddleware().Handle)
+	router.Use(NewCorsMiddleware().Handle)
 }
