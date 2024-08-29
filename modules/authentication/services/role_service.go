@@ -49,9 +49,11 @@ func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRol
 	}
 	// Create the new role entity
 	role := entities.Role{
+		RoleId:      0,
 		RoleName:    request.RoleName,
 		Code:        request.Code,
 		Description: request.Description,
+		Status:      request.Status,
 		UniqueId:    encryption.GenerateUUID(),
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
@@ -82,6 +84,7 @@ func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entiti
 	role.RoleName = request.RoleName
 	role.Code = request.Code
 	role.Description = request.Description
+	role.Status = request.Status
 	role.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, role)
 	if err != nil {
@@ -167,6 +170,18 @@ func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) 
 		return nil, apperrors.NewNotFoundError("No roles found")
 	}
 	roles, err := s.repository.FindAll(ctx)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	return roles, nil
+}
+
+func (s *RoleService) GetAllEnaledRoles(ctx context.Context) ([]entities.Role, error) {
+	_, err := s.repository.Count(ctx)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No roles found")
+	}
+	roles, err := s.repository.FindAllEnabled(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}

@@ -104,7 +104,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 func (ctrl *UserController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
-	roles, err := ctrl.roleService.GetAllRoles(c.Context())
+	roles, err := ctrl.roleService.GetAllEnaledRoles(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}

@@ -8,12 +8,20 @@
             <input class="ui input" type="text" name="role_name" required autofocus>
         </div>
         <div class="field">
-            <label for="role_name"><strong>Code:</strong></label>
+            <label for="code"><strong>Code:</strong></label>
             <input class="ui input" type="text" name="code" required>
         </div>
         <div class="field">
             <label for="description"><strong>Description:</strong></label>
             <textarea class="ui input" cols="20" rows="5" name="description" required></textarea>
+        </div>
+        <div class="field">
+            <label for="status"><strong>Status:</strong></label>
+            <select class="ui dropdown" name="status" id="status" required>
+                <option value="">Select Status</option>
+                <option value="Enabled">Enabled</option>
+                <option value="Disabled">Disabled</option>
+            </select>
         </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">

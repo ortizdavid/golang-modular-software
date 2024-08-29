@@ -1,5 +1,8 @@
 -- tables for 'authentication' schema 
 
+DROP TYPE IF EXISTS authentication.TYPE_ROLE_STATUS;
+CREATE TYPE authentication.TYPE_ROLE_STATUS AS ENUM('Enabled', 'Disabled');
+
 -- Table: roles
 DROP TABLE IF EXISTS authentication.roles;
 CREATE TABLE authentication.roles (
@@ -7,15 +10,24 @@ CREATE TABLE authentication.roles (
     code VARCHAR(50) UNIQUE NOT NULL,
     role_name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
+    status authentication.TYPE_ROLE_STATUS DEFAULT 'Enabled',
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+
 -- Inserts
-INSERT INTO authentication.roles (role_id, code, role_name, unique_id) VALUES 
-(1, 'role_super_admin', 'Super Administrator', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d'),
-(2, 'role_admin', 'Administrator', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d'),
-(3, 'role_employee', 'Employee', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d');
+INSERT INTO authentication.roles (role_id, code, role_name, description, status, unique_id) VALUES 
+(1, 'role_super_admin', 'Super Administrator', 'Has full access to all system features and settings.', 'Enabled', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d'),
+(2, 'role_admin', 'Administrator', 'Manages users, permissions, and overall system configuration.', 'Enabled', '0c8e2b1f-87ba-49b6-ba4f-81634f33732d'),
+(3, 'role_manager', 'Manager', 'Oversees specific departments or projects with restricted admin capabilities.', 'Enabled', '0c8e2b1f-39ba-49b6-ba4f-81622f33732d'),
+(4, 'role_employee', 'Employee', 'Accesses daily tasks and data relevant to their role.', 'Enabled', '0c8e2b1f-99ba-49b6-ba4f-81622f33732d'),
+(5, 'role_customer', 'Customer', 'Interacts with the system for purchasing and account management.', 'Disabled', '0c8e2b1f-11ba-49b6-ba4f-81622f33732d'),
+(6, 'role_supplier', 'Supplier', 'Manages supply-related transactions and information.', 'Disabled', '0c4e2b1f-59ba-49b6-ba4f-81622f33733e'),
+(7, 'role_support', 'Support', 'Provides assistance and resolves issues for other users.', 'Disabled', '0c8e2b1f-87ba-49b6-ba4f-81634f33733e'),
+(8, 'role_developer', 'Developer', 'Works on system development and maintenance tasks.', 'Enabled', '0c8e2b1f-39ba-49b6-ba4f-81622f33733e'),
+(9, 'role_guest', 'Guest', 'Has limited access to view non-sensitive parts of the system.', 'Disabled', '0c8e2b1f-11ba-49b6-ba4f-81622f33733e');
+
 
 -- Table: users
 DROP TABLE IF EXISTS authentication.users;

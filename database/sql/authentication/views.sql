@@ -34,7 +34,7 @@ DROP VIEW IF EXISTS authentication.view_role_data;
 CREATE VIEW authentication.view_role_data AS 
 SELECT  ro.role_id, ro.unique_id,
     ro.role_name, ro.code,
-    ro.description,
+    ro.description, ro.status,
     ro.created_at,
     ro.updated_at
 FROM authentication.roles ro
@@ -49,6 +49,7 @@ SELECT  ur.user_role_id, ur.unique_id,
     TO_CHAR(ur.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
     ro.role_id, ro.role_name,
     ro.code AS role_code,
+    ro.status AS role_status,
     us.user_id, us.unique_id AS user_unique_id,
     us.user_name
 FROM authentication.user_roles ur

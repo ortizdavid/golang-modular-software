@@ -37,6 +37,12 @@ func (repo *RoleRepository) FindAll(ctx context.Context) ([]entities.Role, error
 	return roles, result.Error
 }
 
+func (repo *RoleRepository) FindAllEnabled(ctx context.Context) ([]entities.Role, error) {
+	var roles []entities.Role
+	result := repo.db.WithContext(ctx).Where("status='Enabled'").Find(&roles)
+	return roles, result.Error
+}
+
 func (repo *RoleRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.Role, error) {
 	var roles []entities.Role
 	result := repo.db.WithContext(ctx).Table("authentication.view_role_data").Limit(limit).Offset(offset).Find(&roles)
@@ -109,7 +115,7 @@ func (repo *RoleRepository) FindUnassignedRolesByUser(ctx context.Context, userI
 	var roles []entities.Role
 	result := repo.db.WithContext(ctx).
 		Table("authentication.roles").
-		Where("role_id NOT IN(SELECT role_id FROM authentication.user_roles WHERE user_id = ?)", userId).
+		Where("role_id NOT IN(SELECT role_id FROM authentication.user_roles WHERE user_id = ?) AND status='Enabled'", userId).
 		Find(&roles)
 	return roles, result.Error
 }

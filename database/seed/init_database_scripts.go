@@ -11,7 +11,7 @@ import (
 const (
 	structureDir   = "_structure"
 	authDir        = "authentication"
-	configDir      = "configuration"
+	configDir      = "configurations"
 	companyDir     = "company"
 	referenceDir   = "references"
 	employeeDir    = "employees"

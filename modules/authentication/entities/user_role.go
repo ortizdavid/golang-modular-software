@@ -23,6 +23,7 @@ type UserRoleData struct {
 	RoleId     		int64 `json:"role_id"`
 	RoleName   		string `json:"role_name"`
 	RoleCode		string `json:"role_code"`
+	RoleStatus		string `json:"role_status"`
 	UserId     		int64 `json:"user_id"`
 	UserUniqueId	string `json:"user_unique_id"`
 	UserName   		string `json:"user_name"`

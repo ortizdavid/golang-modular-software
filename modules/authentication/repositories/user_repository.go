@@ -233,7 +233,7 @@ func (repo *UserRepository) HasRoles(ctx context.Context, userId int64, roles ..
     var count int64
     result := repo.db.WithContext(ctx).
         Table("authentication.view_user_role_data").
-        Where("user_id = ? AND role_code IN (?)", userId, roles).
+        Where("user_id = ? AND role_code IN (?)  AND role_status = 'Enabled'", userId, roles).
         Count(&count)
     if result.Error != nil {
         return false, result.Error

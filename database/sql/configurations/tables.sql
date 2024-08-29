@@ -94,15 +94,15 @@ CREATE TABLE configurations.features (
 
 
 -- FEATURE FLAGS
-DROP TYPE IF EXISTS TYPE_FLAG_STATUS;
-CREATE TYPE TYPE_FLAG_STATUS AS ENUM ('Enabled', 'Disabled');
+DROP TYPE IF EXISTS configurations.TYPE_FLAG_STATUS;
+CREATE TYPE configurations.TYPE_FLAG_STATUS AS ENUM ('Enabled', 'Disabled');
 
 -- Table: module_flag
 DROP TABLE IF EXISTS configurations.module_flag;
 CREATE TABLE configurations.module_flag(
     flag_id SERIAL PRIMARY KEY,
     module_id INT NOT NULL,
-    status TYPE_FLAG_STATUS DEFAULT 'Disabled',
+    status coonfigurations.TYPE_FLAG_STATUS DEFAULT 'Disabled',
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
