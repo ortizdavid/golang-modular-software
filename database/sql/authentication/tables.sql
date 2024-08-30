@@ -7,7 +7,7 @@ CREATE TYPE authentication.TYPE_ROLE_STATUS AS ENUM('Enabled', 'Disabled');
 DROP TABLE IF EXISTS authentication.roles;
 CREATE TABLE authentication.roles (
     role_id SERIAL PRIMARY KEY,
-    code VARCHAR(50) UNIQUE NOT NULL,
+    code VARCHAR(30) UNIQUE NOT NULL,
     role_name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
     status authentication.TYPE_ROLE_STATUS DEFAULT 'Enabled',
@@ -15,7 +15,6 @@ CREATE TABLE authentication.roles (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
-
 -- Inserts
 INSERT INTO authentication.roles (role_id, code, role_name, description, status, unique_id) VALUES 
 (1, 'role_super_admin', 'Super Administrator', 'Has full access to all system features and settings.', 'Enabled', '0c4e2b1f-59ba-49b6-ba4f-81622f33732d'),
@@ -27,6 +26,7 @@ INSERT INTO authentication.roles (role_id, code, role_name, description, status,
 (7, 'role_support', 'Support', 'Provides assistance and resolves issues for other users.', 'Disabled', '0c8e2b1f-87ba-49b6-ba4f-81634f33733e'),
 (8, 'role_developer', 'Developer', 'Works on system development and maintenance tasks.', 'Enabled', '0c8e2b1f-39ba-49b6-ba4f-81622f33733e'),
 (9, 'role_guest', 'Guest', 'Has limited access to view non-sensitive parts of the system.', 'Disabled', '0c8e2b1f-11ba-49b6-ba4f-81622f33733e');
+
 
 
 -- Table: users
@@ -50,6 +50,7 @@ INSERT INTO authentication.users (user_name, email, password, user_image, is_act
 ('employee01', 'employee01@example.com', '$2a$10$AlQU9C64eQgiXGTcn2/gLuszJWfw31VkPkP4TI6OpgKjmzST6h1/a', NULL, TRUE, NULL, '1fbe2e02-8f87-4312-9059-1d14f3cef623', NOW(), NOW());
 
 
+
 -- Table: user_roles
 DROP TABLE IF EXISTS authentication.user_roles;
 CREATE TABLE authentication.user_roles (
@@ -63,6 +64,8 @@ CREATE TABLE authentication.user_roles (
     CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id)
 );
 
+
+
 -- Table: permissions
 DROP TABLE IF EXISTS authentication.permissions;
 CREATE TABLE authentication.permissions (
@@ -70,7 +73,7 @@ CREATE TABLE authentication.permissions (
     code VARCHAR(50) UNIQUE NOT NULL,
     permission_name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
-    unique_id VARCHAR(50) UNIQUE,
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -87,6 +90,7 @@ CREATE TABLE authentication.permission_roles (
     CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES  authentication.roles(role_id),
     CONSTRAINT fk_permission FOREIGN KEY(permission_id) REFERENCES  authentication.permissions(permission_id)
 );
+
 
 -- TYPE_ACTIVITY_STATUS
 DROP TYPE IF EXISTS TYPE_ACTIVITY_STATUS;
@@ -107,14 +111,17 @@ CREATE TABLE authentication.login_activity (
     last_logout TIMESTAMP DEFAULT NOW(),
     total_login INT DEFAULT 0,
     total_logout INT DEFAULT 0,
-    unique_id VARCHAR(50) UNIQUE,
+    unique_id VARCHAR(50),
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
 );
+
 -- Index
 DROP INDEX IF EXISTS idx_login_user_id;
 CREATE INDEX idx_login_user_id ON authentication.login_activity(user_id);
+
+
 
 -- Table: user_api_key
 DROP TABLE IF EXISTS authentication.user_api_key;
