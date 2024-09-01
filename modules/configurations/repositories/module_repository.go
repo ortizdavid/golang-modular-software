@@ -17,18 +17,18 @@ func NewModuleRepository(db *database.Database) *ModuleRepository {
 	}
 }
 
-func (repo *ModuleRepository) Create(ctx context.Context, company entities.Module) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *ModuleRepository) Create(ctx context.Context, module entities.Module) error {
+	result := repo.db.WithContext(ctx).Create(&module)
 	return result.Error
 }
 
-func (repo *ModuleRepository) Update(ctx context.Context, company entities.Module) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *ModuleRepository) Update(ctx context.Context, module entities.Module) error {
+	result := repo.db.WithContext(ctx).Save(&module)
 	return result.Error
 }
 
-func (repo *ModuleRepository) Delete(ctx context.Context, company entities.Module) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *ModuleRepository) Delete(ctx context.Context, module entities.Module) error {
+	result := repo.db.WithContext(ctx).Delete(&module)
 	return result.Error
 }
 
@@ -45,27 +45,27 @@ func (repo *ModuleRepository) FindAllLimit(ctx context.Context, limit int, offse
 }
 
 func (repo *ModuleRepository) FindById(ctx context.Context, id int) (entities.Module, error) {
-	var company entities.Module
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var module entities.Module
+	result := repo.db.WithContext(ctx).First(&module, id)
+	return module, result.Error
 }
 
 func (repo *ModuleRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Module, error) {
-	var company entities.Module
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var module entities.Module
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&module)
+	return module, result.Error
 }
 
 func (repo *ModuleRepository) FindByCode(ctx context.Context, code string) (entities.Module, error) {
-	var company entities.Module
-	result := repo.db.WithContext(ctx).Where("code=?", code).First(&company)
-	return company, result.Error
+	var module entities.Module
+	result := repo.db.WithContext(ctx).Where("code=?", code).First(&module)
+	return module, result.Error
 }
 
 func (repo *ModuleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.Module, error) {
-	var company entities.Module
-	result := repo.db.WithContext(ctx).Table("configurations.modules").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var module entities.Module
+	result := repo.db.WithContext(ctx).Table("configurations.modules").Where("unique_id=?", uniqueId).First(&module)
+	return module, result.Error
 }
 
 func (repo *ModuleRepository) Count(ctx context.Context) (int64, error) {

@@ -17,18 +17,18 @@ func NewFeatureRepository(db *database.Database) *FeatureRepository {
 	}
 }
 
-func (repo *FeatureRepository) Create(ctx context.Context, company entities.Feature) error {
-	result := repo.db.WithContext(ctx).Create(&company)
+func (repo *FeatureRepository) Create(ctx context.Context, feature entities.Feature) error {
+	result := repo.db.WithContext(ctx).Create(&feature)
 	return result.Error
 }
 
-func (repo *FeatureRepository) Update(ctx context.Context, company entities.Feature) error {
-	result := repo.db.WithContext(ctx).Save(&company)
+func (repo *FeatureRepository) Update(ctx context.Context, feature entities.Feature) error {
+	result := repo.db.WithContext(ctx).Save(&feature)
 	return result.Error
 }
 
-func (repo *FeatureRepository) Delete(ctx context.Context, company entities.Feature) error {
-	result := repo.db.WithContext(ctx).Delete(&company)
+func (repo *FeatureRepository) Delete(ctx context.Context, feature entities.Feature) error {
+	result := repo.db.WithContext(ctx).Delete(&feature)
 	return result.Error
 }
 
@@ -45,21 +45,21 @@ func (repo *FeatureRepository) FindAllLimit(ctx context.Context, limit int, offs
 }
 
 func (repo *FeatureRepository) FindById(ctx context.Context, id int) (entities.Feature, error) {
-	var company entities.Feature
-	result := repo.db.WithContext(ctx).First(&company, id)
-	return company, result.Error
+	var feature entities.Feature
+	result := repo.db.WithContext(ctx).First(&feature, id)
+	return feature, result.Error
 }
 
 func (repo *FeatureRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Feature, error) {
-	var company entities.Feature
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var feature entities.Feature
+	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&feature)
+	return feature, result.Error
 }
 
 func (repo *FeatureRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.FeatureData, error) {
-	var company entities.FeatureData
-	result := repo.db.WithContext(ctx).Table("configurations.view_feature_data").Where("unique_id=?", uniqueId).First(&company)
-	return company, result.Error
+	var feature entities.FeatureData
+	result := repo.db.WithContext(ctx).Table("configurations.view_feature_data").Where("unique_id=?", uniqueId).First(&feature)
+	return feature, result.Error
 }
 
 func (repo *FeatureRepository) Count(ctx context.Context) (int64, error) {

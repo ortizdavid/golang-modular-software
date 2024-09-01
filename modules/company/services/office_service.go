@@ -84,7 +84,7 @@ func (s *OfficeService) UpdateOffice(ctx context.Context, officeId int, request 
 	return nil
 }
 
-func (s *OfficeService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
+func (s *OfficeService) GetAllOfficesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}

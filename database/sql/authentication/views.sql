@@ -64,8 +64,8 @@ CREATE VIEW authentication.view_permission_data AS
 SELECT  pe.permission_id, pe.unique_id,
     pe.permission_name, pe.code,
     pe.description,
-    pe.created_at,
-    pe.updated_at
+    TO_CHAR(pe.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(pe.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at
 FROM authentication.permissions pe
 ORDER BY created_at ASC;
 

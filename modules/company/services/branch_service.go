@@ -84,7 +84,7 @@ func (s *BranchService) UpdateBranch(ctx context.Context, branchId int, request 
 	return nil
 }
 
-func (s *BranchService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
+func (s *BranchService) GetAllBranchesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}

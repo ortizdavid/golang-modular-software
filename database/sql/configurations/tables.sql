@@ -78,6 +78,21 @@ INSERT INTO configurations.modules (module_id, module_name, code, description) V
 (6, 'Configurations', 'configurations', 'Manages system configurations.');
 
 
+-- Table: core_entities
+DROP TABLE IF EXISTS configurations.core_entities;
+CREATE TABLE configurations.core_entities (
+    entity_id SERIAL PRIMARY KEY,
+    module_id INT NOT NULL,
+    entity_name VARCHAR(100) UNIQUE NOT NULL,
+    code VARCHAR(30) UNIQUE NOT NULL,
+    description TEXT,
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_module_entity FOREIGN KEY(module_id) REFERENCES configurations.modules(module_id)
+);
+
+
 -- Table: features
 DROP TABLE IF EXISTS configurations.features;
 CREATE TABLE configurations.features (

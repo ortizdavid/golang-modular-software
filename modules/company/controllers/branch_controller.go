@@ -51,7 +51,7 @@ func (ctrl *BranchController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllBranchesPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
