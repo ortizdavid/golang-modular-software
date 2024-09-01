@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
@@ -33,8 +32,7 @@ func NewBasicConfigurationController(db *database.Database) *BasicConfigurationC
 }
 
 func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/configurations/basic-configurations", authMiddleware.CheckLoggedUser)
+	group := router.Group("/configurations/basic-configurations")
 	group.Get("", ctrl.index)
 	group.Get("/edit", ctrl.editForm)
 	group.Post("/edit", ctrl.edit)

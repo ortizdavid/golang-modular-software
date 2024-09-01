@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 
@@ -36,8 +35,7 @@ func NewModuleFlagController(db *database.Database) *ModuleFlagController {
 }
 
 func (ctrl *ModuleFlagController) Routes(router *fiber.App, db *database.Database) {
-	authMiddleware := middlewares.NewSessionAuthMiddleware(db)
-	group := router.Group("/configurations/module-flags", authMiddleware.CheckLoggedUser)
+	group := router.Group("/configurations/module-flags")
 	group.Get("", ctrl.index)
 	group.Get("/manage", ctrl.manageForm)
 	group.Post("/manage", ctrl.manage)
