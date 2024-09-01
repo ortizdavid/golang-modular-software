@@ -1,0 +1,45 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/configurations/core-entities/create" method="POST">
+        <div class="field">
+            <label for="entity_name"><strong>Entity Name:</strong></label>
+            <input class="ui input" type="text" name="entity_name" placeholder="Enter entity name" autofocus required>
+        </div>
+        <div class="field">
+            <label for="code"><strong>Code:</strong></label>
+            <input class="ui input" type="text" name="code" id="code" value="" required>
+        </div>
+        <div class="field">
+            <label for="module"><strong>Associated Module:</strong></label>
+            <select class="ui dropdown" id="module_id" name="module_id" required>
+                <option value="">Select Module</option>
+                {{ range .Modules }}
+                    <option value="{{.ModuleId}}">{{.ModuleName}}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="description"><strong>Description:</strong></label>
+            <textarea class="ui input" cols="20" rows="5" name="description" required></textarea>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/configurations/core-entities" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

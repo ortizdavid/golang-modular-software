@@ -35,7 +35,9 @@ func (s *CoreEntityService) CreateCoreEntity(ctx context.Context, request entiti
 		return apperrors.NewBadRequestError("CoreEntity already exists " + request.EntityName)
 	}
 	coreEntity := entities.CoreEntity{
+		ModuleId:    request.ModuleId,
 		EntityName:  request.EntityName,
+		Code:        request.Code,
 		Description: request.Description,
 		UniqueId:    encryption.GenerateUUID(),
 		CreatedAt:   time.Now().UTC(),
@@ -48,14 +50,16 @@ func (s *CoreEntityService) CreateCoreEntity(ctx context.Context, request entiti
 	return nil
 }
 
-func (s *CoreEntityService) UpdateCoreEntity(ctx context.Context, coreEntityId int, request entities.UpdateCoreEntityRequest) error {
+func (s *CoreEntityService) UpdateCoreEntity(ctx context.Context, entityId int, request entities.UpdateCoreEntityRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	coreEntity, err := s.repository.FindById(ctx, coreEntityId)
+	coreEntity, err := s.repository.FindById(ctx, entityId)
 	if err != nil {
 		return apperrors.NewNotFoundError("coreEntity not found")
 	}
+	coreEntity.ModuleId = request.ModuleId
+	coreEntity.Code = request.Code
 	coreEntity.EntityName = request.EntityName
 	coreEntity.Description = request.Description
 	coreEntity.UpdatedAt = time.Now().UTC()

@@ -89,7 +89,7 @@ func (ctrl *CoreEntityController) createForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configuration/core-entity/create", fiber.Map{
-		"Title":      "Create CoreEntity",
+		"Title":      "Create Core Entity",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 		"ModuleFlagStatus": flagStatus,
@@ -109,7 +109,7 @@ func (ctrl *CoreEntityController) create(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created branch '"+request.EntityName+"' successfully")
-	return c.Redirect("/configuration/core-entities")
+	return c.Redirect("/configurations/core-entities")
 }
 
 func (ctrl *CoreEntityController) editForm(c *fiber.Ctx) error {
@@ -121,7 +121,7 @@ func (ctrl *CoreEntityController) editForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configuration/core-entity/edit", fiber.Map{
-		"Title":      "Edit CoreEntity",
+		"Title":      "Edit Core Entity",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser": loggedUser,
 		"ModuleFlagStatus": flagStatus,
@@ -146,7 +146,7 @@ func (ctrl *CoreEntityController) edit(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated CoreEntity '"+request.EntityName+"' successfully")
-	return c.Redirect("/configuration/core-entities/" + id + "/details")
+	return c.Redirect("/configurations/core-entities/" + id + "/details")
 }
 
 func (ctrl *CoreEntityController) searchForm(c *fiber.Ctx) error {

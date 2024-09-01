@@ -11,7 +11,7 @@
             <input class="ui input" type="text" name="acronym" id="acronym" value="{{.Department.Acronym}}" required>
         </div>
         <div class="field">
-            <label for="company"><strong>Company Owner:</strong></label>
+            <label for="company"><strong>Associated Company:</strong></label>
             <select class="ui dropdown" id="company_id" name="company_id" required>
                 <option value="{{.Department.CompanyId}}">{{.Department.CompanyName}}</option>
                 {{ range .Companies }}
