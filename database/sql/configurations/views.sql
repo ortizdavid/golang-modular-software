@@ -45,3 +45,4 @@ JOIN configurations.core_entities ce ON (ce.entity_id = cf.entity_id)
 JOIN configurations.modules md ON (md.module_id = cf.module_id)
 ORDER BY module_name;
 
+

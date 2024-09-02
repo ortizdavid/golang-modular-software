@@ -107,15 +107,13 @@ INSERT INTO configurations.module_flag (flag_id, module_id, status) VALUES
 (6, 6, 'Disabled'); -- Reports
 
 
-
-
 -- Table: core_entities
 DROP TABLE IF EXISTS configurations.core_entities;
 CREATE TABLE configurations.core_entities (
     entity_id SERIAL PRIMARY KEY,
     module_id INT NOT NULL,
     entity_name VARCHAR(100) UNIQUE NOT NULL,
-    code VARCHAR(0) UNIQUE NOT NULL,
+    code VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -124,53 +122,55 @@ CREATE TABLE configurations.core_entities (
 );
 -- Insert entities into core_entities with module_code.entity_code format
 -- Module: Authentication
-INSERT INTO configurations.core_entities (module_id, entity_name, code, description) VALUES
-(1, 'Users', 'authentication.users', 'Enabled or disabled'),
-(1, 'Active Users', 'authentication.active_users', 'Users currently active'),
-(1, 'Inactive Users', 'authentication.inactive_users', 'Users currently inactive'),
-(1, 'Online Users', 'authentication.online_users', 'Users currently online'),
-(1, 'Offline Users', 'authentication.offline_users', 'Users currently offline'),
-(1, 'Roles', 'authentication.roles', 'User roles in the system'),
-(1, 'Permissions', 'authentication.permissions', 'User permissions in the system'),
-(1, 'Login Activity', 'authentication.login_activity', 'User login activity'),
+INSERT INTO configurations.core_entities (entity_id, module_id, entity_name, code, description) VALUES
+-- Module: Authentication
+(1, 1, 'Users', 'authentication.users', 'Enabled or disabled'),
+(2, 1, 'Active Users', 'authentication.active_users', 'Users currently active'),
+(3, 1, 'Inactive Users', 'authentication.inactive_users', 'Users currently inactive'),
+(4, 1, 'Online Users', 'authentication.online_users', 'Users currently online'),
+(5, 1, 'Offline Users', 'authentication.offline_users', 'Users currently offline'),
+(6, 1, 'Roles', 'authentication.roles', 'User roles in the system'),
+(7, 1, 'Permissions', 'authentication.permissions', 'User permissions in the system'),
+(8, 1, 'Login Activity', 'authentication.login_activity', 'User login activity'),
 -- Module: Configurations
-(2, 'Basic Configurations', 'configurations.basic_configurations', 'Basic system configurations'),
-(2, 'Company Configurations', 'configurations.company_configurations', 'Company-related configurations'),
-(2, 'Email Configurations', 'configurations.email_configurations', 'Email system configurations'),
-(2, 'Modules', 'configurations.modules', 'System modules'),
-(2, 'Core Entities', 'configurations.core_entities', 'Core entities used in the system'),
-(2, 'Module Flags', 'configurations.module_flags', 'Flags for various modules'),
-(2, 'Core Entity Flags', 'configurations.core_entity_flags', 'Flags for core entities'),
+(9, 2, 'Basic Configurations', 'configurations.basic_configurations', 'Basic system configurations'),
+(10, 2, 'Company Configurations', 'configurations.company_configurations', 'Company-related configurations'),
+(11, 2, 'Email Configurations', 'configurations.email_configurations', 'Email system configurations'),
+(12, 2, 'Modules', 'configurations.modules', 'System modules'),
+(13, 2, 'Core Entities', 'configurations.core_entities', 'Core entities used in the system'),
+(14, 2, 'Module Flags', 'configurations.module_flags', 'Flags for various modules'),
+(15, 2, 'Core Entity Flags', 'configurations.core_entity_flags', 'Flags for core entities'),
 -- Module: References
-(3, 'Countries', 'references.countries', 'List of countries'),
-(3, 'Currencies', 'references.currencies', 'List of currencies'),
-(3, 'Identification Types', 'references.identification_types', 'Types of identification'),
-(3, 'Contact Types', 'references.contact_types', 'Types of contact information'),
-(3, 'Marital Statuses', 'references.marital_statuses', 'Marital status options'),
-(3, 'Task Statuses', 'references.task_statuses', 'Statuses of tasks'),
-(3, 'Approval Statuses', 'references.approval_statuses', 'Statuses of document approvals'),
-(3, 'Document Statuses', 'references.document_statuses', 'Statuses of documents'),
-(3, 'Workflow Statuses', 'references.workflow_statuses', 'Statuses in workflows'),
-(3, 'Evaluation Statuses', 'references.evaluation_statuses', 'Statuses of evaluations'),
-(3, 'User Statuses', 'references.user_statuses', 'Statuses of users'),
-(3, 'Employment Statuses', 'references.employment_statuses', 'Statuses of employment'),
+(16, 3, 'Countries', 'references.countries', 'List of countries'),
+(17, 3, 'Currencies', 'references.currencies', 'List of currencies'),
+(18, 3, 'Identification Types', 'references.identification_types', 'Types of identification'),
+(19, 3, 'Contact Types', 'references.contact_types', 'Types of contact information'),
+(20, 3, 'Marital Statuses', 'references.marital_statuses', 'Marital status options'),
+(21, 3, 'Task Statuses', 'references.task_statuses', 'Statuses of tasks'),
+(22, 3, 'Approval Statuses', 'references.approval_statuses', 'Statuses of document approvals'),
+(23, 3, 'Document Statuses', 'references.document_statuses', 'Statuses of documents'),
+(24, 3, 'Workflow Statuses', 'references.workflow_statuses', 'Statuses in workflows'),
+(25, 3, 'Evaluation Statuses', 'references.evaluation_statuses', 'Statuses of evaluations'),
+(26, 3, 'User Statuses', 'references.user_statuses', 'Statuses of users'),
+(27, 3, 'Employment Statuses', 'references.employment_statuses', 'Statuses of employment'),
 -- Module: Company
-(4, 'Company Info', 'company.company_info', 'Information about the company'),
-(4, 'Branches', 'company.branches', 'Company branches'),
-(4, 'Offices', 'company.offices', 'Company offices'),
-(4, 'Departments', 'company.departments', 'Company departments'),
-(4, 'Rooms', 'company.rooms', 'Company rooms'),
-(4, 'Projects', 'company.projects', 'Company projects'),
-(4, 'Policies', 'company.policies', 'Company policies'),
+(28, 4, 'Company Info', 'company.company_info', 'Information about the company'),
+(29, 4, 'Branches', 'company.branches', 'Company branches'),
+(30, 4, 'Offices', 'company.offices', 'Company offices'),
+(31, 4, 'Departments', 'company.departments', 'Company departments'),
+(32, 4, 'Rooms', 'company.rooms', 'Company rooms'),
+(33, 4, 'Projects', 'company.projects', 'Company projects'),
+(34, 4, 'Policies', 'company.policies', 'Company policies'),
 -- Module: Employees
-(5, 'Employees', 'employees.employees', 'Employee records'),
-(5, 'Job Titles', 'employees.job_titles', 'Job titles within the company'),
+(35, 5, 'Employees', 'employees.employees', 'Employee records'),
+(36, 5, 'Job Titles', 'employees.job_titles', 'Job titles within the company'),
 -- Module: Reports
-(6, 'User Reports', 'reports.user_reports', 'Reports related to users'),
-(6, 'Configuration Reports', 'reports.configuration_reports', 'Reports related to system configurations'),
-(6, 'Company Reports', 'reports.company_reports', 'Reports related to company information'),
-(6, 'Employee Reports', 'reports.employee_reports', 'Reports related to employees'),
-(6, 'Reference Reports', 'reports.reference_reports', 'Reports related to reference data');
+(37, 6, 'User Reports', 'reports.user_reports', 'Reports related to users'),
+(38, 6, 'Configuration Reports', 'reports.configuration_reports', 'Reports related to system configurations'),
+(39, 6, 'Company Reports', 'reports.company_reports', 'Reports related to company information'),
+(40, 6, 'Employee Reports', 'reports.employee_reports', 'Reports related to employees'),
+(41, 6, 'Reference Reports', 'reports.reference_reports', 'Reports related to reference data');
+
 
 
 
@@ -187,57 +187,57 @@ CREATE TABLE configurations.core_entity_flag(
     CONSTRAINT fk_flag_entity FOREIGN KEY(entity_id) REFERENCES configurations.core_entities(entity_id),
     CONSTRAINT fk_module_flag_entity FOREIGN KEY(module_id) REFERENCES configurations.modules(module_id)
 );
--- Insert flags into core_entity_flag table
 -- Module: Authentication
-INSERT INTO configurations.core_entity_flag (entity_id, module_id, status) VALUES
-(1, 1, 'Disabled'), -- Users
-(2, 1, 'Disabled'), -- ActiveUsers
-(3, 1, 'Disabled'), -- InactiveUsers
-(4, 1, 'Disabled'), -- OnlineUsers
-(5, 1, 'Disabled'), -- OfflineUsers
-(6, 1, 'Disabled'), -- Roles
-(7, 1, 'Disabled'), -- Permissions
-(8, 1, 'Disabled'); -- LoginActivity
+INSERT INTO configurations.core_entity_flag (flag_id, entity_id, module_id, status) VALUES
+(1, 1, 1, 'Disabled'), -- Users
+(2, 2, 1, 'Disabled'), -- ActiveUsers
+(3, 3, 1, 'Disabled'), -- InactiveUsers
+(4, 4, 1, 'Disabled'), -- OnlineUsers
+(5, 5, 1, 'Disabled'), -- OfflineUsers
+(6, 6, 1, 'Disabled'), -- Roles
+(7, 7, 1, 'Disabled'), -- Permissions
+(8, 8, 1, 'Disabled'); -- LoginActivity
 -- Module: Configurations
-INSERT INTO configurations.core_entity_flag (entity_id, module_id, status) VALUES
-(9, 2, 'Enabled'), -- BasicConfigurations
-(10, 2, 'Enabled'), -- CompanyConfigurations
-(11, 2, 'Enabled'), -- EmailConfigurations
-(12, 2, 'Enabled'), -- Modules
-(13, 2, 'Enabled'), -- CoreEntities
-(14, 2, 'Enabled'), -- ModuleFlags
-(15, 2, 'Enabled'); -- CoreEntityFlags
+INSERT INTO configurations.core_entity_flag (flag_id, entity_id, module_id, status) VALUES
+(9, 9, 2, 'Enabled'), -- BasicConfigurations
+(10, 10, 2, 'Enabled'), -- CompanyConfigurations
+(11, 11, 2, 'Enabled'), -- EmailConfigurations
+(12, 12, 2, 'Enabled'), -- Modules
+(13, 13, 2, 'Enabled'), -- CoreEntities
+(14, 14, 2, 'Enabled'), -- ModuleFlags
+(15, 15, 2, 'Enabled'); -- CoreEntityFlags
 -- Module: References
-INSERT INTO configurations.core_entity_flag (entity_id, module_id, status) VALUES
-(16, 3, 'Disabled'), -- Countries
-(17, 3, 'Disabled'), -- Currencies
-(18, 3, 'Disabled'), -- IdentificationTypes
-(19, 3, 'Disabled'), -- ContactTypes
-(20, 3, 'Disabled'), -- MaritalStatuses
-(21, 3, 'Disabled'), -- TaskStatuses
-(22, 3, 'Disabled'), -- ApprovalStatuses
-(23, 3, 'Disabled'), -- DocumentStatuses
-(24, 3, 'Disabled'), -- WorkflowStatuses
-(25, 3, 'Disabled'), -- EvaluationStatuses
-(26, 3, 'Disabled'), -- UserStatuses
-(27, 3, 'Disabled'); -- EmploymentStatuses
+INSERT INTO configurations.core_entity_flag (flag_id, entity_id, module_id, status) VALUES
+(16, 16, 3, 'Disabled'), -- Countries
+(17, 17, 3, 'Disabled'), -- Currencies
+(18, 18, 3, 'Disabled'), -- IdentificationTypes
+(19, 19, 3, 'Disabled'), -- ContactTypes
+(20, 20, 3, 'Disabled'), -- MaritalStatuses
+(21, 21, 3, 'Disabled'), -- TaskStatuses
+(22, 22, 3, 'Disabled'), -- ApprovalStatuses
+(23, 23, 3, 'Disabled'), -- DocumentStatuses
+(24, 24, 3, 'Disabled'), -- WorkflowStatuses
+(25, 25, 3, 'Disabled'), -- EvaluationStatuses
+(26, 26, 3, 'Disabled'), -- UserStatuses
+(27, 27, 3, 'Disabled'); -- EmploymentStatuses
 -- Module: Company
-INSERT INTO configurations.core_entity_flag (entity_id, module_id, status) VALUES
-(28, 4, 'Disabled'), -- CompanyInfo
-(29, 4, 'Disabled'), -- Branches
-(30, 4, 'Disabled'), -- Offices
-(31, 4, 'Disabled'), -- Departments
-(32, 4, 'Disabled'), -- Rooms
-(33, 4, 'Disabled'), -- Projects
-(34, 4, 'Disabled'); -- Policies
+INSERT INTO configurations.core_entity_flag (flag_id, entity_id, module_id, status) VALUES
+(28, 28, 4, 'Disabled'), -- CompanyInfo
+(29, 29, 4, 'Disabled'), -- Branches
+(30, 30, 4, 'Disabled'), -- Offices
+(31, 31, 4, 'Disabled'), -- Departments
+(32, 32, 4, 'Disabled'), -- Rooms
+(33, 33, 4, 'Disabled'), -- Projects
+(34, 34, 4, 'Disabled'); -- Policies
 -- Module: Employees
-INSERT INTO configurations.core_entity_flag (entity_id, module_id, status) VALUES
-(35, 5, 'Disabled'), -- Employees
-(36, 5, 'Disabled'); -- JobTitles
+INSERT INTO configurations.core_entity_flag (flag_id, entity_id, module_id, status) VALUES
+(35, 35, 5, 'Disabled'), -- Employees
+(36, 36, 5, 'Disabled'); -- JobTitles
 -- Module: Reports
-INSERT INTO configurations.core_entity_flag (entity_id, module_id, status) VALUES
-(37, 6, 'Disabled'), -- UserReports
-(38, 6, 'Disabled'), -- ConfigurationReports
-(39, 6, 'Disabled'), -- CompanyReports
-(40, 6, 'Disabled'), -- EmployeeReports
-(41, 6, 'Disabled'); -- ReferenceReports
+INSERT INTO configurations.core_entity_flag (flag_id, entity_id, module_id, status) VALUES
+(37, 37, 6, 'Disabled'), -- UserReports
+(38, 38, 6, 'Disabled'), -- ConfigurationReports
+(39, 39, 6, 'Disabled'), -- CompanyReports
+(40, 40, 6, 'Disabled'), -- EmployeeReports
+(41, 41, 6, 'Disabled'); -- ReferenceReports
+

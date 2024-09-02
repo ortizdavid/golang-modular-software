@@ -1,21 +1,22 @@
 package controllers
 
 import (
-	"fmt"
-	"strings"
+	//"fmt"
+	//"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/go-nopain/conversion"
+	//"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	//"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type CoreEntityFlagController struct {
-	service                 *services.ModuleFlagService
+	service                 *services.CoreEntityFlagService
 	moduleFlagStatusService *services.ModuleFlagStatusService
+	coreEntityFlagStatusService *services.CoreEntityFlagStatusService
 	authService             *authentication.AuthService
 	configService           *services.AppConfigurationService
 	infoLogger              *helpers.Logger
@@ -24,12 +25,13 @@ type CoreEntityFlagController struct {
 
 func NewCoreEntityFlagController(db *database.Database) *CoreEntityFlagController {
 	return &CoreEntityFlagController{
-		service:                 services.NewModuleFlagService(db),
-		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
-		authService:             authentication.NewAuthService(db),
-		configService:           services.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:             helpers.NewErrorLogger("configurations-error.log"),
+		service:                     services.NewCoreEntityFlagService(db),
+		moduleFlagStatusService:     services.NewModuleFlagStatusService(db),
+		coreEntityFlagStatusService: services.NewCoreEntityFlagStatusService(db),
+		authService:                 authentication.NewAuthService(db),
+		configService:               services.NewAppConfigurationService(db),
+		infoLogger:                  helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:                 helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -43,24 +45,25 @@ func (ctrl *CoreEntityFlagController) Routes(router *fiber.App, db *database.Dat
 func (ctrl *CoreEntityFlagController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-
-	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
+	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
+	coreEntityFlags, err := ctrl.service.GetAllCoreEntityFlags(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configuration/core-entity-flag/index", fiber.Map{
-		"Title":            "Module Flags",
+		"Title":            "Core Entities Flags",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":       loggedUser,
 		"ModuleFlagStatus": moduleFlagStatus,
-		"ModuleFlags":      moduleFlags,
+		"CoreEntityFlagStatus": coreEntityFlagStatus,
+		"CoreEntityFlags":      coreEntityFlags,
 	})
 }
 
 func (ctrl *CoreEntityFlagController) manageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
+	coreEntityFlags, err := ctrl.service.GetAllCoreEntityFlags(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -69,12 +72,12 @@ func (ctrl *CoreEntityFlagController) manageForm(c *fiber.Ctx) error {
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":       loggedUser,
 		"ModuleFlagStatus": moduleFlagStatus,
-		"ModuleFlags":      moduleFlags,
+		"CoreEntityFlags":      coreEntityFlags,
 	})
 }
 
 func (ctrl *CoreEntityFlagController) manage(c *fiber.Ctx) error {
-	var requests []entities.ManageModuleFlagRequest
+	/*var requests []entities.ManageModuleFlagRequest
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	// Iterate over the form data
 	c.Request().PostArgs().VisitAll(func(key, value []byte) {
@@ -96,6 +99,6 @@ func (ctrl *CoreEntityFlagController) manage(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated module flags!", loggedUser.UserName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated module flags!", loggedUser.UserName))*/
 	return c.Redirect("/configurations/core-entity-flags")
 }

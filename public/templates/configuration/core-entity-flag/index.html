@@ -12,15 +12,17 @@
         <thead>
             <tr>
                 <th>Module</th>
+                <th>Entity</th>
                 <th>Code</th>
                 <th>Status</th>
                 <th>Last Update</th>
             </tr>
         </thead>
         <tbody>
-            {{ range .ModuleFlags }}
+            {{ range .CoreEntityFlags }}
                 <tr>
                     <td>{{.ModuleName}}</td>
+                    <td>{{.EntityName}}</td>
                     <td>{{.Code}}</td>
                     <td>
                         <i class="square icon {{ if eq .Status "Enabled" }}green{{ else }}red{{ end }}"></i>

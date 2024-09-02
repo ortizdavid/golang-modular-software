@@ -15,7 +15,7 @@ type CoreEntityFlag struct {
 }
 
 func (CoreEntityFlag) TableName() string {
-    return "configurations.module_flag"
+    return "configurations.core_entity_flag"
 }
 
 type CoreEntityFlagData struct {
