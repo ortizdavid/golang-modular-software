@@ -13,22 +13,22 @@ import (
 )
 
 type CountryController struct {
-	service           *services.CountryService
-	authService       *authentication.AuthService
-	configService     *configurations.AppConfigurationService
-	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.CountryService
+	authService             *authentication.AuthService
+	configService           *configurations.AppConfigurationService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewCountryController(db *database.Database) *CountryController {
 	return &CountryController{
-		service:           services.NewCountryService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:        helpers.NewInfoLogger("references-info.log"),
-		errorLogger:       helpers.NewErrorLogger("references-error.log"),
+		service:                 services.NewCountryService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:              helpers.NewInfoLogger("references-info.log"),
+		errorLogger:             helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -50,7 +50,7 @@ func (ctrl *CountryController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCountriesPaginated(c.Context(), c, params)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
@@ -68,7 +68,7 @@ func (ctrl *CountryController) index(c *fiber.Ctx) error {
 func (ctrl *CountryController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	country, err := ctrl.service.GetCountryByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -84,7 +84,7 @@ func (ctrl *CountryController) details(c *fiber.Ctx) error {
 
 func (ctrl *CountryController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/country/create", fiber.Map{
 		"Title":            "Create Country",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -111,7 +111,7 @@ func (ctrl *CountryController) create(c *fiber.Ctx) error {
 func (ctrl *CountryController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	country, err := ctrl.service.GetCountryByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -147,7 +147,7 @@ func (ctrl *CountryController) edit(c *fiber.Ctx) error {
 
 func (ctrl *CountryController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/country/search", fiber.Map{
 		"Title":            "Search Countries",
 		"LoggedUser":       loggedUser,
@@ -160,7 +160,7 @@ func (ctrl *CountryController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchCountryRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchCountries(c.Context(), c, request, params)
 	if err != nil {
@@ -182,7 +182,7 @@ func (ctrl *CountryController) search(c *fiber.Ctx) error {
 func (ctrl *CountryController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	country, err := ctrl.service.GetCountryByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

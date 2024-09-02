@@ -14,24 +14,24 @@ import (
 )
 
 type BranchController struct {
-	service           *services.BranchService
-	companyService    *services.CompanyService
-	flagStatusService *configurations.ModuleFlagStatusService
-	authService       *authentication.AuthService
-	configService     *configurations.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.BranchService
+	companyService          *services.CompanyService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	authService             *authentication.AuthService
+	configService           *configurations.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewBranchController(db *database.Database) *BranchController {
 	return &BranchController{
-		service:           services.NewBranchService(db),
-		companyService:    services.NewCompanyService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("company-info.log"),
-		errorLogger:       helpers.NewErrorLogger("company-error.log"),
+		service:                 services.NewBranchService(db),
+		companyService:          services.NewCompanyService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("company-info.log"),
+		errorLogger:             helpers.NewErrorLogger("company-error.log"),
 	}
 }
 
@@ -49,7 +49,7 @@ func (ctrl *BranchController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *BranchController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllBranchesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -69,7 +69,7 @@ func (ctrl *BranchController) index(c *fiber.Ctx) error {
 func (ctrl *BranchController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -85,7 +85,7 @@ func (ctrl *BranchController) details(c *fiber.Ctx) error {
 
 func (ctrl *BranchController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -118,7 +118,7 @@ func (ctrl *BranchController) create(c *fiber.Ctx) error {
 func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -154,7 +154,7 @@ func (ctrl *BranchController) edit(c *fiber.Ctx) error {
 
 func (ctrl *BranchController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("company/branch/search", fiber.Map{
 		"Title":      "Search Branches",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -167,7 +167,7 @@ func (ctrl *BranchController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchBranchRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchBranches(c.Context(), c, request, params)
 	if err != nil {

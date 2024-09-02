@@ -15,22 +15,22 @@ import (
 )
 
 type ModuleFlagController struct {
-	service           *services.ModuleFlagService
-	flagStatusService *services.ModuleFlagStatusService
-	authService       *authentication.AuthService
-	configService     *services.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.ModuleFlagService
+	moduleFlagStatusService *services.ModuleFlagStatusService
+	authService             *authentication.AuthService
+	configService           *services.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewModuleFlagController(db *database.Database) *ModuleFlagController {
 	return &ModuleFlagController{
-		service:           services.NewModuleFlagService(db),
-		flagStatusService: services.NewModuleFlagStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     services.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
+		service:                 services.NewModuleFlagService(db),
+		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           services.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:             helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -43,7 +43,7 @@ func (ctrl *ModuleFlagController) Routes(router *fiber.App, db *database.Databas
 
 func (ctrl *ModuleFlagController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 
 	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
 	if err != nil {
@@ -60,7 +60,7 @@ func (ctrl *ModuleFlagController) index(c *fiber.Ctx) error {
 
 func (ctrl *ModuleFlagController) manageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

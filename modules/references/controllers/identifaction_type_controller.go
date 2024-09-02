@@ -13,22 +13,22 @@ import (
 )
 
 type IdentificationTypeController struct {
-	service           *services.IdentificationTypeService
-	authService       *authentication.AuthService
-	configService     *configurations.AppConfigurationService
-	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.IdentificationTypeService
+	authService             *authentication.AuthService
+	configService           *configurations.AppConfigurationService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewIdentificationTypeController(db *database.Database) *IdentificationTypeController {
 	return &IdentificationTypeController{
-		service:           services.NewIdentificationTypeService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:        helpers.NewInfoLogger("references-info.log"),
-		errorLogger:       helpers.NewErrorLogger("references-error.log"),
+		service:                 services.NewIdentificationTypeService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:              helpers.NewInfoLogger("references-info.log"),
+		errorLogger:             helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,7 +48,7 @@ func (ctrl *IdentificationTypeController) Routes(router *fiber.App, db *database
 
 func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllTypesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -68,7 +68,7 @@ func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	iType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -84,7 +84,7 @@ func (ctrl *IdentificationTypeController) details(c *fiber.Ctx) error {
 
 func (ctrl *IdentificationTypeController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/identification-type/create", fiber.Map{
 		"Title":            "Create Identification Type",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -111,7 +111,7 @@ func (ctrl *IdentificationTypeController) create(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -158,7 +158,7 @@ func (ctrl *IdentificationTypeController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchTypeRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchTypes(c.Context(), c, request, params)
 	if err != nil {
@@ -180,7 +180,7 @@ func (ctrl *IdentificationTypeController) search(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

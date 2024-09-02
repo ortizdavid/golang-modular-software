@@ -13,22 +13,22 @@ import (
 )
 
 type DocumentStatusController struct {
-	service           *services.DocumentStatusService
-	authService       *authentication.AuthService
-	configService     *configurations.AppConfigurationService
-	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.DocumentStatusService
+	authService             *authentication.AuthService
+	configService           *configurations.AppConfigurationService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewDocumentStatusController(db *database.Database) *DocumentStatusController {
 	return &DocumentStatusController{
-		service:           services.NewDocumentStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:        helpers.NewInfoLogger("references-info.log"),
-		errorLogger:       helpers.NewErrorLogger("references-error.log"),
+		service:                 services.NewDocumentStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:              helpers.NewInfoLogger("references-info.log"),
+		errorLogger:             helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,7 +48,7 @@ func (ctrl *DocumentStatusController) Routes(router *fiber.App, db *database.Dat
 
 func (ctrl *DocumentStatusController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -68,7 +68,7 @@ func (ctrl *DocumentStatusController) index(c *fiber.Ctx) error {
 func (ctrl *DocumentStatusController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetDocumentStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -84,7 +84,7 @@ func (ctrl *DocumentStatusController) details(c *fiber.Ctx) error {
 
 func (ctrl *DocumentStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/document-status/create", fiber.Map{
 		"Title":            "Create Document Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -111,7 +111,7 @@ func (ctrl *DocumentStatusController) create(c *fiber.Ctx) error {
 func (ctrl *DocumentStatusController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetDocumentStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -147,7 +147,7 @@ func (ctrl *DocumentStatusController) edit(c *fiber.Ctx) error {
 
 func (ctrl *DocumentStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/document-status/search", fiber.Map{
 		"Title":            "Search Statuses",
 		"LoggedUser":       loggedUser,
@@ -160,7 +160,7 @@ func (ctrl *DocumentStatusController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchStatusRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
 	if err != nil {
@@ -182,7 +182,7 @@ func (ctrl *DocumentStatusController) search(c *fiber.Ctx) error {
 func (ctrl *DocumentStatusController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetDocumentStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

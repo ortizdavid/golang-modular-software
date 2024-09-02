@@ -13,22 +13,22 @@ import (
 )
 
 type TaskStatusController struct {
-	service           *services.TaskStatusService
-	authService       *authentication.AuthService
-	configService     *configurations.AppConfigurationService
-	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.TaskStatusService
+	authService             *authentication.AuthService
+	configService           *configurations.AppConfigurationService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewTaskStatusController(db *database.Database) *TaskStatusController {
 	return &TaskStatusController{
-		service:           services.NewTaskStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:        helpers.NewInfoLogger("references-info.log"),
-		errorLogger:       helpers.NewErrorLogger("references-error.log"),
+		service:                 services.NewTaskStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:              helpers.NewInfoLogger("references-info.log"),
+		errorLogger:             helpers.NewErrorLogger("references-error.log"),
 	}
 }
 
@@ -48,7 +48,7 @@ func (ctrl *TaskStatusController) Routes(router *fiber.App, db *database.Databas
 
 func (ctrl *TaskStatusController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -68,7 +68,7 @@ func (ctrl *TaskStatusController) index(c *fiber.Ctx) error {
 func (ctrl *TaskStatusController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetTaskStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -84,7 +84,7 @@ func (ctrl *TaskStatusController) details(c *fiber.Ctx) error {
 
 func (ctrl *TaskStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/task-status/create", fiber.Map{
 		"Title":            "Create Task Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -111,7 +111,7 @@ func (ctrl *TaskStatusController) create(c *fiber.Ctx) error {
 func (ctrl *TaskStatusController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetTaskStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -147,7 +147,7 @@ func (ctrl *TaskStatusController) edit(c *fiber.Ctx) error {
 
 func (ctrl *TaskStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/task-status/search", fiber.Map{
 		"Title":            "Search Statuses",
 		"LoggedUser":       loggedUser,
@@ -160,7 +160,7 @@ func (ctrl *TaskStatusController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchStatusRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
 	if err != nil {
@@ -182,7 +182,7 @@ func (ctrl *TaskStatusController) search(c *fiber.Ctx) error {
 func (ctrl *TaskStatusController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetTaskStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

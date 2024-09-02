@@ -13,26 +13,26 @@ import (
 )
 
 type RoomController struct {
-	service           *services.RoomService
-	companyService    *services.CompanyService
-	branchService     *services.BranchService
-	authService       *authentication.AuthService
-	flagStatusService *configurations.ModuleFlagStatusService
-	configService     *configurations.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.RoomService
+	companyService          *services.CompanyService
+	branchService           *services.BranchService
+	authService             *authentication.AuthService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	configService           *configurations.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewRoomController(db *database.Database) *RoomController {
 	return &RoomController{
-		service:           services.NewRoomService(db),
-		companyService:    services.NewCompanyService(db),
-		branchService:     services.NewBranchService(db),
-		authService:       authentication.NewAuthService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("company-info.log"),
-		errorLogger:       helpers.NewErrorLogger("company-error.log"),
+		service:                 services.NewRoomService(db),
+		companyService:          services.NewCompanyService(db),
+		branchService:           services.NewBranchService(db),
+		authService:             authentication.NewAuthService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("company-info.log"),
+		errorLogger:             helpers.NewErrorLogger("company-error.log"),
 	}
 }
 
@@ -50,7 +50,7 @@ func (ctrl *RoomController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *RoomController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -70,7 +70,7 @@ func (ctrl *RoomController) index(c *fiber.Ctx) error {
 func (ctrl *RoomController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	room, err := ctrl.service.GetRoomByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -86,7 +86,7 @@ func (ctrl *RoomController) details(c *fiber.Ctx) error {
 
 func (ctrl *RoomController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -123,7 +123,7 @@ func (ctrl *RoomController) create(c *fiber.Ctx) error {
 func (ctrl *RoomController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	room, err := ctrl.service.GetRoomByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)

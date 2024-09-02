@@ -14,24 +14,24 @@ import (
 )
 
 type DepartmentController struct {
-	service           *services.DepartmentService
-	companyService    *services.CompanyService
-	authService       *authentication.AuthService
-	flagStatusService *configurations.ModuleFlagStatusService
-	configService     *configurations.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.DepartmentService
+	companyService          *services.CompanyService
+	authService             *authentication.AuthService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	configService           *configurations.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewDepartmentController(db *database.Database) *DepartmentController {
 	return &DepartmentController{
-		service:           services.NewDepartmentService(db),
-		companyService:    services.NewCompanyService(db),
-		authService:       authentication.NewAuthService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("company-info.log"),
-		errorLogger:       helpers.NewErrorLogger("company-error.log"),
+		service:                 services.NewDepartmentService(db),
+		companyService:          services.NewCompanyService(db),
+		authService:             authentication.NewAuthService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("company-info.log"),
+		errorLogger:             helpers.NewErrorLogger("company-error.log"),
 	}
 }
 
@@ -49,7 +49,7 @@ func (ctrl *DepartmentController) Routes(router *fiber.App, db *database.Databas
 
 func (ctrl *DepartmentController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllDepartmentsPaginated(c.Context(), c, params)
 	if err != nil {
@@ -69,7 +69,7 @@ func (ctrl *DepartmentController) index(c *fiber.Ctx) error {
 func (ctrl *DepartmentController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	department, err := ctrl.service.GetDepartmentByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -85,7 +85,7 @@ func (ctrl *DepartmentController) details(c *fiber.Ctx) error {
 
 func (ctrl *DepartmentController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -118,7 +118,7 @@ func (ctrl *DepartmentController) create(c *fiber.Ctx) error {
 func (ctrl *DepartmentController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -159,7 +159,7 @@ func (ctrl *DepartmentController) edit(c *fiber.Ctx) error {
 
 func (ctrl *DepartmentController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("company/department/search", fiber.Map{
 		"Title":            "Search Departments",
 		"LoggedUser":       loggedUser,
@@ -172,7 +172,7 @@ func (ctrl *DepartmentController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchDepartmentRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchDepartments(c.Context(), c, request, params)
 	if err != nil {

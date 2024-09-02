@@ -12,22 +12,22 @@ import (
 )
 
 type PermissionController struct {
-	service           *services.PermissionService
-	authService       *services.AuthService
-	configService     *configurations.AppConfigurationService
-	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.PermissionService
+	authService             *services.AuthService
+	configService           *configurations.AppConfigurationService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewPermissionController(db *database.Database) *PermissionController {
 	return &PermissionController{
-		service:           services.NewPermissionService(db),
-		authService:       services.NewAuthService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:        helpers.NewInfoLogger("users-info.log"),
-		errorLogger:       helpers.NewInfoLogger("users-error.log"),
+		service:                 services.NewPermissionService(db),
+		authService:             services.NewAuthService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		infoLogger:              helpers.NewInfoLogger("users-info.log"),
+		errorLogger:             helpers.NewInfoLogger("users-error.log"),
 	}
 }
 
@@ -48,7 +48,7 @@ func (ctrl *PermissionController) Routes(router *fiber.App, db *database.Databas
 func (ctrl *PermissionController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	pagination, err := ctrl.service.GetAllPermissionsPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -65,7 +65,7 @@ func (ctrl *PermissionController) index(c *fiber.Ctx) error {
 func (ctrl *PermissionController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	permission, err := ctrl.service.GetPermissionByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -81,7 +81,7 @@ func (ctrl *PermissionController) details(c *fiber.Ctx) error {
 
 func (ctrl *PermissionController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/permission/create", fiber.Map{
 		"Title":            "Create Permission",
 		"LoggedUser":       loggedUser,
@@ -108,7 +108,7 @@ func (ctrl *PermissionController) create(c *fiber.Ctx) error {
 func (ctrl *PermissionController) editForm(c *fiber.Ctx) error {
 	id := c.Params(("id"))
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	permission, err := ctrl.service.GetPermissionByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -145,7 +145,7 @@ func (ctrl *PermissionController) edit(c *fiber.Ctx) error {
 func (ctrl *PermissionController) deleteForm(c *fiber.Ctx) error {
 	id := c.Params(("id"))
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	permission, err := ctrl.service.GetPermissionByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -177,7 +177,7 @@ func (ctrl *PermissionController) delete(c *fiber.Ctx) error {
 
 func (ctrl *PermissionController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/permission/search", fiber.Map{
 		"Title":            "Search Permissions",
 		"LoggedUser":       loggedUser,
@@ -190,7 +190,7 @@ func (ctrl *PermissionController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchPermissionRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchPermissions(c.Context(), c, request, params)
 	if err != nil {

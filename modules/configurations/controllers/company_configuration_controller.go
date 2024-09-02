@@ -12,22 +12,22 @@ import (
 )
 
 type CompanyConfigurationController struct {
-	service           *services.CompanyConfigurationService
-	flagStatusService *services.ModuleFlagStatusService
-	authService       *authentication.AuthService
-	configService     *services.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.CompanyConfigurationService
+	moduleFlagStatusService *services.ModuleFlagStatusService
+	authService             *authentication.AuthService
+	configService           *services.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurationController {
 	return &CompanyConfigurationController{
-		service:           services.NewCompanyConfigurationService(db),
-		flagStatusService: services.NewModuleFlagStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     services.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
+		service:                 services.NewCompanyConfigurationService(db),
+		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           services.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:             helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -40,7 +40,7 @@ func (ctrl *CompanyConfigurationController) Routes(router *fiber.App, db *databa
 
 func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/company/index", fiber.Map{
 		"Title":            "Company Configurations",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),

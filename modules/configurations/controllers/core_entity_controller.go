@@ -12,24 +12,24 @@ import (
 )
 
 type CoreEntityController struct {
-	service           *services.CoreEntityService
-	moduleService     *services.ModuleService
-	flagStatusService *services.ModuleFlagStatusService
-	authService       *authentication.AuthService
-	configService     *services.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.CoreEntityService
+	moduleService           *services.ModuleService
+	moduleFlagStatusService *services.ModuleFlagStatusService
+	authService             *authentication.AuthService
+	configService           *services.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewCoreEntityController(db *database.Database) *CoreEntityController {
 	return &CoreEntityController{
-		service:           services.NewCoreEntityService(db),
-		moduleService:     services.NewModuleService(db),
-		flagStatusService: services.NewModuleFlagStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     services.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
+		service:                 services.NewCoreEntityService(db),
+		moduleService:           services.NewModuleService(db),
+		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           services.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:             helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -47,7 +47,7 @@ func (ctrl *CoreEntityController) Routes(router *fiber.App, db *database.Databas
 
 func (ctrl *CoreEntityController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCoreEntitiesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -67,7 +67,7 @@ func (ctrl *CoreEntityController) index(c *fiber.Ctx) error {
 func (ctrl *CoreEntityController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntity, err := ctrl.service.GetCoreEntityByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -83,7 +83,7 @@ func (ctrl *CoreEntityController) details(c *fiber.Ctx) error {
 
 func (ctrl *CoreEntityController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	modules, err := ctrl.moduleService.GetAllModules(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -115,7 +115,7 @@ func (ctrl *CoreEntityController) create(c *fiber.Ctx) error {
 func (ctrl *CoreEntityController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntity, err := ctrl.service.GetCoreEntityByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -151,7 +151,7 @@ func (ctrl *CoreEntityController) edit(c *fiber.Ctx) error {
 
 func (ctrl *CoreEntityController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/core-entity/search", fiber.Map{
 		"Title":      "Search Core Entities",
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -164,7 +164,7 @@ func (ctrl *CoreEntityController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchCoreEntityRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchCoreEntities(c.Context(), c, request, params)
 	if err != nil {

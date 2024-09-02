@@ -12,22 +12,22 @@ import (
 )
 
 type EmailConfigurationController struct {
-	service           *services.EmailConfigurationService
-	flagStatusService *services.ModuleFlagStatusService
-	authService       *authentication.AuthService
-	configService     *services.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.EmailConfigurationService
+	moduleFlagStatusService *services.ModuleFlagStatusService
+	authService             *authentication.AuthService
+	configService           *services.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewEmailConfigurationController(db *database.Database) *EmailConfigurationController {
 	return &EmailConfigurationController{
-		service:           services.NewEmailConfigurationService(db),
-		flagStatusService: services.NewModuleFlagStatusService(db),
-		authService:       authentication.NewAuthService(db),
-		configService:     services.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
+		service:                 services.NewEmailConfigurationService(db),
+		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
+		authService:             authentication.NewAuthService(db),
+		configService:           services.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:             helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -40,7 +40,7 @@ func (ctrl *EmailConfigurationController) Routes(router *fiber.App, db *database
 
 func (ctrl *EmailConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/email/index", fiber.Map{
 		"Title":            "Email Configurations",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -51,7 +51,7 @@ func (ctrl *EmailConfigurationController) index(c *fiber.Ctx) error {
 
 func (ctrl *EmailConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/email/edit", fiber.Map{
 		"Title":            "Edit Email Configuration",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),

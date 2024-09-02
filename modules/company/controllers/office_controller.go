@@ -14,24 +14,24 @@ import (
 )
 
 type OfficeController struct {
-	service           *services.OfficeService
-	companyService    *services.CompanyService
-	authService       *authentication.AuthService
-	flagStatusService *configurations.ModuleFlagStatusService
-	configService     *configurations.AppConfigurationService
-	infoLogger        *helpers.Logger
-	errorLogger       *helpers.Logger
+	service                 *services.OfficeService
+	companyService          *services.CompanyService
+	authService             *authentication.AuthService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	configService           *configurations.AppConfigurationService
+	infoLogger              *helpers.Logger
+	errorLogger             *helpers.Logger
 }
 
 func NewOfficeController(db *database.Database) *OfficeController {
 	return &OfficeController{
-		service:           services.NewOfficeService(db),
-		companyService:    services.NewCompanyService(db),
-		authService:       authentication.NewAuthService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		infoLogger:        helpers.NewInfoLogger("company-info.log"),
-		errorLogger:       helpers.NewErrorLogger("company-error.log"),
+		service:                 services.NewOfficeService(db),
+		companyService:          services.NewCompanyService(db),
+		authService:             authentication.NewAuthService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		infoLogger:              helpers.NewInfoLogger("company-info.log"),
+		errorLogger:             helpers.NewErrorLogger("company-error.log"),
 	}
 }
 
@@ -49,7 +49,7 @@ func (ctrl *OfficeController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *OfficeController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllOfficesPaginated(c.Context(), c, params)
 	if err != nil {
@@ -69,7 +69,7 @@ func (ctrl *OfficeController) index(c *fiber.Ctx) error {
 func (ctrl *OfficeController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	office, err := ctrl.service.GetOfficeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -85,7 +85,7 @@ func (ctrl *OfficeController) details(c *fiber.Ctx) error {
 
 func (ctrl *OfficeController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -118,7 +118,7 @@ func (ctrl *OfficeController) create(c *fiber.Ctx) error {
 func (ctrl *OfficeController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	office, err := ctrl.service.GetOfficeByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -154,7 +154,7 @@ func (ctrl *OfficeController) edit(c *fiber.Ctx) error {
 
 func (ctrl *OfficeController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("company/office/search", fiber.Map{
 		"Title":            "Search Offices",
 		"LoggedUser":       loggedUser,
@@ -167,7 +167,7 @@ func (ctrl *OfficeController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchOfficeRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchOffices(c.Context(), c, request, params)
 	if err != nil {

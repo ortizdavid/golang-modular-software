@@ -9,16 +9,16 @@ import (
 )
 
 type RootController struct {
-	authService       *authentication.AuthService
-	flagStatusService *services.ModuleFlagStatusService
-	configService     *services.AppConfigurationService
+	authService             *authentication.AuthService
+	moduleFlagStatusService *services.ModuleFlagStatusService
+	configService           *services.AppConfigurationService
 }
 
 func NewRootController(db *database.Database) *RootController {
 	return &RootController{
-		authService:       authentication.NewAuthService(db),
-		flagStatusService: services.NewModuleFlagStatusService(db),
-		configService:     services.NewAppConfigurationService(db),
+		authService:             authentication.NewAuthService(db),
+		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
+		configService:           services.NewAppConfigurationService(db),
 	}
 }
 
@@ -30,7 +30,7 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/_root/index", fiber.Map{
 		"Title":            "Configurations",
 		"LoggedUser":       loggedUser,

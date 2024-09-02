@@ -9,18 +9,18 @@ import (
 )
 
 type RootController struct {
-	authService       *authentication.AuthService
-	flagStatusService *configurations.ModuleFlagStatusService
-	configService     *configurations.AppConfigurationService
-	statisticsService *services.StatisticsService
+	authService             *authentication.AuthService
+	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	configService           *configurations.AppConfigurationService
+	statisticsService       *services.StatisticsService
 }
 
 func NewRootController(db *database.Database) *RootController {
 	return &RootController{
-		authService:       authentication.NewAuthService(db),
-		flagStatusService: configurations.NewModuleFlagStatusService(db),
-		configService:     configurations.NewAppConfigurationService(db),
-		statisticsService: services.NewStatisticsService(db),
+		authService:             authentication.NewAuthService(db),
+		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		configService:           configurations.NewAppConfigurationService(db),
+		statisticsService:       services.NewStatisticsService(db),
 	}
 }
 
@@ -31,7 +31,7 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
 	return c.Render("company/_root/index", fiber.Map{
 		"Title":            "Company Management",
