@@ -15,22 +15,22 @@ import (
 )
 
 type ModuleFlagController struct {
-	service *services.ModuleFlagService
+	service           *services.ModuleFlagService
 	flagStatusService *services.ModuleFlagStatusService
-	authService *authentication.AuthService
-	configService *services.AppConfigurationService
-	infoLogger *helpers.Logger
-	errorLogger *helpers.Logger
+	authService       *authentication.AuthService
+	configService     *services.AppConfigurationService
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewModuleFlagController(db *database.Database) *ModuleFlagController {
 	return &ModuleFlagController{
-		service:       services.NewModuleFlagService(db),
-		flagStatusService:    services.NewModuleFlagStatusService(db),
-		authService:   authentication.NewAuthService(db),
-		configService: services.NewAppConfigurationService(db),
-		infoLogger:    helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:   helpers.NewErrorLogger("configurations-error.log"),
+		service:           services.NewModuleFlagService(db),
+		flagStatusService: services.NewModuleFlagStatusService(db),
+		authService:       authentication.NewAuthService(db),
+		configService:     services.NewAppConfigurationService(db),
+		infoLogger:        helpers.NewInfoLogger("configurations-info.log"),
+		errorLogger:       helpers.NewErrorLogger("configurations-error.log"),
 	}
 }
 
@@ -43,34 +43,34 @@ func (ctrl *ModuleFlagController) Routes(router *fiber.App, db *database.Databas
 
 func (ctrl *ModuleFlagController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
-	
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+
 	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configuration/module-flag/index", fiber.Map{
-		"Title": "Module Flags",
-		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser": loggedUser,
-		"ModuleFlagStatus": flagStatus,
-		"ModuleFlags": moduleFlags,
+		"Title":            "Module Flags",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
+		"ModuleFlags":      moduleFlags,
 	})
 }
 
 func (ctrl *ModuleFlagController) manageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("configuration/module-flag/manage", fiber.Map{
-		"Title": "Module Flags",
-		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser":loggedUser,
-		"ModuleFlagStatus": flagStatus,
-		"ModuleFlags": moduleFlags,
+		"Title":            "Module Flags",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
+		"ModuleFlags":      moduleFlags,
 	})
 }
 
@@ -92,12 +92,11 @@ func (ctrl *ModuleFlagController) manage(c *fiber.Ctx) error {
 		}
 	})
 	// Call the service method to process the module flags
-    err := ctrl.service.ManageModuleFlags(c.Context(), requests); 
+	err := ctrl.service.ManageModuleFlags(c.Context(), requests)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-        return helpers.HandleHttpErrors(c, err)
-    }
+		return helpers.HandleHttpErrors(c, err)
+	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated module flags!", loggedUser.UserName))
 	return c.Redirect("/configurations/module-flags")
 }
-

@@ -12,13 +12,13 @@ import (
 )
 
 type AccountController struct {
-	service       *services.UserService
-	authService   *services.AuthService
-	roleService   *services.RoleService
-	configService *configurations.AppConfigurationService
+	service           *services.UserService
+	authService       *services.AuthService
+	roleService       *services.RoleService
+	configService     *configurations.AppConfigurationService
 	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger    *helpers.Logger
-	errorLogger   *helpers.Logger
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewAccountController(db *database.Database) *AccountController {
@@ -44,12 +44,12 @@ func (ctrl *AccountController) Routes(router *fiber.App, db *database.Database) 
 
 func (ctrl *AccountController) uploadUserImageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/upload-image", fiber.Map{
-		"Title":      "Upload Image",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Upload Image",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -66,12 +66,12 @@ func (ctrl *AccountController) uploadUserImage(c *fiber.Ctx) error {
 
 func (ctrl *AccountController) changePasswordForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/change-password", fiber.Map{
-		"Title":      "Change Password",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Change Password",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -92,22 +92,22 @@ func (ctrl *AccountController) changePassword(c *fiber.Ctx) error {
 
 func (ctrl *AccountController) userData(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/user-data", fiber.Map{
-		"Title":      "User Data",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
+		"Title":            "User Data",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
 	})
 }
 
 func (ctrl *AccountController) changeUserDataForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/change-data", fiber.Map{
-		"Title":      "Change Data",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
+		"Title":            "Change Data",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
 	})
 }

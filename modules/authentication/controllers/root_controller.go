@@ -30,12 +30,12 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
 	return c.Render("authentication/_root/index", fiber.Map{
 		"Title":            "User Management",
 		"LoggedUser":       loggedUser,
-		"ModuleFlagStatus": flagStatus,
+		"ModuleFlagStatus": moduleFlagStatus,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"Statistics":       statistics,
 	})

@@ -12,12 +12,12 @@ import (
 )
 
 type BasicConfigurationController struct {
-	service *services.BasicConfigurationService
+	service           *services.BasicConfigurationService
 	flagStatusService *services.ModuleFlagStatusService
-	authService *authentication.AuthService
-	configService *services.AppConfigurationService
-	infoLogger *helpers.Logger
-	errorLogger *helpers.Logger
+	authService       *authentication.AuthService
+	configService     *services.AppConfigurationService
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewBasicConfigurationController(db *database.Database) *BasicConfigurationController {
@@ -40,23 +40,23 @@ func (ctrl *BasicConfigurationController) Routes(router *fiber.App, db *database
 
 func (ctrl *BasicConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/basic/index", fiber.Map{
-		"Title": "Basic Configurations",
-		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser": loggedUser,
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Basic Configurations",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
 func (ctrl *BasicConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/basic/edit", fiber.Map{
-		"Title": "Edit Basic Configuration",
-		"AppConfig": ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser":loggedUser,
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Edit Basic Configuration",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 

@@ -7,18 +7,18 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
+	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/services"
-	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
 type ApprovalStatusController struct {
-	service        *services.ApprovalStatusService
-	authService    *authentication.AuthService
-	configService *configurations.AppConfigurationService
+	service           *services.ApprovalStatusService
+	authService       *authentication.AuthService
+	configService     *configurations.AppConfigurationService
 	flagStatusService *configurations.ModuleFlagStatusService
-	infoLogger     *helpers.Logger
-	errorLogger    *helpers.Logger
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewApprovalStatusController(db *database.Database) *ApprovalStatusController {
@@ -48,48 +48,48 @@ func (ctrl *ApprovalStatusController) Routes(router *fiber.App, db *database.Dat
 
 func (ctrl *ApprovalStatusController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/approval-status/index", fiber.Map{
-		"Title":       "Approval Statuses",
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser":  loggedUser,
-		"Pagination":  pagination,
-		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"Title":            "Approval Statuses",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"Pagination":       pagination,
+		"CurrentPage":      pagination.MetaData.CurrentPage + 1,
+		"TotalPages":       pagination.MetaData.TotalPages + 1,
 	})
 }
 
 func (ctrl *ApprovalStatusController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/approval-status/details", fiber.Map{
-		"Title":      "Details",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
-		"ApprovalStatus":     status,
+		"Title":            "Details",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"ApprovalStatus":   status,
 	})
 }
 
 func (ctrl *ApprovalStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/approval-status/create", fiber.Map{
-		"Title":      "Create Approval Status",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
+		"Title":            "Create Approval Status",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
 	})
 }
 
@@ -111,17 +111,17 @@ func (ctrl *ApprovalStatusController) create(c *fiber.Ctx) error {
 func (ctrl *ApprovalStatusController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/approval-status/edit", fiber.Map{
-		"Title":      "Edit Approval Status",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
-		"ApprovalStatus":     status,
+		"Title":            "Edit Approval Status",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"ApprovalStatus":   status,
 	})
 }
 
@@ -147,12 +147,12 @@ func (ctrl *ApprovalStatusController) edit(c *fiber.Ctx) error {
 
 func (ctrl *ApprovalStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("references/approval-status/search", fiber.Map{
-		"Title":      "Search Statuses",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Search Statuses",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -160,7 +160,7 @@ func (ctrl *ApprovalStatusController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchStatusRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
 	if err != nil {
@@ -168,31 +168,31 @@ func (ctrl *ApprovalStatusController) search(c *fiber.Ctx) error {
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("references/approval-status/search-results", fiber.Map{
-		"Title":       "Search Results",
-		"LoggedUser":  loggedUser,
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"Pagination":  pagination,
-		"Param":       request.SearchParam,
-		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"Title":            "Search Results",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"Pagination":       pagination,
+		"Param":            request.SearchParam,
+		"CurrentPage":      pagination.MetaData.CurrentPage + 1,
+		"TotalPages":       pagination.MetaData.TotalPages + 1,
 	})
 }
 
 func (ctrl *ApprovalStatusController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("references/approval-status/delete", fiber.Map{
-		"Title":  "Remove Approval Status",
-		"ApprovalStatus": 	status,
-		"LoggedUser":  loggedUser,
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Remove Approval Status",
+		"ApprovalStatus":   status,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 

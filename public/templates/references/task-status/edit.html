@@ -18,6 +18,10 @@
             <label for="bg_color"><strong>Background Color (class): <i class="ui square icon {{.TaskStatus.BgColor}}"></i></strong></label>
             <input class="ui input" type="text" name="bg_color" id="bg_color" value="{{.TaskStatus.BgColor}}"  required>
         </div>
+        <div class="field">
+            <label for="description"><strong>Description:</strong></label>
+            <textarea class="ui input" name="description" id="description" cols="20" rows="10" required>{{.TaskStatus.Description}}</textarea>
+        </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">
                 <i class="send icon"></i>

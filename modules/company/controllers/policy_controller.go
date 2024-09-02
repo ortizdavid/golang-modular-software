@@ -14,13 +14,13 @@ import (
 )
 
 type PolicyController struct {
-	service        *services.PolicyService
-	companyService *services.CompanyService
-	authService    *authentication.AuthService
+	service           *services.PolicyService
+	companyService    *services.CompanyService
+	authService       *authentication.AuthService
 	flagStatusService *configurations.ModuleFlagStatusService
-	configService *configurations.AppConfigurationService
-	infoLogger     *helpers.Logger
-	errorLogger    *helpers.Logger
+	configService     *configurations.AppConfigurationService
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewPolicyController(db *database.Database) *PolicyController {
@@ -51,54 +51,54 @@ func (ctrl *PolicyController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *PolicyController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllPoliciesPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/policy/index", fiber.Map{
-		"Title":       "Policies",
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser":  loggedUser,
-		"Pagination":  pagination,
-		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"Title":            "Policies",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"Pagination":       pagination,
+		"CurrentPage":      pagination.MetaData.CurrentPage + 1,
+		"TotalPages":       pagination.MetaData.TotalPages + 1,
 	})
 }
 
 func (ctrl *PolicyController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/policy/details", fiber.Map{
-		"Title":      "Details",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
-		"Policy":     policy,
+		"Title":            "Details",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"Policy":           policy,
 	})
 }
 
 func (ctrl *PolicyController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/policy/create", fiber.Map{
-		"Title":      "Create Policy",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStaus": flagStatus,
-		"LoggedUser": loggedUser,
-		"Companies":  companies,
-		"PolicyCode": encryption.GenerateCode("POL-"),
+		"Title":           "Create Policy",
+		"AppConfig":       ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStaus": moduleFlagStatus,
+		"LoggedUser":      loggedUser,
+		"Companies":       companies,
+		"PolicyCode":      encryption.GenerateCode("POL-"),
 	})
 }
 
@@ -120,7 +120,7 @@ func (ctrl *PolicyController) create(c *fiber.Ctx) error {
 func (ctrl *PolicyController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -130,12 +130,12 @@ func (ctrl *PolicyController) editForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/policy/edit", fiber.Map{
-		"Title":      "Edit Policy",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"LoggedUser": loggedUser,
-		"Policy":     policy,
-		"Companies":  companies,
+		"Title":            "Edit Policy",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"Policy":           policy,
+		"Companies":        companies,
 	})
 }
 
@@ -161,12 +161,12 @@ func (ctrl *PolicyController) edit(c *fiber.Ctx) error {
 
 func (ctrl *PolicyController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("company/policy/search", fiber.Map{
-		"Title":      "Search Policies",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Search Policies",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -174,7 +174,7 @@ func (ctrl *PolicyController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchPolicyRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchPolicies(c.Context(), c, request, params)
 	if err != nil {
@@ -182,31 +182,31 @@ func (ctrl *PolicyController) search(c *fiber.Ctx) error {
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("company/policy/search-results", fiber.Map{
-		"Title":       "Search Results",
-		"LoggedUser":  loggedUser,
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"Pagination":  pagination,
-		"Param":       request.SearchParam,
-		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages":  pagination.MetaData.TotalPages + 1,
+		"Title":            "Search Results",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"Pagination":       pagination,
+		"Param":            request.SearchParam,
+		"CurrentPage":      pagination.MetaData.CurrentPage + 1,
+		"TotalPages":       pagination.MetaData.TotalPages + 1,
 	})
 }
 
 func (ctrl *PolicyController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("company/policy/delete", fiber.Map{
-		"Title":  "Remove Policy",
-		"Policy": 	policy,
-		"LoggedUser":  loggedUser,
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Remove Policy",
+		"Policy":           policy,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 

@@ -55,24 +55,24 @@ func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 func (ctrl *RoleController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	pagination, err := ctrl.service.GetAllRolesPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/index", fiber.Map{
-		"Title":      "Roles",
-		"Pagination": pagination,
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Roles",
+		"Pagination":       pagination,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
 func (ctrl *RoleController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -82,7 +82,7 @@ func (ctrl *RoleController) details(c *fiber.Ctx) error {
 		"Title":            "Details",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"ModuleFlagStatus": moduleFlagStatus,
 		"Role":             role,
 		"PermissionRoles":  permissionRoles,
 		"CountPermissions": len(permissionRoles),
@@ -91,17 +91,16 @@ func (ctrl *RoleController) details(c *fiber.Ctx) error {
 
 func (ctrl *RoleController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	csrfToken := helpers.GenerateCsrfToken(c)
 	return c.Render("authentication/role/create", fiber.Map{
-		"Title":      "Create Role",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"CsrfToken": csrfToken,
+		"Title":            "Create Role",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"CsrfToken":        csrfToken,
 	})
 }
-
 
 func (ctrl *RoleController) create(c *fiber.Ctx) error {
 	csrfToken := c.FormValue("csrf_token")
@@ -125,17 +124,17 @@ func (ctrl *RoleController) create(c *fiber.Ctx) error {
 func (ctrl *RoleController) editForm(c *fiber.Ctx) error {
 	id := c.Params(("id"))
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/edit", fiber.Map{
-		"Title":      "Edit Role",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"Role":       role,
+		"Title":            "Edit Role",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"Role":             role,
 	})
 }
 
@@ -162,17 +161,17 @@ func (ctrl *RoleController) edit(c *fiber.Ctx) error {
 func (ctrl *RoleController) deleteForm(c *fiber.Ctx) error {
 	id := c.Params(("id"))
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), id)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/delete", fiber.Map{
-		"Title":      "Delete Role",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
-		"Role":       role,
+		"Title":            "Delete Role",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"Role":             role,
 	})
 }
 
@@ -194,12 +193,12 @@ func (ctrl *RoleController) delete(c *fiber.Ctx) error {
 
 func (ctrl *RoleController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/role/search", fiber.Map{
-		"Title":      "Search Roles",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Search Roles",
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -207,7 +206,7 @@ func (ctrl *RoleController) search(c *fiber.Ctx) error {
 	searcParam := c.FormValue("search_param")
 	request := entities.SearchRoleRequest{SearchParam: searcParam}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchRoles(c.Context(), c, request, params)
 	if err != nil {
@@ -215,14 +214,14 @@ func (ctrl *RoleController) search(c *fiber.Ctx) error {
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("authentication/role/search-results", fiber.Map{
-		"Title":       "Search Results",
-		"Pagination":  pagination,
-		"Param":       request.SearchParam,
-		"CurrentPage": pagination.MetaData.CurrentPage + 1,
-		"TotalPages":  pagination.MetaData.TotalPages + 1,
-		"LoggedUser":  loggedUser,
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Search Results",
+		"Pagination":       pagination,
+		"Param":            request.SearchParam,
+		"CurrentPage":      pagination.MetaData.CurrentPage + 1,
+		"TotalPages":       pagination.MetaData.TotalPages + 1,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -233,18 +232,18 @@ func (ctrl *RoleController) assignPermissionForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	permissions, err := ctrl.permissionService.GetUnassignedPermissionsByRole(c.Context(), role.RoleId)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/assign-permission", fiber.Map{
-		"Title":       "Assign Role",
-		"Permissions": permissions,
-		"Role":        role,
-		"LoggedUser":  loggedUser,
-		"AppConfig":   ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Assign Role",
+		"Permissions":      permissions,
+		"Role":             role,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
@@ -271,7 +270,7 @@ func (ctrl *RoleController) removePermissionForm(c *fiber.Ctx) error {
 	roleId := c.Params("roleId")
 	permissionRoleId := c.Params("permissionRoleId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), roleId)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
@@ -281,12 +280,12 @@ func (ctrl *RoleController) removePermissionForm(c *fiber.Ctx) error {
 		return helpers.HandleHttpErrors(c, err)
 	}
 	return c.Render("authentication/role/remove-permission", fiber.Map{
-		"Title":          "Remove Permission",
-		"PermissionRole": permissionRole,
-		"Role":           role,
-		"LoggedUser":     loggedUser,
-		"AppConfig":      ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Remove Permission",
+		"PermissionRole":   permissionRole,
+		"Role":             role,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 

@@ -12,12 +12,12 @@ import (
 )
 
 type EmailConfigurationController struct {
-	service       *services.EmailConfigurationService
+	service           *services.EmailConfigurationService
 	flagStatusService *services.ModuleFlagStatusService
-	authService   *authentication.AuthService
-	configService *services.AppConfigurationService
-	infoLogger    *helpers.Logger
-	errorLogger   *helpers.Logger
+	authService       *authentication.AuthService
+	configService     *services.AppConfigurationService
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewEmailConfigurationController(db *database.Database) *EmailConfigurationController {
@@ -40,23 +40,23 @@ func (ctrl *EmailConfigurationController) Routes(router *fiber.App, db *database
 
 func (ctrl *EmailConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/email/index", fiber.Map{
-		"Title":      "Email Configurations",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser": loggedUser,
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Email Configurations",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 
 func (ctrl *EmailConfigurationController) editForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/email/edit", fiber.Map{
-		"Title":      "Edit Email Configuration",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser": loggedUser,
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Edit Email Configuration",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 
 }

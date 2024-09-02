@@ -3,14 +3,14 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/database"
-	"github.com/ortizdavid/golang-modular-software/modules/references/services"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	"github.com/ortizdavid/golang-modular-software/modules/references/services"
 )
 
 type RootController struct {
-	authService *authentication.AuthService
-	configService *configurations.AppConfigurationService
+	authService       *authentication.AuthService
+	configService     *configurations.AppConfigurationService
 	flagStatusService *configurations.ModuleFlagStatusService
 	statisticsService *services.StatisticsService
 }
@@ -31,13 +31,13 @@ func (ctrl *RootController) Routes(router *fiber.App, db *database.Database) {
 
 func (ctrl *RootController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
 	return c.Render("references/_root/index", fiber.Map{
-		"Title":      "References",
-		"LoggedUser": loggedUser,
-		"ModuleFlagStatus": flagStatus,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"Statistics": statistics,
+		"Title":            "References",
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Statistics":       statistics,
 	})
 }

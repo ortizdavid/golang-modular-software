@@ -12,4 +12,5 @@ type Statistics struct {
 	WorkflowStatuses    int64 `json:"workflow_statuses"`
 	EvaluationStatuses    int64 `json:"evaluation_statuses"`
 	UserStatuses    	int64 `json:"user_statuses"`
+	EmploymentStatuses    	int64 `json:"employment_statuses"`
 }

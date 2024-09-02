@@ -12,12 +12,12 @@ import (
 )
 
 type CompanyConfigurationController struct {
-	service       *services.CompanyConfigurationService
+	service           *services.CompanyConfigurationService
 	flagStatusService *services.ModuleFlagStatusService
-	authService   *authentication.AuthService
-	configService *services.AppConfigurationService
-	infoLogger    *helpers.Logger
-	errorLogger   *helpers.Logger
+	authService       *authentication.AuthService
+	configService     *services.AppConfigurationService
+	infoLogger        *helpers.Logger
+	errorLogger       *helpers.Logger
 }
 
 func NewCompanyConfigurationController(db *database.Database) *CompanyConfigurationController {
@@ -40,12 +40,12 @@ func (ctrl *CompanyConfigurationController) Routes(router *fiber.App, db *databa
 
 func (ctrl *CompanyConfigurationController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	flagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
+	moduleFlagStatus, _ := ctrl.flagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("configuration/company/index", fiber.Map{
-		"Title":      "Company Configurations",
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser": loggedUser,
-		"ModuleFlagStatus": flagStatus,
+		"Title":            "Company Configurations",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":       loggedUser,
+		"ModuleFlagStatus": moduleFlagStatus,
 	})
 }
 

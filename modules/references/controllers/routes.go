@@ -14,6 +14,7 @@ func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
 	NewWorkflowStatusController(db).Routes(router, db)
 	NewEvaluationStatusController(db).Routes(router, db)
 	NewUserStatusController(db).Routes(router, db)
+	NewEmploymentStatusController(db).Routes(router, db)
 	NewDocumentStatusController(db).Routes(router, db)
 	NewMaritalStatusController(db).Routes(router, db)
 	NewContactTypeController(db).Routes(router, db)

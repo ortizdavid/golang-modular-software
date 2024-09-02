@@ -20,6 +20,7 @@ type StatisticsService struct {
 	workflowStatusRepository     *repositories.WorkflowStatusRepository
 	evaluationStatusRepository     *repositories.EvaluationStatusRepository
 	userStatusRepository         *repositories.UserStatusRepository
+	employmentStatusRepository         *repositories.EmploymentStatusRepository
 }
 
 func NewStatisticsService(db *database.Database) *StatisticsService {
@@ -35,6 +36,7 @@ func NewStatisticsService(db *database.Database) *StatisticsService {
 		workflowStatusRepository:     repositories.NewWorkflowStatusRepository(db),
 		evaluationStatusRepository:   repositories.NewEvaluationStatusRepository(db),
 		userStatusRepository:         repositories.NewUserStatusRepository(db),
+		employmentStatusRepository:   repositories.NewEmploymentStatusRepository(db),
 	}
 }
 
@@ -83,6 +85,10 @@ func (s *StatisticsService) GetStatistics(ctx context.Context) (entities.Statist
 	if err != nil {
 		return entities.Statistics{}, err
 	}
+	employmentStatuses, err := s.employmentStatuses(ctx)
+	if err != nil {
+		return entities.Statistics{}, err
+	}
 
 	return entities.Statistics{
 		Countries:           countries,
@@ -96,6 +102,7 @@ func (s *StatisticsService) GetStatistics(ctx context.Context) (entities.Statist
 		WorkflowStatuses:    workflowStatuses,
 		EvaluationStatuses:  evaluationStatuses,
 		UserStatuses:        userStatuses,
+		EmploymentStatuses:  employmentStatuses,
 	}, nil
 }
 
@@ -142,3 +149,8 @@ func (s *StatisticsService) evaluationStatuses(ctx context.Context) (int64, erro
 func (s *StatisticsService) userStatuses(ctx context.Context) (int64, error) {
 	return s.userStatusRepository.Count(ctx)
 }
+
+func (s *StatisticsService) employmentStatuses(ctx context.Context) (int64, error) {
+	return s.employmentStatusRepository.Count(ctx)
+}
+

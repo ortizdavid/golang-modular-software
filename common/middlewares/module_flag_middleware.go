@@ -46,7 +46,7 @@ func (mid *ModuleFlagMiddleware) CheckModule(moduleCode string) fiber.Handler {
 		if !isEnabled {
 			return c.Status(fiber.StatusForbidden).Render("_errors/error", fiber.Map{
 				"Title":   "Module Error",
-				"Message": "Module '"+moduleCode+"' is Disabled",
+				"Message": "Module '" + moduleCode + "' is Disabled",
 			})
 		}
 		return c.Next()

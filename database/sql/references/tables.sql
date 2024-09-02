@@ -171,6 +171,37 @@ INSERT INTO reference.marital_statuses (code, status_name) VALUES
 ('OTHER', 'Other');
 
 
+-- Table: employment_statuses
+DROP TABLE IF EXISTS reference.employment_statuses;
+CREATE TABLE IF NOT EXISTS reference.employment_statuses (
+    status_id SERIAL PRIMARY KEY,
+    status_name VARCHAR(100) NOT NULL UNIQUE,
+    code VARCHAR(30) UNIQUE NOT NULL,
+    description TEXT,
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+-- Insert
+INSERT INTO reference.employment_statuses (status_name, code, description) VALUES 
+('Full-Time', 'FT', 'Employee works full-time hours.'),
+('Part-Time', 'PT', 'Employee works part-time hours.'),
+('Contract', 'CT', 'Employee is on a contract basis.'),
+('Intern', 'IN', 'Employee is an intern.'),
+('Temporary', 'TEMP', 'Employee is hired temporarily.'),
+('Freelance', 'FL', 'Employee is a freelancer.'),
+('Seasonal', 'SEAS', 'Employee is hired for a seasonal period.'),
+('Casual', 'CAS', 'Employee works on a casual basis.'),
+('Apprentice', 'APP', 'Employee is an apprentice.'),
+('Per Diem', 'PRN', 'Employee works on a per diem basis (as needed).'),
+('Regular', 'REG', 'Employee is a regular, full-time staff member.'),
+('On-Call', 'ONC', 'Employee is available on-call.'),
+('Terminated', 'TERM', 'Employee is no longer with the company.'),
+('Retired', 'RET', 'Employee has retired.'),
+('Leave of Absence', 'LOA', 'Employee is on a leave of absence.');
+
+
+
 -- Table: identification_types
 DROP TABLE IF EXISTS reference.identification_types;
 CREATE TABLE IF NOT EXISTS reference.identification_types (
