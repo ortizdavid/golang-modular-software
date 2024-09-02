@@ -3,16 +3,30 @@
 <div class="ui segment">
     <h4 class="ui header">Manage Module Availability</h4>
     <div class="ui divider"></div>
-    <form class="ui form" action="/configurations/module-flags/manage" method="POST">
+    <form class="ui form" action="/configurations/core-entity-flags/manage" method="POST">
         <div class="ui grid">
-            {{ range .ModuleFlags }}
+            {{ $currentModule := "" }}
+            {{ range .CoreEntityFlags }}
+                {{ if ne .ModuleName $currentModule }}
+                    {{ if $currentModule }} <!-- Insert horizontal rule if not the first module -->
+                        <div class="ui divider"></div>
+                    {{ end }}
+                    <!-- Display module name -->
+                    <div class="row">
+                        <div class="sixteen wide column">
+                            <h2 class="ui header">{{ .ModuleName }}</h2>
+                        </div>
+                    </div>
+                    {{ $currentModule = .ModuleName }}
+                {{ end }}
+                <!-- Display entity flag -->
                 <div class="row">
                     <div class="eight wide column">
-                        <label for="flag_{{.FlagId}}"><strong>{{.ModuleName}}</strong></label>
+                        <label for="flag_{{.FlagId}}"><strong>{{.EntityName}}</strong></label>
                     </div>
                     <div class="eight wide column">
                         <select class="ui dropdown" name="flag_{{.FlagId}}" id="flag_{{.FlagId}}" 
-                            {{if or (eq .ModuleName "Authentication") (eq .ModuleName "Configurations")}}disabled{{end}}>
+                            {{if eq .ModuleName "Configurations"}}disabled{{end}}>
                             <option value="Enabled" {{if eq .Status "Enabled"}}selected{{end}}>Enabled</option>
                             <option value="Disabled" {{if eq .Status "Disabled"}}selected{{end}}>Disabled</option>
                         </select>
@@ -27,7 +41,7 @@
                 Save Changes
             </button>
             <div class="or"></div>
-            <a href="/configurations/module-flags" class="ui red button">
+            <a href="/configurations/core-entity-flags" class="ui red button">
                 <i class="cancel icon"></i>
                 Cancel
             </a>
