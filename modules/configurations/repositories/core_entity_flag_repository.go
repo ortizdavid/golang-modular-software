@@ -63,6 +63,12 @@ func (repo *CoreEntityFlagRepository) FindByUniqueId(ctx context.Context, unique
 
 func (repo *CoreEntityFlagRepository) FindByModule(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
 	var moduleFlag entities.CoreEntityFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("module_code=?", module)
+	return moduleFlag, result.Error
+}
+
+func (repo *CoreEntityFlagRepository) FindByCoreEntity(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
+	var moduleFlag entities.CoreEntityFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("code=?", module)
 	return moduleFlag, result.Error
 }

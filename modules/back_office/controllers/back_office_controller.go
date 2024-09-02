@@ -25,6 +25,12 @@ func (ctrl *BackOfficeController) Routes(router *fiber.App, db *database.Databas
 	group := router.Group("/account")
 	group.Get("/home", ctrl.home)
 	group.Get("/notifications", ctrl.notifications)
+
+	router.Get("/", ctrl.index)
+}
+
+func (ctrl *BackOfficeController) index(c *fiber.Ctx) error {
+	return c.Redirect("/account/home")
 }
 
 func (ctrl *BackOfficeController) home(c *fiber.Ctx) error {

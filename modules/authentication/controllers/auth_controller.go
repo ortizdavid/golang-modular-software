@@ -31,7 +31,6 @@ func NewAuthController(db *database.Database) *AuthController {
 }
 
 func (auth AuthController) Routes(router *fiber.App) {
-	router.Get("/", auth.index)
 	group := router.Group("/auth")
 	group.Get("/login", auth.loginForm)
 	group.Post("/login", auth.login)
@@ -40,10 +39,6 @@ func (auth AuthController) Routes(router *fiber.App) {
 	group.Post("/recover-password/:token", auth.recoverPassword)
 	group.Get("/get-recover-link", auth.getRecoverLinkForm)
 	group.Post("/get-recover-link", auth.getRecoverLink)
-}
-
-func (ctrl *AuthController) index(c *fiber.Ctx) error {
-	return c.Redirect("/auth/login")
 }
 
 func (ctrl *AuthController) loginForm(c *fiber.Ctx) error {

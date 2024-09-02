@@ -33,7 +33,7 @@ func NewAccountController(db *database.Database) *AccountController {
 	}
 }
 func (ctrl *AccountController) Routes(router *fiber.App, db *database.Database) {
-	group := router.Group("account")
+	group := router.Group("/account")
 	group.Get("/user-data", ctrl.userData)
 	group.Get("/change-data", ctrl.changeUserDataForm)
 	group.Get("/upload-image", ctrl.uploadUserImageForm)
