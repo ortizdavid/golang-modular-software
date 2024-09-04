@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -41,7 +39,6 @@ func (ctrl *BackOfficeController) home(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
-	fmt.Println(coreEntityFlagStatus)
 	return c.Render("_back_office/home", fiber.Map{
 		"Title":            "Home",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),

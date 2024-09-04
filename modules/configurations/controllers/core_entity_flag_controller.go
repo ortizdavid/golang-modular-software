@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	//"fmt"
-	//"strings"
+	"fmt"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	//"github.com/ortizdavid/go-nopain/conversion"
+	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-	//"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 )
 
@@ -77,7 +77,7 @@ func (ctrl *CoreEntityFlagController) manageForm(c *fiber.Ctx) error {
 }
 
 func (ctrl *CoreEntityFlagController) manage(c *fiber.Ctx) error {
-	/*var requests []entities.ManageModuleFlagRequest
+	var requests []entities.ManageCoreEntityFlagRequest
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	// Iterate over the form data
 	c.Request().PostArgs().VisitAll(func(key, value []byte) {
@@ -85,20 +85,20 @@ func (ctrl *CoreEntityFlagController) manage(c *fiber.Ctx) error {
 		if strings.HasPrefix(keyStr, "flag_") {
 			flagIdStr := strings.TrimPrefix(keyStr, "flag_")
 			flagId := conversion.StringToInt(flagIdStr)
-			// Create a new ManageModuleFlagRequest for each flag
-			req := entities.ManageModuleFlagRequest{
+			// Create a new ManageCoreEntityFlagRequest for each flag
+			req := entities.ManageCoreEntityFlagRequest{
 				FlagId: flagId,
 				Status: string(value),
 			}
 			requests = append(requests, req)
 		}
 	})
-	// Call the service method to process the module flags
-	err := ctrl.service.ManageModuleFlags(c.Context(), requests)
+	// Call the service method to process the core entity flags
+	err := ctrl.service.ManageCoreEntityFlags(c.Context(), requests)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated module flags!", loggedUser.UserName))*/
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated core entity flags!", loggedUser.UserName))
 	return c.Redirect("/configurations/core-entity-flags")
 }
