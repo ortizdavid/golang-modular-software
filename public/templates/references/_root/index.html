@@ -3,329 +3,265 @@
 <div class="ui grid stackable padded">
 
     <!-- Countries Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header blue">
-                    <i class="icon globe"></i>
-                </div>
-                <div class="header">
-                    <div class="ui blue header" id="countries">
-                        {{.Statistics.Countries}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.Countries "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header blue">
+                        <i class="icon globe"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui blue header" id="countries">
+                            {{.Statistics.Countries}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Countries</strong>
+                    </div>
+                    <div class="description">
+                        Total number of countries where the company operates or has a presence.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Countries</strong>
-                </div>
-                <div class="description">
-                    Total number of countries where the company operates or has a presence.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/countries" class="ui blue button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/countries" class="ui blue button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    {{ end }}
+    
     <!-- Currencies Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header brown">
-                    <i class="icon dollar sign"></i>
-                </div>
-                <div class="header">
-                    <div class="ui brown header" id="currencies">
-                        {{.Statistics.Currencies}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.Currencies "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header brown">
+                        <i class="icon dollar sign"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui brown header" id="currencies">
+                            {{.Statistics.Currencies}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Currencies</strong>
+                    </div>
+                    <div class="description">
+                        Total number of currencies used or supported by the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Currencies</strong>
-                </div>
-                <div class="description">
-                    Total number of currencies used or supported by the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/currencies" class="ui brown button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/currencies" class="ui brown button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Identification Types Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header green">
-                    <i class="icon id badge"></i>
-                </div>
-                <div class="header">
-                    <div class="ui green header" id="identification-types">
-                        {{.Statistics.IdentificationTypes}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.IdentificationTypes "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header green">
+                        <i class="icon id badge"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui green header" id="identification-types">
+                            {{.Statistics.IdentificationTypes}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Identification Types</strong>
+                    </div>
+                    <div class="description">
+                        Different types of identification recognized by the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Identification Types</strong>
-                </div>
-                <div class="description">
-                    Different types of identification recognized by the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/identification-types" class="ui green button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/identification-types" class="ui green button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Contact Types Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header red">
-                    <i class="icon address book"></i>
-                </div>
-                <div class="header">
-                    <div class="ui red header" id="contact-types">
-                        {{.Statistics.ContactTypes}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.ContactTypes "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header red">
+                        <i class="icon address book"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui red header" id="contact-types">
+                            {{.Statistics.ContactTypes}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Contact Types</strong>
+                    </div>
+                    <div class="description">
+                        Various types of contact information used in the system.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Contact Types</strong>
-                </div>
-                <div class="description">
-                    Various types of contact information used in the system.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/contact-types" class="ui red button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/contact-types" class="ui red button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Marital Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header teal">
-                    <i class="icon heart"></i>
-                </div>
-                <div class="header">
-                    <div class="ui teal header" id="marital-statuses">
-                        {{.Statistics.MaritalStatuses}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.MaritalStatuses "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header teal">
+                        <i class="icon heart"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui teal header" id="marital-statuses">
+                            {{.Statistics.MaritalStatuses}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Marital Statuses</strong>
+                    </div>
+                    <div class="description">
+                        Various marital statuses recognized by the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Marital Statuses</strong>
-                </div>
-                <div class="description">
-                    Various marital statuses recognized by the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/marital-statuses" class="ui teal button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/marital-statuses" class="ui teal button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Task Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header orange">
-                    <i class="icon tasks"></i>
-                </div>
-                <div class="header">
-                    <div class="ui orange header" id="task-statuses">
-                        {{.Statistics.TaskStatuses}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.TaskStatuses "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header orange">
+                        <i class="icon tasks"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui orange header" id="task-statuses">
+                            {{.Statistics.TaskStatuses}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Task Statuses</strong>
+                    </div>
+                    <div class="description">
+                        Different statuses assigned to tasks within the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Task Statuses</strong>
-                </div>
-                <div class="description">
-                    Different statuses assigned to tasks within the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/task-statuses" class="ui orange button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/task-statuses" class="ui orange button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Approval Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header purple">
-                    <i class="icon check circle outline"></i>
-                </div>
-                <div class="header">
-                    <div class="ui purple header" id="approval-statuses">
-                        {{.Statistics.ApprovalStatuses}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.ApprovalStatuses "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header purple">
+                        <i class="icon check circle outline"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui purple header" id="approval-statuses">
+                            {{.Statistics.ApprovalStatuses}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Approval Statuses</strong>
+                    </div>
+                    <div class="description">
+                        Various approval statuses for tasks and projects within the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Approval Statuses</strong>
-                </div>
-                <div class="description">
-                    Various approval statuses for tasks and projects within the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/approval-statuses" class="ui purple button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/approval-statuses" class="ui purple button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Document Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header pink">
-                    <i class="icon file alternate"></i>
-                </div>
-                <div class="header">
-                    <div class="ui pink header" id="document-statuses">
-                        {{.Statistics.DocumentStatuses}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.DocumentStatuses "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header pink">
+                        <i class="icon file alternate"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui pink header" id="document-statuses">
+                            {{.Statistics.DocumentStatuses}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Document Statuses</strong>
+                    </div>
+                    <div class="description">
+                        Various statuses assigned to documents within the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Document Statuses</strong>
-                </div>
-                <div class="description">
-                    Various statuses assigned to documents within the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/document-statuses" class="ui pink button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/document-statuses" class="ui pink button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
     <!-- Workflow Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header violet">
-                    <i class="icon random"></i>
-                </div>
-                <div class="header">
-                    <div class="ui violet header" id="workflow-statuses">
-                        {{.Statistics.WorkflowStatuses}}
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.WorkflowStatuses "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header violet">
+                        <i class="icon random"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui violet header" id="workflow-statuses">
+                            {{.Statistics.WorkflowStatuses}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Workflow Statuses</strong>
+                    </div>
+                    <div class="description">
+                        Various statuses for workflows or processes within the company.
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Workflow Statuses</strong>
-                </div>
-                <div class="description">
-                    Various statuses for workflows or processes within the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/workflow-statuses" class="ui violet button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/workflow-statuses" class="ui violet button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Evaluation Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header blue">
-                    <i class="icon star"></i>
-                </div>
-                <div class="header">
-                    <div class="ui blue header" id="evaluation-statuses">
-                        {{.Statistics.EvaluationStatuses}}
-                    </div>
-                </div>
-                <div class="meta">
-                    <strong>Evaluation Statuses</strong>
-                </div>
-                <div class="description">
-                    A range of statuses used to evaluate performance or quality.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/evaluation-statuses" class="ui blue button">View More</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header grey">
-                    <i class="icon user"></i>
-                </div>
-                <div class="header">
-                    <div class="ui grey header" id="user-statuses">
-                        {{.Statistics.UserStatuses}}
-                    </div>
-                </div>
-                <div class="meta">
-                    <strong>User Statuses</strong>
-                </div>
-                <div class="description">
-                    Various statuses for users within the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/user-statuses" class="ui grey button">View More</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Employment Statuses Card -->
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header olive">
-                    <i class="icon id card"></i>
-                </div>
-                <div class="header">
-                    <div class="ui olive header" id="employment-statuses">
-                        {{.Statistics.EmploymentStatuses}}
-                    </div>
-                </div>
-                <div class="meta">
-                    <strong>Employment Statuses</strong>
-                </div>
-                <div class="description">
-                    Various statuses for employees employment within the company.
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/references/employment-statuses" class="ui olive button">View More</a>
-                </div>
-            </div>
-        </div>
-    </div>
-   
+    {{ end }}
 
 </div>
 

@@ -1,214 +1,230 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui grid stackable padded">
-
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header blue">
-                    <i class="icon users"></i>
-                </div>
-                <div class="header">
-                    <div class="ui blue header" id="users">
-                        {{.Statistics.Users}}
+    
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.Users "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header blue">
+                        <i class="icon users"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui blue header" id="users">
+                            {{.Statistics.Users}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Users</strong>
+                    </div>
+                    <div class="description">
+                        Total number of registered users
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Users</strong>
-                </div>
-                <div class="description">
-                    Total number of registered users
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/users" class="ui primary button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/users" class="ui primary button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header green">
-                    <i class="icon check square"></i>
-                </div>
-                <div class="header">
-                    <div class="ui green header" id="active-users">
-                        {{.Statistics.ActiveUsers}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.ActiveUsers "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header green">
+                        <i class="icon check square"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui green header" id="active-users">
+                            {{.Statistics.ActiveUsers}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Active Users</strong>
+                    </div>
+                    <div class="description">
+                        Total number of active users
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Active Users</strong>
-                </div>
-                <div class="description">
-                    Total number of active users
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/users/active-users" class="ui green button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/users/active-users" class="ui green button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header red">
-                    <i class="icon user times"></i>
-                </div>
-                <div class="header">
-                    <div class="ui red header" id="inactive-users">
-                        {{.Statistics.InactiveUsers}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.InactiveUsers "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header red">
+                        <i class="icon user times"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui red header" id="inactive-users">
+                            {{.Statistics.InactiveUsers}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Inactive Users</strong>
+                    </div>
+                    <div class="description">
+                        Total of inactive users
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Inactive Users</strong>
-                </div>
-                <div class="description">
-                    Total of inactive users
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/users/inactive-users" class="ui red button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/users/inactive-users" class="ui red button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header teal">
-                    <i class="icon user circle"></i>
-                </div>
-                <div class="header">
-                    <div class="ui teal header" id="online-users">
-                        {{.Statistics.OnlineUsers}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.OnlineUsers "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header teal">
+                        <i class="icon user circle"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui teal header" id="online-users">
+                            {{.Statistics.OnlineUsers}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Online Users</strong>
+                    </div>
+                    <div class="description">
+                        Total number of online users
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Online Users</strong>
-                </div>
-                <div class="description">
-                    Total number of online users
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/users/online-users" class="ui teal button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/users/online-users" class="ui teal button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header orange">
-                    <i class="icon user circle"></i>
-                </div>
-                <div class="header">
-                    <div class="ui orange header" id="offline-users">
-                        {{.Statistics.OfflineUsers}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.OfflineUsers "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header orange">
+                        <i class="icon user circle"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui orange header" id="offline-users">
+                            {{.Statistics.OfflineUsers}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Offline Users</strong>
+                    </div>
+                    <div class="description">
+                        Total number of offline users
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Offline Users</strong>
-                </div>
-                <div class="description">
-                    Total number of offline users
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/users/offline-users" class="ui orange button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/users/offline-users" class="ui orange button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header brown">
-                    <i class="icon user plus"></i>
-                </div>
-                <div class="header">
-                    <div class="ui brown header" id="roles">
-                        {{.Statistics.Roles}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.Roles "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header brown">
+                        <i class="icon user plus"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui brown header" id="roles">
+                            {{.Statistics.Roles}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Roles</strong>
+                    </div>
+                    <div class="description">
+                        Different roles within the system
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Roles</strong>
-                </div>
-                <div class="description">
-                    Different roles within the system
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/roles" class="ui brown button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/roles" class="ui brown button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header olive">
-                    <i class="icon lock"></i>
-                </div>
-                <div class="header">
-                    <div class="ui olive header" id="permissions">
-                        {{.Statistics.Permissions}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.Permissions "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header olive">
+                        <i class="icon lock"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui olive header" id="permissions">
+                            {{.Statistics.Permissions}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Permissions</strong>
+                    </div>
+                    <div class="description">
+                        Access permissions and roles
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Permissions</strong>
-                </div>
-                <div class="description">
-                    Access permissions and roles
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/permissions" class="ui olive button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/permissions" class="ui olive button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
-    <div class="four wide computer eight wide tablet sixteen wide mobile column">
-        <div class="ui fluid card">
-            <div class="content">
-                <div class="ui right floated header purple">
-                    <i class="icon sign-in"></i>
-                </div>
-                <div class="header">
-                    <div class="ui purple header" id="login-activity">
-                        {{.Statistics.LoginActivity}}
+    {{ if eq .CoreEntityFlagStatus.AuthenticationFlags.LoginActivity "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header purple">
+                        <i class="icon sign-in"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui purple header" id="login-activity">
+                            {{.Statistics.LoginActivity}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Login Activity</strong>
+                    </div>
+                    <div class="description">
+                        Recent login and logout activities
                     </div>
                 </div>
-                <div class="meta">
-                    <strong>Login Activity</strong>
-                </div>
-                <div class="description">
-                    Recent login and logout activities
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui two buttons">
-                    <a href="/user-management/login-activities" class="ui purple button">View More</a>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/user-management/login-activities" class="ui purple button">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 
 </div>
 
