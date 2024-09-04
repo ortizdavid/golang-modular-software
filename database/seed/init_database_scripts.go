@@ -52,9 +52,9 @@ func execCreateSchemas(db *database.Database) error {
 }
 
 // execCreateExtensions creates database extensions.
-func execCreateExtensions(db *database.Database) error {
+func execCreateConfigsAndExtensions(db *database.Database) error {
 	log.Println("Executing extensions creation scripts...")
-	return execDatabaseScript(db, structureDir, "extensions.sql")
+	return execDatabaseScript(db, structureDir, "configs-and-extensions.sql")
 }
 
 
@@ -62,6 +62,9 @@ func execCreateExtensions(db *database.Database) error {
 func execAuthenticationScripts(db *database.Database) error {
 	log.Println("Executing authentication schema scripts...")
 	if err := execDatabaseScript(db, authDir, "tables.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, authDir, "scripts.sql"); err != nil {
 		return err
 	}
 	if err := execDatabaseScript(db, authDir, "triggers.sql"); err != nil {
@@ -79,6 +82,9 @@ func execConfigurationScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, configDir, "tables.sql"); err != nil {
 		return err
 	}
+	if err := execDatabaseScript(db, configDir, "scripts.sql"); err != nil {
+		return err
+	}
 	if err := execDatabaseScript(db, configDir, "triggers.sql"); err != nil {
 		return err
 	}
@@ -92,6 +98,9 @@ func execConfigurationScripts(db *database.Database) error {
 func execCompanyScripts(db *database.Database) error {
 	log.Println("Executing company schema scripts...")
 	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, companyDir, "scripts.sql"); err != nil {
 		return err
 	}
 	if err := execDatabaseScript(db, companyDir, "triggers.sql"); err != nil {
@@ -109,6 +118,9 @@ func execEmployeeScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, employeeDir, "tables.sql"); err != nil {
 		return err
 	}
+	if err := execDatabaseScript(db, employeeDir, "scripts.sql"); err != nil {
+		return err
+	}
 	if err := execDatabaseScript(db, employeeDir, "triggers.sql"); err != nil {
 		return err
 	}
@@ -123,6 +135,9 @@ func execEmployeeScripts(db *database.Database) error {
 func execReferenceScripts(db *database.Database) error {
 	log.Println("Executing reference schema scripts...")
 	if err := execDatabaseScript(db, referenceDir, "tables.sql"); err != nil {
+		return err
+	}
+	if err := execDatabaseScript(db, referenceDir, "scripts.sql"); err != nil {
 		return err
 	}
 	if err := execDatabaseScript(db, referenceDir, "triggers.sql"); err != nil {
@@ -142,7 +157,7 @@ func InitDatabaseScripts(db *database.Database) error {
 	if err := execCreateSchemas(db); err != nil {
 		return err
 	}
-	if err := execCreateExtensions(db); err != nil {
+	if err := execCreateConfigsAndExtensions(db); err != nil {
 		return err
 	}
 	if err := execAuthenticationScripts(db); err != nil {
