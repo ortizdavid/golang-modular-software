@@ -21,121 +21,66 @@ func NewCoreEntityFlagStatusService(db *database.Database) *CoreEntityFlagStatus
 }
 
 func (s *CoreEntityFlagStatusService) LoadCoreEntityFlagStatus(ctx context.Context) (entities.CoreEntityFlagStatus, error) {
-	// Fetch the status of each module flag
-
-	// List of all IDs needed
-	ids := []int{
-		entities.CoreEntityUsers.Id,
-		entities.CoreEntityActiveUsers.Id,
-		entities.CoreEntityInactiveUsers.Id,
-		entities.CoreEntityOnlineUsers.Id,
-		entities.CoreEntityOfflineUsers.Id,
-		entities.CoreEntityRoles.Id,
-		entities.CoreEntityPermissions.Id,
-		entities.CoreEntityLoginActivity.Id,
-
-		entities.CoreEntityBasicConfigurations.Id,
-		entities.CoreEntityCompanyConfigurations.Id,
-		entities.CoreEntityEmailConfigurations.Id,
-		entities.CoreEntityModules.Id,
-		entities.CoreEntityCoreEntities.Id,
-		entities.CoreEntityModuleFlags.Id,
-		entities.CoreEntityCoreEntityFlags.Id,
-
-		entities.CoreEntityCountries.Id,
-		entities.CoreEntityCurrencies.Id,
-		entities.CoreEntityIdentificationTypes.Id,
-		entities.CoreEntityContactTypes.Id,
-		entities.CoreEntityMaritalStatuses.Id,
-		entities.CoreEntityTaskStatuses.Id,
-		entities.CoreEntityApprovalStatuses.Id,
-		entities.CoreEntityDocumentStatuses.Id,
-		entities.CoreEntityWorkflowStatuses.Id,
-		entities.CoreEntityEvaluationStatuses.Id,
-		entities.CoreEntityUserStatuses.Id,
-		entities.CoreEntityEmploymentStatuses.Id,
-
-		entities.CoreEntityCompanyInfo.Id,
-		entities.CoreEntityBranches.Id,
-		entities.CoreEntityOffices.Id,
-		entities.CoreEntityDepartments.Id,
-		entities.CoreEntityRooms.Id,
-		entities.CoreEntityProjects.Id,
-		entities.CoreEntityPolicies.Id,
-
-		entities.CoreEntityEmployees.Id,
-		entities.CoreEntityJobTitles.Id,
-
-		entities.CoreEntityUserReports.Id,
-		entities.CoreEntityConfigurationReports.Id,
-		entities.CoreEntityCompanyReports.Id,
-		entities.CoreEntityEmployeeReports.Id,
-		entities.CoreEntityReferenceReports.Id,
-	}
-
-	// Fetch all entity flags in a single query
-	flagMap, err := s.repository.FindByIdBatch(ctx, ids)
+	// Fetch the status of each core entity flag
+	flagMap, err := s.repository.FindAllFlagsMap(ctx)
 	if err != nil {
-		return entities.CoreEntityFlagStatus{}, fmt.Errorf("error fetching core entity flags: %w", err)
+		return entities.CoreEntityFlagStatus{}, fmt.Errorf("error fetching all core entity flags: %w", err)
 	}
-
-	// Construct and return the flag status
 	// Initialize the flag status structure
 	flagStatus := entities.CoreEntityFlagStatus{
 		AuthenticationFlags: entities.AuthenticationFlags{
-			Users:         flagMap[entities.CoreEntityUsers.Id],
-			ActiveUsers:   flagMap[entities.CoreEntityActiveUsers.Id],
-			InactiveUsers: flagMap[entities.CoreEntityInactiveUsers.Id],
-			OnlineUsers:   flagMap[entities.CoreEntityOnlineUsers.Id],
-			OfflineUsers:  flagMap[entities.CoreEntityOfflineUsers.Id],
-			Roles:         flagMap[entities.CoreEntityRoles.Id],
-			Permissions:   flagMap[entities.CoreEntityPermissions.Id],
-			LoginActivity: flagMap[entities.CoreEntityLoginActivity.Id],
+			Users:         flagMap[entities.CoreEntityUsers.Code],
+			ActiveUsers:   flagMap[entities.CoreEntityActiveUsers.Code],
+			InactiveUsers: flagMap[entities.CoreEntityInactiveUsers.Code],
+			OnlineUsers:   flagMap[entities.CoreEntityOnlineUsers.Code],
+			OfflineUsers:  flagMap[entities.CoreEntityOfflineUsers.Code],
+			Roles:         flagMap[entities.CoreEntityRoles.Code],
+			Permissions:   flagMap[entities.CoreEntityPermissions.Code],
+			LoginActivity: flagMap[entities.CoreEntityLoginActivity.Code],
 		},
 		ConfigurationFlags: entities.ConfigurationFlags{
-			BasicConfigurations:   flagMap[entities.CoreEntityBasicConfigurations.Id],
-			CompanyConfigurations: flagMap[entities.CoreEntityCompanyConfigurations.Id],
-			EmailConfigurations:   flagMap[entities.CoreEntityEmailConfigurations.Id],
-			Modules:               flagMap[entities.CoreEntityModules.Id],
-			CoreEntities:          flagMap[entities.CoreEntityCoreEntities.Id],
-			ModuleFlags:           flagMap[entities.CoreEntityModuleFlags.Id],
-			CoreEntityFlags:       flagMap[entities.CoreEntityCoreEntityFlags.Id],
+			BasicConfigurations:   flagMap[entities.CoreEntityBasicConfigurations.Code],
+			CompanyConfigurations: flagMap[entities.CoreEntityCompanyConfigurations.Code],
+			EmailConfigurations:   flagMap[entities.CoreEntityEmailConfigurations.Code],
+			Modules:               flagMap[entities.CoreEntityModules.Code],
+			CoreEntities:          flagMap[entities.CoreEntityCoreEntities.Code],
+			ModuleFlags:           flagMap[entities.CoreEntityModuleFlags.Code],
+			CoreEntityFlags:       flagMap[entities.CoreEntityCoreEntityFlags.Code],
 		},
 		ReferenceFlags: entities.ReferenceFlags{
-			Countries:           flagMap[entities.CoreEntityCountries.Id],
-			Currencies:          flagMap[entities.CoreEntityCurrencies.Id],
-			IdentificationTypes: flagMap[entities.CoreEntityIdentificationTypes.Id],
-			ContactTypes:        flagMap[entities.CoreEntityContactTypes.Id],
-			MaritalStatuses:     flagMap[entities.CoreEntityMaritalStatuses.Id],
-			TaskStatuses:        flagMap[entities.CoreEntityTaskStatuses.Id],
-			ApprovalStatuses:    flagMap[entities.CoreEntityApprovalStatuses.Id],
-			DocumentStatuses:    flagMap[entities.CoreEntityDocumentStatuses.Id],
-			WorkflowStatuses:    flagMap[entities.CoreEntityWorkflowStatuses.Id],
-			EvaluationStatuses:  flagMap[entities.CoreEntityEvaluationStatuses.Id],
-			UserStatuses:        flagMap[entities.CoreEntityUserStatuses.Id],
-			EmploymentStatuses:  flagMap[entities.CoreEntityEmploymentStatuses.Id],
+			Countries:           flagMap[entities.CoreEntityCountries.Code],
+			Currencies:          flagMap[entities.CoreEntityCurrencies.Code],
+			IdentificationTypes: flagMap[entities.CoreEntityIdentificationTypes.Code],
+			ContactTypes:        flagMap[entities.CoreEntityContactTypes.Code],
+			MaritalStatuses:     flagMap[entities.CoreEntityMaritalStatuses.Code],
+			TaskStatuses:        flagMap[entities.CoreEntityTaskStatuses.Code],
+			ApprovalStatuses:    flagMap[entities.CoreEntityApprovalStatuses.Code],
+			DocumentStatuses:    flagMap[entities.CoreEntityDocumentStatuses.Code],
+			WorkflowStatuses:    flagMap[entities.CoreEntityWorkflowStatuses.Code],
+			EvaluationStatuses:  flagMap[entities.CoreEntityEvaluationStatuses.Code],
+			UserStatuses:        flagMap[entities.CoreEntityUserStatuses.Code],
+			EmploymentStatuses:  flagMap[entities.CoreEntityEmploymentStatuses.Code],
 		},
 		CompanyFlags: entities.CompanyFlags{
-			CompanyInfo: flagMap[entities.CoreEntityCompanyInfo.Id],
-			Branches:    flagMap[entities.CoreEntityBranches.Id],
-			Offices:     flagMap[entities.CoreEntityOffices.Id],
-			Departments: flagMap[entities.CoreEntityDepartments.Id],
-			Rooms:       flagMap[entities.CoreEntityRooms.Id],
-			Projects:    flagMap[entities.CoreEntityProjects.Id],
-			Policies:    flagMap[entities.CoreEntityPolicies.Id],
+			CompanyInfo: flagMap[entities.CoreEntityCompanyInfo.Code],
+			Branches:    flagMap[entities.CoreEntityBranches.Code],
+			Offices:     flagMap[entities.CoreEntityOffices.Code],
+			Departments: flagMap[entities.CoreEntityDepartments.Code],
+			Rooms:       flagMap[entities.CoreEntityRooms.Code],
+			Projects:    flagMap[entities.CoreEntityProjects.Code],
+			Policies:    flagMap[entities.CoreEntityPolicies.Code],
 		},
 		EmployeeFlags: entities.EmployeeFlags{
-			Employees: flagMap[entities.CoreEntityEmployees.Id],
-			JobTitles: flagMap[entities.CoreEntityJobTitles.Id],
+			Employees: flagMap[entities.CoreEntityEmployees.Code],
+			JobTitles: flagMap[entities.CoreEntityJobTitles.Code],
 		},
 		ReportFlags: entities.ReportFlags{
-			UserReports:          flagMap[entities.CoreEntityUserReports.Id],
-			ConfigurationReports: flagMap[entities.CoreEntityConfigurationReports.Id],
-			CompanyReports:       flagMap[entities.CoreEntityCompanyReports.Id],
-			EmployeeReports:      flagMap[entities.CoreEntityEmployeeReports.Id],
-			ReferenceReports:     flagMap[entities.CoreEntityReferenceReports.Id],
+			UserReports:          flagMap[entities.CoreEntityUserReports.Code],
+			ConfigurationReports: flagMap[entities.CoreEntityConfigurationReports.Code],
+			CompanyReports:       flagMap[entities.CoreEntityCompanyReports.Code],
+			EmployeeReports:      flagMap[entities.CoreEntityEmployeeReports.Code],
+			ReferenceReports:     flagMap[entities.CoreEntityReferenceReports.Code],
 		},
 	}
-
 	return flagStatus, nil
 }

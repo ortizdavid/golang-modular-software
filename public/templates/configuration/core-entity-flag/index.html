@@ -1,17 +1,15 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    
     <div class="ui right floated buttons">
         <a href="/configurations/core-entity-flags/manage" class="ui primary button">
             <i class="pencil icon"></i>
-            Manage
+            Manage Flags
         </a>
     </div>
-    <table class="ui selectable small table blue">
+    <table class="ui selectable striped small table blue">
         <thead>
             <tr>
-                <th>Module</th>
                 <th>Entity</th>
                 <th>Code</th>
                 <th>Status</th>
@@ -19,9 +17,21 @@
             </tr>
         </thead>
         <tbody>
+            {{ $currentModule := "" }}
             {{ range .CoreEntityFlags }}
+                {{ if ne .ModuleName $currentModule }}
+                    {{ if $currentModule }} 
+                        <tr>
+                            <td colspan="5">
+                            </td>
+                        </tr>
+                    {{ end }}
+                    <tr>
+                        <td colspan="5"><h3 class="ui header">{{ .ModuleName }}</h3></td>
+                    </tr>
+                    {{ $currentModule = .ModuleName }}
+                {{ end }}
                 <tr>
-                    <td>{{.ModuleName}}</td>
                     <td>{{.EntityName}}</td>
                     <td>{{.Code}}</td>
                     <td>
@@ -33,7 +43,6 @@
             {{ end }}
         </tbody>
     </table>
-   
 </div>
 
 {{ template "_partials/footer-back" .}}

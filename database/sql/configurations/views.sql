@@ -26,7 +26,7 @@ SELECT ce.entity_id, ce.unique_id,
     md.module_id, md.module_name
 FROM configurations.core_entities ce
 JOIN configurations.modules md ON (md.module_id = ce.module_id)
-ORDER BY module_name;
+ORDER BY md.module_id;
 
 
 -- View: view_core_entity_flag_data
@@ -43,6 +43,6 @@ SELECT cf.flag_id, cf.unique_id,
 FROM configurations.core_entity_flag cf
 JOIN configurations.core_entities ce ON (ce.entity_id = cf.entity_id)
 JOIN configurations.modules md ON (md.module_id = cf.module_id)
-ORDER BY module_id;
+ORDER BY md.module_id;
 
 

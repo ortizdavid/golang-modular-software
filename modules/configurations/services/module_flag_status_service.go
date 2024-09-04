@@ -20,39 +20,19 @@ func NewModuleFlagStatusService(db *database.Database) *ModuleFlagStatusService 
 }
 
 func (s *ModuleFlagStatusService) LoadModuleFlagStatus(ctx context.Context) (entities.ModuleFlagStatus, error) {
-	// Fetch the status of each module flag
-	authenticationFlag, err := s.repository.FindById(ctx, entities.ModuleAuthentication.Id)
+	// Fetch all module flags in a single query
+	flagMap, err := s.repository.FindAllFlagsMap(ctx)
 	if err != nil {
-		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching authentication flag: %w", err)
-	}
-	companyFlag, err := s.repository.FindById(ctx, entities.ModuleCompany.Id)
-	if err != nil {
-		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching company flag: %w", err)
-	}
-	employeesFlag, err := s.repository.FindById(ctx, entities.ModuleEmployees.Id)
-	if err != nil {
-		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching employees flag: %w", err)
-	}
-	referencesFlag, err := s.repository.FindById(ctx, entities.ModuleReferences.Id)
-	if err != nil {
-		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching references flag: %w", err)
-	}
-	reportsFlag, err := s.repository.FindById(ctx, entities.ModuleReports.Id)
-	if err != nil {
-		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching reports flag: %w", err)
-	}
-	configurationsFlag, err := s.repository.FindById(ctx, entities.ModuleConfigurations.Id)
-	if err != nil {
-		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching configurations flag: %w", err)
+		return entities.ModuleFlagStatus{}, fmt.Errorf("error fetching all module flags: %w", err)
 	}
 	// Construct and return the flag status
 	flagStatus := entities.ModuleFlagStatus{
-		Authentication: authenticationFlag.Status,
-		Company:        companyFlag.Status,
-		Employees:      employeesFlag.Status,
-		References:     referencesFlag.Status,
-		Reports:        reportsFlag.Status,
-		Configurations: configurationsFlag.Status,
+		Authentication: flagMap[entities.ModuleAuthentication.Code],
+		Company:        flagMap[entities.ModuleCompany.Code],
+		Employees:      flagMap[entities.ModuleEmployees.Code],
+		References:     flagMap[entities.ModuleReferences.Code],
+		Reports:        flagMap[entities.ModuleReports.Code],
+		Configurations: flagMap[entities.ModuleConfigurations.Code],
 	}
 	return flagStatus, nil
 }

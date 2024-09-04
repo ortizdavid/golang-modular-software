@@ -55,22 +55,17 @@ func (repo *CoreEntityFlagRepository) FindById(ctx context.Context, id int) (ent
 	return coreEntityFlag, result.Error
 }
 
-func (repo *CoreEntityFlagRepository) FindByIdBatchV1(ctx context.Context, idValues ...int) ([]entities.CoreEntityFlag, error) {
-	var coreEntityFlags []entities.CoreEntityFlag
-	result := repo.db.WithContext(ctx).Where("flag_id IN ?", idValues).Find(&coreEntityFlags)
-	return coreEntityFlags, result.Error
-}
-
-func (repo *CoreEntityFlagRepository) FindByIdBatch(ctx context.Context, idValues []int) (map[int]string, error) {
-	var coreEntityFlags []entities.CoreEntityFlag
-	err := repo.db.WithContext(ctx).Where("flag_id IN ?", idValues).Find(&coreEntityFlags).Error
+func (repo *CoreEntityFlagRepository) FindAllFlagsMap(ctx context.Context) (map[string]string, error) {
+	var coreEntityFlags []entities.CoreEntityFlagData
+	err := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Find(&coreEntityFlags).Error
 	if err != nil {
 		return nil, err
 	}
-	// Map the results by ID
-	flagMap := make(map[int]string)
+	// Create a map to store the flags
+	// Map the results by code
+	flagMap := make(map[string]string)
 	for _, flag := range coreEntityFlags {
-		flagMap[flag.FlagId] = flag.Status
+		flagMap[flag.Code] = flag.Status
 	}
 	return flagMap, nil
 }
@@ -81,7 +76,7 @@ func (repo *CoreEntityFlagRepository) FindByUniqueId(ctx context.Context, unique
 	return coreEntityFlag, result.Error
 }
 
-func (repo *CoreEntityFlagRepository) FindByModule(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
+func (repo *CoreEntityFlagRepository) FindByModuleCode(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
 	var coreEntityFlag entities.CoreEntityFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("module_code=?", module)
 	return coreEntityFlag, result.Error

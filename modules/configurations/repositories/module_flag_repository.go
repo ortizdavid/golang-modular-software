@@ -55,13 +55,28 @@ func (repo *ModuleFlagRepository) FindById(ctx context.Context, id int) (entitie
 	return moduleFlag, result.Error
 }
 
+func (repo *ModuleFlagRepository) FindAllFlagsMap(ctx context.Context) (map[string]string, error) {
+	var moduleFlags []entities.ModuleFlagData
+	err := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Find(&moduleFlags).Error
+	if err != nil {
+		return nil, err
+	}
+	// Create a map to store the flags
+	// Map the results by code
+	flagMap := make(map[string]string)
+	for _, flag := range moduleFlags {
+		flagMap[flag.Code] = flag.Status
+	}
+	return flagMap, nil
+}
+
 func (repo *ModuleFlagRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlag, error) {
 	var moduleFlag entities.ModuleFlag
 	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&moduleFlag)
 	return moduleFlag, result.Error
 }
 
-func (repo *ModuleFlagRepository) FindByModule(ctx context.Context, module string) (entities.ModuleFlagData, error) {
+func (repo *ModuleFlagRepository) FindByModuleCode(ctx context.Context, module string) (entities.ModuleFlagData, error) {
 	var moduleFlag entities.ModuleFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("code=?", module)
 	return moduleFlag, result.Error
