@@ -6,12 +6,12 @@ type ModuleInfo struct {
 }
 
 var (
-    ModuleAuthentication = ModuleInfo{Id: 1, Code: "authentication"}
-    ModuleConfigurations = ModuleInfo{Id: 2, Code: "configurations"}
-    ModuleReferences     = ModuleInfo{Id: 3, Code: "references"}
-    ModuleCompany        = ModuleInfo{Id: 4, Code: "company"}
-    ModuleEmployees      = ModuleInfo{Id: 5, Code: "employees"}
-    ModuleReports        = ModuleInfo{Id: 6, Code: "reports"}
+    ModuleAuthentication = ModuleInfo{Code: "authentication"}
+    ModuleConfigurations = ModuleInfo{Code: "configurations"}
+    ModuleReferences     = ModuleInfo{Code: "references"}
+    ModuleCompany        = ModuleInfo{Code: "company"}
+    ModuleEmployees      = ModuleInfo{Code: "employees"}
+    ModuleReports        = ModuleInfo{Code: "reports"}
 )
 
 
