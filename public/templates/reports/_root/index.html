@@ -1,4 +1,95 @@
 {{ template "_partials/header-back" .}}
-    
-    
+
+<div class="ui grid stackable padded">
+
+    <!-- User Reports -->
+    {{ if eq .CoreEntityFlagStatus.ReportFlags.UserReports "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header teal">
+                        <i class="users icon"></i>
+                    </div>
+                    <div class="meta">
+                        <strong>User Reports</strong>
+                        <div class="description">Analyze user activity, roles, and permission trends.</div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/reports/user" class="ui teal button">View Analysis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}
+
+    <!-- Company Reports -->
+    {{ if eq .CoreEntityFlagStatus.ReportFlags.CompanyReports "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header orange">
+                        <i class="building icon"></i>
+                    </div>
+                    <div class="meta">
+                        <strong>Company Reports</strong>
+                        <div class="description">Review and analyze company performance, branch operations, and growth.</div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/reports/company" class="ui orange button">View Analysis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}
+
+    <!-- Employees -->
+    {{ if eq .CoreEntityFlagStatus.ReportFlags.EmployeeReports "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header purple">
+                        <i class="user icon"></i>
+                    </div>
+                    <div class="meta">
+                        <strong>Employee Reports</strong>
+                        <div class="description">Analyze employee performance, roles, and retention rates.</div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/reports/employees" class="ui purple button">View Analysis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}
+
+    <!-- Configurations -->
+    {{ if eq .CoreEntityFlagStatus.ReportFlags.ConfigurationReports "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header green">
+                        <i class="cogs icon"></i>
+                    </div>
+                    <div class="meta">
+                        <strong>System Reports</strong>
+                        <div class="description">Evaluate system configurations and their impact on performance.</div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/reports/configurations" class="ui green button">View Analysis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}    
+
+</div>
+
 {{ template "_partials/footer-back" .}}
