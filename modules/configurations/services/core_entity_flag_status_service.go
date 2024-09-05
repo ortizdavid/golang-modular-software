@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"fmt"
-	//"fmt"
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
@@ -22,9 +21,9 @@ func NewCoreEntityFlagStatusService(db *database.Database) *CoreEntityFlagStatus
 
 func (s *CoreEntityFlagStatusService) LoadCoreEntityFlagStatus(ctx context.Context) (entities.CoreEntityFlagStatus, error) {
 	// Fetch the status of each core entity flag
-	flagMap, err := s.repository.FindAllFlagsMap(ctx)
+	flagMap, err := s.GetAllEntityCoreFlags(ctx)
 	if err != nil {
-		return entities.CoreEntityFlagStatus{}, fmt.Errorf("error fetching all core entity flags: %w", err)
+		return entities.CoreEntityFlagStatus{}, err
 	}
 	// Initialize the flag status structure
 	flagStatus := entities.CoreEntityFlagStatus{
@@ -83,4 +82,13 @@ func (s *CoreEntityFlagStatusService) LoadCoreEntityFlagStatus(ctx context.Conte
 		},
 	}
 	return flagStatus, nil
+}
+
+
+func (s *CoreEntityFlagStatusService) GetAllEntityCoreFlags(ctx context.Context) (map[string]string, error) {
+	flagMap, err := s.repository.FindAllFlagsMap(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching all core entity flags: %w", err)
+	}
+	return flagMap, nil
 }

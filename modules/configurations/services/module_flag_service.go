@@ -88,3 +88,12 @@ func (s *ModuleFlagService) GetModuleFlagByUniqueId(ctx context.Context, uniqueI
 	return module, nil
 }
 
+func (s *ModuleFlagService) GetModuleFlagByCode(ctx context.Context, code string) (entities.ModuleFlagData, error) {
+	moduleFlag, err := s.repository.FindByModuleCode(ctx, code)
+	if err != nil {
+		return entities.ModuleFlagData{}, apperrors.NewNotFoundError("module flag not found")
+	}
+	return moduleFlag, nil
+}
+
+

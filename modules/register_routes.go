@@ -148,7 +148,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			module: configEntities.ModuleReferences,
 			middlewares: []fiber.Handler{
 				sessionMiddleware.CheckLoggedUser,
-				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
+				flagMiddleware.CheckModule(configEntities.ModuleReports.Code),
 				
 			},
 		},
@@ -156,7 +156,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			prefix: "/api/reports",
 			module: configEntities.ModuleReferences,
 			middlewares: []fiber.Handler{
-				flagMiddleware.CheckModule(configEntities.ModuleReferences.Code),
+				flagMiddleware.CheckModule(configEntities.ModuleReports.Code),
 				
 			},
 		},

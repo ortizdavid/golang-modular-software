@@ -82,7 +82,7 @@ func (repo *CoreEntityFlagRepository) FindByModuleCode(ctx context.Context, modu
 	return coreEntityFlag, result.Error
 }
 
-func (repo *CoreEntityFlagRepository) FindByCoreEntity(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
+func (repo *CoreEntityFlagRepository) FindByEntityCode(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
 	var coreEntityFlag entities.CoreEntityFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("code=?", module)
 	return coreEntityFlag, result.Error

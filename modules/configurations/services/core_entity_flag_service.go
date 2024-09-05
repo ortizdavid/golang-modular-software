@@ -13,13 +13,13 @@ import (
 
 type CoreEntityFlagService struct {
 	repository        *repositories.CoreEntityFlagRepository
-	moduleRepository *repositories.ModuleRepository
+	coreEntityRepository *repositories.ModuleRepository
 }
 
 func NewCoreEntityFlagService(db *database.Database) *CoreEntityFlagService {
 	return &CoreEntityFlagService{
 		repository:        repositories.NewCoreEntityFlagRepository(db),
-		moduleRepository: repositories.NewModuleRepository(db),
+		coreEntityRepository: repositories.NewModuleRepository(db),
 	}
 }
 
@@ -31,7 +31,7 @@ func (s *CoreEntityFlagService) ManageCoreEntityFlags(ctx context.Context, reque
         }
     }
     // Retrieve and update each core entity flag
-    var moduleFlags []entities.CoreEntityFlag
+    var coreEntityFlags []entities.CoreEntityFlag
     for _, req := range requests {
         flag, err := s.repository.FindById(ctx, req.FlagId)
         if err != nil {
@@ -39,15 +39,14 @@ func (s *CoreEntityFlagService) ManageCoreEntityFlags(ctx context.Context, reque
         }
         flag.Status = req.Status
         flag.UpdatedAt = time.Now().UTC() // Ensure time is in UTC
-        moduleFlags = append(moduleFlags, flag)
+        coreEntityFlags = append(coreEntityFlags, flag)
     }
     // Perform bulk update
-    if err := s.repository.UpdateBatch(ctx, moduleFlags); err != nil {
+    if err := s.repository.UpdateBatch(ctx, coreEntityFlags); err != nil {
         return apperrors.NewInternalServerError("error while updating core entity flags: " + err.Error())
     }
     return nil
 }
-
 
 func (s *CoreEntityFlagService) GetAllCoreEntityFlagsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityFlagData], error) {
 	if err := params.Validate(); err != nil {
@@ -57,11 +56,11 @@ func (s *CoreEntityFlagService) GetAllCoreEntityFlagsPaginated(ctx context.Conte
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entity flags found")
 	}
-	modules, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	coreEntities, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, modules, count, params.CurrentPage, params.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, coreEntities, count, params.CurrentPage, params.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
@@ -71,20 +70,28 @@ func (s *CoreEntityFlagService) GetAllCoreEntityFlagsPaginated(ctx context.Conte
 func (s *CoreEntityFlagService) GetAllCoreEntityFlags(ctx context.Context) ([]entities.CoreEntityFlagData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No modules found")
+		return nil, apperrors.NewNotFoundError("No core entities found")
 	}
-	modules, err := s.repository.FindAll(ctx)
+	coreEntities, err := s.repository.FindAll(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
-	return modules, nil
+	return coreEntities, nil
 }
 
 func (s *CoreEntityFlagService) GetCoreEntityFlagByUniqueId(ctx context.Context, uniqueId string) (entities.CoreEntityFlagData, error) {
-	module, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	coreEntity, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("module not found")
+		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
 	}
-	return module, nil
+	return coreEntity, nil
+}
+
+func (s *CoreEntityFlagService) GetCoreEntityFlagByCode(ctx context.Context, code string) (entities.CoreEntityFlagData, error) {
+	coreEntity, err := s.repository.FindByEntityCode(ctx, code)
+	if err != nil {
+		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
+	}
+	return coreEntity, nil
 }
 
