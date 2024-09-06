@@ -1,0 +1,21 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div class="ui right floated buttons">
+        <a href="/employees/job-titles" class="ui primary button">
+            <i class="left arrow icon"></i>
+            Return to List
+        </a>
+        <a href="/employees/job-titles/{{.JobTitle.UniqueId}}/edit" class="ui primary button">
+            <i class="pencil icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>ID:</strong> {{.JobTitle.JobTitleId}}</p>
+    <p><strong>Title Name:</strong> {{.JobTitle.TitleName}}</p>
+    <p><strong>Description:</strong> {{.JobTitle.Description}}</p>
+    <p><strong>Creation Date:</strong> {{.JobTitle.CreatedAt}}</p>
+    <p><strong>Last Update:</strong> {{.JobTitle.UpdatedAt}}</p>
+</div>
+
+{{ template "_partials/footer-back" .}}

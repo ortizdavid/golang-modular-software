@@ -17,7 +17,7 @@ type Employee struct {
 	DateOfBirth				time.Time `gorm:"column:date_of_birth"`
 	UniqueId  				string    `gorm:"column:unique_id"`
 	CreatedAt 				time.Time `gorm:"column:created_at"`
-	UpdatedAt 				time.Time `gorm:"column:updated"`
+	UpdatedAt 				time.Time `gorm:"column:updated_at"`
 }
 
 func (Employee) TableName() string {
@@ -33,7 +33,7 @@ type EmployeeData struct {
 	Gender					string `json:"gender"`
 	DateOfBirth				string `json:"date_of_birth"`
 	CreatedAt 				string `json:"created_at"`
-	UpdatedAt 				string `json:"updated"`
+	UpdatedAt 				string `json:"updated_at"`
 	IdentificationTypeId	int `json:"identification_type_id"`
 	IdentificationTypeName	string `json:"identification_type_name"`
 	CountryId				int `json:"country_id"`

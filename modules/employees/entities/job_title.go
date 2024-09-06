@@ -8,7 +8,7 @@ type JobTitle struct {
 	Description string `gorm:"column:description"`
 	UniqueId    string `gorm:"column:unique_id"`
 	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt	time.Time `gorm:"column:updated"`
+	UpdatedAt	time.Time `gorm:"column:updated_at"`
 }
 
 func (JobTitle) TableName() string {

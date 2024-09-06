@@ -10,10 +10,23 @@ CREATE TABLE employees.job_titles(
     job_title_id SERIAL PRIMARY KEY,
     title_name VARCHAR(150) NOT NULL,
     description TEXT,
-    unique_id VARCHAR(50) UNIQUE,
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+-- Example inserts
+INSERT INTO employees.job_titles (title_name, description) VALUES
+('Human Resources Manager', 'Oversees HR functions including recruitment, employee relations, and compliance.'),
+('Recruitment Specialist', 'Handles the recruitment process, from sourcing candidates to conducting interviews.'),
+('HR Business Partner', 'Works closely with business units to align HR strategies with business goals.'),
+('Payroll Specialist', 'Manages payroll processing, tax calculations, and compliance with wage laws.'),
+('HR Coordinator', 'Supports HR operations by managing employee records, onboarding, and administrative tasks.'),
+('Benefits Administrator', 'Manages employee benefits programs, including health insurance and retirement plans.'),
+('Training and Development Manager', 'Develops and implements training programs to enhance employee skills and performance.'),
+('Employee Relations Specialist', 'Addresses employee concerns and mediates conflicts to ensure a positive workplace environment.'),
+('Compensation Analyst', 'Analyzes and develops compensation structures and salary benchmarking.'),
+('HRIS Analyst', 'Maintains and optimizes the Human Resources Information System (HRIS) for data management and reporting.');
+
 
 -- Table: employees
 DROP TABLE IF EXISTS employees.employees;
@@ -43,9 +56,9 @@ CREATE TABLE employees.employees(
 
 -- Indexes:
 -- name indexes
-DROP INDEX idx_employees_first_name;
-CREATE INDEX idx_employees_first_name ON employees.employees(first_name);
-DROP INDEX idx_employees_last_name;
+DROP INDEX IF EXISTS idx_employees_first_name;
+CREATE INDEX  IF EXISTS idx_employees_first_name ON employees.employees(first_name);
+DROP INDEX IF EXISTS idx_employees_last_name;
 CREATE INDEX idx_employees_last_name ON employees.employees(last_name);
 -- Country index
 DROP INDEX IF EXISTS idx_employees_country;
