@@ -104,3 +104,16 @@ FROM company.projects pr
 JOIN company.companies co ON(co.company_id = pr.company_id)
 ORDER BY created_at DESC;
 
+
+
+-- view: view_statistics_data
+DROP TABLE IF EXISTS company.view_statistics_data;
+CREATE VIEW company.view_statistics_data AS
+SELECT 
+    (SELECT COUNT(*) FROM company.branches) AS branches,
+    (SELECT COUNT(*) FROM company.offices) AS offices,
+    (SELECT COUNT(*) FROM company.departments) AS departments,
+    (SELECT COUNT(*) FROM company.rooms) AS rooms,
+    (SELECT COUNT(*) FROM company.projects) AS projects,
+    (SELECT COUNT(*) FROM company.policies) AS policies;
+
