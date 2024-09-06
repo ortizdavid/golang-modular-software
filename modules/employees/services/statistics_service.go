@@ -9,26 +9,19 @@ import (
 )
 
 type StatisticsService struct {
-	jobTitleRepository *repositories.JobTitleRepository
+	repository *repositories.StatisticsRepository
 }
 
 func NewStatisticsService(db *database.Database) *StatisticsService {
 	return &StatisticsService{
-		jobTitleRepository: repositories.NewJobTitleRepository(db),
+		repository: repositories.NewStatisticsRepository(db),
 	}
 }
 
-func (s *StatisticsService) GetStatistics(ctx context.Context) (entities.Statistics, error) {
-	jobTitle, err := s.jobTitles(ctx)
+func (s *StatisticsService) GetStatistics(ctx context.Context)  (entities.Statistics, error) {
+	statistics, err := s.repository.GetStatistics(ctx)
 	if err != nil {
 		return entities.Statistics{}, err
 	}
-	return entities.Statistics{
-		Employees: 0,
-		JobTitles: jobTitle,
-	}, nil
-}
-
-func (s *StatisticsService) jobTitles(ctx context.Context) (int64, error) {
-	return s.jobTitleRepository.Count(ctx)
+	return statistics, nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
 )
+
 type StatisticsService struct {
 	repository *repositories.StatisticsRepository
 }

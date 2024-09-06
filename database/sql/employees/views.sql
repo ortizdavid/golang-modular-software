@@ -28,3 +28,13 @@ ORDER BY emp.created_at;
 
 
 
+
+-- view: view_statistics_data
+DROP TABLE IF EXISTS employees.view_statistics_data;
+CREATE VIEW employees.view_statistics_data AS
+SELECT 
+    (SELECT COUNT(*) FROM employees.job_titles) AS job_titles,
+    (SELECT COUNT(*) FROM employees.employees) AS employees;
+
+
+

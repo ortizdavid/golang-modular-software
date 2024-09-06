@@ -263,6 +263,35 @@
         </div>
     {{ end }}
 
+     <!-- Employment Statuses Card -->
+    {{ if eq .CoreEntityFlagStatus.ReferenceFlags.EmploymentStatuses "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header olive">
+                        <i class="icon id card"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui olive header" id="employment-statuses">
+                            {{.Statistics.EmploymentStatuses}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Employment Statuses</strong>
+                    </div>
+                    <div class="description">
+                        Various statuses for employments or processes within the company.
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/references/employment-statuses" class="ui olive button">View More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}
+
 </div>
 
 {{ template "_partials/footer-back" .}}
