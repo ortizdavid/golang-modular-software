@@ -13,3 +13,22 @@ SELECT
 FROM reference.countries co
 ORDER BY co.created_at DESC; 
 
+
+
+-- view: view_statistics_data
+DROP TABLE IF EXISTS reference.view_statistics_data;
+CREATE VIEW reference.view_statistics_data AS
+SELECT 
+    (SELECT COUNT(*) FROM reference.countries) AS countries,
+    (SELECT COUNT(*) FROM reference.currencies) AS currencies,
+    (SELECT COUNT(*) FROM reference.identification_types) AS identification_types,
+    (SELECT COUNT(*) FROM reference.contact_types) AS contact_types,
+    (SELECT COUNT(*) FROM reference.marital_statuses) AS marital_statuses,
+    (SELECT COUNT(*) FROM reference.task_statuses) AS task_statuses,
+    (SELECT COUNT(*) FROM reference.approval_statuses) AS approval_statuses,
+    (SELECT COUNT(*) FROM reference.document_statuses) AS document_statuses,
+    (SELECT COUNT(*) FROM reference.workflow_statuses) AS workflow_statuses,
+    (SELECT COUNT(*) FROM reference.evaluation_statuses) AS evaluation_statuses,
+    (SELECT COUNT(*) FROM reference.user_statuses) AS user_statuses,
+    (SELECT COUNT(*) FROM reference.employment_statuses) AS employment_statuses;
+
