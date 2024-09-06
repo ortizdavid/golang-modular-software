@@ -121,3 +121,18 @@ FROM authentication.user_api_key uak
 JOIN authentication.users us ON(uak.user_id = us.user_id)
 ORDER BY created_at DESC;
 
+
+-- view: view_statistics_data
+DROP TABLE IF EXISTS authentication.view_statistics_data;
+CREATE VIEW authentication.view_statistics_data AS
+SELECT 
+    COUNT(user_id) AS users,
+    SUM(CASE WHEN is_active THEN 1 ELSE 0 END) AS active_users,
+    SUM(CASE WHEN NOT is_active THEN 1 ELSE 0 END) AS inactive_users,
+    (SELECT COUNT(DISTINCT ur.user_id) FROM authentication.user_roles ur) AS online_users, 
+    (SELECT COUNT(DISTINCT ur.user_id) FROM authentication.user_roles ur) AS offline_users, 
+    (SELECT COUNT(role_id) FROM authentication.roles) AS roles,
+    (SELECT COUNT(permission_id) FROM authentication.permissions) AS permissions, 
+    (SELECT COUNT(*) FROM authentication.login_activity) AS login_activity 
+FROM authentication.users;
+
