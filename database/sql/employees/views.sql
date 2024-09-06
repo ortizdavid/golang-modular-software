@@ -16,7 +16,7 @@ SELECT emp.employee_id, emp.unique_id,
     ms.status_name AS marital_status_name,
     es.status_id AS employment_status_id,
     es.status_name AS employment_status_name,
-    jt.job_title_id, jt.title_name
+    jt.job_title_id, jt.title_name AS job_title_name
 FROM employees.employees emp 
 LEFT JOIN reference.identification_types it ON(it.type_id = emp.identification_type_id)
 LEFT JOIN reference.countries co ON(co.country_id = emp.country_id)
