@@ -28,7 +28,6 @@ ORDER BY emp.created_at;
 
 
 
-
 -- view: view_statistics_data
 DROP TABLE IF EXISTS employees.view_statistics_data;
 CREATE VIEW employees.view_statistics_data AS

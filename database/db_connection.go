@@ -3,7 +3,9 @@ package database
 import (
 	"fmt"
 	"log"
+	"sync"
 	"time"
+
 	"github.com/ortizdavid/golang-modular-software/common/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -13,6 +15,7 @@ type DBConnection struct {
 	DB 			*gorm.DB
 	url 		string
 	poolConfig 	ConnPoolConfig
+	mu 			sync.Mutex
 }
 
 type ConnPoolConfig struct {
@@ -28,7 +31,7 @@ func NewDBConnection(dbURL string) (*DBConnection, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect database: %v", err.Error())
 	}
-	// Create DBConnection struct with default pool settings
+	// DBConnection struct with default pool settings
 	dbConn := &DBConnection{
 		DB: db,
 		url: dbURL,
@@ -57,6 +60,10 @@ func (dbConn *DBConnection) Close() {
 	if dbConn == nil {
 		return
 	}
+	
+	dbConn.mu.Lock()
+	defer dbConn.mu.Unlock()
+
 	sqlDB, err := dbConn.DB.DB()
 	if err != nil {
 		log.Fatalf("Failed to disconnect DB: %v", err)
@@ -66,6 +73,8 @@ func (dbConn *DBConnection) Close() {
 
 // SetConnectionPool allows modifying the connection pool settings
 func (dbConn *DBConnection) SetConnectionPool(poolConfig ConnPoolConfig) {
+	dbConn.mu.Lock()
+	defer dbConn.mu.Unlock()
 	dbConn.poolConfig = poolConfig
 	dbConn.configurePool()
 }
