@@ -41,6 +41,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err != nil {
 		return apperrors.NewInternalServerError("error starting transaction: "+err.Error())
 	}
+	defer func() {
+	if r := recover(); r != nil {
+		tx.Rollback()
+	}
+	}()
 
 	exists, err := s.repository.ExistsByName(ctx, request.UserName)
 	if err != nil {
