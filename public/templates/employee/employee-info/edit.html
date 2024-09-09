@@ -1,0 +1,101 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/edit" method="POST">
+        <div class="field">
+            <label for="first_name"><strong>First Name:</strong></label>
+            <input class="ui input" type="text" name="first_name" id="first_name" value="{{.Employee.FirstName}}" placeholder="Type First Name" required>
+        </div>
+        <div class="field">
+            <label for="last_name"><strong>Last Name:</strong></label>
+            <input class="ui input" type="text" name="last_name" id="last_name" value="{{.Employee.LastName}}" placeholder="Type Last Name" required>
+        </div>
+        <div class="field">
+            <label for="identification_type_id"><strong>Identification Type:</strong></label>
+            <select class="ui dropdown" name="identification_type_id" id="identification_type_id" required>
+                <option value="">Select Identification Type</option>
+                {{ range .IdentificationTypes }}
+                    <option value="{{ .TypeId }}" {{ if eq .TypeId $.Employee.IdentificationTypeId }}selected{{ end }}>{{ .TypeName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="identification_number"><strong>Identification Number:</strong></label>
+            <input class="ui input" type="text" name="identification_number" id="identification_number" value="{{.Employee.IdentificationNumber}}" placeholder="Enter Identification Number" required>
+        </div>
+        <div class="field">
+            <label for="gender"><strong>Gender:</strong></label>
+            <select class="ui dropdown" name="gender" id="gender">
+                <option value="Male" {{ if eq .Employee.Gender "Male" }}selected{{ end }}>Male</option>
+                <option value="Female" {{ if eq .Employee.Gender "Female" }}selected{{ end }}>Female</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="date_of_birth"><strong>Date of Birth:</strong></label>
+            <input class="ui input" type="date" name="date_of_birth" id="date_of_birth" value="{{.Employee.DateOfBirth}}">
+        </div>
+        <div class="field">
+            <label for="country_id"><strong>Country:</strong></label>
+            <select class="ui dropdown" name="country_id" id="country_id">
+                <option value="">Select Country</option>
+                {{ range .Countries }}
+                    <option value="{{ .CountryId }}" {{ if eq .CountryId $.Employee.CountryId }}selected{{ end }}>{{ .CountryName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="marital_status_id"><strong>Marital Status:</strong></label>
+            <select class="ui dropdown" name="marital_status_id" id="marital_status_id">
+                <option value="">Select Marital Status</option>
+                {{ range .MaritalStatuses }}
+                    <option value="{{ .StatusId }}" {{ if eq .StatusId $.Employee.MaritalStatusId }}selected{{ end }}>{{ .StatusName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="department_id"><strong>Department:</strong></label>
+            <select class="ui dropdown" name="department_id" id="department_id">
+                <option value="">Select Department</option>
+                {{ range .Departments }}
+                    <option value="{{ .DepartmentId }}" {{ if eq .DepartmentId $.Employee.DepartmentId }}selected{{ end }}>{{ .DepartmentName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="job_title_id"><strong>Job Title:</strong></label>
+            <select class="ui dropdown" name="job_title_id" id="job_title_id">
+                <option value="">Select Job Title</option>
+                {{ range .JobTitles }}
+                    <option value="{{ .JobTitleId }}" {{ if eq .JobTitleId $.Employee.JobTitleId }}selected{{ end }}>{{ .TitleName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="employment_status_id"><strong>Employment Status:</strong></label>
+            <select class="ui dropdown" name="employment_status_id" id="employment_status_id" required>
+                <option value="">Select Employment Status</option>
+                {{ range .EmploymentStatuses }}
+                    <option value="{{ .StatusId }}" {{ if eq .StatusId $.Employee.EmploymentStatusId }}selected{{ end }}>{{ .StatusName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/employees/employee-info" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

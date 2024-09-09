@@ -1,0 +1,75 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <div>
+        <form class="ui form" action="/employees/employee-info/search-results" method="GET" style="padding-bottom: 2%">
+            <table>
+                <tr>
+                    <td><input style="width: 400px;" type="text" name="search_param" placeholder="Search by Name or Identification" required autofocus></td>
+                    <td>
+                        <button class="ui blue icon button">
+                            <i class="search icon"></i>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="">
+        {{ if .Pagination.MetaData.TotalItems }}
+            <b>{{.Pagination.MetaData.TotalItems}}</b> results for <b><i>{{.Param}}</i></b><br>
+            <table class="ui celled striped selectable blue table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Identification Number</th>
+                        <th>Gender</th>
+                        <th>Department</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .Pagination.Items }}
+                        <tr>
+                            <td class="collapsing">{{.JobTitleId}}</td>
+                            <td>{{.FirstName}} {{.LastName}}</td>
+                            <td>{{.IdentificationNumber}}</td>
+                            <td>{{.Gender}}</td>
+                            <td>{{.DepartmentName}}</td>
+                            <td>
+                                <a href="/employees/employee-info/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
+                                    <i class="eye blue icon"></i>
+                                </a>
+                                <a href="/employees/employee-info/{{.UniqueId}}/edit" class="ui icon button" data-tooltip="Edit" data-position="top center">
+                                    <i class="pencil icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+            <div class="ui pagination menu">
+                <div class="item">Page {{.CurrentPage}} of {{.TotalPages}}</div>
+                <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.FirstPageUrl}}">
+                    First
+                </a>
+                <a class="item {{ if not .Pagination.HasPreviousPage}}disabled{{ end }}" href="{{.Pagination.MetaData.PreviousPageUrl}}">
+                    <i class="angle double left icon"></i>Previous
+                </a>
+                <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.NextPageUrl}}">
+                    Next <i class="angle double right icon"></i>
+                </a>
+                <a class="item {{ if not .Pagination.HasNextPage}}disabled{{ end }}" href="{{.Pagination.MetaData.LastPageUrl}}">
+                    Last
+                </a>
+            </div>
+        {{ else }}
+            <div class="ui warning message">
+                <p><strong>0</strong> results found for <strong><i>{{.Param}}</i></strong></p>
+            </div>
+        {{ end }}
+    </div>
+</div>
+    
+{{ template "_partials/footer-back" .}}

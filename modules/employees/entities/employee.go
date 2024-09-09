@@ -41,6 +41,7 @@ type EmployeeData struct {
 	MaritalStatusId			int `json:"marital_status_id"`
 	MaritalStatusName		string `json:"marital_status_name"`
 	DepartmentId			int `json:"department_id"`
+	DepartmentName			string `json:"department_name"`
 	EmploymentStatusId		int `json:"employment_status_id"`
 	EmploymentStatusName	string `json:"employment_status_name"`
 	JobTitleId				int `json:"job_title_id"`

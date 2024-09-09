@@ -50,7 +50,7 @@ func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllTypesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllIdentificationTypesPaginated(c.Context(), c, params)
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}

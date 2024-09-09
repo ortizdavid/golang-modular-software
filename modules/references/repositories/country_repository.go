@@ -34,7 +34,7 @@ func (repo *CountryRepository) Delete(ctx context.Context, country entities.Coun
 
 func (repo *CountryRepository) FindAll(ctx context.Context) ([]entities.CountryData, error) {
 	var countries []entities.CountryData
-	result := repo.db.WithContext(ctx).Find(&countries)
+	result := repo.db.WithContext(ctx).Table("reference.view_country_data").Find(&countries)
 	return countries, result.Error
 }
 

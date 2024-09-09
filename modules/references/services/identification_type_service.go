@@ -66,7 +66,7 @@ func (s *IdentificationTypeService) UpdateIdentificationType(ctx context.Context
 	return nil
 }
 
-func (s *IdentificationTypeService) GetAllTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.IdentificationType], error) {
+func (s *IdentificationTypeService) GetAllIdentificationTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.IdentificationType], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -85,7 +85,7 @@ func (s *IdentificationTypeService) GetAllTypesPaginated(ctx context.Context, fi
 	return pagination, nil
 }
 
-func (s *IdentificationTypeService) GetAllTypes(ctx context.Context) ([]entities.IdentificationType, error) {
+func (s *IdentificationTypeService) GetAllIdentificationTypes(ctx context.Context) ([]entities.IdentificationType, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No types found")
