@@ -6,6 +6,7 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
@@ -18,6 +19,10 @@ func NewUserRepository(db *database.Database) *UserRepository {
 	return &UserRepository{
 		db: db,
 	}
+}
+
+func (repo *UserRepository) BeginTransaction(ctx context.Context) (*gorm.DB, error){
+	return repo.db.BeginTx(ctx)
 }
 
 func (repo *UserRepository) Create(ctx context.Context, user entities.User) error {

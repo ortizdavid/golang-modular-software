@@ -37,6 +37,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	tx, err := s.repository.BeginTransaction(ctx)
+	if err != nil {
+		return apperrors.NewInternalServerError("error starting transaction: "+err.Error())
+	}
+
 	exists, err := s.repository.ExistsByName(ctx, request.UserName)
 	if err != nil {
 		return apperrors.NewNotFoundError(err.Error())
@@ -59,6 +64,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	}
 	err = s.repository.Create(ctx, user)
 	if err != nil {
+		tx.Rollback()
 		return apperrors.NewInternalServerError("error while creating user: "+ err.Error())
 	}
 	userId := s.repository.LastInsertId
@@ -76,6 +82,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	}
 	err = s.userRoleRepository.Create(ctx, userRole)
 	if err != nil {
+		tx.Rollback()
 		return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
 	}
 	//---- Create Login Activity ----------------------------------------------------------------------
@@ -88,6 +95,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	}
 	err = s.loginActRepository.Create(ctx, loginAct)
 	if err != nil {
+		tx.Rollback()
 		return apperrors.NewInternalServerError("error while creating login activity: "+err.Error())
 	}
 	//--- Create API Key ----------------------------------------------------------------------
@@ -102,7 +110,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	}
 	err = s.userApiKeyRepository.Create(ctx, userApiKey)
 	if err != nil {
+		tx.Rollback()
 		return apperrors.NewInternalServerError("error while creating api key: "+err.Error())
+	}
+	if err := tx.Commit().Error; err != nil {
+		return apperrors.NewInternalServerError("error while committing transaction: "+err.Error())
 	}
 	return nil
 }
