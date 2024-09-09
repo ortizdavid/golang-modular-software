@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"sync"
+
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 )
@@ -9,6 +11,7 @@ import (
 type UserRepository struct {
 	db *database.Database
 	LastInsertId int64
+	mu sync.Mutex
 }
 
 func NewUserRepository(db *database.Database) *UserRepository {
@@ -19,6 +22,8 @@ func NewUserRepository(db *database.Database) *UserRepository {
 
 func (repo *UserRepository) Create(ctx context.Context, user entities.User) error {
 	result := repo.db.WithContext(ctx).Create(&user)
+	repo.mu.Lock()
+	defer repo.mu.Unlock()
 	repo.LastInsertId = user.UserId
 	return result.Error
 }
