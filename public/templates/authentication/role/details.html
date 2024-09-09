@@ -1,7 +1,6 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-
     <div class="ui right floated buttons">
         <a href="/user-management/roles" class="ui primary button">
             <i class="left arrow icon"></i>
@@ -17,53 +16,65 @@
         </a>
     </div>
 
-    <p><strong>ID:</strong> {{.Role.RoleId}}</p>
-    <p><strong>Role Name:</strong> {{.Role.RoleName}}</p>
-    <p><strong>Code:</strong> {{.Role.Code}}</p>
-    <p><strong>Description:</strong> {{.Role.Description}}</p>
-    <p><strong>Status:</strong> {{.Role.Status}}</p>
-    <p><strong>Creation Date:</strong> {{.Role.CreatedAt}}</p>
-    <p><strong>Last Update:</strong> {{.Role.UpdatedAt}}</p>
-
-    <div class="ui clearing divider"></div>
-    <p><strong>Assigned Permissions: {{.CountPermissions}}</strong></p>
-    <div class="ui right aligned container">
-        <a href="/user-management/roles/{{.Role.UniqueId}}/assign-permission" class="ui primary button small">
-            <i class="plus icon"></i>
-            Add Permission
-        </a>
+    <div class="ui top attached tabular menu">
+        <a class="active item" data-tab="role-details">Role Details</a>
+        <a class="item" data-tab="permissions">Permissions</a>
     </div>
-    {{ if .CountPermissions }}
-        <table class="ui selectable small table blue">
-            <thead>
-                <tr>
-                    <th>Permission Name</th>
-                    <th>Permission Code</th>
-                    <th>Assigned Date</th>
-                    <th>Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{ range .PermissionRoles }}
-                    <tr>
-                        <td>{{.PermissionName}}</td>
-                        <td>{{.PermissionCode}}</td>
-                        <td>{{.CreatedAt}}</td>
-                        <td>
-                            <a href="/user-management/roles/{{.RoleUniqueId}}/remove-permission/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Permission">
-                                <i class="trash alternate red icon"></i>
-                            </a>
-                        </td>
-                    </tr>
-                {{ end }}
-            </tbody>
-        </table>
-    {{ else }}
-        <div class="ui warning message">
-            No permissions found
+
+    <div class="ui bottom attached active tab segment" data-tab="role-details">
+        <p><strong>ID:</strong> {{.Role.RoleId}}</p>
+        <p><strong>Role Name:</strong> {{.Role.RoleName}}</p>
+        <p><strong>Code:</strong> {{.Role.Code}}</p>
+        <p><strong>Description:</strong> {{.Role.Description}}</p>
+        <p><strong>Status:</strong> {{.Role.Status}}</p>
+        <p><strong>Creation Date:</strong> {{.Role.CreatedAt}}</p>
+        <p><strong>Last Update:</strong> {{.Role.UpdatedAt}}</p>
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="permissions">
+        <p><strong>Assigned Permissions: {{.CountPermissions}}</strong></p>
+        <div class="ui right aligned container">
+            <a href="/user-management/roles/{{.Role.UniqueId}}/assign-permission" class="ui primary button small">
+                <i class="plus icon"></i>
+                Add Permission
+            </a>
         </div>
-    {{ end }}
+        {{ if .CountPermissions }}
+            <table class="ui selectable small table blue">
+                <thead>
+                    <tr>
+                        <th>Permission Name</th>
+                        <th>Permission Code</th>
+                        <th>Assigned Date</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .PermissionRoles }}
+                        <tr>
+                            <td>{{.PermissionName}}</td>
+                            <td>{{.PermissionCode}}</td>
+                            <td>{{.CreatedAt}}</td>
+                            <td>
+                                <a href="/user-management/roles/{{.RoleUniqueId}}/remove-permission/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Permission">
+                                    <i class="trash alternate red icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        {{ else }}
+            <div class="ui warning message">
+                No permissions found
+            </div>
+        {{ end }}
+    </div>
 
 </div>
 
 {{ template "_partials/footer-back" .}}
+
+<script>
+    $('.menu .item').tab();
+</script>
