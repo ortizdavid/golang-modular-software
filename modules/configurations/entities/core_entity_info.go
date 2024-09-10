@@ -51,6 +51,7 @@ var (
 	// Module: Employees
 	CoreEntityEmployees = CoreEntityInfo{Code: "employees.employees"}
 	CoreEntityJobTitles = CoreEntityInfo{Code: "employees.job_titles"}
+	CoreEntityDocumentTypes = CoreEntityInfo{Code: "employees.document_types"}
 
 	// Module: Reports
 	CoreEntityUserReports          = CoreEntityInfo{Code: "reports.user_reports"}

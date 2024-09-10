@@ -1,0 +1,18 @@
+<div class="ui image">
+    {{ if .User.UserImage}}
+        <img src="/uploads/images/users/{{.User.UserImage}}" alt="User Image" class="ui small rounded image">
+    {{ else }}
+        <img src="/images/user-blank.jpg" alt="Default User Image" class="ui small rounded image">
+    {{ end }}
+</div>
+<div class="ui clearing divider"></div>
+<p><strong>ID:</strong> {{.User.UserId}}</p>
+<p><strong>User Name:</strong> {{.User.UserName}}</p>
+<p><strong>Email:</strong> {{.User.Email}}</p>
+<p><strong>Active Status:</strong>
+    <span class="{{ if eq .User.IsActive "Yes" }}ui green label{{ else }}ui red label{{ end }}">
+        {{ if eq .User.IsActive "Yes" }}Active{{ else }}Inactive{{ end }}
+    </span>
+</p>
+<p><strong>Creation Date:</strong> {{.User.CreatedAt}}</p>
+<p><strong>Last Update:</strong> {{.User.UpdatedAt}}</p>

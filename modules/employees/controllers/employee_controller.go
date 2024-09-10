@@ -150,7 +150,7 @@ func (ctrl *EmployeeController) create(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created job title '"+request.FirstName+"' successfully")
+	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created employment '"+request.FirstName+"' successfully")
 	return c.Redirect("/employees/employee-info")
 }
 
@@ -218,7 +218,7 @@ func (ctrl *EmployeeController) edit(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated job title '"+request.FirstName+"' successfully")
+	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated employment '"+request.FirstName+"' successfully")
 	return c.Redirect("/employees/employee-info/" + id + "/details")
 }
 
@@ -284,6 +284,6 @@ func (ctrl *EmployeeController) remove(c *fiber.Ctx) error {
 	if err != nil {
 		return helpers.HandleHttpErrors(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed job title '%s'", loggedUser.UserName, employee.FirstName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed employment '%s'", loggedUser.UserName, employee.FirstName))
 	return c.Redirect("/employees/employee-info")
 }

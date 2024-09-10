@@ -1,8 +1,7 @@
 -- views for 'employees' schema 
 
 -- View: view_employee_data
-DROP VIEW IF EXISTS employees.view_employee_data;
-CREATE VIEW employees.view_employee_data AS
+CREATE OR REPLACE VIEW employees.view_employee_data AS
 SELECT emp.employee_id, emp.unique_id,
     emp.first_name, emp.last_name,
     emp.identification_number,
@@ -31,11 +30,11 @@ ORDER BY emp.created_at;
 
 
 -- view: view_statistics_data
-DROP TABLE IF EXISTS employees.view_statistics_data;
-CREATE VIEW employees.view_statistics_data AS
+CREATE OR REPLACE VIEW employees.view_statistics_data AS
 SELECT 
     (SELECT COUNT(*) FROM employees.job_titles) AS job_titles,
-    (SELECT COUNT(*) FROM employees.employees) AS employees;
+    (SELECT COUNT(*) FROM employees.employees) AS employees,
+    (SELECT COUNT(*) FROM employees.document_types) AS document_types;
 
 
 

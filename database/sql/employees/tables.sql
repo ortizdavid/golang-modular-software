@@ -53,16 +53,63 @@ CREATE TABLE employees.employees(
     CONSTRAINT fk_job_title FOREIGN KEY(job_title_id) REFERENCES employees.job_titles(job_title_id),
     CONSTRAINT fk_employment_status FOREIGN KEY(employment_status_id) REFERENCES reference.employment_statuses(status_id)
 );
-
 -- Indexes:
--- name indexes
 DROP INDEX IF EXISTS idx_employees_first_name;
 CREATE INDEX  IF EXISTS idx_employees_first_name ON employees.employees(first_name);
 DROP INDEX IF EXISTS idx_employees_last_name;
 CREATE INDEX idx_employees_last_name ON employees.employees(last_name);
--- Country index
 DROP INDEX IF EXISTS idx_employees_country;
 CREATE INDEX idx_employees_country ON employees.employees(country_id);
 
+
+
+-- Table: document_types
+DROP TABLE IF EXISTS employees.document_types;
+CREATE TABLE employees.document_types(
+    type_id SERIAL PRIMARY KEY,
+    type_name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+-- Insert
+INSERT INTO employees.document_types (type_name, description) VALUES
+('Identification', 'Documents used for personal identification'),
+('Employment', 'Documents related to employment'),
+('Financial', 'Documents related to financial information'),
+('Compliance', 'Documents related to compliance and legal requirements'),
+('Training/Certifications', 'Documents related to training and certifications'),
+('Health', 'Documents related to employee health and safety');
+
+
+
+DROP TYPE IF EXISTS TYPE_DOCUMENT_STATUS;
+CREATE TYPE TYPE_DOCUMENT_STATUS AS ENUM('Expired', 'Active');
+
+-- Table: documents
+DROP TABLE IF EXISTS employees.documents;
+CREATE TABLE employees.documents(
+    document_id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    document_type_id INT NOT NULL,
+    document_name VARCHAR(200),
+    document_number VARCHAR(40),
+    expiration_date DATE,
+    file_path VARCHAR(150),
+    status TYPE_DOCUMENT_STATUS DEFAULT 'Active',
+    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_document_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id),
+    CONSTRAINT fk_document_type FOREIGN KEY (document_type_id) REFERENCES employees.document_types(type_id)
+);
+-- Indexes
+DROP INDEX IF EXISTS idx_employee_id;
+CREATE INDEX idx_employee_id ON employees.documents(employee_id);
+DROP INDEX IF EXISTS idx_document_type_id;
+CREATE INDEX idx_document_type_id ON employees.documents(document_type_id);
+DROP INDEX IF EXISTS idx_status;
+CREATE INDEX idx_status ON employees.documents(status);
 
 

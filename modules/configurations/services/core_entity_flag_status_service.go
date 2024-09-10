@@ -70,8 +70,9 @@ func (s *CoreEntityFlagStatusService) LoadCoreEntityFlagStatus(ctx context.Conte
 			Policies:    flagMap[entities.CoreEntityPolicies.Code],
 		},
 		EmployeeFlags: entities.EmployeeFlags{
-			Employees: flagMap[entities.CoreEntityEmployees.Code],
-			JobTitles: flagMap[entities.CoreEntityJobTitles.Code],
+			Employees:     flagMap[entities.CoreEntityEmployees.Code],
+			JobTitles:     flagMap[entities.CoreEntityJobTitles.Code],
+			DocumentTypes: flagMap[entities.CoreEntityDocumentTypes.Code],
 		},
 		ReportFlags: entities.ReportFlags{
 			UserReports:          flagMap[entities.CoreEntityUserReports.Code],

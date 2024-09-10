@@ -227,7 +227,7 @@ func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, 
 		return apperrors.NewNotFoundError("user not found")
 	}
 	// remove current image if exists //TODO
-	uploadPath := config.UploadImagePath()
+	uploadPath := config.UploadImagePath() + "/users"
 	//currentImage := user.UserImage
 	uploader := helpers.NewUploader(uploadPath, config.MaxUploadImageSize(), helpers.ExtImages)
 	info, err := uploader.UploadSingleFile(fiberCtx, "user_image")

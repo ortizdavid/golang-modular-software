@@ -1,6 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
+
     <div class="ui right floated buttons">
         <a href="/employees/employee-info" class="ui primary button">
             <i class="left arrow icon"></i>
@@ -21,36 +22,25 @@
     </div>
 
     <div class="ui bottom attached tab segment active" data-tab="personal">
-        <p><strong>Employee ID:</strong> {{.Employee.EmployeeId}}</p>
-        <p><strong>Full Name:</strong> {{.Employee.FirstName}} {{.Employee.LastName}}</p>
-        <p><strong>Identification Number:</strong> {{.Employee.IdentificationNumber}}</p>
-        <p><strong>Gender:</strong> {{.Employee.Gender}}</p>
-        <p><strong>Date of Birth:</strong> {{.Employee.DateOfBirth}}</p>
-        <p><strong>Date of Birth:</strong> {{.Employee.DateOfBirth}}</p>
-        <p><strong>Identification Type:</strong> {{.Employee.IdentificationTypeName}}</p>
-        <p><strong>Country:</strong> {{.Employee.CountryName}}</p>
-        <p><strong>Marital Status:</strong> {{.Employee.MaritalStatusName}}</p>
-        <p><strong>Creation Date:</strong> {{.Employee.CreatedAt}}</p>
-        <p><strong>Last Update:</strong> {{.Employee.UpdatedAt}}</p>
+        {{ template "employee/employee-info/details-personal" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="contacts">
-        <p>Contacts information</p>
+        {{ template "employee/employee-info/details-contacts" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="documents">
-        <p>Documents information</p>
+        {{ template "employee/employee-info/details-documents" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="professional">
-        <p><strong>Department:</strong> {{.Employee.DepartmentName}}</p>
-        <p><strong>Employment Status:</strong> {{.Employee.EmploymentStatusName}}</p>
-        <p><strong>Job Title:</strong> {{.Employee.JobTitleName}}</p>
+        {{ template "employee/employee-info/details-professional" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="account">
-        <p>Account details</p>
+        {{ template "employee/employee-info/details-account" . }}
     </div>
+    
 </div>
 
 {{ template "_partials/footer-back" .}}

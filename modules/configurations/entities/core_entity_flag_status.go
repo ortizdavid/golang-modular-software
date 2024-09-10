@@ -62,6 +62,7 @@ type CompanyFlags struct {
 type EmployeeFlags struct {
 	Employees   string `json:"employees"`
 	JobTitles   string `json:"job_titles"`
+	DocumentTypes	string `json:"document_types"`
 }
 
 type ReportFlags struct {

@@ -1,8 +1,7 @@
 -- views for 'reference' schema 
 
 -- View: view_user_data
-DROP VIEW IF EXISTS authentication.view_user_data;
-CREATE VIEW authentication.view_user_data AS 
+CREATE OR REPLACE VIEW authentication.view_user_data AS 
 SELECT 
     us.user_id,
     us.unique_id,
@@ -30,8 +29,7 @@ ORDER BY us.created_at ASC;
 
 
 -- View: view_role_data
-DROP VIEW IF EXISTS authentication.view_role_data;
-CREATE VIEW authentication.view_role_data AS 
+CREATE OR REPLACE VIEW authentication.view_role_data AS 
 SELECT  ro.role_id, ro.unique_id,
     ro.role_name, ro.code,
     ro.description, ro.status,
@@ -42,8 +40,7 @@ ORDER BY created_at ASC;
 
 
 -- View: view_user_role_data
-DROP VIEW IF EXISTS authentication.view_user_role_data;
-CREATE VIEW authentication.view_user_role_data AS 
+CREATE OR REPLACE VIEW authentication.view_user_role_data AS 
 SELECT  ur.user_role_id, ur.unique_id,
     TO_CHAR(ur.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(ur.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
@@ -59,8 +56,7 @@ ORDER BY created_at DESC;
 
 
 -- View: view_permission_data
-DROP VIEW IF EXISTS authentication.view_permission_data;
-CREATE VIEW authentication.view_permission_data AS 
+CREATE OR REPLACE VIEW authentication.view_permission_data AS 
 SELECT  pe.permission_id, pe.unique_id,
     pe.permission_name, pe.code,
     pe.description,
@@ -71,8 +67,7 @@ ORDER BY created_at ASC;
 
 
 -- View: view_permission_role_data
-DROP VIEW IF EXISTS authentication.view_permission_role_data;
-CREATE VIEW authentication.view_permission_role_data AS 
+CREATE OR REPLACE VIEW authentication.view_permission_role_data AS 
 SELECT pr.permission_role_id, pr.unique_id,  
     TO_CHAR(pr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(pr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
@@ -87,8 +82,7 @@ ORDER BY created_at DESC;
 
 
 -- View: view_login_activity_data
-DROP VIEW IF EXISTS authentication.view_login_activity_data;
-CREATE VIEW authentication.view_login_activity_data AS
+CREATE OR REPLACE VIEW authentication.view_login_activity_data AS
 SELECT la.login_id, la.unique_id,
     la.status, la.host,
     la.browser, la.ip_address,
@@ -106,8 +100,7 @@ ORDER BY created_at DESC;
 
 
 --- View: view_user_api_key_data
-DROP VIEW IF EXISTS authentication.view_user_api_key_data;
-CREATE VIEW authentication.view_user_api_key_data AS 
+CREATE OR REPLACE VIEW authentication.view_user_api_key_data AS 
 SELECT uak.api_key_id, uak.unique_id,
     uak.key, 
     CASE WHEN uak.is_active THEN 'Yes' ELSE 'No' END AS is_active,
@@ -123,8 +116,7 @@ ORDER BY created_at DESC;
 
 
 -- view: view_statistics_data
-DROP TABLE IF EXISTS authentication.view_statistics_data;
-CREATE VIEW authentication.view_statistics_data AS
+CREATE OR REPLACE VIEW authentication.view_statistics_data AS
 SELECT 
     COUNT(user_id) AS users,
     SUM(CASE WHEN is_active THEN 1 ELSE 0 END) AS active_users,

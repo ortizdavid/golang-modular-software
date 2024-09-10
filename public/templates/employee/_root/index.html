@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="meta">
-                        <strong>JobTitles</strong>
+                        <strong>Job Titles</strong>
                     </div>
                     <div class="description">
                         Total number of employees job titles supported by the company.
@@ -53,6 +53,34 @@
                 <div class="extra content">
                     <div class="ui two buttons">
                         <a href="/employees/job-titles" class="ui brown button">View More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}
+
+    {{ if eq .CoreEntityFlagStatus.EmployeeFlags.DocumentTypes "Enabled" }}
+        <div class="four wide computer eight wide tablet sixteen wide mobile column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="ui right floated header green">
+                        <i class="icon list"></i>
+                    </div>
+                    <div class="header">
+                        <div class="ui green header" id="document-types">
+                            {{.Statistics.DocumentTypes}}
+                        </div>
+                    </div>
+                    <div class="meta">
+                        <strong>Document Types</strong>
+                    </div>
+                    <div class="description">
+                        Total number of employees document type supported by the company.
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a href="/employees/document-types" class="ui green button">View More</a>
                     </div>
                 </div>
             </div>

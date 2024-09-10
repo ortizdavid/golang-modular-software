@@ -1,6 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
+
     <div class="ui right floated buttons">
         <a href="/user-management/users" class="ui primary button">
             <i class="left arrow icon"></i>
@@ -35,81 +36,21 @@
     </div>
 
     <div class="ui bottom attached active tab segment" data-tab="user-info">
-        <div class="ui image">
-            {{ if .User.UserImage}}
-                <img src="/uploads/images/{{.User.UserImage}}" alt="User Image" class="ui small rounded image">
-            {{ else }}
-                <img src="/images/user-blank.jpg" alt="Default User Image" class="ui small rounded image">
-            {{ end }}
-        </div>
-        <div class="ui clearing divider"></div>
-        <p><strong>ID:</strong> {{.User.UserId}}</p>
-        <p><strong>User Name:</strong> {{.User.UserName}}</p>
-        <p><strong>Email:</strong> {{.User.Email}}</p>
-        <p><strong>Active Status:</strong>
-            <span class="{{ if eq .User.IsActive "Yes" }}ui green label{{ else }}ui red label{{ end }}">
-                {{ if eq .User.IsActive "Yes" }}Active{{ else }}Inactive{{ end }}
-            </span>
-        </p>
-        <p><strong>Creation Date:</strong> {{.User.CreatedAt}}</p>
-        <p><strong>Last Update:</strong> {{.User.UpdatedAt}}</p>
+        {{ template "authentication/user/details-user-info" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="status-activity">
-        <p><strong>Status:</strong> {{.User.Status}}</p>
-        <p><strong>Device:</strong> {{.User.Device}}</p>
-        <p><strong>Browser:</strong> {{.User.Browser}}</p>
-        <p><strong>Last Login:</strong> {{.User.LastLogin}}</p>
-        <p><strong>Last Logout:</strong> {{.User.LastLogout}}</p>
-        <p><strong>Total Login:</strong> {{.User.TotalLogin}}</p>
-        <p><strong>Total Logout:</strong> {{.User.TotalLogout}}</p>
+        {{ template "authentication/user/details-status-activity" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="api-info">
-        <p><strong>API Key:</strong> {{.UserApiKey.Key}}</p>
-        <p><strong>Expiration Date:</strong> {{.UserApiKey.ExpiresAt}}</p>
-        <p><strong>Is Active:</strong> {{.UserApiKey.IsActive}}</p>
+       {{ template "authentication/user/details-api-info" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="roles">
-        <p><strong>Assigned Roles: {{.CountRoles}}</strong></p>
-        <div class="ui right aligned container">
-            <a href="/user-management/users/{{.User.UniqueId}}/assign-role" class="ui primary button small">
-                <i class="plus icon"></i>
-                Add Role
-            </a>
-        </div>
-        {{ if .CountRoles }}
-            <table class="ui selectable small table blue">
-                <thead>
-                    <tr>
-                        <th>Role Name</th>
-                        <th>Role Code</th>
-                        <th>Assigned Date</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{ range .UserRoles }}
-                        <tr>
-                            <td>{{.RoleName}}</td>
-                            <td>{{.RoleCode}}</td>
-                            <td>{{.CreatedAt}}</td>
-                            <td>
-                                <a href="/user-management/users/{{.UserUniqueId}}/remove-role/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Role">
-                                    <i class="trash alternate red icon"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    {{ end }}
-                </tbody>
-            </table>
-        {{ else }}
-            <div class="ui warning message">
-                No roles found
-            </div>
-        {{ end }}
+       {{ template "authentication/user/details-roles" . }}
     </div>
+
 </div>
 
 {{ template "_partials/footer-back" .}}

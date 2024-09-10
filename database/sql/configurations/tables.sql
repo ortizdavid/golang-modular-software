@@ -121,7 +121,6 @@ CREATE TABLE configurations.core_entities (
     CONSTRAINT fk_module_entity FOREIGN KEY(module_id) REFERENCES configurations.modules(module_id)
 );
 -- Insert entities into core_entities with module_code.entity_code format
--- Module: Authentication
 INSERT INTO configurations.core_entities (module_id, entity_name, code, description) VALUES
 -- Module: Authentication
 (1, 'Users', 'authentication.users', 'Enabled or disabled'),
@@ -164,6 +163,7 @@ INSERT INTO configurations.core_entities (module_id, entity_name, code, descript
 -- Module: Employees
 (5, 'Employees', 'employees.employees', 'Employee records'),
 (5, 'Job Titles', 'employees.job_titles', 'Job titles within the company'),
+(5, 'Document Types', 'employees.document_types', 'Document types within the company'),
 -- Module: Reports
 (6, 'User Reports', 'reports.user_reports', 'Reports related to users'),
 (6, 'Configuration Reports', 'reports.configuration_reports', 'Reports related to system configurations'),

@@ -1,0 +1,44 @@
+<p><strong>Employee Documents: {{.CountDocuments}}</strong></p>
+<div class="ui right aligned container">
+    <a href="/employees/employee-info/{{.Employee.UniqueId}}/add-document" class="ui primary button small">
+        <i class="plus icon"></i>
+        Add Document
+    </a>
+</div>
+
+{{ if .CountDocuments }}
+    <table class="ui selectable small table blue">
+        <thead>
+            <tr>
+                <th>Doc. Name</th>
+                <th>Doc. Number</th>
+                <th>Type</th>
+                <th>Expiration</th>
+                <th>Status</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .EmployeeDocuments }}
+                <tr>
+                    <td>{{.RoleName}}</td>
+                    <td>{{.RoleCode}}</td>
+                    <td>{{.ExprirationDate}}</td>
+                    <td>{{.Status}}</td>
+                    <td>
+                        <a href="/employees/documents/{{.UniqueId}}/display" class="ui icon button" data-tooltip="Display">
+                            <i class="trash alternate red icon"></i>
+                        </a>
+                        <a href="/employees/documents/{{.UniqueId}}/display" class="ui icon button" data-tooltip="Edit Info"></a>
+                            <i class="trash alternate red icon"></i>
+                        </a>
+                    </td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+{{ else }}
+    <div class="ui warning message">
+        No documents found
+    </div>
+{{ end }}

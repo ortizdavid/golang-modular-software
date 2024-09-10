@@ -1,0 +1,37 @@
+<p><strong>Assigned Roles: {{.CountRoles}}</strong></p>
+<div class="ui right aligned container">
+    <a href="/user-management/users/{{.User.UniqueId}}/assign-role" class="ui primary button small">
+        <i class="plus icon"></i>
+        Add Role
+    </a>
+</div>
+{{ if .CountRoles }}
+    <table class="ui selectable small table blue">
+        <thead>
+            <tr>
+                <th>Role Name</th>
+                <th>Role Code</th>
+                <th>Assigned Date</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .UserRoles }}
+                <tr>
+                    <td>{{.RoleName}}</td>
+                    <td>{{.RoleCode}}</td>
+                    <td>{{.CreatedAt}}</td>
+                    <td>
+                        <a href="/user-management/users/{{.UserUniqueId}}/remove-role/{{.UniqueId}}" class="ui icon button" data-tooltip="Remove Role">
+                            <i class="trash alternate red icon"></i>
+                        </a>
+                    </td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+{{ else }}
+    <div class="ui warning message">
+        No roles found
+    </div>
+{{ end }}
