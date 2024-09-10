@@ -27,7 +27,6 @@ func NewDocumentService(db *database.Database) *DocumentService {
 	}
 }
 
-
 func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateDocumentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -46,7 +45,7 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 	//------------Upload ------------------------------------------------
 	uploadPath := config.UploadDocumentPath() + "/employees"
 	uploader := helpers.NewUploader(uploadPath, config.MaxUploadDocumentSize(), helpers.ExtDocuments)
-	info, err := uploader.UploadSingleFile(fiberCtx, "file_name")
+	info, err := uploader.UploadSingleFile(fiberCtx, "document_file")
 	if err != nil {
 		return apperrors.NewNotFoundError("error while uploading employee document: "+err.Error())
 	}
@@ -86,7 +85,7 @@ func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int, re
 	return nil
 }
 
-func (s *DocumentService) GetAllEmployeeDocumentsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.Document], error) {
+func (s *DocumentService) GetAllEmployeeDocumentsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.DocumentData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -105,7 +104,7 @@ func (s *DocumentService) GetAllEmployeeDocumentsPaginated(ctx context.Context, 
 	return pagination, nil
 }
 
-func (s *DocumentService) GetAllEmployeeDocuments(ctx context.Context, employeeId int64) ([]entities.Document, error) {
+func (s *DocumentService) GetAllEmployeeDocuments(ctx context.Context, employeeId int64) ([]entities.DocumentData, error) {
 	_, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No documents found")

@@ -32,14 +32,14 @@ func (repo *DocumentRepository) Delete(ctx context.Context, document entities.Do
 	return result.Error
 }
 
-func (repo *DocumentRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.Document, error) {
-	var documents []entities.Document
+func (repo *DocumentRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.DocumentData, error) {
+	var documents []entities.DocumentData
 	result := repo.db.WithContext(ctx).Table("employees.documents").Limit(limit).Offset(offset).Find(&documents)
 	return documents, result.Error
 }
 
-func (repo *DocumentRepository) FindAllByEmployeeIdLimit(ctx context.Context, limit int, offset int, employeeId int64) ([]entities.Document, error) {
-	var documents []entities.Document
+func (repo *DocumentRepository) FindAllByEmployeeIdLimit(ctx context.Context, limit int, offset int, employeeId int64) ([]entities.DocumentData, error) {
+	var documents []entities.DocumentData
 	result := repo.db.WithContext(ctx).Table("employees.view_document_data").
 		Where("employee_id=?", employeeId).
 		Limit(limit).Offset(offset).
@@ -47,8 +47,8 @@ func (repo *DocumentRepository) FindAllByEmployeeIdLimit(ctx context.Context, li
 	return documents, result.Error
 }
 
-func (repo *DocumentRepository) FindAllByEmployeeId(ctx context.Context, employeeId int64) ([]entities.Document, error) {
-	var documents []entities.Document
+func (repo *DocumentRepository) FindAllByEmployeeId(ctx context.Context, employeeId int64) ([]entities.DocumentData, error) {
+	var documents []entities.DocumentData
 	result := repo.db.WithContext(ctx).Table("employees.view_document_data").Where("employee_id=?", employeeId).Find(&documents)
 	return documents, result.Error
 }
@@ -105,6 +105,6 @@ func (repo *DocumentRepository) CountByParam(ctx context.Context, param string) 
 
 func (repo *DocumentRepository) ExistsByName(ctx context.Context, documentName string, employeeId int64) (bool, error) {
 	var document entities.Document
-	result := repo.db.WithContext(ctx).Where("document_name=? AND employe_id=?", documentName, employeeId).Find(&document)
+	result := repo.db.WithContext(ctx).Where("document_name=? AND employee_id=?", documentName, employeeId).Find(&document)
 	return document.DocumentId != 0, result.Error
 }

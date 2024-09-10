@@ -21,16 +21,14 @@
         <tbody>
             {{ range .EmployeeDocuments }}
                 <tr>
-                    <td>{{.RoleName}}</td>
-                    <td>{{.RoleCode}}</td>
-                    <td>{{.ExprirationDate}}</td>
+                    <td>{{.DocumentName}}</td>
+                    <td>{{.DocumentNumber}}</td>
+                    <td>{{.DocumentTypeName}}</td>
+                    <td>{{.ExpirationDate}}</td>
                     <td>{{.Status}}</td>
                     <td>
                         <a href="/employees/documents/{{.UniqueId}}/display" class="ui icon button" data-tooltip="Display">
-                            <i class="trash alternate red icon"></i>
-                        </a>
-                        <a href="/employees/documents/{{.UniqueId}}/display" class="ui icon button" data-tooltip="Edit Info"></a>
-                            <i class="trash alternate red icon"></i>
+                            <i class="trash pdf file red blue icon"></i>
                         </a>
                     </td>
                 </tr>

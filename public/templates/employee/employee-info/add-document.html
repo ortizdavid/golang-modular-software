@@ -1,0 +1,62 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/add-document" method="POST" enctype="multipart/form-data">
+        <div class="field">
+            <label for="employee_id"><strong>Employee:</strong></label>
+            <select class="ui dropdown" name="employee_id" id="employee_id" readolny>
+                <option value="{{.Employee.EmployeeId}}">{{.Employee.FirstName}} {{.Employee.LastName}}</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="document_type_id"><strong>Document Type:</strong></label>
+            <select class="ui dropdown" name="document_type_id" id="document_type_id" autofocus required>
+                <option value="">Select Document Type</option>
+                {{ range .DocumentTypes }}
+                    <option value="{{ .TypeId }}">{{ .TypeName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="document_name"><strong>Document Name:</strong></label>
+            <input class="ui input" type="text" name="document_name" id="document_name" placeholder="Enter Document Name" required>
+        </div>
+        <div class="field">
+            <label for="document_number"><strong>Document Number:</strong></label>
+            <input class="ui input" type="text" name="document_number" id="document_number" placeholder="Enter Document Number" required>
+        </div>
+        <div class="field">
+            <label for="expiration_date"><strong>Expiration Date:</strong></label>
+            <input class="ui input" type="date" name="expiration_date" id="expiration_date">
+        </div>
+        <div class="field">
+            <label for="status"><strong>Status:</strong></label>
+            <select class="ui dropdown" name="status" id="status">
+                <option value="Active">Active</option>
+                <!--<option value="Expired">Expired</option>-->
+            </select>
+        </div>
+        <div class="field">
+            <label for="document_file"><strong>Upload Document:</strong></label>
+            <input class="ui input" type="file" name="document_file" id="document_file" accept=".pdf,.doc,.docx" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/employees/employee-documents" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

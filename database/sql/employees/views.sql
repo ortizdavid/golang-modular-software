@@ -33,7 +33,8 @@ ORDER BY emp.created_at;
 CREATE OR REPLACE VIEW employees.view_document_data AS
 SELECT doc.document_id, doc.unique_id,
     doc.document_name, doc.document_number,
-    doc.expiration_date, doc.file_name,
+    TO_CHAR(doc.expiration_date, 'YYYY-MM-DD') AS expiration_date,
+    doc.file_name,
     doc.status,
     TO_CHAR(doc.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(doc.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
