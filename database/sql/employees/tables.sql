@@ -96,7 +96,7 @@ CREATE TABLE employees.documents(
     document_name VARCHAR(200),
     document_number VARCHAR(40),
     expiration_date DATE,
-    file_path VARCHAR(150),
+    file_name VARCHAR(150),
     status TYPE_DOCUMENT_STATUS DEFAULT 'Active',
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
