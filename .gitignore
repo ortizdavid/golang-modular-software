@@ -9,3 +9,10 @@
 
 # Uploaded files
 public/uploads/
+
+# IDE/Editor-specific files
+.vscode/
+
+# Compiled output (Golang, etc.)
+*.out
+*.exe
