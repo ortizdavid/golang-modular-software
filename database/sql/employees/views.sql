@@ -58,7 +58,7 @@ SELECT em.email_id, em.unique_id,
     emp.employee_id, 
     emp.unique_id AS employee_unique_id,
     emp.first_name, emp.last_name,
-    ct.type_id AS document_type_id,
+    ct.type_id AS contact_type_id,
     ct.type_name AS contact_type_name
 FROM employees.employee_emails em 
 LEFT JOIN employees.employees emp ON(emp.employee_id = em.employee_id)
@@ -75,7 +75,7 @@ SELECT ph.phone_id, ph.unique_id,
     emp.employee_id, 
     emp.unique_id AS employee_unique_id,
     emp.first_name, emp.last_name,
-    ct.type_id AS document_type_id,
+    ct.type_id AS contact_type_id,
     ct.type_name AS contact_type_name
 FROM employees.employee_phones ph 
 LEFT JOIN employees.employees emp ON(emp.employee_id = ph.employee_id)

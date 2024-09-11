@@ -68,16 +68,22 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 	group.Get("/search-results", ctrl.search)
 	group.Get("/:id/delete", ctrl.removeForm)
 	group.Post("/:id/delete", ctrl.remove)
+	
 	group.Get("/:id/add-phone", ctrl.addPhoneForm)
 	group.Post("/:id/add-phone", ctrl.addPhone)
+	group.Get("/:empId/edit-phone/:contId", ctrl.editPhoneForm)
+	group.Post("/:empId/edit-phone/:contId", ctrl.editPhone)
+	
 	group.Get("/:id/add-email", ctrl.addEmailForm)
 	group.Post("/:id/add-email", ctrl.addEmail)
+	group.Get("/:empId/edit-email/:contId", ctrl.editEmailForm)
+	group.Post("/:empId/edit-email/:contId", ctrl.editEmail)
+
 	group.Get("/:id/add-document", ctrl.addDocumentForm)
 	group.Post("/:id/add-document", ctrl.addDocument)
 	group.Get("/:empId/edit-document/:docId", ctrl.editDocumentForm)
 	group.Post("/:empId/edit-document/:docId", ctrl.editDocument)
 	group.Get("/display-document/:id", ctrl.displayDocument)
-
 }
 
 func (ctrl *EmployeeController) index(c *fiber.Ctx) error {
@@ -368,6 +374,59 @@ func (ctrl *EmployeeController) addPhone(c *fiber.Ctx) error {
 	return c.Redirect("/employees/employee-info/"+id+"/details")
 }
 
+func (ctrl *EmployeeController) editPhoneForm(c *fiber.Ctx) error {
+	empId := c.Params("empId")
+	contId := c.Params("contId")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	employeePhone, err := ctrl.phoneService.GetEmployeePhoneByUniqueId(c.Context(), contId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	contactTypes, err := ctrl.contactTypeService.GetAllContactTypes(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("employee/employee-info/edit-phone", fiber.Map{
+		"Title":            "Edit Employee Phone",
+		"Employee":      employee,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"ContactTypes": contactTypes,
+		"EmployeePhone": employeePhone,
+	})
+}
+
+func (ctrl *EmployeeController) editPhone(c *fiber.Ctx) error {
+	empId := c.Params("empId")
+	contId := c.Params("contId")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	employeePhone, err := ctrl.phoneService.GetEmployeePhoneByUniqueId(c.Context(), contId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	var request entities.UpdateEmployeePhoneRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.phoneService.UpdateEmployeePhone(c.Context(), employeePhone.PhoneId, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' edit phone for employee '%s'", loggedUser.UserName, employee.FirstName))
+	return c.Redirect("/employees/employee-info/"+empId+"/details")
+}
+
 func (ctrl *EmployeeController) addEmailForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
@@ -408,6 +467,59 @@ func (ctrl *EmployeeController) addEmail(c *fiber.Ctx) error {
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' added email for employee '%s'", loggedUser.UserName, employee.FirstName))
 	return c.Redirect("/employees/employee-info/"+id+"/details")
+}
+
+func (ctrl *EmployeeController) editEmailForm(c *fiber.Ctx) error {
+	empId := c.Params("empId")
+	contId := c.Params("contId")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	employeeEmail, err := ctrl.emailService.GetEmployeeEmailByUniqueId(c.Context(), contId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	contactTypes, err := ctrl.contactTypeService.GetAllContactTypes(c.Context())
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	return c.Render("employee/employee-info/edit-email", fiber.Map{
+		"Title":            "Edit Employee Email",
+		"Employee":      employee,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"ContactTypes": contactTypes,
+		"EmployeeEmail": employeeEmail,
+	})
+}
+
+func (ctrl *EmployeeController) editEmail(c *fiber.Ctx) error {
+	empId := c.Params("empId")
+	contId := c.Params("contId")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	employeeEmail, err := ctrl.emailService.GetEmployeeEmailByUniqueId(c.Context(), contId)
+	if err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	var request entities.UpdateEmployeeEmailRequest
+	if err := c.BodyParser(&request); err != nil {
+		return helpers.HandleHttpErrors(c, err)
+	}
+	err = ctrl.emailService.UpdateEmployeeEmail(c.Context(), employeeEmail.EmailId, request)
+	if err != nil {
+		ctrl.errorLogger.Error(c, err.Error())
+		return helpers.HandleHttpErrors(c, err)
+	}
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' edit email for employee '%s'", loggedUser.UserName, employee.FirstName))
+	return c.Redirect("/employees/employee-info/"+empId+"/details")
 }
 
 func (ctrl *EmployeeController) addDocumentForm(c *fiber.Ctx) error {

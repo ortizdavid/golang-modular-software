@@ -18,7 +18,6 @@ func (EmployeeEmail) TableName() string {
 
 type EmployeeEmailData struct {
 	EmailId				int64 `json:"email_id"`
-	EmailName   		string `json:"email_name"`
 	EmailAddress 		string `json:"email_address"`
 	UniqueId    		string `json:"unique_id"`
 	CreatedAt   		string `json:"created_at"`
@@ -30,3 +29,4 @@ type EmployeeEmailData struct {
 	ContactTypeId		int	`json:"contact_type_id"`
 	ContactTypeName		string `json:"contact_type_name"`
 }
+

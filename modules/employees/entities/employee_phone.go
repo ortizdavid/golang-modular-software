@@ -18,7 +18,6 @@ func (EmployeePhone) TableName() string {
 
 type EmployeePhoneData struct {
 	PhoneId				int64 `json:"phone_id"`
-	PhoneName   		string `json:"phone_name"`
 	PhoneNumber 		string `json:"phone_number"`
 	UniqueId    		string `json:"unique_id"`
 	CreatedAt   		string `json:"created_at"`
