@@ -1,6 +1,11 @@
+# Log files
 *.log
-*.json
+
+# Environment variables
 .env
 
-# uploads
+# JSON files
+*.json
+
+# Uploaded files
 public/uploads/
