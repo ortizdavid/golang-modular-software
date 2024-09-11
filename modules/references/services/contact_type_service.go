@@ -66,7 +66,7 @@ func (s *ContactTypeService) UpdateContactType(ctx context.Context, contactTypeI
 	return nil
 }
 
-func (s *ContactTypeService) GetAllTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ContactType], error) {
+func (s *ContactTypeService) GetAllContactTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ContactType], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -85,7 +85,7 @@ func (s *ContactTypeService) GetAllTypesPaginated(ctx context.Context, fiberCtx 
 	return pagination, nil
 }
 
-func (s *ContactTypeService) GetAllTypes(ctx context.Context) ([]entities.ContactType, error) {
+func (s *ContactTypeService) GetAllContactTypes(ctx context.Context) ([]entities.ContactType, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No types found")

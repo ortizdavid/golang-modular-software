@@ -1,0 +1,40 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/add-email" method="POST" enctype="multipart/form-data">
+        <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
+        <div class="ui divider"></div>
+        <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
+        <div class="field">
+            <label for="contact_type_id"><strong>Contact Type:</strong></label>
+            <select class="ui dropdown" name="contact_type_id" id="contact_type_id" autofocus required>
+                <option value="">Select Contact Type</option>
+                {{ range .ContactTypes }}
+                    <option value="{{ .TypeId }}">{{ .TypeName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="email_address"><strong>Email Address:</strong></label>
+            <input class="ui input" type="text" name="email_address" id="email_address" placeholder="Enter Email Address" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/employees/employee-info/{{.Employee.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

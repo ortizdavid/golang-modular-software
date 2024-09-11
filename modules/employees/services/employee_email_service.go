@@ -74,7 +74,7 @@ func (s *EmployeeEmailService) UpdateEmployeeEmail(ctx context.Context, employee
 	return nil
 }
 
-func (s *EmployeeEmailService) GetAllEmployeeEmployeeEmailsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.EmployeeEmailData], error) {
+func (s *EmployeeEmailService) GetAllEmployeeEmailsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.EmployeeEmailData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -93,7 +93,7 @@ func (s *EmployeeEmailService) GetAllEmployeeEmployeeEmailsPaginated(ctx context
 	return pagination, nil
 }
 
-func (s *EmployeeEmailService) GetAllEmployeeEmployeeEmails(ctx context.Context, employeeId int64) ([]entities.EmployeeEmailData, error) {
+func (s *EmployeeEmailService) GetAllEmployeeEmails(ctx context.Context, employeeId int64) ([]entities.EmployeeEmailData, error) {
 	_, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No employee emails found")

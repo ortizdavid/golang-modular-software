@@ -1,0 +1,91 @@
+<!-- Employee Phones Section -->
+<div class="ui segment">
+    <div class="ui grid">
+        <div class="eight wide column">
+            <h4 class="ui header">Phones: {{.CountPhones}}</h4>
+        </div>
+        <div class="eight wide column right aligned">
+            <a href="/employees/employee-info/{{.Employee.UniqueId}}/add-phone" class="ui primary button small">
+                <i class="plus icon"></i>
+                Add Phone
+            </a>
+        </div>
+    </div>
+
+    {{ if .CountPhones }}
+        <table class="ui selectable small table blue">
+            <thead>
+                <tr>
+                    <th>Phone Number</th>
+                    <th>Contact Type</th>
+                    <th>Creation Date</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .EmployeePhones }}
+                    <tr>
+                        <td>{{.PhoneNumber}}</td>
+                        <td>{{.ContactTypeName}}</td>
+                        <td>{{.CreatedAt}}</td>
+                        <td>
+                            <a href="/employees/employee-info/{{.EmployeeUniqueId}}/edit-phone/{{.UniqueId}}" class="ui icon button" data-tooltip="Edit Phone">
+                                <i class="pencil blue icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <div class="ui warning message">
+            No phones found.
+        </div>
+    {{ end }}
+</div>
+
+<!-- Employee Emails Section -->
+<div class="ui segment">
+    <div class="ui grid">
+        <div class="eight wide column">
+            <h4 class="ui header">Emails: {{.CountEmails}}</h4>
+        </div>
+        <div class="eight wide column right aligned">
+            <a href="/employees/employee-info/{{.Employee.UniqueId}}/add-email" class="ui primary button small">
+                <i class="plus icon"></i>
+                Add Email
+            </a>
+        </div>
+    </div>
+
+    {{ if .CountEmails }}
+        <table class="ui selectable small table blue">
+            <thead>
+                <tr>
+                    <th>Email Address</th>
+                    <th>Contact Type</th>
+                    <th>Creation Date</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .EmployeeEmails }}
+                    <tr>
+                        <td>{{.EmailAddress}}</td>
+                        <td>{{.ContactTypeName}}</td>
+                        <td>{{.CreatedAt}}</td>
+                        <td>
+                            <a href="/employees/employee-info/{{.EmployeeUniqueId}}/edit-email/{{.UniqueId}}" class="ui icon button" data-tooltip="Edit Email">
+                                <i class="pencil blue icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <div class="ui warning message">
+            No emails found.
+        </div>
+    {{ end }}
+</div>
