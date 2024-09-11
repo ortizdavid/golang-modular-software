@@ -18,6 +18,7 @@
         <a class="item" data-tab="contacts">Contacts</a>
         <a class="item" data-tab="documents">Documents</a>
         <a class="item" data-tab="professional">Professional</a>
+        <a class="item" data-tab="health">Health</a>
         <a class="item" data-tab="account">Account</a>
     </div>
 
@@ -35,6 +36,9 @@
 
     <div class="ui bottom attached tab segment" data-tab="professional">
         {{ template "employee/employee-info/details-professional" . }}
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="health">
+        {{ template "employee/employee-info/details-health" . }}
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="account">

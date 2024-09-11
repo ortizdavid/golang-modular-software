@@ -29,7 +29,7 @@ ORDER BY emp.created_at;
 
 
 
--- view: view_employee_data
+-- view: view_document_data
 CREATE OR REPLACE VIEW employees.view_document_data AS
 SELECT doc.document_id, doc.unique_id,
     doc.document_name, doc.document_number,
@@ -45,7 +45,41 @@ SELECT doc.document_id, doc.unique_id,
     dt.type_name AS document_type_name
 FROM employees.documents doc 
 LEFT JOIN employees.employees emp ON(emp.employee_id = doc.employee_id)
-LEFT JOIN employees.document_types dt ON (dt.type_id = doc.document_type_id);
+LEFT JOIN employees.document_types dt ON (dt.type_id = doc.document_type_id)
+ORDER BY type_id;
+
+
+-- view: view_employee_email_data
+CREATE OR REPLACE VIEW employees.view_employee_email_data AS
+SELECT em.email_id, em.unique_id,
+    em.email_address,
+    TO_CHAR(em.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(em.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    emp.employee_id, 
+    emp.unique_id AS employee_unique_id,
+    emp.first_name, emp.last_name,
+    ct.type_id AS document_type_id,
+    ct.type_name AS document_type_name
+FROM employees.employee_emails em 
+LEFT JOIN employees.employees emp ON(emp.employee_id = em.employee_id)
+LEFT JOIN reference.contact_types ct ON (ct.type_id = em.contact_type_id);
+
+
+
+-- view: view_employee_phone_data
+CREATE OR REPLACE VIEW employees.view_employee_phone_data AS
+SELECT ph.phone_id, ph.unique_id,
+    ph.phone_number,
+    TO_CHAR(ph.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(ph.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    emp.employee_id, 
+    emp.unique_id AS employee_unique_id,
+    emp.first_name, emp.last_name,
+    ct.type_id AS document_type_id,
+    ct.type_name AS document_type_name
+FROM employees.employee_phones ph 
+LEFT JOIN employees.employees emp ON(emp.employee_id = ph.employee_id)
+LEFT JOIN reference.contact_types ct ON (ct.type_id = ph.contact_type_id);
 
 
 

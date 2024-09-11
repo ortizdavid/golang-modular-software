@@ -98,7 +98,7 @@ CREATE TABLE employees.documents(
     expiration_date DATE,
     file_name VARCHAR(150),
     status TYPE_DOCUMENT_STATUS DEFAULT 'Active',
-    unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
+    unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_document_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id),
@@ -109,7 +109,33 @@ DROP INDEX IF EXISTS idx_employee_id;
 CREATE INDEX idx_employee_id ON employees.documents(employee_id);
 DROP INDEX IF EXISTS idx_document_type_id;
 CREATE INDEX idx_document_type_id ON employees.documents(document_type_id);
-DROP INDEX IF EXISTS idx_status;
-CREATE INDEX idx_status ON employees.documents(status);
 
+
+-- Table: employee_phones
+DROP TABLE IF EXISTS employees.employee_phones;
+CREATE TABLE employees.employee_phones(
+    phone_id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    contact_type_id INT NOT NULL,
+    phone_number VARCHAR(30) UNIQUE NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_contact_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id),
+    CONSTRAINT fk_contact_type FOREIGN KEY (contact_type_id) REFERENCES reference.contact_types(type_id)
+);
+
+-- Table: employee_emails
+DROP TABLE IF EXISTS employees.employee_emails;
+CREATE TABLE employees.employee_emails(
+    email_id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    contact_type_id INT NOT NULL,
+    email_address VARCHAR(150) UNIQUE NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_contact_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id),
+    CONSTRAINT fk_contact_type FOREIGN KEY (contact_type_id) REFERENCES reference.contact_types(type_id)
+);
 
