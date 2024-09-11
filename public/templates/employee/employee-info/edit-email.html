@@ -1,7 +1,7 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/employees/employee-info/{{.EmployeeUniqueId}}/edit-email/{{.UniqueId}}" method="POST" enctype="multipart/form-data">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/edit-email/{{.EmployeeEmail.UniqueId}}" method="POST" enctype="multipart/form-data">
         <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
         <div class="ui divider"></div>
         <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
