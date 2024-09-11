@@ -27,8 +27,11 @@
                     <td>{{.ExpirationDate}}</td>
                     <td>{{.Status}}</td>
                     <td>
-                        <a href="/employees/documents/{{.UniqueId}}/display" class="ui icon button" data-tooltip="Display">
-                            <i class="trash pdf file red blue icon"></i>
+                        <a target="_blank" href="/employees/employee-info/display-document/{{.UniqueId}}" class="ui icon button" data-tooltip="Display">
+                            <i class="pdf file red blue icon"></i>
+                        </a>
+                        <a href="/employees/employee-info/{{.EmployeeUniqueId}}/edit-document/{{.UniqueId}}" class="ui icon button" data-tooltip="Edit Info">
+                            <i class="pencil blue icon"></i>
                         </a>
                     </td>
                 </tr>

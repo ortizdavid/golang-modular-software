@@ -27,8 +27,8 @@ func NewDocumentTypeController(db *database.Database) *DocumentTypeController {
 		authService:             authentication.NewAuthService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		configService:           configurations.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("employee-info.log"),
-		errorLogger:             helpers.NewErrorLogger("employee-error.log"),
+		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
+		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
 	}
 }
 

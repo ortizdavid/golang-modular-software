@@ -38,8 +38,9 @@ SELECT doc.document_id, doc.unique_id,
     doc.status,
     TO_CHAR(doc.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(doc.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-    emp.employee_id, emp.first_name, 
-    emp.last_name,
+    emp.employee_id, 
+    emp.unique_id AS employee_unique_id,
+    emp.first_name, emp.last_name,
     dt.type_id AS document_type_id,
     dt.type_name AS document_type_name
 FROM employees.documents doc 

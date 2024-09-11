@@ -69,7 +69,7 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 	return nil
 }
 
-func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int, request entities.UpdateDocumentRequest) error {
+func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int64, request entities.UpdateDocumentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -77,6 +77,10 @@ func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int, re
 	if err != nil {
 		return apperrors.NewNotFoundError("document not found")
 	}
+	document.DocumentTypeId = request.DocumentTypeId
+	document.DocumentName = request.DocumentName
+	document.DocumentNumber = request.DocumentNumber
+	document.ExpirationDate = datetime.StringToDate(request.ExpirationDate)
 	document.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, document)
 	if err != nil {
@@ -135,10 +139,10 @@ func (s *DocumentService) SearchDocuments(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *DocumentService) GetDocumentByUniqueId(ctx context.Context, uniqueId string) (entities.Document, error) {
+func (s *DocumentService) GetDocumentByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentData, error) {
 	document, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.Document{}, apperrors.NewNotFoundError("document not found")
+		return entities.DocumentData{}, apperrors.NewNotFoundError("document not found")
 	}
 	return document, nil
 }

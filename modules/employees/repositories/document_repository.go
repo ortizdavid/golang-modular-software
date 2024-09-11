@@ -53,15 +53,15 @@ func (repo *DocumentRepository) FindAllByEmployeeId(ctx context.Context, employe
 	return documents, result.Error
 }
 
-func (repo *DocumentRepository) FindById(ctx context.Context, id int) (entities.Document, error) {
+func (repo *DocumentRepository) FindById(ctx context.Context, id int64) (entities.Document, error) {
 	var document entities.Document
 	result := repo.db.WithContext(ctx).First(&document, id)
 	return document, result.Error
 }
 
-func (repo *DocumentRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.Document, error) {
-	var document entities.Document
-	result := repo.db.WithContext(ctx).Table("employees.documents").Where("unique_id=?", uniqueId).First(&document)
+func (repo *DocumentRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentData, error) {
+	var document entities.DocumentData
+	result := repo.db.WithContext(ctx).Table("employees.view_document_data").Where("unique_id=?", uniqueId).First(&document)
 	return document, result.Error
 }
 
