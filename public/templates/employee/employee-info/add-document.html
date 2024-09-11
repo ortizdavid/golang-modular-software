@@ -2,12 +2,9 @@
 
 <div class="ui segment">
     <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/add-document" method="POST" enctype="multipart/form-data">
-        <div class="field">
-            <label for="employee_id"><strong>Employee:</strong></label>
-            <select class="ui dropdown" name="employee_id" id="employee_id" readolny>
-                <option value="{{.Employee.EmployeeId}}">{{.Employee.FirstName}} {{.Employee.LastName}}</option>
-            </select>
-        </div>
+        <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
+        <div class="ui divider"></div>
+        <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
         <div class="field">
             <label for="document_type_id"><strong>Document Type:</strong></label>
             <select class="ui dropdown" name="document_type_id" id="document_type_id" autofocus required>

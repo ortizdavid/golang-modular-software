@@ -1,4 +1,6 @@
 *.log
 *.json
-*.pdf
 .env
+
+# uploads
+public/uploads/

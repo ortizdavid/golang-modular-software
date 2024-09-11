@@ -2,15 +2,13 @@
 
 <div class="ui segment">
     <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/edit-document/{{.Document.UniqueId}}" method="POST" enctype="multipart/form-data">
-        <h3>Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
+        <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
         <div class="ui divider"></div>
-        <div class="field">
-            <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
-        </div>
+        <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
         <div class="field">
             <label for="document_type_id"><strong>Document Type:</strong></label>
             <select class="ui dropdown" name="document_type_id" id="document_type_id" autofocus required>
-                <option value="{{.Document.DocumentTypeId}}">{{.Document.DocumentTypeName}}</option>
+                <option value="{{.Document.DocumentTypeId}}" selected>{{.Document.DocumentTypeName}}</option>
                 {{ range .DocumentTypes }}
                     <option value="{{ .TypeId }}">{{ .TypeName }}</option>
                 {{ end }}
