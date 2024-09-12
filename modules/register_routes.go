@@ -42,7 +42,6 @@ type routeGroup struct {
 func createRouteGroups(db *database.Database) []routeGroup {
 	// Initialize the middlewares
 	flagMiddleware := middlewares.NewModuleFlagMiddleware(db)
-	//authorization := middlewares.NewAuthorizationMiddleware(db)
 	sessionMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	apiKeyMiddleware := middlewares.NewApiKeyMiddleware(db)
 	//jwtMiddleware := middlewares.NewJwtMiddleware(db)
@@ -167,7 +166,6 @@ func createRouteGroups(db *database.Database) []routeGroup {
 func registerRouteGroups(router *fiber.App, routeGroups []routeGroup) {
 	for _, group := range routeGroups {
 		router.Group(group.prefix, group.middlewares...)
-		// Optionally register API version routes
 		router.Group("/api"+group.prefix, group.middlewares...)
 	}
 }

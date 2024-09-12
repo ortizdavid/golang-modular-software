@@ -61,8 +61,7 @@ func (repo *ModuleFlagRepository) FindAllFlagsMap(ctx context.Context) (map[stri
 	if err != nil {
 		return nil, err
 	}
-	// Create a map to store the flags
-	// Map the results by code
+	// Create a map to store the flags | Map the results by code
 	flagMap := make(map[string]string)
 	for _, flag := range moduleFlags {
 		flagMap[flag.Code] = flag.Status

@@ -61,8 +61,7 @@ func (repo *CoreEntityFlagRepository) FindAllFlagsMap(ctx context.Context) (map[
 	if err != nil {
 		return nil, err
 	}
-	// Create a map to store the flags
-	// Map the results by code
+	// Create a map to store the flags | Map the results by code
 	flagMap := make(map[string]string)
 	for _, flag := range coreEntityFlags {
 		flagMap[flag.Code] = flag.Status
