@@ -1,14 +1,14 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type PermissionRole struct {
     PermissionRoleId 	int64 `gorm:"primaryKey;autoIncrement"`
     PermissionId     	int64 `gorm:"column:permission_id"`
     RoleId     			int `gorm:"column:role_id"`
-    UniqueId   			string `gorm:"column:unique_id"`
-    CreatedAt  			time.Time `gorm:"column:created_at"`
-    UpdatedAt  			time.Time `gorm:"column:updated_at"`
+    shared.BaseEntity
 }
 
 func (PermissionRole) TableName() string {

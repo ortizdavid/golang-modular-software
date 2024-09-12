@@ -1,6 +1,10 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type UserApiKey struct {
 	ApiKeyId  int64 `gorm:"autoIncrement;primaryKey"`
@@ -9,9 +13,7 @@ type UserApiKey struct {
 	IsActive  bool  `gorm:"column:is_active"`
 	CreatedBy int64 `gorm:"column:created_by"`
 	ExpiresAt time.Time `gorm:"column:expires_at"`
-	UniqueId	string `gorm:"column:unique_id"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (UserApiKey) TableName() string {

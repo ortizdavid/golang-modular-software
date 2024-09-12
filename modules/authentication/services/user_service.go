@@ -13,6 +13,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type UserService struct {
@@ -63,9 +64,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		IsActive:  true,
 		UserImage:     "",
 		Token:     encryption.GenerateRandomToken(),
-		UniqueId:  encryption.GenerateUUID(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
 	}
 	err = s.repository.Create(ctx, user)
 	if err != nil {
@@ -81,9 +84,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	userRole := entities.UserRole{
 		UserId:     userId,
 		RoleId:     request.RoleId,
-		UniqueId:  encryption.GenerateUUID(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
 	}
 	err = s.userRoleRepository.Create(ctx, userRole)
 	if err != nil {
@@ -94,9 +99,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	loginAct := entities.LoginActivity{
 		UserId:   userId,
 		Status: entities.ActivityStatusOffline,
-		UniqueId:  encryption.GenerateUUID(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
+		},
 	}
 	err = s.loginActRepository.Create(ctx, loginAct)
 	if err != nil {
@@ -109,9 +116,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		Key:       encryption.GenerateRandomToken(),
 		IsActive:  true,
 		ExpiresAt: time.Now().AddDate(0, 1, 0),  // Add 1 month to the current time
-		UniqueId:  encryption.GenerateUUID(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
 	}
 	err = s.userApiKeyRepository.Create(ctx, userApiKey)
 	if err != nil {
@@ -162,9 +171,11 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	userRole := entities.UserRole{
 		UserId:     userId,
 		RoleId:     request.RoleId,
-		UniqueId:  encryption.GenerateUUID(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
 	}
 	err = s.userRoleRepository.Create(ctx, userRole)
 	if err != nil {

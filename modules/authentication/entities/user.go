@@ -1,6 +1,8 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type User struct {
 	UserId    	int64 `gorm:"autoIncrement;primarykey"`
@@ -8,11 +10,9 @@ type User struct {
 	Email  		string `gorm:"column:email"`
 	Password  	string `gorm:"column:password"`
 	IsActive  	bool `gorm:"column:is_active"`
-	UserImage  		string `gorm:"column:user_image"`
+	UserImage  	string `gorm:"column:user_image"`
 	Token  		string `gorm:"column:token;"`
-	UniqueId  	string `gorm:"column:unique_id"`
-	CreatedAt 	time.Time `gorm:"column:created_at"`
-	UpdatedAt  	time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (User) TableName() string {

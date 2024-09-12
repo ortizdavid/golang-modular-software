@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
+	shared	"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type PermissionService struct {
@@ -33,9 +34,11 @@ func (s *PermissionService) CreatePermission(ctx context.Context, request entiti
 		PermissionName:    request.PermissionName,
 		Code:        request.Code,
 		Description: request.Description,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:    encryption.GenerateUUID(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		},
 	}
 	err := s.repository.Create(ctx, permission)
 	if err != nil {

@@ -1,6 +1,10 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type LoginActivity struct {
 	LoginId     int64 `gorm:"primaryKey;autoIncrement"`
@@ -15,9 +19,7 @@ type LoginActivity struct {
     LastLogout  time.Time `gorm:"column:last_logout"`
     TotalLogin  int64 `gorm:"column:total_login"`
     TotalLogout int64 `gorm:"column:total_logout"`
-    UniqueId    string `gorm:"column:unique_id"`
-    CreatedAt   time.Time `gorm:"column:created_at"`
-    UpdatedAt   time.Time `gorm:"column:updated_at"`
+    shared.BaseEntity
 }
 
 func (LoginActivity) TableName() string {

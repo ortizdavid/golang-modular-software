@@ -12,6 +12,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type RoleService struct {
@@ -54,9 +55,11 @@ func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRol
 		Code:        request.Code,
 		Description: request.Description,
 		Status:      request.Status,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:    encryption.GenerateUUID(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		},
 	}
 	// Persist the role entity
 	if err := s.repository.Create(ctx, role); err != nil {
@@ -115,9 +118,11 @@ func (s *RoleService) AssignRolePermission(ctx context.Context, roleId int, requ
 	permissionRole := entities.PermissionRole{
 		PermissionId:     int64(request.PermissionId),
 		RoleId:           roleId,
-		UniqueId:         encryption.GenerateUUID(),
-		CreatedAt:        time.Now().UTC(),
-		UpdatedAt:        time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:         encryption.GenerateUUID(),
+			CreatedAt:        time.Now().UTC(),
+			UpdatedAt:        time.Now().UTC(),
+		},
 	}
 	err = s.permissionRoleRepository.Create(ctx, permissionRole)
 	if err != nil {

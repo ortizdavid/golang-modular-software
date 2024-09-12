@@ -15,6 +15,7 @@ import (
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type AuthService struct {
@@ -85,10 +86,12 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 				IPAddress:  fiberCtx.IP(),
 				Device:     fiberCtx.Get("Device"),
 				Location:   fiberCtx.Get("Location"),
-				UniqueId:   encryption.GenerateUUID(),
 				LastLogin:  time.Now().UTC(),
-				CreatedAt:  time.Now().UTC(),
-				UpdatedAt:  time.Now().UTC(),
+				BaseEntity: shared.BaseEntity{
+					UniqueId:   encryption.GenerateUUID(),
+					CreatedAt:  time.Now().UTC(),
+					UpdatedAt:  time.Now().UTC(),
+				},
 			}
 			if err := s.loginActRepository.Create(ctx, loginAct); err != nil {
 				return apperrors.NewInternalServerError("Failed to create login activity: " + err.Error())
