@@ -12,6 +12,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type EmployeeService struct {
@@ -36,6 +37,7 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 		return apperrors.NewBadRequestError("employee already exists")
 	}
 	employee := entities.Employee{
+		EmployeeId:           0,
 		IdentificationTypeId: request.IdentificationTypeId,
 		CountryId:            request.CountryId,
 		MaritalStatusId:      request.MaritalStatusId,
@@ -47,9 +49,11 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 		IdentificationNumber: request.IdentificationNumber,
 		Gender:               request.Gender,
 		DateOfBirth:          datetime.StringToDate(request.DateOfBirth),
-		UniqueId:             encryption.GenerateUUID(),
-		CreatedAt:            time.Now().UTC(),
-		UpdatedAt:            time.Now().UTC(),
+		BaseEntity:           shared.BaseEntity{
+			UniqueId:             encryption.GenerateUUID(),
+			CreatedAt:            time.Now().UTC(),
+			UpdatedAt:            time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, employee)
 	if err != nil {

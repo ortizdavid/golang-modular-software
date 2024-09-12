@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type EmployeePhoneService struct {
@@ -43,10 +44,12 @@ func (s *EmployeePhoneService) CreateEmployeePhone(ctx context.Context, fiberCtx
 	employeePhone := entities.EmployeePhone{
 		EmployeeId:    request.EmployeeId,
 		ContactTypeId: request.ContactTypeId,
-		PhoneNumber:  request.PhoneNumber,
-		UniqueId:      encryption.GenerateUUID(),
-		CreatedAt:     time.Now().UTC(),
-		UpdatedAt:     time.Now().UTC(),
+		PhoneNumber:   request.PhoneNumber,
+		BaseEntity:    shared.BaseEntity{
+			UniqueId:      encryption.GenerateUUID(),
+			CreatedAt:     time.Now().UTC(),
+			UpdatedAt:     time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, employeePhone)
 	if err != nil {

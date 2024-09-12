@@ -1,15 +1,15 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type EmployeeEmail struct {
 	EmailId			int64 `gorm:"autoIncrement;primaryKey"`
 	EmployeeId		int64 `gorm:"column:employee_id"`
 	ContactTypeId	int	`gorm:"column:contact_type_id"`
 	EmailAddress   	string `gorm:"column:email_address"`
-	UniqueId  		string    `gorm:"column:unique_id"`
-	CreatedAt 		time.Time `gorm:"column:created_at"`
-	UpdatedAt 		time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (EmployeeEmail) TableName() string {

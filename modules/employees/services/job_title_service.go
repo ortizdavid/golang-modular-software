@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type JobTitleService struct {
@@ -36,11 +37,14 @@ func (s *JobTitleService) CreateJobTitle(ctx context.Context, request entities.C
 		return apperrors.NewBadRequestError("job title already exists")
 	}
 	jobTitle := entities.JobTitle{
+		JobTitleId:  0,
 		TitleName:   request.TitleName,
 		Description: request.Description,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity:  shared.BaseEntity{
+			UniqueId:    encryption.GenerateUUID(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, jobTitle)
 	if err != nil {

@@ -13,6 +13,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type DocumentService struct {
@@ -51,6 +52,7 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 	}
 	//----------------------------------------
 	document := entities.Document{
+		DocumentId:     0,
 		EmployeeId:     request.EmployeeId,
 		DocumentTypeId: request.DocumentTypeId,
 		DocumentName:   request.DocumentName,
@@ -58,9 +60,11 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 		ExpirationDate: datetime.StringToDate(request.ExpirationDate),
 		FileName:       info.FinalName,
 		Status:         request.Status,
-		UniqueId:       encryption.GenerateUUID(),
-		CreatedAt:      time.Now().UTC(),
-		UpdatedAt:      time.Now().UTC(),
+		BaseEntity:     shared.BaseEntity{
+			UniqueId:       encryption.GenerateUUID(),
+			CreatedAt:      time.Now().UTC(),
+			UpdatedAt:      time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, document)
 	if err != nil {

@@ -1,14 +1,14 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type DocumentType struct {
 	TypeId  int    `gorm:"autoIncrement;primaryKey"`
 	TypeName   string `gorm:"column:type_name"`
 	Description string `gorm:"column:description"`
-	UniqueId    string `gorm:"column:unique_id"`
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt	time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (DocumentType) TableName() string {

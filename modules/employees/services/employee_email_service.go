@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type EmployeeEmailService struct {
@@ -41,12 +42,15 @@ func (s *EmployeeEmailService) CreateEmployeeEmail(ctx context.Context, fiberCtx
 		return apperrors.NewBadRequestError("employee email already exists for employee: "+employee.FirstName)
 	}
 	employeeEmail := entities.EmployeeEmail{
+		EmailId:       0,
 		EmployeeId:    request.EmployeeId,
 		ContactTypeId: request.ContactTypeId,
 		EmailAddress:  request.EmailAddress,
-		UniqueId:      encryption.GenerateUUID(),
-		CreatedAt:     time.Now().UTC(),
-		UpdatedAt:     time.Now().UTC(),
+		BaseEntity:    shared.BaseEntity{
+			UniqueId:      encryption.GenerateUUID(),
+			CreatedAt:     time.Now().UTC(),
+			UpdatedAt:     time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, employeeEmail)
 	if err != nil {

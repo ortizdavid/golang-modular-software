@@ -1,15 +1,15 @@
 package entities
 
-import "time"
+import (
+	"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type EmployeePhone struct {
 	PhoneId			int64 `gorm:"autoIncrement;primaryKey"`
 	EmployeeId		int64 `gorm:"column:employee_id"`
 	ContactTypeId	int	`gorm:"column:contact_type_id"`
 	PhoneNumber   	string `gorm:"column:phone_number"`
-	UniqueId  		string    `gorm:"column:unique_id"`
-	CreatedAt 		time.Time `gorm:"column:created_at"`
-	UpdatedAt 		time.Time `gorm:"column:updated_at"`
+	entities.BaseEntity
 }
 
 func (EmployeePhone) TableName() string {

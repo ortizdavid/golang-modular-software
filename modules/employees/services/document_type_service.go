@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type DocumentTypeService struct {
@@ -36,11 +37,14 @@ func (s *DocumentTypeService) CreateDocumentType(ctx context.Context, request en
 		return apperrors.NewBadRequestError("document type already exists")
 	}
 	documentType := entities.DocumentType{
-		TypeName:       request.TypeName,
-		Description:    request.Description,
-		UniqueId:       encryption.GenerateUUID(),
-		CreatedAt:      time.Now().UTC(),
-		UpdatedAt:      time.Now().UTC(),
+		TypeId:      0,
+		TypeName:    request.TypeName,
+		Description: request.Description,
+		BaseEntity:  shared.BaseEntity{
+			UniqueId:       encryption.GenerateUUID(),
+			CreatedAt:      time.Now().UTC(),
+			UpdatedAt:      time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, documentType)
 	if err != nil {
