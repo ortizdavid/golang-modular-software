@@ -1,6 +1,8 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type CoreEntity struct {
 	EntityId    int       `gorm:"primaryKey;autoIncrement"`
@@ -8,9 +10,7 @@ type CoreEntity struct {
 	EntityName  string    `gorm:"column:entity_name"`
 	Code        string    `gorm:"column:code"`
 	Description string    `gorm:"column:description"`
-	UniqueId    string    `gorm:"column:unique_id"`
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (CoreEntity) TableName() string {

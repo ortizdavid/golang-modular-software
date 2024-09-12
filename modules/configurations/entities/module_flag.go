@@ -1,16 +1,14 @@
 package entities
 
 import (
-    "time"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type ModuleFlag struct {
     FlagId    int       `gorm:"primaryKey;autoIncrement"`
     ModuleId  int       `gorm:"column:module_id"`
     Status    string    `gorm:"column:status"` 
-    UniqueId    string `gorm:"column:unique_id"`
-    CreatedAt time.Time `gorm:"column:created_at"`
-    UpdatedAt time.Time `gorm:"column:updated_at"`
+    shared.BaseEntity
 }
 
 func (ModuleFlag) TableName() string {

@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type ModuleService struct {
@@ -36,11 +37,13 @@ func (s *ModuleService) CreateModule(ctx context.Context, request entities.Creat
 	}
 	module := entities.Module{
 		ModuleName:  request.ModuleName,
-		Code: request.Code,
+		Code:        request.Code,
 		Description: request.Description,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity:  shared.BaseEntity{
+			UniqueId:    encryption.GenerateUUID(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, module)
 	if err != nil {

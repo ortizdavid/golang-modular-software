@@ -9,6 +9,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type CompanyConfigurationService struct {
@@ -26,15 +27,18 @@ func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Con
     conf, err := s.repository.FindLast(ctx)
     if err != nil {
 		conf = entities.CompanyConfiguration{
+			ConfigurationId:  0,
 			CompanyName:      request.CompanyName,
 			CompanyAcronym:   request.CompanyAcronym,
 			CompanyMainColor: request.CompanyMainColor,
 			CompanyLogo:      "",
 			CompanyPhone:     request.CompanyPhone,
 			CompanyEmail:     request.CompanyEmail,
-			UniqueId:         encryption.GenerateUUID(),
-			CreatedAt:        time.Now().UTC(),
-			UpdatedAt:        time.Now().UTC(),
+			BaseEntity:       shared.BaseEntity{
+				UniqueId:         encryption.GenerateUUID(),
+				CreatedAt:        time.Now().UTC(),
+				UpdatedAt:        time.Now().UTC(),
+			},
 		}
 		err = s.repository.Create(ctx, conf)
 		if err != nil {

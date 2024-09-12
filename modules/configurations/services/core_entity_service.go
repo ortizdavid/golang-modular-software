@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type CoreEntityService struct {
@@ -35,13 +36,16 @@ func (s *CoreEntityService) CreateCoreEntity(ctx context.Context, request entiti
 		return apperrors.NewBadRequestError("CoreEntity already exists " + request.EntityName)
 	}
 	coreEntity := entities.CoreEntity{
+		EntityId:    0,
 		ModuleId:    request.ModuleId,
 		EntityName:  request.EntityName,
 		Code:        request.Code,
 		Description: request.Description,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity:  shared.BaseEntity{
+			UniqueId:    encryption.GenerateUUID(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, coreEntity)
 	if err != nil {

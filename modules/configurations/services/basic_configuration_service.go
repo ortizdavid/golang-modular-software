@@ -9,6 +9,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type BasicConfigurationService struct {
@@ -26,14 +27,17 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 	if err != nil {
 		// Create a new configuration if none exists
 		conf = entities.BasicConfiguration{
+			ConfigurationId:     0,
 			AppName:             request.AppName,
 			AppAcronym:          request.AppAcronym,
 			MaxRecordsPerPage:   request.MaxRecordPerPage,
 			MaxAdmninUsers:      request.MaxAdmninUsers,
 			MaxSuperAdmninUsers: request.MaxSuperAdminUsers,
-			UniqueId:            encryption.GenerateUUID(),
-			CreatedAt:           time.Now().UTC(),
-			UpdatedAt:           time.Now().UTC(),
+			BaseEntity:          shared.BaseEntity{
+				UniqueId:            encryption.GenerateUUID(),
+				CreatedAt:           time.Now().UTC(),
+				UpdatedAt:           time.Now().UTC(),
+			},
 		}
 		err = s.repository.Create(ctx, conf)
 		if err != nil {

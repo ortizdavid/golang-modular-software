@@ -1,6 +1,8 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type EmailConfiguration struct {
     ConfigurationId int `gorm:"autoIncrement;primaryKey" json:"configuration_id"`
@@ -8,9 +10,7 @@ type EmailConfiguration struct {
     SMTPPort        string `gorm:"column:smtp_port" json:"smtp_port"`
     SenderEmail     string `gorm:"column:sender_email" json:"sender_email"`
     SenderPassword  string `gorm:"column:sender_password" json:"sender_password"`
-    UniqueId        string `gorm:"column:unique_id" json:"unique_id"`
-    CreatedAt       time.Time `gorm:"column:created_at" json:"created_at"`
-    UpdatedAt       time.Time `gorm:"column:updated_at" json:"updated_at"`
+    shared.BaseEntity
 }
 
 func (EmailConfiguration) TableName() string {

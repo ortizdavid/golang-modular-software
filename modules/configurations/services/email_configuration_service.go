@@ -10,6 +10,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type EmailConfigurationService struct {
@@ -28,13 +29,16 @@ func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context
     if err != nil {
 		// Create a new configuration if none exists
 		conf = entities.EmailConfiguration{
-			SMTPServer:     request.SMTPServer,
-			SMTPPort:       request.SMTPPort,
-			SenderEmail:    request.SenderEmail,
-			SenderPassword: request.SenderPassword,
-			UniqueId:         encryption.GenerateUUID(),
-			CreatedAt:        time.Now().UTC(),
-			UpdatedAt:        time.Now().UTC(),
+			ConfigurationId: 0,
+			SMTPServer:      request.SMTPServer,
+			SMTPPort:        request.SMTPPort,
+			SenderEmail:     request.SenderEmail,
+			SenderPassword:  request.SenderPassword,
+			BaseEntity:      shared.BaseEntity{
+				UniqueId:         encryption.GenerateUUID(),
+				CreatedAt:        time.Now().UTC(),
+				UpdatedAt:        time.Now().UTC(),
+			},
 		}
 		err = s.repository.Create(ctx, conf)
 		if err != nil {
