@@ -12,6 +12,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type ProjectService struct {
@@ -49,9 +50,11 @@ func (s *ProjectService) CreateProject(ctx context.Context, request entities.Cre
 		EndDate:     datetime.StringToDate(request.EndDate),
 		Status:      request.Status,
 		CompanyId:   company.CompanyId,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:    encryption.GenerateUUID(),
+			CreatedAt:   time.Now().UTC(),
+			UpdatedAt:   time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, project)
 	if err != nil {

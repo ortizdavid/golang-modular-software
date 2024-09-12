@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
+	shared	"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type RoomService struct {
@@ -52,9 +53,11 @@ func (s *RoomService) CreateRoom(ctx context.Context, request entities.CreateRoo
 		RoomName:  request.RoomName,
 		Number:    request.Number,
 		Capacity:  request.Capacity,
-		UniqueId:  encryption.GenerateUUID(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, room)
 	if err != nil {

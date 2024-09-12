@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type OfficeService struct {
@@ -48,9 +49,11 @@ func (s *OfficeService) CreateOffice(ctx context.Context, request entities.Creat
 		Address:    request.Address,
 		Phone:      request.Phone,
 		Email:      request.Email,
-		UniqueId:   encryption.GenerateUUID(),
-		CreatedAt:  time.Now().UTC(),
-		UpdatedAt:  time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:   encryption.GenerateUUID(),
+			CreatedAt:  time.Now().UTC(),
+			UpdatedAt:  time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, office)
 	if err != nil {

@@ -1,7 +1,7 @@
 package entities
 
 import (
-    "time"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type Office struct {
@@ -12,9 +12,7 @@ type Office struct {
     Address     string `gorm:"column:address"`
     Phone       string `gorm:"column:phone"`
     Email       string `gorm:"column:email"`
-    UniqueId    string `gorm:"column:unique_id"`
-    CreatedAt   time.Time `gorm:"column:created_at"`
-    UpdatedAt   time.Time `gorm:"column:updated_at"`
+    shared.BaseEntity
 }
 
 func (Office) TableName() string {

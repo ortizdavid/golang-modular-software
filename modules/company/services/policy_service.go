@@ -12,6 +12,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type PolicyService struct {
@@ -47,9 +48,11 @@ func (s *PolicyService) CreatePolicy(ctx context.Context, request entities.Creat
 		PolicyName:    request.PolicyName,
 		Description:   request.Description,
 		EffectiveDate: datetime.StringToDate(request.EffectiveDate),
-		UniqueId:      encryption.GenerateUUID(),
-		CreatedAt:     time.Now().UTC(),
-		UpdatedAt:     time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:      encryption.GenerateUUID(),
+			CreatedAt:     time.Now().UTC(),
+			UpdatedAt:     time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, policy)
 	if err != nil {

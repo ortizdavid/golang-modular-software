@@ -1,6 +1,10 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type Policy struct {
     PolicyId        int `gorm:"primaryKey;autoIncrement"`
@@ -8,9 +12,7 @@ type Policy struct {
     PolicyName      string `gorm:"column:policy_name"`
     Description     string `gorm:"column:description"`
     EffectiveDate   time.Time `gorm:"column:effective_date"`
-    UniqueId        string `gorm:"column:unique_id"`
-    CreatedAt       time.Time `gorm:"column:created_at"`
-    UpdatedAt       time.Time `gorm:"column:updated_at"`
+    shared.BaseEntity
 }
 
 func (Policy) TableName() string {

@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type DepartmentService struct {
@@ -46,9 +47,11 @@ func (s *DepartmentService) CreateDepartment(ctx context.Context, request entiti
 		DepartmentName: request.DepartmentName,
 		Acronym:        request.Acronym,
 		Description:    request.Description,
-		UniqueId:       encryption.GenerateUUID(),
-		CreatedAt:      time.Now().UTC(),
-		UpdatedAt:      time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:       encryption.GenerateUUID(),
+			CreatedAt:      time.Now().UTC(),
+			UpdatedAt:      time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, department)
 	if err != nil {

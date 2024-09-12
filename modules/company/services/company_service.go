@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/repositories"
+	shared	"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type CompanyService struct {
@@ -37,9 +38,11 @@ func (s *CompanyService) CreateCompany(ctx context.Context, request entities.Cre
         Phone:          request.Phone,
         Email:          request.Email,
         WebsiteURL:     request.WebsiteURL,
-        UniqueId:       encryption.GenerateUUID(),
-        CreatedAt:      time.Now().UTC(),
-        UpdatedAt:      time.Now().UTC(),
+        BaseEntity: shared.BaseEntity{
+			UniqueId:       encryption.GenerateUUID(),
+			CreatedAt:      time.Now().UTC(),
+			UpdatedAt:      time.Now().UTC(),
+		},
     }
     err := s.repository.Create(ctx, company)
     if err != nil {
