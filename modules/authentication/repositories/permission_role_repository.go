@@ -37,7 +37,7 @@ func (repo *PermissionRoleRepository) FindAll(ctx context.Context) ([]entities.P
 	return roles, result.Error
 }
 
-func (repo *PermissionRoleRepository) FindAllByRoleId(ctx context.Context, roleId int) ([]entities.PermissionRoleData, error) {
+func (repo *PermissionRoleRepository) FindAllDataByRoleId(ctx context.Context, roleId int) ([]entities.PermissionRoleData, error) {
 	var roles []entities.PermissionRoleData
 	result := repo.db.WithContext(ctx).Table("authentication.view_permission_role_data").Where("role_id = ?", roleId).Find(&roles)
 	return roles, result.Error

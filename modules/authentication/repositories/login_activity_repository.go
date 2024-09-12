@@ -27,7 +27,7 @@ func (repo *LoginActivityRepository) Update(ctx context.Context, loginAct entiti
 	return result.Error
 }
 
-func (repo *LoginActivityRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.LoginActivityData, error) {
+func (repo *LoginActivityRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.LoginActivityData, error) {
 	var loginActivities []entities.LoginActivityData
 	result := repo.db.WithContext(ctx).Table("authentication.view_login_activity_data").Limit(limit).Offset(offset).Find(&loginActivities)
 	return loginActivities, result.Error

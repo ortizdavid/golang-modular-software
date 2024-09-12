@@ -38,7 +38,7 @@ func (repo *OfficeRepository) FindAll(ctx context.Context) ([]entities.Office, e
 	return offices, result.Error
 }
 
-func (repo *OfficeRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.OfficeData, error) {
+func (repo *OfficeRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.OfficeData, error) {
 	var offices []entities.OfficeData
 	result := repo.db.WithContext(ctx).Table("company.view_office_data").Limit(limit).Offset(offset).Find(&offices)
 	return offices, result.Error

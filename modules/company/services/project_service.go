@@ -94,7 +94,7 @@ func (s *ProjectService) GetAllProjectsPaginated(ctx context.Context, fiberCtx *
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No projects found")
 	}
-	projects, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	projects, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

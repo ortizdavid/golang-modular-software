@@ -29,7 +29,7 @@ func (s *LoginActivityService) GetAllLoginActivities(ctx context.Context, fiberC
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No login activities found")
 	}
-	loginActivities, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	loginActivities, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}

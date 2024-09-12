@@ -57,7 +57,7 @@ func (s *ModuleFlagService) GetAllModuleFlagsPaginated(ctx context.Context, fibe
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No module flags found")
 	}
-	modules, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	modules, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
@@ -73,7 +73,7 @@ func (s *ModuleFlagService) GetAllModuleFlags(ctx context.Context) ([]entities.M
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No modules found")
 	}
-	modules, err := s.repository.FindAll(ctx)
+	modules, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

@@ -96,7 +96,7 @@ func (s *RoomService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fi
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No rooms found")
 	}
-	rooms, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	rooms, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

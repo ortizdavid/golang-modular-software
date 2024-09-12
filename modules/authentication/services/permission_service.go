@@ -96,7 +96,7 @@ func (s *PermissionService) GetAllPermissionsPaginated(ctx context.Context, fibe
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No permissions found")
 	}
-	permissions, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	permissions, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}
@@ -175,7 +175,7 @@ func (s *PermissionService) RemovePermissionRole(ctx context.Context, uniqueId s
 }
 
 func (s *PermissionService) GetAssignedPermissionsByRole(ctx context.Context, roleId int) ([]entities.PermissionRoleData, error) {
-	permissionRoles, err := s.permissionRoleRepository.FindAllByRoleId(ctx, roleId)
+	permissionRoles, err := s.permissionRoleRepository.FindAllDataByRoleId(ctx, roleId)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}

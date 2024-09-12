@@ -38,7 +38,7 @@ func (repo *ProjectRepository) FindAll(ctx context.Context) ([]entities.Project,
 	return projects, result.Error
 }
 
-func (repo *ProjectRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.ProjectData, error) {
+func (repo *ProjectRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.ProjectData, error) {
 	var projects []entities.ProjectData
 	result := repo.db.WithContext(ctx).Table("company.view_project_data").Limit(limit).Offset(offset).Find(&projects)
 	return projects, result.Error

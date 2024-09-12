@@ -92,7 +92,7 @@ func (s *BranchService) GetAllBranchesPaginated(ctx context.Context, fiberCtx *f
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No branches found")
 	}
-	branches, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	branches, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

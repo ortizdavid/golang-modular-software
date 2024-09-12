@@ -292,7 +292,7 @@ func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, para
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	users, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	users, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
 	}

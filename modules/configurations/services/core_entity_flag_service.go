@@ -56,7 +56,7 @@ func (s *CoreEntityFlagService) GetAllCoreEntityFlagsPaginated(ctx context.Conte
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entity flags found")
 	}
-	coreEntities, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	coreEntities, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
@@ -72,7 +72,7 @@ func (s *CoreEntityFlagService) GetAllCoreEntityFlags(ctx context.Context) ([]en
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entities found")
 	}
-	coreEntities, err := s.repository.FindAll(ctx)
+	coreEntities, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

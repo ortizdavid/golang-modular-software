@@ -38,7 +38,7 @@ func (repo *RoomRepository) FindAll(ctx context.Context) ([]entities.Room, error
 	return rooms, result.Error
 }
 
-func (repo *RoomRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.RoomData, error) {
+func (repo *RoomRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.RoomData, error) {
 	var rooms []entities.RoomData
 	result := repo.db.WithContext(ctx).Table("company.view_room_data").Limit(limit).Offset(offset).Find(&rooms)
 	return rooms, result.Error

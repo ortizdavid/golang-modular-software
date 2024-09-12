@@ -63,7 +63,7 @@ func (repo *UserRepository) FindAll(ctx context.Context) ([]entities.User, error
 	return users, result.Error
 }
 
-func (repo *UserRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.UserData, error) {
+func (repo *UserRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
 	result := repo.db.WithContext(ctx).
 		Table("authentication.view_user_data").
@@ -71,6 +71,7 @@ func (repo *UserRepository) FindAllLimit(ctx context.Context, limit int, offset 
 		Offset(offset).Find(&users)
 	return users, result.Error
 }
+
 
 func (repo *UserRepository) FindById(ctx context.Context, id int64) (entities.User, error) {
 	var user entities.User
@@ -132,12 +133,6 @@ func (repo *UserRepository) FindAllData(ctx context.Context) ([]entities.UserDat
 	return users, result.Error
 }
 
-func (repo *UserRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.UserData, error) {
-	var users []entities.UserData
-	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data LIMIT ? OFFSET ?", limit, offset).Scan(&users)
-	return users, result.Error
-}
-
 func (repo *UserRepository) Exists(ctx context.Context, userName string, password string) (bool, error) {
 	var user entities.User
 	result := repo.db.WithContext(ctx).Where("user_name=? AND password=?", userName, password).Find(&user)
@@ -172,29 +167,7 @@ func (repo *UserRepository) GetByUserNameAndPassword(ctx context.Context, userNa
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE user_name=? AND password=?", userName, password).Scan(&userData)
 	return userData, result.Error
 }
-//-------------------------------------------------------------------------------------------------------------------------
-func (repo *UserRepository) FindByIdentifier(ctx context.Context, identifier string) (entities.User, error) {
-	var user entities.User
-	result := repo.db.WithContext(ctx).
-		Where("user_name = ? OR email = ?", identifier, identifier).
-		First(&user)
-	return user, result.Error
-}
 
-func (repo *UserRepository) ExistsActiveUserByIdentifier(ctx context.Context, identifier string) (bool, error) {
-	var user entities.User
-	result := repo.db.WithContext(ctx).Where("(user_name=? OR email=?) AND is_active=true", identifier, identifier).Find(&user)
-	return user.UserId !=0 , result.Error
-}
-
-func (repo *UserRepository) GetByIdentifierAndPassword(ctx context.Context, identifier string, password string) (entities.UserData, error) {
-	var userData entities.UserData
-	result := repo.db.WithContext(ctx).
-		Raw("SELECT * FROM authentication.view_user_data WHERE (user_name=? OR email=?) AND password=?", identifier, identifier, password).
-		Scan(&userData)
-	return userData, result.Error
-}
-//-------------------------------------------------------------------------------------------------------------------------
 func (repo *UserRepository) GetDataByUserName(ctx context.Context, userName string) (entities.UserData, error) {
 	var userData entities.UserData
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM authentication.view_user_data WHERE user_name=?", userName).Scan(&userData)

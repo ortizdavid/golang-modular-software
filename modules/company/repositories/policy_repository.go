@@ -38,7 +38,7 @@ func (repo *PolicyRepository) FindAll(ctx context.Context) ([]entities.Policy, e
 	return policies, result.Error
 }
 
-func (repo *PolicyRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.PolicyData, error) {
+func (repo *PolicyRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.PolicyData, error) {
 	var policies []entities.PolicyData
 	result := repo.db.WithContext(ctx).Table("company.view_policy_data").Limit(limit).Offset(offset).Find(&policies)
 	return policies, result.Error

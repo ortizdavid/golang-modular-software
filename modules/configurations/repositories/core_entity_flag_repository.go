@@ -37,13 +37,13 @@ func (repo *CoreEntityFlagRepository) Delete(ctx context.Context, coreEntityFlag
 	return result.Error
 }
 
-func (repo *CoreEntityFlagRepository) FindAll(ctx context.Context) ([]entities.CoreEntityFlagData, error) {
+func (repo *CoreEntityFlagRepository) FindAllData(ctx context.Context) ([]entities.CoreEntityFlagData, error) {
 	var coreEntityFlags []entities.CoreEntityFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Find(&coreEntityFlags)
 	return coreEntityFlags, result.Error
 }
 
-func (repo *CoreEntityFlagRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.CoreEntityFlagData, error) {
+func (repo *CoreEntityFlagRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.CoreEntityFlagData, error) {
 	var coreEntityFlags []entities.CoreEntityFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Limit(limit).Offset(offset).Find(&coreEntityFlags)
 	return coreEntityFlags, result.Error

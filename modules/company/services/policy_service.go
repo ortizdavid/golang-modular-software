@@ -91,7 +91,7 @@ func (s *PolicyService) GetAllPoliciesPaginated(ctx context.Context, fiberCtx *f
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No policies found")
 	}
-	policies, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	policies, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

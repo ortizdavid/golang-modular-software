@@ -37,12 +37,6 @@ func (repo *UserApiKeyRepository) FindAll(ctx context.Context) ([]entities.UserA
 	return userApiKeys, result.Error
 }
 
-func (repo *UserApiKeyRepository) FindAllByUserId(ctx context.Context, userId int64) ([]entities.UserApiKeyData, error) {
-	var userApiKeys []entities.UserApiKeyData
-	result := repo.db.WithContext(ctx).Table("authentication.view_user_api_key_data").Where("user_id = ?", userId).Find(&userApiKeys)
-	return userApiKeys, result.Error
-}
-
 func (repo *UserApiKeyRepository) FindAllDataByUserId(ctx context.Context, userId int64) ([]entities.UserApiKeyData, error) {
 	var userApiKeys []entities.UserApiKeyData
 	result := repo.db.WithContext(ctx).Table("authentication.view_user_api_key_data").Where("user_id = ?", userId).Find(&userApiKeys)

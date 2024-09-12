@@ -63,7 +63,7 @@ func (repo *EmployeeRepository) FindAll(ctx context.Context) ([]entities.Employe
 	return employees, result.Error
 }
 
-func (repo *EmployeeRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeeData, error) {
+func (repo *EmployeeRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeeData, error) {
 	var employees []entities.EmployeeData
 	result := repo.db.WithContext(ctx).
 		Table("employees.view_employee_data").
@@ -123,12 +123,6 @@ func (repo *EmployeeRepository) GetDataByUniqueId(ctx context.Context, uniqueId 
 func (repo *EmployeeRepository) FindAllData(ctx context.Context) ([]entities.EmployeeData, error) {
 	var employees []entities.EmployeeData
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_data").Scan(&employees)
-	return employees, result.Error
-}
-
-func (repo *EmployeeRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeeData, error) {
-	var employees []entities.EmployeeData
-	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_data LIMIT ? OFFSET ?", limit, offset).Scan(&employees)
 	return employees, result.Error
 }
 

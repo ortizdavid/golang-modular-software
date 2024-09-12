@@ -37,15 +37,9 @@ func (repo *UserRoleRepository) FindAll(ctx context.Context) ([]entities.UserRol
 	return roles, result.Error
 }
 
-func (repo *UserRoleRepository) FindAllByUserId(ctx context.Context, userId int64) ([]entities.UserRoleData, error) {
-	var roles []entities.UserRoleData
-	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_id = ?", userId).Find(&roles)
-	return roles, result.Error
-}
-
 func (repo *UserRoleRepository) FindAllDataByUserId(ctx context.Context, userId int64) ([]entities.UserRoleData, error) {
 	var roles []entities.UserRoleData
-	result := repo.db.WithContext(ctx).Table("view_user_role_data").Where("user_id = ?", userId).Find(&roles)
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_id = ?", userId).Find(&roles)
 	return roles, result.Error
 }
 

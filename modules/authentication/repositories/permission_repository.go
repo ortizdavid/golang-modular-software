@@ -38,7 +38,7 @@ func (repo *PermissionRepository) FindAll(ctx context.Context) ([]entities.Permi
 	return permissions, result.Error
 }
 
-func (repo *PermissionRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.PermissionData, error) {
+func (repo *PermissionRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.PermissionData, error) {
 	var permissions []entities.PermissionData
 	result := repo.db.WithContext(ctx).Table("authentication.view_permission_data").Limit(limit).Offset(offset).Find(&permissions)
 	return permissions, result.Error

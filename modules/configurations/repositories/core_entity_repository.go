@@ -38,7 +38,7 @@ func (repo *CoreEntityRepository) FindAll(ctx context.Context) ([]entities.CoreE
 	return coreEntities, result.Error
 }
 
-func (repo *CoreEntityRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.CoreEntityData, error) {
+func (repo *CoreEntityRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.CoreEntityData, error) {
 	var coreEntities []entities.CoreEntityData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_data").Limit(limit).Offset(offset).Find(&coreEntities)
 	return coreEntities, result.Error

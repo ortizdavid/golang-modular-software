@@ -32,7 +32,7 @@ func (repo *EmployeeEmailRepository) Delete(ctx context.Context, employeeEmail e
 	return result.Error
 }
 
-func (repo *EmployeeEmailRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeeEmailData, error) {
+func (repo *EmployeeEmailRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeeEmailData, error) {
 	var employeeEmails []entities.EmployeeEmailData
 	result := repo.db.WithContext(ctx).Table("employees.employee_emails").Limit(limit).Offset(offset).Find(&employeeEmails)
 	return employeeEmails, result.Error

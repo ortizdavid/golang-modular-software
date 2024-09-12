@@ -90,7 +90,7 @@ func (s *DepartmentService) GetAllDepartmentsPaginated(ctx context.Context, fibe
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No departments found")
 	}
-	departments, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	departments, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

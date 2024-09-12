@@ -92,7 +92,7 @@ func (s *OfficeService) GetAllOfficesPaginated(ctx context.Context, fiberCtx *fi
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No offices found")
 	}
-	offices, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	offices, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

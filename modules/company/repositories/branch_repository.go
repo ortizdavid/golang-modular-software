@@ -38,7 +38,7 @@ func (repo *BranchRepository) FindAll(ctx context.Context) ([]entities.Branch, e
 	return branches, result.Error
 }
 
-func (repo *BranchRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.BranchData, error) {
+func (repo *BranchRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.BranchData, error) {
 	var branches []entities.BranchData
 	result := repo.db.WithContext(ctx).Table("company.view_branch_data").Limit(limit).Offset(offset).Find(&branches)
 	return branches, result.Error
