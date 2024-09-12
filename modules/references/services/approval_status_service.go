@@ -11,6 +11,8 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+	
 )
 
 type ApprovalStatusService struct {
@@ -37,9 +39,11 @@ func (s *ApprovalStatusService) CreateApprovalStatus(ctx context.Context, reques
 	approvalStatus := entities.ApprovalStatus{
 		StatusName:  request.StatusName,
 		Code:        request.Code,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:         encryption.GenerateUUID(),
+			CreatedAt:        time.Now().UTC(),
+			UpdatedAt:        time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, approvalStatus)
 	if err != nil {

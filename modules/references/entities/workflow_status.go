@@ -1,6 +1,8 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type WorkflowStatus struct {
 	StatusId    int       `gorm:"autoIncrement;primaryKey"`
@@ -9,9 +11,7 @@ type WorkflowStatus struct {
 	LblColor    string    `gorm:"column:lbl_color"`
 	BgColor     string    `gorm:"column:bg_color"`
 	Description string    `gorm:"column:description"`
-	UniqueId    string    `gorm:"column:unique_id"`
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (WorkflowStatus) TableName() string {

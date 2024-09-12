@@ -1,15 +1,15 @@
 package entities
 
-import "time"
+import (
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+)
 
 type Country struct {
 	CountryId int `gorm:"autoIncrement;primaryKey"`
 	CountryName  string    `gorm:"column:country_name"`
 	IsoCode  string    `gorm:"column:iso_code"`
 	DialingCode  string    `gorm:"column:dialing_code"`
-	UniqueId  string    `gorm:"column:unique_id"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
+	shared.BaseEntity
 }
 
 func (Country) TableName() string {

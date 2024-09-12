@@ -11,6 +11,8 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/repositories"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+
 )
 
 type CountryService struct {
@@ -38,9 +40,11 @@ func (s *CountryService) CreateCountry(ctx context.Context, request entities.Cre
 		CountryName: request.CountryName,
 		IsoCode:     request.IsoCode,
 		DialingCode: request.DialingCode,
-		UniqueId:    encryption.GenerateUUID(),
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:         encryption.GenerateUUID(),
+			CreatedAt:        time.Now().UTC(),
+			UpdatedAt:        time.Now().UTC(),
+		},
 	}
 	err = s.repository.Create(ctx, country)
 	if err != nil {
