@@ -10,6 +10,13 @@ import (
 // BaseRepository provides generic CRUD operations for entities.
 type BaseRepository[T entities.Entity] struct {
 	db *database.Database
+	LastInsertId int64
+}
+
+func NewBaseRepository[T entities.Entity](db *database.Database) *BaseRepository[T] {
+	return &BaseRepository[T]{
+		db: db,
+	}
 }
 
 // Create inserts a new entity into the database.
@@ -38,7 +45,7 @@ func (repo *BaseRepository[T]) FindAll(ctx context.Context) ([]T, error) {
 }
 
 // FindById retrieves an entity by its ID.
-func (repo *BaseRepository[T]) FindById(ctx context.Context, id int) (T, error) {
+func (repo *BaseRepository[T]) FindById(ctx context.Context, id interface{}) (T, error) {
 	var entity T
 	result := repo.db.WithContext(ctx).First(&entity, id)
 	return entity, result.Error

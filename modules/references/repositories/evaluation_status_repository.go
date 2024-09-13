@@ -5,67 +5,25 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type EvaluationStatusRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.EvaluationStatus]
 }
 
 func NewEvaluationStatusRepository(db *database.Database) *EvaluationStatusRepository {
 	return &EvaluationStatusRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.EvaluationStatus](db),
 	}
-}
-
-func (repo *EvaluationStatusRepository) Create(ctx context.Context, evaluationStatus entities.EvaluationStatus) error {
-	result := repo.db.WithContext(ctx).Create(&evaluationStatus)
-	return result.Error
-}
-
-func (repo *EvaluationStatusRepository) Update(ctx context.Context, evaluationStatus entities.EvaluationStatus) error {
-	result := repo.db.WithContext(ctx).Save(&evaluationStatus)
-	return result.Error
-}
-
-func (repo *EvaluationStatusRepository) Delete(ctx context.Context, evaluationStatus entities.EvaluationStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&evaluationStatus)
-	return result.Error
-}
-
-func (repo *EvaluationStatusRepository) FindAll(ctx context.Context) ([]entities.EvaluationStatus, error) {
-	var evaluationStatuses []entities.EvaluationStatus
-	result := repo.db.WithContext(ctx).Find(&evaluationStatuses)
-	return evaluationStatuses, result.Error
-}
-
-func (repo *EvaluationStatusRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.EvaluationStatus, error) {
-	var evaluationStatuses []entities.EvaluationStatus
-	result := repo.db.WithContext(ctx).Table("reference.evaluation_statuses").Limit(limit).Offset(offset).Find(&evaluationStatuses)
-	return evaluationStatuses, result.Error
-}
-
-func (repo *EvaluationStatusRepository) FindById(ctx context.Context, id int) (entities.EvaluationStatus, error) {
-	var evaluationStatus entities.EvaluationStatus
-	result := repo.db.WithContext(ctx).First(&evaluationStatus, id)
-	return evaluationStatus, result.Error
 }
 
 func (repo *EvaluationStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.EvaluationStatus, error) {
 	var evaluationStatus entities.EvaluationStatus
 	result := repo.db.WithContext(ctx).Table("reference.evaluation_statuses").Where("unique_id=?", uniqueId).First(&evaluationStatus)
 	return evaluationStatus, result.Error
-}
-
-func (repo *EvaluationStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.EvaluationStatus, error) {
-	var evaluationStatus entities.EvaluationStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&evaluationStatus)
-	return evaluationStatus, result.Error
-}
-
-func (repo *EvaluationStatusRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.evaluation_statuses").Count(&count)
-	return count, result.Error
 }
 
 func (repo *EvaluationStatusRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.EvaluationStatus, error) {

@@ -5,37 +5,19 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type PolicyRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.Policy]
 }
 
 func NewPolicyRepository(db *database.Database) *PolicyRepository {
 	return &PolicyRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Policy](db),
 	}
-}
-
-func (repo *PolicyRepository) Create(ctx context.Context, policy entities.Policy) error {
-	result := repo.db.WithContext(ctx).Create(&policy)
-	return result.Error
-}
-
-func (repo *PolicyRepository) Update(ctx context.Context, policy entities.Policy) error {
-	result := repo.db.WithContext(ctx).Save(&policy)
-	return result.Error
-}
-
-func (repo *PolicyRepository) Delete(ctx context.Context, policy entities.Policy) error {
-	result := repo.db.WithContext(ctx).Delete(&policy)
-	return result.Error
-}
-
-func (repo *PolicyRepository) FindAll(ctx context.Context) ([]entities.Policy, error) {
-	var policies []entities.Policy
-	result := repo.db.WithContext(ctx).Find(&policies)
-	return policies, result.Error
 }
 
 func (repo *PolicyRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.PolicyData, error) {
@@ -44,28 +26,10 @@ func (repo *PolicyRepository) FindAllDataLimit(ctx context.Context, limit int, o
 	return policies, result.Error
 }
 
-func (repo *PolicyRepository) FindById(ctx context.Context, id int) (entities.Policy, error) {
-	var policy entities.Policy
-	result := repo.db.WithContext(ctx).First(&policy, id)
-	return policy, result.Error
-}
-
-func (repo *PolicyRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Policy, error) {
-	var policy entities.Policy
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&policy)
-	return policy, result.Error
-}
-
 func (repo *PolicyRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyData, error) {
 	var policy entities.PolicyData
 	result := repo.db.WithContext(ctx).Table("company.view_policy_data").Where("unique_id=?", uniqueId).First(&policy)
 	return policy, result.Error
-}
-
-func (repo *PolicyRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("company.policies").Count(&count)
-	return count, result.Error
 }
 
 func (repo *PolicyRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.PolicyData, error) {

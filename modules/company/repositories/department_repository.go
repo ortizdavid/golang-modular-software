@@ -5,37 +5,19 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type DepartmentRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.Department]
 }
 
 func NewDepartmentRepository(db *database.Database) *DepartmentRepository {
 	return &DepartmentRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Department](db),
 	}
-}
-
-func (repo *DepartmentRepository) Create(ctx context.Context, department entities.Department) error {
-	result := repo.db.WithContext(ctx).Create(&department)
-	return result.Error
-}
-
-func (repo *DepartmentRepository) Update(ctx context.Context, department entities.Department) error {
-	result := repo.db.WithContext(ctx).Save(&department)
-	return result.Error
-}
-
-func (repo *DepartmentRepository) Delete(ctx context.Context, department entities.Department) error {
-	result := repo.db.WithContext(ctx).Delete(&department)
-	return result.Error
-}
-
-func (repo *DepartmentRepository) FindAll(ctx context.Context) ([]entities.Department, error) {
-	var departments []entities.Department
-	result := repo.db.WithContext(ctx).Find(&departments)
-	return departments, result.Error
 }
 
 func (repo *DepartmentRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.DepartmentData, error) {
@@ -44,28 +26,10 @@ func (repo *DepartmentRepository) FindAllDataLimit(ctx context.Context, limit in
 	return departments, result.Error
 }
 
-func (repo *DepartmentRepository) FindById(ctx context.Context, id int) (entities.Department, error) {
-	var department entities.Department
-	result := repo.db.WithContext(ctx).First(&department, id)
-	return department, result.Error
-}
-
-func (repo *DepartmentRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Department, error) {
-	var department entities.Department
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&department)
-	return department, result.Error
-}
-
 func (repo *DepartmentRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.DepartmentData, error) {
 	var department entities.DepartmentData
 	result := repo.db.WithContext(ctx).Table("company.view_department_data").Where("unique_id=?", uniqueId).First(&department)
 	return department, result.Error
-}
-
-func (repo *DepartmentRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("company.departments").Count(&count)
-	return count, result.Error
 }
 
 func (repo *DepartmentRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.DepartmentData, error) {

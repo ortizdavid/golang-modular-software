@@ -5,31 +5,19 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type EmployeePhoneRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.EmployeePhone]
 }
 
 func NewEmployeePhoneRepository(db *database.Database) *EmployeePhoneRepository {
 	return &EmployeePhoneRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.EmployeePhone](db),
 	}
-}
-
-func (repo *EmployeePhoneRepository) Create(ctx context.Context, employeePhone entities.EmployeePhone) error {
-	result := repo.db.WithContext(ctx).Create(&employeePhone)
-	return result.Error
-}
-
-func (repo *EmployeePhoneRepository) Update(ctx context.Context, employeePhone entities.EmployeePhone) error {
-	result := repo.db.WithContext(ctx).Save(&employeePhone)
-	return result.Error
-}
-
-func (repo *EmployeePhoneRepository) Delete(ctx context.Context, employeePhone entities.EmployeePhone) error {
-	result := repo.db.WithContext(ctx).Delete(&employeePhone)
-	return result.Error
 }
 
 func (repo *EmployeePhoneRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeePhoneData, error) {
@@ -53,28 +41,10 @@ func (repo *EmployeePhoneRepository) FindAllByEmployeeId(ctx context.Context, em
 	return employeePhones, result.Error
 }
 
-func (repo *EmployeePhoneRepository) FindById(ctx context.Context, id int64) (entities.EmployeePhone, error) {
-	var employeePhone entities.EmployeePhone
-	result := repo.db.WithContext(ctx).First(&employeePhone, id)
-	return employeePhone, result.Error
-}
-
 func (repo *EmployeePhoneRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeePhoneData, error) {
 	var employeePhone entities.EmployeePhoneData
 	result := repo.db.WithContext(ctx).Table("employees.view_employee_phone_data").Where("unique_id=?", uniqueId).First(&employeePhone)
 	return employeePhone, result.Error
-}
-
-func (repo *EmployeePhoneRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeePhone, error) {
-	var employeePhone entities.EmployeePhone
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&employeePhone)
-	return employeePhone, result.Error
-}
-
-func (repo *EmployeePhoneRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("employees.employee_phones").Count(&count)
-	return count, result.Error
 }
 
 func (repo *EmployeePhoneRepository) CountByEmployee(ctx context.Context, employeeId int64) (int64, error) {

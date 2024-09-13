@@ -5,49 +5,19 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type ContactTypeRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.ContactType]
 }
 
 func NewContactTypeRepository(db *database.Database) *ContactTypeRepository {
 	return &ContactTypeRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.ContactType](db),
 	}
-}
-
-func (repo *ContactTypeRepository) Create(ctx context.Context, contactType entities.ContactType) error {
-	result := repo.db.WithContext(ctx).Create(&contactType)
-	return result.Error
-}
-
-func (repo *ContactTypeRepository) Update(ctx context.Context, contactType entities.ContactType) error {
-	result := repo.db.WithContext(ctx).Save(&contactType)
-	return result.Error
-}
-
-func (repo *ContactTypeRepository) Delete(ctx context.Context, contactType entities.ContactType) error {
-	result := repo.db.WithContext(ctx).Delete(&contactType)
-	return result.Error
-}
-
-func (repo *ContactTypeRepository) FindAll(ctx context.Context) ([]entities.ContactType, error) {
-	var contactTypes []entities.ContactType
-	result := repo.db.WithContext(ctx).Find(&contactTypes)
-	return contactTypes, result.Error
-}
-
-func (repo *ContactTypeRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.ContactType, error) {
-	var contactTypes []entities.ContactType
-	result := repo.db.WithContext(ctx).Table("reference.contact_types").Limit(limit).Offset(offset).Find(&contactTypes)
-	return contactTypes, result.Error
-}
-
-func (repo *ContactTypeRepository) FindById(ctx context.Context, id int) (entities.ContactType, error) {
-	var contactType entities.ContactType
-	result := repo.db.WithContext(ctx).First(&contactType, id)
-	return contactType, result.Error
 }
 
 func (repo *ContactTypeRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.ContactType, error) {
@@ -60,12 +30,6 @@ func (repo *ContactTypeRepository) FindByUniqueId(ctx context.Context, uniqueId 
 	var contactType entities.ContactType
 	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&contactType)
 	return contactType, result.Error
-}
-
-func (repo *ContactTypeRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.contact_types").Count(&count)
-	return count, result.Error
 }
 
 func (repo *ContactTypeRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.ContactType, error) {

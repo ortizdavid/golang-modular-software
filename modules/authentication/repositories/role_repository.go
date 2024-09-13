@@ -2,39 +2,23 @@ package repositories
 
 import (
 	"context"
+
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
+
 )
 
 type RoleRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.Role]
 }
 
 func NewRoleRepository(db *database.Database) *RoleRepository {
-	return &RoleRepository {
+	return &RoleRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Role](db),
 	}
-}
-
-func (repo *RoleRepository) Create(ctx context.Context, role entities.Role) error {
-	result := repo.db.WithContext(ctx).Create(&role)
-	return result.Error
-}
-
-func (repo *RoleRepository) Update(ctx context.Context, role entities.Role) error {
-	result := repo.db.WithContext(ctx).Save(&role)
-	return result.Error
-}
-
-func (repo *RoleRepository) Delete(ctx context.Context, role entities.Role) error {
-	result := repo.db.WithContext(ctx).Delete(&role)
-	return result.Error
-}
-
-func (repo *RoleRepository) FindAll(ctx context.Context) ([]entities.Role, error) {
-	var roles []entities.Role
-	result := repo.db.WithContext(ctx).Find(&roles)
-	return roles, result.Error
 }
 
 func (repo *RoleRepository) FindAllEnabled(ctx context.Context) ([]entities.Role, error) {
@@ -49,17 +33,6 @@ func (repo *RoleRepository) FindAllDataLimit(ctx context.Context, limit int, off
 	return roles, result.Error
 }
 
-func (repo *RoleRepository) FindById(ctx context.Context, id int) (entities.Role, error) {
-	var role entities.Role
-	result := repo.db.WithContext(ctx).First(&role, id)
-	return role, result.Error
-}
-
-func (repo *RoleRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Role, error) {
-	var role entities.Role
-	result := repo.db.WithContext(ctx).Where("unique_id=?").First(&role)
-	return role, result.Error
-}
 
 func (repo *RoleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
 	var role entities.RoleData
@@ -73,27 +46,21 @@ func (repo *RoleRepository) FindByName(ctx context.Context, name string) (entiti
 	return role, result.Error
 }
 
-func (repo *RoleRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("authentication.roles").Count(&count)
-	return count, result.Error
-}
-
 func (repo *RoleRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.roles").WithContext(ctx).Where("code = ?", code).Count(&count)
-	return count > 0 , result.Error
+	return count > 0, result.Error
 }
 
 func (repo *RoleRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.roles").Where("role_name = ?", name).Count(&count)
-	return count > 0 , result.Error
+	return count > 0, result.Error
 }
 
 func (repo *RoleRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.RoleData, error) {
 	var users []entities.RoleData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -103,12 +70,12 @@ func (repo *RoleRepository) Search(ctx context.Context, param string, limit int,
 }
 
 func (repo *RoleRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }
 
 func (repo *RoleRepository) FindUnassignedRolesByUser(ctx context.Context, userId int64) ([]entities.Role, error) {

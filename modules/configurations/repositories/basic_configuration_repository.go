@@ -1,46 +1,19 @@
 package repositories
 
 import (
-	"context"
-
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type BasicConfigurationRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.BasicConfiguration]
 }
 
 func NewBasicConfigurationRepository(db *database.Database) *BasicConfigurationRepository {
 	return &BasicConfigurationRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.BasicConfiguration](db),
 	}
-}
-
-func (repo *BasicConfigurationRepository) Create(ctx context.Context, configuration entities.BasicConfiguration) error {
-	result := repo.db.WithContext(ctx).Create(&configuration)
-	return result.Error
-}
-
-func (repo *BasicConfigurationRepository) Update(ctx context.Context, configuration entities.BasicConfiguration) error {
-	result := repo.db.WithContext(ctx).Save(&configuration)
-	return result.Error
-}
-
-func (repo *BasicConfigurationRepository) FindById(ctx context.Context, id int) (entities.BasicConfiguration, error) {
-	var conf entities.BasicConfiguration
-	result := repo.db.WithContext(ctx).First(&conf, id)
-	return conf, result.Error
-}
-
-func (repo *BasicConfigurationRepository) FindFirst(ctx context.Context) (entities.BasicConfiguration, error) {
-	var conf entities.BasicConfiguration
-	result := repo.db.WithContext(ctx).First(&conf)
-	return conf, result.Error
-}
-
-func (repo *BasicConfigurationRepository) FindLast(ctx context.Context) (entities.BasicConfiguration, error) {
-	var conf entities.BasicConfiguration
-	result := repo.db.WithContext(ctx).Last(&conf)
-	return conf, result.Error
 }

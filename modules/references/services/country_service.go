@@ -80,7 +80,7 @@ func (s *CountryService) GetAllCountriesPaginated(ctx context.Context, fiberCtx 
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No countries found")
 	}
-	countries, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
+	countries, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
@@ -96,7 +96,7 @@ func (s *CountryService) GetAllCountries(ctx context.Context) ([]entities.Countr
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No countries found")
 	}
-	countries, err := s.repository.FindAll(ctx)
+	countries, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

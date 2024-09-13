@@ -2,39 +2,22 @@ package repositories
 
 import (
 	"context"
-	
+
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type ModuleFlagRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.ModuleFlag]
 }
 
 func NewModuleFlagRepository(db *database.Database) *ModuleFlagRepository {
 	return &ModuleFlagRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.ModuleFlag](db),
 	}
-}
-
-func (repo *ModuleFlagRepository) Create(ctx context.Context, moduleFlag entities.ModuleFlag) error {
-	result := repo.db.WithContext(ctx).Create(&moduleFlag)
-	return result.Error
-}
-
-func (repo *ModuleFlagRepository) Update(ctx context.Context, moduleFlag entities.ModuleFlag) error {
-	result := repo.db.WithContext(ctx).Save(&moduleFlag)
-	return result.Error
-}
-
-func (repo *ModuleFlagRepository) UpdateBatch(ctx context.Context, moduleFlags []entities.ModuleFlag) error {
-    result := repo.db.WithContext(ctx).Save(&moduleFlags)
-    return result.Error
-}
-
-func (repo *ModuleFlagRepository) Delete(ctx context.Context, moduleFlag entities.ModuleFlag) error {
-	result := repo.db.WithContext(ctx).Delete(&moduleFlag)
-	return result.Error
 }
 
 func (repo *ModuleFlagRepository) FindAllData(ctx context.Context) ([]entities.ModuleFlagData, error) {
@@ -47,12 +30,6 @@ func (repo *ModuleFlagRepository) FindAllDataLimit(ctx context.Context, limit in
 	var moduleFlags []entities.ModuleFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Limit(limit).Offset(offset).Find(&moduleFlags)
 	return moduleFlags, result.Error
-}
-
-func (repo *ModuleFlagRepository) FindById(ctx context.Context, id int) (entities.ModuleFlag, error) {
-	var moduleFlag entities.ModuleFlag
-	result := repo.db.WithContext(ctx).First(&moduleFlag, id)
-	return moduleFlag, result.Error
 }
 
 func (repo *ModuleFlagRepository) FindAllFlagsMap(ctx context.Context) (map[string]string, error) {
@@ -69,12 +46,6 @@ func (repo *ModuleFlagRepository) FindAllFlagsMap(ctx context.Context) (map[stri
 	return flagMap, nil
 }
 
-func (repo *ModuleFlagRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlag, error) {
-	var moduleFlag entities.ModuleFlag
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&moduleFlag)
-	return moduleFlag, result.Error
-}
-
 func (repo *ModuleFlagRepository) FindByModuleCode(ctx context.Context, module string) (entities.ModuleFlagData, error) {
 	var moduleFlag entities.ModuleFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("code=?", module)
@@ -85,12 +56,6 @@ func (repo *ModuleFlagRepository) GetDataByUniqueId(ctx context.Context, uniqueI
 	var moduleFlag entities.ModuleFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("unique_id=?", uniqueId).First(&moduleFlag)
 	return moduleFlag, result.Error
-}
-
-func (repo *ModuleFlagRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("configurations.module_flag").Count(&count)
-	return count, result.Error
 }
 
 func (repo *ModuleFlagRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.ModuleFlagData, error) {

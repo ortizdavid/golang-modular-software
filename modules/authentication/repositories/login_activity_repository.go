@@ -5,38 +5,25 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type LoginActivityRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.LoginActivity]
 }
 
 func NewLoginActivityRepository(db *database.Database) *LoginActivityRepository {
 	return &LoginActivityRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.LoginActivity](db),
 	}
-}
-
-func (repo *LoginActivityRepository) Create(ctx context.Context, loginAct entities.LoginActivity) error {
-	result := repo.db.WithContext(ctx).Create(&loginAct)
-	return result.Error
-}
-
-func (repo *LoginActivityRepository) Update(ctx context.Context, loginAct entities.LoginActivity) error {
-	result := repo.db.WithContext(ctx).Save(&loginAct)
-	return result.Error
 }
 
 func (repo *LoginActivityRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.LoginActivityData, error) {
 	var loginActivities []entities.LoginActivityData
 	result := repo.db.WithContext(ctx).Table("authentication.view_login_activity_data").Limit(limit).Offset(offset).Find(&loginActivities)
 	return loginActivities, result.Error
-}
-
-func (repo *LoginActivityRepository) FindById(ctx context.Context, userId int64) (entities.LoginActivity, error) {
-	var loginAct entities.LoginActivity
-	result := repo.db.WithContext(ctx).First(&loginAct)
-	return loginAct, result.Error
 }
 
 func (repo *LoginActivityRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.LoginActivityData, error) {
@@ -49,12 +36,6 @@ func (repo *LoginActivityRepository) FindByUserId(ctx context.Context, userId in
 	var loginAct entities.LoginActivity
 	result := repo.db.WithContext(ctx).Where("user_id=?", userId).First(&loginAct)
 	return loginAct, result.Error
-}
-
-func (repo *LoginActivityRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("authentication.login_activity").Count(&count)
-	return count, result.Error
 }
 
 func (repo *LoginActivityRepository) CountByStatus(ctx context.Context, status string) (int64, error) {
@@ -79,7 +60,7 @@ func (repo *LoginActivityRepository) SumLoginAndLogout(ctx context.Context) (int
 
 func (repo *LoginActivityRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.LoginActivityData, error) {
 	var loginActivities []entities.LoginActivityData
-	likeParam := "%"+param+"%"
+	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
 		Raw("SELECT * FROM authentication.view_login_activity_data WHERE user_name LIKE ? OR email LIKE ?", likeParam, likeParam).
 		Limit(limit).
@@ -89,10 +70,10 @@ func (repo *LoginActivityRepository) Search(ctx context.Context, param string, l
 }
 
 func (repo *LoginActivityRepository) CountByParam(ctx context.Context, param string) (int64, error) {
-    var count int64
-	likeParam := "%"+param+"%"
-    result := repo.db.WithContext(ctx).
-        Raw("SELECT COUNT(*) FROM authentication.view_login_activity_data WHERE user_name LIKE ? OR email LIKE ?", likeParam, likeParam).
-        Scan(&count)
-    return count, result.Error
+	var count int64
+	likeParam := "%" + param + "%"
+	result := repo.db.WithContext(ctx).
+		Raw("SELECT COUNT(*) FROM authentication.view_login_activity_data WHERE user_name LIKE ? OR email LIKE ?", likeParam, likeParam).
+		Scan(&count)
+	return count, result.Error
 }

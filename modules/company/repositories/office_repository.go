@@ -5,37 +5,19 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type OfficeRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.Office]
 }
 
 func NewOfficeRepository(db *database.Database) *OfficeRepository {
 	return &OfficeRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Office](db),
 	}
-}
-
-func (repo *OfficeRepository) Create(ctx context.Context, office entities.Office) error {
-	result := repo.db.WithContext(ctx).Create(&office)
-	return result.Error
-}
-
-func (repo *OfficeRepository) Update(ctx context.Context, office entities.Office) error {
-	result := repo.db.WithContext(ctx).Save(&office)
-	return result.Error
-}
-
-func (repo *OfficeRepository) Delete(ctx context.Context, office entities.Office) error {
-	result := repo.db.WithContext(ctx).Delete(&office)
-	return result.Error
-}
-
-func (repo *OfficeRepository) FindAll(ctx context.Context) ([]entities.Office, error) {
-	var offices []entities.Office
-	result := repo.db.WithContext(ctx).Find(&offices)
-	return offices, result.Error
 }
 
 func (repo *OfficeRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.OfficeData, error) {
@@ -44,28 +26,10 @@ func (repo *OfficeRepository) FindAllDataLimit(ctx context.Context, limit int, o
 	return offices, result.Error
 }
 
-func (repo *OfficeRepository) FindById(ctx context.Context, id int) (entities.Office, error) {
-	var office entities.Office
-	result := repo.db.WithContext(ctx).First(&office, id)
-	return office, result.Error
-}
-
-func (repo *OfficeRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Office, error) {
-	var office entities.Office
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&office)
-	return office, result.Error
-}
-
 func (repo *OfficeRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
 	var office entities.OfficeData
 	result := repo.db.WithContext(ctx).Table("company.view_office_data").Where("unique_id=?", uniqueId).First(&office)
 	return office, result.Error
-}
-
-func (repo *OfficeRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("company.offices").Count(&count)
-	return count, result.Error
 }
 
 func (repo *OfficeRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.OfficeData, error) {

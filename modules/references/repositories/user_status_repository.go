@@ -5,67 +5,25 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type UserStatusRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.UserStatus]
 }
 
 func NewUserStatusRepository(db *database.Database) *UserStatusRepository {
 	return &UserStatusRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.UserStatus](db),
 	}
-}
-
-func (repo *UserStatusRepository) Create(ctx context.Context, userStatus entities.UserStatus) error {
-	result := repo.db.WithContext(ctx).Create(&userStatus)
-	return result.Error
-}
-
-func (repo *UserStatusRepository) Update(ctx context.Context, userStatus entities.UserStatus) error {
-	result := repo.db.WithContext(ctx).Save(&userStatus)
-	return result.Error
-}
-
-func (repo *UserStatusRepository) Delete(ctx context.Context, userStatus entities.UserStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&userStatus)
-	return result.Error
-}
-
-func (repo *UserStatusRepository) FindAll(ctx context.Context) ([]entities.UserStatus, error) {
-	var userStatuses []entities.UserStatus
-	result := repo.db.WithContext(ctx).Find(&userStatuses)
-	return userStatuses, result.Error
-}
-
-func (repo *UserStatusRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.UserStatus, error) {
-	var userStatuses []entities.UserStatus
-	result := repo.db.WithContext(ctx).Table("reference.user_statuses").Limit(limit).Offset(offset).Find(&userStatuses)
-	return userStatuses, result.Error
-}
-
-func (repo *UserStatusRepository) FindById(ctx context.Context, id int) (entities.UserStatus, error) {
-	var userStatus entities.UserStatus
-	result := repo.db.WithContext(ctx).First(&userStatus, id)
-	return userStatus, result.Error
 }
 
 func (repo *UserStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.UserStatus, error) {
 	var userStatus entities.UserStatus
 	result := repo.db.WithContext(ctx).Table("reference.user_statuses").Where("unique_id=?", uniqueId).First(&userStatus)
 	return userStatus, result.Error
-}
-
-func (repo *UserStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.UserStatus, error) {
-	var userStatus entities.UserStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&userStatus)
-	return userStatus, result.Error
-}
-
-func (repo *UserStatusRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.user_statuses").Count(&count)
-	return count, result.Error
 }
 
 func (repo *UserStatusRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.UserStatus, error) {

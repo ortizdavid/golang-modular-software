@@ -6,23 +6,20 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
-	"gorm.io/gorm"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type EmployeeRepository struct {
 	db *database.Database
-	LastInsertId int64
 	mu sync.Mutex
+	*shared.BaseRepository[entities.Employee]
 }
 
 func NewEmployeeRepository(db *database.Database) *EmployeeRepository {
 	return &EmployeeRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Employee](db),
 	}
-}
-
-func (repo *EmployeeRepository) BeginTransaction(ctx context.Context) (*gorm.DB, error){
-	return repo.db.BeginTx(ctx)
 }
 
 func (repo *EmployeeRepository) Create(ctx context.Context, employee entities.Employee) error {
@@ -33,36 +30,6 @@ func (repo *EmployeeRepository) Create(ctx context.Context, employee entities.Em
 	return result.Error
 }
 
-func (repo *EmployeeRepository) CreateBatch(ctx context.Context, employees []entities.Employee) error {
-	tx := repo.db.Begin()
-	if tx.Error != nil {
-		return tx.Error
-	}
-	result := tx.WithContext(ctx).Create(&employees)
-	if result.Error != nil {
-		tx.Rollback()
-		return result.Error
-	}
-	tx.Commit()
-	return nil
-}
-
-func (repo *EmployeeRepository) Update(ctx context.Context, employee entities.Employee) error {
-	result := repo.db.WithContext(ctx).Save(&employee)
-	return result.Error
-}
-
-func (repo *EmployeeRepository) Delete(ctx context.Context, employee entities.Employee) error {
-	result := repo.db.WithContext(ctx).Delete(&employee)
-	return result.Error
-}
-
-func (repo *EmployeeRepository) FindAll(ctx context.Context) ([]entities.Employee, error) {
-	var employees []entities.Employee
-	result := repo.db.WithContext(ctx).Find(&employees)
-	return employees, result.Error
-}
-
 func (repo *EmployeeRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.EmployeeData, error) {
 	var employees []entities.EmployeeData
 	result := repo.db.WithContext(ctx).
@@ -70,18 +37,6 @@ func (repo *EmployeeRepository) FindAllDataLimit(ctx context.Context, limit int,
 		Limit(limit).
 		Offset(offset).Find(&employees)
 	return employees, result.Error
-}
-
-func (repo *EmployeeRepository) FindById(ctx context.Context, id int64) (entities.Employee, error) {
-	var employee entities.Employee
-	result := repo.db.WithContext(ctx).First(&employee, id)
-	return employee, result.Error
-}
-
-func (repo *EmployeeRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Employee, error) {
-	var employee entities.Employee
-	result := repo.db.WithContext(ctx).First(&employee, "unique_id=?", uniqueId)
-	return employee, result.Error
 }
 
 func (repo *EmployeeRepository) FindByName(ctx context.Context, employeeName string) (entities.Employee, error) {
@@ -94,12 +49,6 @@ func (repo *EmployeeRepository) FindByIdentificationNumber(ctx context.Context, 
 	var employee entities.Employee
 	result := repo.db.WithContext(ctx).First(&employee, "identification_number=?", identNumber)
 	return employee, result.Error
-}
-
-func (repo *EmployeeRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("employees.employees").Count(&count)
-	return count, result.Error
 }
 
 func (repo *EmployeeRepository) FindAllOrdered(ctx context.Context) ([]entities.Employee, error) {

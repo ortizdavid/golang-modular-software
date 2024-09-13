@@ -5,67 +5,25 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type DocumentStatusRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.DocumentStatus]
 }
 
 func NewDocumentStatusRepository(db *database.Database) *DocumentStatusRepository {
 	return &DocumentStatusRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.DocumentStatus](db),
 	}
-}
-
-func (repo *DocumentStatusRepository) Create(ctx context.Context, documentStatus entities.DocumentStatus) error {
-	result := repo.db.WithContext(ctx).Create(&documentStatus)
-	return result.Error
-}
-
-func (repo *DocumentStatusRepository) Update(ctx context.Context, documentStatus entities.DocumentStatus) error {
-	result := repo.db.WithContext(ctx).Save(&documentStatus)
-	return result.Error
-}
-
-func (repo *DocumentStatusRepository) Delete(ctx context.Context, documentStatus entities.DocumentStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&documentStatus)
-	return result.Error
-}
-
-func (repo *DocumentStatusRepository) FindAll(ctx context.Context) ([]entities.DocumentStatus, error) {
-	var documentStatuses []entities.DocumentStatus
-	result := repo.db.WithContext(ctx).Find(&documentStatuses)
-	return documentStatuses, result.Error
-}
-
-func (repo *DocumentStatusRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.DocumentStatus, error) {
-	var documentStatuses []entities.DocumentStatus
-	result := repo.db.WithContext(ctx).Table("reference.document_statuses").Limit(limit).Offset(offset).Find(&documentStatuses)
-	return documentStatuses, result.Error
-}
-
-func (repo *DocumentStatusRepository) FindById(ctx context.Context, id int) (entities.DocumentStatus, error) {
-	var documentStatus entities.DocumentStatus
-	result := repo.db.WithContext(ctx).First(&documentStatus, id)
-	return documentStatus, result.Error
 }
 
 func (repo *DocumentStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentStatus, error) {
 	var documentStatus entities.DocumentStatus
 	result := repo.db.WithContext(ctx).Table("reference.document_statuses").Where("unique_id=?", uniqueId).First(&documentStatus)
 	return documentStatus, result.Error
-}
-
-func (repo *DocumentStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentStatus, error) {
-	var documentStatus entities.DocumentStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&documentStatus)
-	return documentStatus, result.Error
-}
-
-func (repo *DocumentStatusRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.document_statuses").Count(&count)
-	return count, result.Error
 }
 
 func (repo *DocumentStatusRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.DocumentStatus, error) {

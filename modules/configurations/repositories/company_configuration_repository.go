@@ -1,46 +1,19 @@
 package repositories
 
 import (
-	"context"
-
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type CompanyConfigurationRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.CompanyConfiguration]
 }
 
 func NewCompanyConfigurationRepository(db *database.Database) *CompanyConfigurationRepository {
 	return &CompanyConfigurationRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.CompanyConfiguration](db),
 	}
-}
-
-func (repo *CompanyConfigurationRepository) Create(ctx context.Context, conf entities.CompanyConfiguration) error {
-	result := repo.db.WithContext(ctx).Create(&conf)
-	return result.Error
-}
-
-func (repo *CompanyConfigurationRepository) Update(ctx context.Context, conf entities.CompanyConfiguration) error {
-	result := repo.db.WithContext(ctx).Save(&conf)
-	return result.Error
-}
-
-func (repo *CompanyConfigurationRepository) FindById(ctx context.Context, id int) (entities.CompanyConfiguration, error) {
-	var conf entities.CompanyConfiguration
-	result := repo.db.WithContext(ctx).First(&conf, id)
-	return conf, result.Error
-}
-
-func (repo *CompanyConfigurationRepository) FindFirst(ctx context.Context) (entities.CompanyConfiguration, error) {
-	var conf entities.CompanyConfiguration
-	result := repo.db.WithContext(ctx).Last(&conf)
-	return conf, result.Error
-}
-
-func (repo *CompanyConfigurationRepository) FindLast(ctx context.Context) (entities.CompanyConfiguration, error) {
-	var conf entities.CompanyConfiguration
-	result := repo.db.WithContext(ctx).Last(&conf)
-	return conf, result.Error
 }

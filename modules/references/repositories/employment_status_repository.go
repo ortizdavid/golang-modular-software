@@ -5,67 +5,25 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type EmploymentStatusRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.EmploymentStatus]
 }
 
 func NewEmploymentStatusRepository(db *database.Database) *EmploymentStatusRepository {
 	return &EmploymentStatusRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.EmploymentStatus](db),
 	}
-}
-
-func (repo *EmploymentStatusRepository) Create(ctx context.Context, employmentStatus entities.EmploymentStatus) error {
-	result := repo.db.WithContext(ctx).Create(&employmentStatus)
-	return result.Error
-}
-
-func (repo *EmploymentStatusRepository) Update(ctx context.Context, employmentStatus entities.EmploymentStatus) error {
-	result := repo.db.WithContext(ctx).Save(&employmentStatus)
-	return result.Error
-}
-
-func (repo *EmploymentStatusRepository) Delete(ctx context.Context, employmentStatus entities.EmploymentStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&employmentStatus)
-	return result.Error
-}
-
-func (repo *EmploymentStatusRepository) FindAll(ctx context.Context) ([]entities.EmploymentStatus, error) {
-	var employmentStatuses []entities.EmploymentStatus
-	result := repo.db.WithContext(ctx).Find(&employmentStatuses)
-	return employmentStatuses, result.Error
-}
-
-func (repo *EmploymentStatusRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.EmploymentStatus, error) {
-	var employmentStatuses []entities.EmploymentStatus
-	result := repo.db.WithContext(ctx).Table("reference.employment_statuses").Limit(limit).Offset(offset).Find(&employmentStatuses)
-	return employmentStatuses, result.Error
-}
-
-func (repo *EmploymentStatusRepository) FindById(ctx context.Context, id int) (entities.EmploymentStatus, error) {
-	var employmentStatus entities.EmploymentStatus
-	result := repo.db.WithContext(ctx).First(&employmentStatus, id)
-	return employmentStatus, result.Error
 }
 
 func (repo *EmploymentStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.EmploymentStatus, error) {
 	var employmentStatus entities.EmploymentStatus
 	result := repo.db.WithContext(ctx).Table("reference.employment_statuses").Where("unique_id=?", uniqueId).First(&employmentStatus)
 	return employmentStatus, result.Error
-}
-
-func (repo *EmploymentStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.EmploymentStatus, error) {
-	var employmentStatus entities.EmploymentStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&employmentStatus)
-	return employmentStatus, result.Error
-}
-
-func (repo *EmploymentStatusRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.employment_statuses").Count(&count)
-	return count, result.Error
 }
 
 func (repo *EmploymentStatusRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.EmploymentStatus, error) {

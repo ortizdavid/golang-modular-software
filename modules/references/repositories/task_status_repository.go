@@ -5,67 +5,25 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type TaskStatusRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.TaskStatus]
 }
 
 func NewTaskStatusRepository(db *database.Database) *TaskStatusRepository {
 	return &TaskStatusRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.TaskStatus](db),
 	}
-}
-
-func (repo *TaskStatusRepository) Create(ctx context.Context, taskStatus entities.TaskStatus) error {
-	result := repo.db.WithContext(ctx).Create(&taskStatus)
-	return result.Error
-}
-
-func (repo *TaskStatusRepository) Update(ctx context.Context, taskStatus entities.TaskStatus) error {
-	result := repo.db.WithContext(ctx).Save(&taskStatus)
-	return result.Error
-}
-
-func (repo *TaskStatusRepository) Delete(ctx context.Context, taskStatus entities.TaskStatus) error {
-	result := repo.db.WithContext(ctx).Delete(&taskStatus)
-	return result.Error
-}
-
-func (repo *TaskStatusRepository) FindAll(ctx context.Context) ([]entities.TaskStatus, error) {
-	var taskStatuses []entities.TaskStatus
-	result := repo.db.WithContext(ctx).Find(&taskStatuses)
-	return taskStatuses, result.Error
-}
-
-func (repo *TaskStatusRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.TaskStatus, error) {
-	var taskStatuses []entities.TaskStatus
-	result := repo.db.WithContext(ctx).Table("reference.task_statuses").Limit(limit).Offset(offset).Find(&taskStatuses)
-	return taskStatuses, result.Error
-}
-
-func (repo *TaskStatusRepository) FindById(ctx context.Context, id int) (entities.TaskStatus, error) {
-	var taskStatus entities.TaskStatus
-	result := repo.db.WithContext(ctx).First(&taskStatus, id)
-	return taskStatus, result.Error
 }
 
 func (repo *TaskStatusRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.TaskStatus, error) {
 	var taskStatus entities.TaskStatus
 	result := repo.db.WithContext(ctx).Table("reference.task_statuses").Where("unique_id=?", uniqueId).First(&taskStatus)
 	return taskStatus, result.Error
-}
-
-func (repo *TaskStatusRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.TaskStatus, error) {
-	var taskStatus entities.TaskStatus
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&taskStatus)
-	return taskStatus, result.Error
-}
-
-func (repo *TaskStatusRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.task_statuses").Count(&count)
-	return count, result.Error
 }
 
 func (repo *TaskStatusRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.TaskStatus, error) {

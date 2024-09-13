@@ -7,17 +7,21 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"gorm.io/gorm"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
+
 )
 
 type UserRepository struct {
 	db *database.Database
 	LastInsertId int64
 	mu sync.Mutex
+	*shared.BaseRepository[entities.User]
 }
 
 func NewUserRepository(db *database.Database) *UserRepository {
 	return &UserRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.User](db),
 	}
 }
 

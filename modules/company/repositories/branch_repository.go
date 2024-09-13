@@ -5,15 +5,18 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type BranchRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.Branch]
 }
 
 func NewBranchRepository(db *database.Database) *BranchRepository {
 	return &BranchRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Branch](db),
 	}
 }
 

@@ -5,67 +5,37 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 )
 
 type CountryRepository struct {
 	db *database.Database
+	*shared.BaseRepository[entities.Country]
 }
 
 func NewCountryRepository(db *database.Database) *CountryRepository {
 	return &CountryRepository{
 		db: db,
+		BaseRepository: shared.NewBaseRepository[entities.Country](db),
 	}
 }
 
-func (repo *CountryRepository) Create(ctx context.Context, country entities.Country) error {
-	result := repo.db.WithContext(ctx).Create(&country)
-	return result.Error
-}
-
-func (repo *CountryRepository) Update(ctx context.Context, country entities.Country) error {
-	result := repo.db.WithContext(ctx).Save(&country)
-	return result.Error
-}
-
-func (repo *CountryRepository) Delete(ctx context.Context, country entities.Country) error {
-	result := repo.db.WithContext(ctx).Delete(&country)
-	return result.Error
-}
-
-func (repo *CountryRepository) FindAll(ctx context.Context) ([]entities.CountryData, error) {
+func (repo *CountryRepository) FindAllData(ctx context.Context) ([]entities.CountryData, error) {
 	var countries []entities.CountryData
 	result := repo.db.WithContext(ctx).Table("reference.view_country_data").Find(&countries)
 	return countries, result.Error
 }
 
-func (repo *CountryRepository) FindAllLimit(ctx context.Context, limit int, offset int) ([]entities.CountryData, error) {
+func (repo *CountryRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.CountryData, error) {
 	var countries []entities.CountryData
 	result := repo.db.WithContext(ctx).Table("reference.view_country_data").Limit(limit).Offset(offset).Find(&countries)
 	return countries, result.Error
-}
-
-func (repo *CountryRepository) FindById(ctx context.Context, id int) (entities.Country, error) {
-	var country entities.Country
-	result := repo.db.WithContext(ctx).First(&country, id)
-	return country, result.Error
 }
 
 func (repo *CountryRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.CountryData, error) {
 	var country entities.CountryData
 	result := repo.db.WithContext(ctx).Table("reference.view_country_data").Where("unique_id=?", uniqueId).First(&country)
 	return country, result.Error
-}
-
-func (repo *CountryRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Country, error) {
-	var country entities.Country
-	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&country)
-	return country, result.Error
-}
-
-func (repo *CountryRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("reference.countries").Count(&count)
-	return count, result.Error
 }
 
 func (repo *CountryRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.CountryData, error) {
