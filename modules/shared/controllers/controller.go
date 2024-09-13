@@ -5,7 +5,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 )
 
-type BaseController interface {
+type Controller interface {
 	Routes(router *fiber.App, db *database.Database)
 	index(fiber.Ctx) error
 	details(fiber.Ctx) error
