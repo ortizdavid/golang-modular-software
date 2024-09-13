@@ -37,36 +37,6 @@ func (repo *UserRepository) Create(ctx context.Context, user entities.User) erro
 	return result.Error
 }
 
-func (repo *UserRepository) CreateBatch(ctx context.Context, users []entities.User) error {
-	tx := repo.db.Begin()
-	if tx.Error != nil {
-		return tx.Error
-	}
-	result := tx.WithContext(ctx).Create(&users)
-	if result.Error != nil {
-		tx.Rollback()
-		return result.Error
-	}
-	tx.Commit()
-	return nil
-}
-
-func (repo *UserRepository) Update(ctx context.Context, user entities.User) error {
-	result := repo.db.WithContext(ctx).Save(&user)
-	return result.Error
-}
-
-func (repo *UserRepository) Delete(ctx context.Context, user entities.User) error {
-	result := repo.db.WithContext(ctx).Delete(&user)
-	return result.Error
-}
-
-func (repo *UserRepository) FindAll(ctx context.Context) ([]entities.User, error) {
-	var users []entities.User
-	result := repo.db.WithContext(ctx).Find(&users)
-	return users, result.Error
-}
-
 func (repo *UserRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
 	result := repo.db.WithContext(ctx).
@@ -74,19 +44,6 @@ func (repo *UserRepository) FindAllDataLimit(ctx context.Context, limit int, off
 		Limit(limit).
 		Offset(offset).Find(&users)
 	return users, result.Error
-}
-
-
-func (repo *UserRepository) FindById(ctx context.Context, id int64) (entities.User, error) {
-	var user entities.User
-	result := repo.db.WithContext(ctx).First(&user, id)
-	return user, result.Error
-}
-
-func (repo *UserRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.User, error) {
-	var user entities.User
-	result := repo.db.WithContext(ctx).First(&user, "unique_id=?", uniqueId)
-	return user, result.Error
 }
 
 func (repo *UserRepository) FindByUserName(ctx context.Context, userName string) (entities.User, error) {
@@ -105,12 +62,6 @@ func (repo *UserRepository) FindByEmail(ctx context.Context, email string) (enti
 	var user entities.User
 	result := repo.db.WithContext(ctx).First(&user, "email=?", email)
 	return user, result.Error
-}
-
-func (repo *UserRepository) Count(ctx context.Context) (int64, error) {
-	var count int64
-	result := repo.db.WithContext(ctx).Table("authentication.users").Count(&count)
-	return count, result.Error
 }
 
 func (repo *UserRepository) FindAllOrdered(ctx context.Context) ([]entities.User, error) {
