@@ -8,6 +8,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type CompanyController struct {
@@ -17,6 +18,7 @@ type CompanyController struct {
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewCompanyController(db *database.Database) *CompanyController {
@@ -46,7 +48,7 @@ func (ctrl *CompanyController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/company-info/index", fiber.Map{
 		"Title":            "Company Info",
@@ -65,7 +67,7 @@ func (ctrl *CompanyController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	company, err := ctrl.service.GetCompanyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/company-info/details", fiber.Map{
 		"Title":            "Company Details",
@@ -91,12 +93,12 @@ func (ctrl *CompanyController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateCompanyRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateCompany(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created Company '"+request.CompanyName+"' successfully")
 	return c.Redirect("/company/company-info")
@@ -108,7 +110,7 @@ func (ctrl *CompanyController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	company, err := ctrl.service.GetCompanyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/company-info/edit", fiber.Map{
 		"Title":            "Edit Company Info",
@@ -124,16 +126,16 @@ func (ctrl *CompanyController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	company, err := ctrl.service.GetCompanyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateCompanyRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateCompany(c.Context(), company.CompanyId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated Company '"+request.CompanyName+"' successfully")
 	return c.Redirect("/company/company-info/" + id + "/details")

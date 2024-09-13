@@ -10,6 +10,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type RoomController struct {
@@ -21,6 +22,7 @@ type RoomController struct {
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewRoomController(db *database.Database) *RoomController {
@@ -54,7 +56,7 @@ func (ctrl *RoomController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllCompaniesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/room/index", fiber.Map{
 		"Title":            "Rooms",
@@ -73,7 +75,7 @@ func (ctrl *RoomController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	room, err := ctrl.service.GetRoomByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/room/details", fiber.Map{
 		"Title":            "Details",
@@ -89,11 +91,11 @@ func (ctrl *RoomController) createForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	branches, err := ctrl.branchService.GetAllBranches(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/room/create", fiber.Map{
 		"Title":            "Create Room",
@@ -109,12 +111,12 @@ func (ctrl *RoomController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateRoomRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateRoom(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created room '"+request.RoomName+"' successfully")
 	return c.Redirect("/company/rooms")
@@ -126,15 +128,15 @@ func (ctrl *RoomController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	room, err := ctrl.service.GetRoomByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	branches, err := ctrl.branchService.GetAllBranches(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/room/edit", fiber.Map{
 		"Title":            "Edit Room",
@@ -152,16 +154,16 @@ func (ctrl *RoomController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	room, err := ctrl.service.GetRoomByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateRoomRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateRoom(c.Context(), room.RoomId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated Room '"+request.RoomName+"' successfully")
 	return c.Redirect("/company/rooms/" + id + "/details")
@@ -183,7 +185,7 @@ func (ctrl *RoomController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchRooms(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("company/room/search-results", fiber.Map{

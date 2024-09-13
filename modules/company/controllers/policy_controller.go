@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type PolicyController struct {
@@ -21,6 +22,7 @@ type PolicyController struct {
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewPolicyController(db *database.Database) *PolicyController {
@@ -55,7 +57,7 @@ func (ctrl *PolicyController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllPoliciesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/policy/index", fiber.Map{
 		"Title":            "Policies",
@@ -74,7 +76,7 @@ func (ctrl *PolicyController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/policy/details", fiber.Map{
 		"Title":            "Details",
@@ -90,7 +92,7 @@ func (ctrl *PolicyController) createForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/policy/create", fiber.Map{
 		"Title":           "Create Policy",
@@ -106,12 +108,12 @@ func (ctrl *PolicyController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreatePolicyRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreatePolicy(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created policy '"+request.PolicyName+"' successfully")
 	return c.Redirect("/company/policies")
@@ -123,11 +125,11 @@ func (ctrl *PolicyController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/policy/edit", fiber.Map{
 		"Title":            "Edit Policy",
@@ -144,16 +146,16 @@ func (ctrl *PolicyController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdatePolicyRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdatePolicy(c.Context(), policy.PolicyId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated Policy '"+request.PolicyName+"' successfully")
 	return c.Redirect("/company/policies/" + id + "/details")
@@ -178,7 +180,7 @@ func (ctrl *PolicyController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchPolicies(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("company/policy/search-results", fiber.Map{
@@ -199,7 +201,7 @@ func (ctrl *PolicyController) removeForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/policy/delete", fiber.Map{
 		"Title":            "Remove Policy",
@@ -215,11 +217,11 @@ func (ctrl *PolicyController) remove(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.RemovePolicy(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed policy '%s'", loggedUser.UserName, policy.PolicyName))
 	return c.Redirect("/company/policies")

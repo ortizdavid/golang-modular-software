@@ -8,18 +8,18 @@ import (
 )
 
 type CompanyReportController struct {
-	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	moduleFlagStatusService     *configurations.ModuleFlagStatusService
 	coreEntityFlagStatusService *configurations.CoreEntityFlagStatusService
-	authService *authentication.AuthService
-	configService *configurations.AppConfigurationService
+	authService                 *authentication.AuthService
+	configService               *configurations.AppConfigurationService
 }
 
 func NewCompanyReportController(db *database.Database) *CompanyReportController {
 	return &CompanyReportController{
-		authService: authentication.NewAuthService(db),
+		authService:                 authentication.NewAuthService(db),
 		moduleFlagStatusService:     configurations.NewModuleFlagStatusService(db),
 		coreEntityFlagStatusService: configurations.NewCoreEntityFlagStatusService(db),
-		configService: configurations.NewAppConfigurationService(db),
+		configService:               configurations.NewAppConfigurationService(db),
 	}
 }
 
@@ -33,10 +33,10 @@ func (ctrl *CompanyReportController) index(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	return c.Render("reports/company/index", fiber.Map{
-		"Title":      "Company Reports",
-		"LoggedUser": loggedUser,
-		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": moduleFlagStatus,
+		"Title":                "Company Reports",
+		"LoggedUser":           loggedUser,
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus":     moduleFlagStatus,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
 	})
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/company/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/company/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type BranchController struct {
@@ -21,6 +22,7 @@ type BranchController struct {
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewBranchController(db *database.Database) *BranchController {
@@ -53,7 +55,7 @@ func (ctrl *BranchController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllBranchesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/branch/index", fiber.Map{
 		"Title":            "Branches",
@@ -72,7 +74,7 @@ func (ctrl *BranchController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/branch/details", fiber.Map{
 		"Title":            "Details",
@@ -88,7 +90,7 @@ func (ctrl *BranchController) createForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/branch/create", fiber.Map{
 		"Title":            "Create Branch",
@@ -104,12 +106,12 @@ func (ctrl *BranchController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateBranchRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateBranch(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created branch '"+request.BranchName+"' successfully")
 	return c.Redirect("/company/branches")
@@ -121,7 +123,7 @@ func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/branch/edit", fiber.Map{
 		"Title":            "Edit Branch",
@@ -137,16 +139,16 @@ func (ctrl *BranchController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateBranchRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateBranch(c.Context(), branch.BranchId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated Branch '"+request.BranchName+"' successfully")
 	return c.Redirect("/company/branches/" + id + "/details")
@@ -171,7 +173,7 @@ func (ctrl *BranchController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchBranches(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("company/branch/search-results", fiber.Map{

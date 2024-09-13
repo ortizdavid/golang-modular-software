@@ -10,6 +10,7 @@ import (
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type EvaluationStatusController struct {
@@ -19,6 +20,7 @@ type EvaluationStatusController struct {
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewEvaluationStatusController(db *database.Database) *EvaluationStatusController {
@@ -52,7 +54,7 @@ func (ctrl *EvaluationStatusController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/evaluation-status/index", fiber.Map{
 		"Title":            "Evaluation Statuses",
@@ -71,7 +73,7 @@ func (ctrl *EvaluationStatusController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/evaluation-status/details", fiber.Map{
 		"Title":            "Details",
@@ -97,12 +99,12 @@ func (ctrl *EvaluationStatusController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateStatusRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateEvaluationStatus(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created evaluation status '"+request.StatusName+"' successfully")
 	return c.Redirect("/references/evaluation-statuses")
@@ -114,7 +116,7 @@ func (ctrl *EvaluationStatusController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/evaluation-status/edit", fiber.Map{
 		"Title":            "Edit Evaluation Status",
@@ -130,16 +132,16 @@ func (ctrl *EvaluationStatusController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateStatusRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateEvaluationStatus(c.Context(), status.StatusId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated evaluation status '"+request.StatusName+"' successfully")
 	return c.Redirect("/references/evaluation-statuses/" + id + "/details")
@@ -164,7 +166,7 @@ func (ctrl *EvaluationStatusController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("references/evaluation-status/search-results", fiber.Map{
@@ -185,7 +187,7 @@ func (ctrl *EvaluationStatusController) removeForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/evaluation-status/delete", fiber.Map{
 		"Title":            "Remove Evaluation Status",
@@ -201,11 +203,11 @@ func (ctrl *EvaluationStatusController) remove(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	status, err := ctrl.service.GetEvaluationStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.RemoveEvaluationStatus(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed evaluation status '%s'", loggedUser.UserName, status.StatusName))
 	return c.Redirect("/references/evaluation-statuses")

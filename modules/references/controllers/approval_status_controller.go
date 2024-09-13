@@ -10,6 +10,7 @@ import (
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type ApprovalStatusController struct {
@@ -19,6 +20,7 @@ type ApprovalStatusController struct {
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewApprovalStatusController(db *database.Database) *ApprovalStatusController {
@@ -52,7 +54,7 @@ func (ctrl *ApprovalStatusController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/approval-status/index", fiber.Map{
 		"Title":            "Approval Statuses",
@@ -71,7 +73,7 @@ func (ctrl *ApprovalStatusController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/approval-status/details", fiber.Map{
 		"Title":            "Details",
@@ -97,12 +99,12 @@ func (ctrl *ApprovalStatusController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateStatusRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateApprovalStatus(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created approval status '"+request.StatusName+"' successfully")
 	return c.Redirect("/references/approval-statuses")
@@ -114,7 +116,7 @@ func (ctrl *ApprovalStatusController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/approval-status/edit", fiber.Map{
 		"Title":            "Edit Approval Status",
@@ -130,16 +132,16 @@ func (ctrl *ApprovalStatusController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateStatusRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateApprovalStatus(c.Context(), status.StatusId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated approval status '"+request.StatusName+"' successfully")
 	return c.Redirect("/references/approval-statuses/" + id + "/details")
@@ -164,7 +166,7 @@ func (ctrl *ApprovalStatusController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("references/approval-status/search-results", fiber.Map{
@@ -185,7 +187,7 @@ func (ctrl *ApprovalStatusController) removeForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/approval-status/delete", fiber.Map{
 		"Title":            "Remove Approval Status",
@@ -201,11 +203,11 @@ func (ctrl *ApprovalStatusController) remove(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	status, err := ctrl.service.GetApprovalStatusByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.RemoveApprovalStatus(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed approval status '%s'", loggedUser.UserName, status.StatusName))
 	return c.Redirect("/references/approval-statuses")

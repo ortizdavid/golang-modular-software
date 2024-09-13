@@ -10,6 +10,7 @@ import (
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type IdentificationTypeController struct {
@@ -19,6 +20,7 @@ type IdentificationTypeController struct {
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewIdentificationTypeController(db *database.Database) *IdentificationTypeController {
@@ -52,7 +54,7 @@ func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllIdentificationTypesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/identification-type/index", fiber.Map{
 		"Title":            "Identification Types",
@@ -71,7 +73,7 @@ func (ctrl *IdentificationTypeController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	iType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/identification-type/details", fiber.Map{
 		"Title":              "Details",
@@ -97,12 +99,12 @@ func (ctrl *IdentificationTypeController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateTypeRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateIdentificationType(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created contact type '"+request.TypeName+"' successfully")
 	return c.Redirect("/references/identification-types")
@@ -114,7 +116,7 @@ func (ctrl *IdentificationTypeController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/identification-type/edit", fiber.Map{
 		"Title":              "Edit Identification Type",
@@ -130,16 +132,16 @@ func (ctrl *IdentificationTypeController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateTypeRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateIdentificationType(c.Context(), identType.TypeId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated contact type '"+request.TypeName+"' successfully")
 	return c.Redirect("/references/identification-types/" + id + "/details")
@@ -162,7 +164,7 @@ func (ctrl *IdentificationTypeController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchTypes(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("references/identification-type/search-results", fiber.Map{
@@ -183,7 +185,7 @@ func (ctrl *IdentificationTypeController) removeForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("references/identification-type/delete", fiber.Map{
 		"Title":              "Remove Identification Type",
@@ -199,11 +201,11 @@ func (ctrl *IdentificationTypeController) remove(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	identType, err := ctrl.service.GetIdentificationTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.RemoveIdentificationType(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed contact type '%s'", loggedUser.UserName, identType.TypeName))
 	return c.Redirect("/references/identification-types")

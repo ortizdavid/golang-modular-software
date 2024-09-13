@@ -9,9 +9,9 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
-
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type ModuleFlagController struct {
@@ -21,6 +21,7 @@ type ModuleFlagController struct {
 	configService           *services.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewModuleFlagController(db *database.Database) *ModuleFlagController {
@@ -47,7 +48,7 @@ func (ctrl *ModuleFlagController) index(c *fiber.Ctx) error {
 
 	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("configuration/module-flag/index", fiber.Map{
 		"Title":            "Module Flags",
@@ -63,7 +64,7 @@ func (ctrl *ModuleFlagController) manageForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("configuration/module-flag/manage", fiber.Map{
 		"Title":            "Module Flags",
@@ -95,7 +96,7 @@ func (ctrl *ModuleFlagController) manage(c *fiber.Ctx) error {
 	err := ctrl.service.ManageModuleFlags(c.Context(), requests)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated module flags!", loggedUser.UserName))
 	return c.Redirect("/configurations/module-flags")

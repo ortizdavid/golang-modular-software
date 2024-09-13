@@ -9,20 +9,20 @@ import (
 )
 
 type RootController struct {
-	authService             *authentication.AuthService
-	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	authService                 *authentication.AuthService
+	moduleFlagStatusService     *configurations.ModuleFlagStatusService
 	coreEntityFlagStatusService *configurations.CoreEntityFlagStatusService
-	configService           *configurations.AppConfigurationService
-	statisticsService       *services.StatisticsService
+	configService               *configurations.AppConfigurationService
+	statisticsService           *services.StatisticsService
 }
 
 func NewRootController(db *database.Database) *RootController {
 	return &RootController{
-		authService:             authentication.NewAuthService(db),
-		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
+		authService:                 authentication.NewAuthService(db),
+		moduleFlagStatusService:     configurations.NewModuleFlagStatusService(db),
 		coreEntityFlagStatusService: configurations.NewCoreEntityFlagStatusService(db),
-		configService:           configurations.NewAppConfigurationService(db),
-		statisticsService:       services.NewStatisticsService(db),
+		configService:               configurations.NewAppConfigurationService(db),
+		statisticsService:           services.NewStatisticsService(db),
 	}
 }
 
@@ -37,11 +37,11 @@ func (ctrl *RootController) index(c *fiber.Ctx) error {
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
 	return c.Render("company/_root/index", fiber.Map{
-		"Title":            "Company Management",
-		"LoggedUser":       loggedUser,
-		"ModuleFlagStatus": moduleFlagStatus,
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"Statistics":       statistics,
+		"Title":                "Company Management",
+		"LoggedUser":           loggedUser,
+		"ModuleFlagStatus":     moduleFlagStatus,
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Statistics":           statistics,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
 	})
 }

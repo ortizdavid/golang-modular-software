@@ -5,12 +5,14 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type RoleApi struct {
 	service     *services.RoleService
 	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
+	shared.BaseController
 }
 
 func NewRoleApi(db *database.Database) *RoleApi {
@@ -32,7 +34,7 @@ func (api *RoleApi) getAllRoles(c *fiber.Ctx) error {
 	//loggedUser := c.Locals("loggedUser").(entities.UserData)
 	roles, err := api.service.GetAllRolesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return api.HandleErrorsApi(c, err)
 	}
 	return c.Status(fiber.StatusOK).JSON(roles)
 }

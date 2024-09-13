@@ -8,9 +8,9 @@ import (
 )
 
 type BackOfficeController struct {
-	authService             *authentication.AuthService
-	configService           *configurations.AppConfigurationService
-	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	authService                 *authentication.AuthService
+	configService               *configurations.AppConfigurationService
+	moduleFlagStatusService     *configurations.ModuleFlagStatusService
 	coreEntityFlagStatusService *configurations.CoreEntityFlagStatusService
 }
 
@@ -25,7 +25,7 @@ func NewBackOfficeController(db *database.Database) *BackOfficeController {
 
 func (ctrl *BackOfficeController) Routes(router *fiber.App, db *database.Database) {
 	router.Get("/", ctrl.index)
-	
+
 	group := router.Group("/account")
 	group.Get("/home", ctrl.home)
 	group.Get("/notifications", ctrl.notifications)
@@ -40,10 +40,10 @@ func (ctrl *BackOfficeController) home(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	return c.Render("_back_office/home", fiber.Map{
-		"Title":            "Home",
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": moduleFlagStatus,
-		"LoggedUser":       loggedUser,
+		"Title":                "Home",
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus":     moduleFlagStatus,
+		"LoggedUser":           loggedUser,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
 	})
 }
@@ -53,10 +53,10 @@ func (ctrl *BackOfficeController) notifications(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	return c.Render("_back_office/notifications", fiber.Map{
-		"Title":            "Notifications",
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": moduleFlagStatus,
+		"Title":                "Notifications",
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus":     moduleFlagStatus,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
-		"LoggedUser":       loggedUser,
+		"LoggedUser":           loggedUser,
 	})
 }

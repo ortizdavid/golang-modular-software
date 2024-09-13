@@ -5,7 +5,6 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 )
 
-
 func RegisterRoutes(router *fiber.App, db *database.Database) {
 	NewRootController(db).Routes(router, db)
 	NewBasicConfigurationController(db).Routes(router, db)

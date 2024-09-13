@@ -6,6 +6,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type RoleController struct {
@@ -16,6 +17,7 @@ type RoleController struct {
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewRoleController(db *database.Database) *RoleController {
@@ -32,7 +34,7 @@ func NewRoleController(db *database.Database) *RoleController {
 
 func (ctrl *RoleController) Routes(router *fiber.App, db *database.Database) {
 	group := router.Group("/user-management/roles")
-	
+
 	group.Get("/", ctrl.index)
 	group.Get("/create", ctrl.createForm)
 	group.Post("/create", ctrl.create)

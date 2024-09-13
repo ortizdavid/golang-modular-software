@@ -13,7 +13,7 @@ func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
@@ -33,11 +33,11 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.ResetPasswordRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
@@ -46,7 +46,7 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 	err = ctrl.service.ResetUserPassword(c.Context(), user.UserId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' password reseted", loggedUser.UserName))
 	return c.Redirect("/user-management/users/" + user.UniqueId + "/details")

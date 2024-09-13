@@ -11,14 +11,16 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type AuthApi struct {
-	service		*services.AuthService
-	jwtService	*services.JwtService
-	userService	*services.UserService
-	infoLogger	*helpers.Logger
-	errorLogger	*helpers.Logger
+	service     *services.AuthService
+	jwtService  *services.JwtService
+	userService *services.UserService
+	infoLogger  *helpers.Logger
+	errorLogger *helpers.Logger
+	shared.BaseController
 }
 
 func NewAuthApi(db *database.Database) *AuthApi {
@@ -40,12 +42,12 @@ func (ctrl *AuthApi) Routes(router *fiber.App) {
 func (ctrl *AuthApi) login(c *fiber.Ctx) error {
 	var request entities.LoginRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return ctrl.HandleErrorsApi(c, err)
 	}
 	token, err := ctrl.service.AuthenticateAPI(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, fmt.Sprintf("User '%s' failed to login", request.UserName))
-		return helpers.HandleHttpErrorsApi(c, err)
+		return ctrl.HandleErrorsApi(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' authenticated sucessful!", request.UserName))
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -58,7 +60,7 @@ func (ctrl *AuthApi) refresh(c *fiber.Ctx) error {
 	// Extract refresh token from the Authorization header (assuming it's in the format "Bearer {token}")
 	authHeader := c.Get("Authorization")
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-	
+
 	if tokenString == "" {
 		return helpers.HandleHttpErrorsApi(c, apperrors.NewBadRequestError("Refresh token is required"))
 	}
@@ -84,7 +86,7 @@ func (ctrl *AuthApi) refresh(c *fiber.Ctx) error {
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%d' refreshed token successfully", userId))
 	// Return new token in response
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status": "success",
-		"refresh_token":  newToken,
+		"status":        "success",
+		"refresh_token": newToken,
 	})
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type UserApi struct {
@@ -16,6 +17,7 @@ type UserApi struct {
 	configService *configurations.BasicConfigurationService
 	infoLogger    *helpers.Logger
 	errorLogger   *helpers.Logger
+	shared.BaseController
 }
 
 func NewUserApi(db *database.Database) *UserApi {
@@ -41,7 +43,7 @@ func (ctrl *UserApi) getAllUsers(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllUsers(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return ctrl.HandleErrorsApi(c, err)
 	}
 	return c.JSON(pagination)
 }
@@ -50,7 +52,7 @@ func (ctrl *UserApi) getAllActiveUsers(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return ctrl.HandleErrorsApi(c, err)
 	}
 	return c.JSON(pagination)
 }
@@ -59,7 +61,7 @@ func (ctrl *UserApi) getAllInactiveUsers(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return ctrl.HandleErrorsApi(c, err)
 	}
 	return c.JSON(pagination)
 }

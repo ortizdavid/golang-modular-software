@@ -9,6 +9,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type LoginActivityController struct {
@@ -18,6 +19,7 @@ type LoginActivityController struct {
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewLoginActivityController(db *database.Database) *LoginActivityController {
@@ -45,7 +47,7 @@ func (ctrl *LoginActivityController) index(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	pagination, err := ctrl.service.GetAllLoginActivities(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("authentication/login-activity/index", fiber.Map{
 		"Title":            "Login Activities",
@@ -64,7 +66,7 @@ func (ctrl *LoginActivityController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	loginActivity, err := ctrl.service.GetLoginActivityByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("authentication/login-activity/details", fiber.Map{
 		"Title":            "Details",
@@ -94,7 +96,7 @@ func (ctrl *LoginActivityController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchLoginActivities(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("authentication/login-activity/search-results", fiber.Map{

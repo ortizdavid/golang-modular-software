@@ -9,13 +9,15 @@ import (
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type CompanyConfigurationApi struct {
 	service     *services.CompanyConfigurationService
 	authService *authentication.AuthService
-	infoLogger *helpers.Logger
+	infoLogger  *helpers.Logger
 	errorLogger *helpers.Logger
+	shared.BaseController
 }
 
 func NewCompanyConfigurationApi(db *database.Database) *CompanyConfigurationApi {
@@ -36,11 +38,11 @@ func (api *CompanyConfigurationApi) Routes(router *fiber.App, db *database.Datab
 func (api *CompanyConfigurationApi) getCompanyConfiguration(c *fiber.Ctx) error {
 	_, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return api.HandleErrorsApi(c, err)
 	}
 	companyConfig, err := api.service.GetCompanyConfiguration(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return api.HandleErrorsApi(c, err)
 	}
 	return c.JSON(companyConfig)
 }
@@ -49,15 +51,15 @@ func (api *CompanyConfigurationApi) edit(c *fiber.Ctx) error {
 	var request entities.UpdateCompanyConfigurationRequest
 	loggedUser, err := api.authService.GetLoggedUser(c.Context(), c)
 	if err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return api.HandleErrorsApi(c, err)
 	}
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrorsApi(c, err)
+		return api.HandleErrorsApi(c, err)
 	}
 	err = api.service.UpdateCompanyConfiguration(c.Context(), request)
 	if err != nil {
 		api.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrorsApi(c, err)
+		return api.HandleErrorsApi(c, err)
 	}
 	message := fmt.Sprintf("User '%s' updated company configurations!", loggedUser.UserName)
 	api.infoLogger.Info(c, message)

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-
+    shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -10,6 +10,7 @@ import (
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/services"
+	
 )
 
 type JobTitleController struct {
@@ -19,6 +20,7 @@ type JobTitleController struct {
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewJobTitleController(db *database.Database) *JobTitleController {
@@ -31,7 +33,6 @@ func NewJobTitleController(db *database.Database) *JobTitleController {
 		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
 	}
 }
-
 
 func (ctrl *JobTitleController) Routes(router *fiber.App, db *database.Database) {
 	group := router.Group("/employees/job-titles")
@@ -53,7 +54,7 @@ func (ctrl *JobTitleController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllJobTitlesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employee/job-title/index", fiber.Map{
 		"Title":            "Job Titles",
@@ -72,14 +73,14 @@ func (ctrl *JobTitleController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employee/job-title/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
-		"JobTitle":      jobTitle,
+		"JobTitle":         jobTitle,
 	})
 }
 
@@ -98,12 +99,12 @@ func (ctrl *JobTitleController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateJobTitleRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateJobTitle(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created job title '"+request.TitleName+"' successfully")
 	return c.Redirect("/employees/job-titles")
@@ -115,14 +116,14 @@ func (ctrl *JobTitleController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employee/job-title/edit", fiber.Map{
 		"Title":            "Edit Job Title",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
-		"JobTitle":      jobTitle,
+		"JobTitle":         jobTitle,
 	})
 }
 
@@ -131,16 +132,16 @@ func (ctrl *JobTitleController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateJobTitleRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateJobTitle(c.Context(), jobTitle.JobTitleId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated job title '"+request.TitleName+"' successfully")
 	return c.Redirect("/employees/job-titles/" + id + "/details")
@@ -165,7 +166,7 @@ func (ctrl *JobTitleController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchJobTitles(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("employee/job-title/search-results", fiber.Map{
@@ -186,11 +187,11 @@ func (ctrl *JobTitleController) removeForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employees/job-title/delete", fiber.Map{
 		"Title":            "Remove Job Title",
-		"JobTitle":      jobTitle,
+		"JobTitle":         jobTitle,
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -202,11 +203,11 @@ func (ctrl *JobTitleController) remove(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.RemoveJobTitle(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed job title '%s'", loggedUser.UserName, jobTitle.TitleName))
 	return c.Redirect("/employees/job-titles")

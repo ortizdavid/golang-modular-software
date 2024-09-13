@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -10,6 +9,7 @@ import (
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type DocumentTypeController struct {
@@ -19,6 +19,7 @@ type DocumentTypeController struct {
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewDocumentTypeController(db *database.Database) *DocumentTypeController {
@@ -31,7 +32,6 @@ func NewDocumentTypeController(db *database.Database) *DocumentTypeController {
 		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
 	}
 }
-
 
 func (ctrl *DocumentTypeController) Routes(router *fiber.App, db *database.Database) {
 	group := router.Group("/employees/document-types")
@@ -53,7 +53,7 @@ func (ctrl *DocumentTypeController) index(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.GetAllDocumentTypesPaginated(c.Context(), c, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employee/document-type/index", fiber.Map{
 		"Title":            "Document Types",
@@ -72,14 +72,14 @@ func (ctrl *DocumentTypeController) details(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	documentType, err := ctrl.service.GetDocumentTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employee/document-type/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
-		"DocumentType":      documentType,
+		"DocumentType":     documentType,
 	})
 }
 
@@ -98,12 +98,12 @@ func (ctrl *DocumentTypeController) create(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateDocumentTypeRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.CreateDocumentType(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created document type '"+request.TypeName+"' successfully")
 	return c.Redirect("/employees/document-types")
@@ -115,14 +115,14 @@ func (ctrl *DocumentTypeController) editForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	documentType, err := ctrl.service.GetDocumentTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employee/document-type/edit", fiber.Map{
 		"Title":            "Edit Document Type",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
-		"DocumentType":      documentType,
+		"DocumentType":     documentType,
 	})
 }
 
@@ -131,16 +131,16 @@ func (ctrl *DocumentTypeController) edit(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	documentType, err := ctrl.service.GetDocumentTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	var request entities.UpdateDocumentTypeRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.UpdateDocumentType(c.Context(), documentType.TypeId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated document type '"+request.TypeName+"' successfully")
 	return c.Redirect("/employees/document-types/" + id + "/details")
@@ -165,7 +165,7 @@ func (ctrl *DocumentTypeController) search(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)
 	pagination, err := ctrl.service.SearchDocumentTypes(c.Context(), c, request, params)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
 	return c.Render("employee/document-type/search-results", fiber.Map{
@@ -186,11 +186,11 @@ func (ctrl *DocumentTypeController) removeForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	documentType, err := ctrl.service.GetDocumentTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("employees/document-type/delete", fiber.Map{
 		"Title":            "Remove Document Type",
-		"DocumentType":      documentType,
+		"DocumentType":     documentType,
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -202,11 +202,11 @@ func (ctrl *DocumentTypeController) remove(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	documentType, err := ctrl.service.GetDocumentTypeByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err = ctrl.service.RemoveDocumentType(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed document type '%s'", loggedUser.UserName, documentType.TypeName))
 	return c.Redirect("/employees/document-types")

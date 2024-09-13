@@ -12,7 +12,7 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
@@ -32,7 +32,7 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
@@ -41,7 +41,7 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 	err = ctrl.service.DeactivateUser(c.Context(), user.UserId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' deactivated successfully!", user.UserName))
 	return c.Redirect("/user-management/users/" + id + "/details")
@@ -51,7 +51,7 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
@@ -71,7 +71,7 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
@@ -80,7 +80,7 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	err = ctrl.service.ActivateUser(c.Context(), user.UserId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' activated successfully!", user.UserName))
 	return c.Redirect("/user-management/users/" + id + "/details")

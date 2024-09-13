@@ -11,16 +11,18 @@ import (
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type CoreEntityFlagController struct {
-	service                 *services.CoreEntityFlagService
-	moduleFlagStatusService *services.ModuleFlagStatusService
+	service                     *services.CoreEntityFlagService
+	moduleFlagStatusService     *services.ModuleFlagStatusService
 	coreEntityFlagStatusService *services.CoreEntityFlagStatusService
-	authService             *authentication.AuthService
-	configService           *services.AppConfigurationService
-	infoLogger              *helpers.Logger
-	errorLogger             *helpers.Logger
+	authService                 *authentication.AuthService
+	configService               *services.AppConfigurationService
+	infoLogger                  *helpers.Logger
+	errorLogger                 *helpers.Logger
+	shared.BaseController
 }
 
 func NewCoreEntityFlagController(db *database.Database) *CoreEntityFlagController {
@@ -48,13 +50,13 @@ func (ctrl *CoreEntityFlagController) index(c *fiber.Ctx) error {
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	coreEntityFlags, err := ctrl.service.GetAllCoreEntityFlags(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("configuration/core-entity-flag/index", fiber.Map{
-		"Title":            "Core Entities Flags",
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"LoggedUser":       loggedUser,
-		"ModuleFlagStatus": moduleFlagStatus,
+		"Title":                "Core Entities Flags",
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"LoggedUser":           loggedUser,
+		"ModuleFlagStatus":     moduleFlagStatus,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
 		"CoreEntityFlags":      coreEntityFlags,
 	})
@@ -65,14 +67,14 @@ func (ctrl *CoreEntityFlagController) manageForm(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlags, err := ctrl.service.GetAllCoreEntityFlags(c.Context())
 	if err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("configuration/core-entity-flag/manage", fiber.Map{
 		"Title":            "Manage Core Entity Flags",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":       loggedUser,
 		"ModuleFlagStatus": moduleFlagStatus,
-		"CoreEntityFlags":      coreEntityFlags,
+		"CoreEntityFlags":  coreEntityFlags,
 	})
 }
 
@@ -97,7 +99,7 @@ func (ctrl *CoreEntityFlagController) manage(c *fiber.Ctx) error {
 	err := ctrl.service.ManageCoreEntityFlags(c.Context(), requests)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated core entity flags!", loggedUser.UserName))
 	return c.Redirect("/configurations/core-entity-flags")

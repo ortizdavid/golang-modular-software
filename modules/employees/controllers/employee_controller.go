@@ -9,26 +9,28 @@ import (
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/services"
 	references "github.com/ortizdavid/golang-modular-software/modules/references/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type EmployeeController struct {
 	service                 *services.EmployeeService
-	jobTitleService			*services.JobTitleService
+	jobTitleService         *services.JobTitleService
 	documentService         *services.DocumentService
-	phoneService    		*services.EmployeePhoneService
-	emailService    		*services.EmployeeEmailService
+	phoneService            *services.EmployeePhoneService
+	emailService            *services.EmployeeEmailService
 	documentTypeService     *services.DocumentTypeService
-	identTypeService		*references.IdentificationTypeService
-	countryService			*references.CountryService
-	maritalStatusService	*references.MaritalStatusService
-	employmentStatusService	*references.EmploymentStatusService
-	contactTypeService	    *references.ContactTypeService
-	departmentService		*company.DepartmentService
+	identTypeService        *references.IdentificationTypeService
+	countryService          *references.CountryService
+	maritalStatusService    *references.MaritalStatusService
+	employmentStatusService *references.EmploymentStatusService
+	contactTypeService      *references.ContactTypeService
+	departmentService       *company.DepartmentService
 	authService             *authentication.AuthService
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewEmployeeController(db *database.Database) *EmployeeController {
@@ -36,8 +38,8 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		service:                 services.NewEmployeeService(db),
 		jobTitleService:         services.NewJobTitleService(db),
 		documentService:         services.NewDocumentService(db),
-		phoneService:    		 services.NewEmployeePhoneService(db),
-		emailService:    		 services.NewEmployeeEmailService(db),
+		phoneService:            services.NewEmployeePhoneService(db),
+		emailService:            services.NewEmployeeEmailService(db),
 		documentTypeService:     services.NewDocumentTypeService(db),
 		identTypeService:        references.NewIdentificationTypeService(db),
 		countryService:          references.NewCountryService(db),
@@ -55,7 +57,7 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 
 func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database) {
 	group := router.Group("/employees/employee-info")
-	
+
 	group.Get("", ctrl.index)
 	group.Get("/:id/details", ctrl.details)
 	group.Get("/create", ctrl.createForm)
@@ -66,12 +68,12 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 	group.Get("/search-results", ctrl.search)
 	group.Get("/:id/delete", ctrl.removeForm)
 	group.Post("/:id/delete", ctrl.remove)
-	
+
 	group.Get("/:id/add-phone", ctrl.addPhoneForm)
 	group.Post("/:id/add-phone", ctrl.addPhone)
 	group.Get("/:empId/edit-phone/:contId", ctrl.editPhoneForm)
 	group.Post("/:empId/edit-phone/:contId", ctrl.editPhone)
-	
+
 	group.Get("/:id/add-email", ctrl.addEmailForm)
 	group.Post("/:id/add-email", ctrl.addEmail)
 	group.Get("/:empId/edit-email/:contId", ctrl.editEmailForm)
@@ -83,4 +85,3 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 	group.Post("/:empId/edit-document/:docId", ctrl.editDocument)
 	group.Get("/display-document/:id", ctrl.displayDocument)
 }
-

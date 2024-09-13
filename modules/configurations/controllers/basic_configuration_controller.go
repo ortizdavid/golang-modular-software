@@ -9,6 +9,7 @@ import (
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type BasicConfigurationController struct {
@@ -18,6 +19,7 @@ type BasicConfigurationController struct {
 	configService           *services.AppConfigurationService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewBasicConfigurationController(db *database.Database) *BasicConfigurationController {
@@ -64,12 +66,12 @@ func (ctrl *BasicConfigurationController) edit(c *fiber.Ctx) error {
 	var request entities.UpdateBasicConfigurationRequest
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	err := ctrl.service.UpdateBasicConfiguration(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated basic configurations!", loggedUser.UserName))
 	return c.Redirect("/configurations/basic-configurations")

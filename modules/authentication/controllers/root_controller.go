@@ -8,11 +8,11 @@ import (
 )
 
 type RootController struct {
-	authService             *services.AuthService
-	configService           *configurations.AppConfigurationService
-	moduleFlagStatusService *configurations.ModuleFlagStatusService
+	authService                 *services.AuthService
+	configService               *configurations.AppConfigurationService
+	moduleFlagStatusService     *configurations.ModuleFlagStatusService
 	coreEntityFlagStatusService *configurations.CoreEntityFlagStatusService
-	statisticsService       *services.StatisticsService
+	statisticsService           *services.StatisticsService
 }
 
 func NewRootController(db *database.Database) *RootController {
@@ -36,11 +36,11 @@ func (ctrl *RootController) index(c *fiber.Ctx) error {
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
 	return c.Render("authentication/_root/index", fiber.Map{
-		"Title":            "User Management",
-		"LoggedUser":       loggedUser,
-		"ModuleFlagStatus": moduleFlagStatus,
+		"Title":                "User Management",
+		"LoggedUser":           loggedUser,
+		"ModuleFlagStatus":     moduleFlagStatus,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"Statistics":       statistics,
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"Statistics":           statistics,
 	})
 }

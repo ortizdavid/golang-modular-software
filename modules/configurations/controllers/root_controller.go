@@ -9,10 +9,10 @@ import (
 )
 
 type RootController struct {
-	authService             *authentication.AuthService
-	moduleFlagStatusService *services.ModuleFlagStatusService
+	authService                 *authentication.AuthService
+	moduleFlagStatusService     *services.ModuleFlagStatusService
 	coreEntityFlagStatusService *services.CoreEntityFlagStatusService
-	configService           *services.AppConfigurationService
+	configService               *services.AppConfigurationService
 }
 
 func NewRootController(db *database.Database) *RootController {
@@ -35,10 +35,10 @@ func (ctrl *RootController) index(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	return c.Render("configuration/_root/index", fiber.Map{
-		"Title":            "Configurations",
-		"LoggedUser":       loggedUser,
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": moduleFlagStatus,
+		"Title":                "Configurations",
+		"LoggedUser":           loggedUser,
+		"AppConfig":            ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus":     moduleFlagStatus,
 		"CoreEntityFlagStatus": coreEntityFlagStatus,
 	})
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type AccountController struct {
@@ -19,6 +20,7 @@ type AccountController struct {
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	infoLogger              *helpers.Logger
 	errorLogger             *helpers.Logger
+	shared.BaseController
 }
 
 func NewAccountController(db *database.Database) *AccountController {
@@ -58,7 +60,7 @@ func (ctrl *AccountController) uploadUserImage(c *fiber.Ctx) error {
 	err := ctrl.service.UploadUserImage(c.Context(), c, loggedUser.UserId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' uploaded image", loggedUser.UserName))
 	return c.Redirect("/account/user-data")
@@ -78,13 +80,13 @@ func (ctrl *AccountController) changePasswordForm(c *fiber.Ctx) error {
 func (ctrl *AccountController) changePassword(c *fiber.Ctx) error {
 	var request entities.ChangePasswordRequest
 	if err := c.BodyParser(&request); err != nil {
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	err := ctrl.service.ChangeUserPassword(c.Context(), loggedUser.UserId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
-		return helpers.HandleHttpErrors(c, err)
+		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated password", loggedUser.UserName))
 	return c.Redirect("/auth/login")

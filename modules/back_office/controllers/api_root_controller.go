@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"path/filepath"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,7 +21,7 @@ func (ctrl ApiRootController) index(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl *ApiRootController) downloadCollections(c * fiber.Ctx) error {
+func (ctrl *ApiRootController) downloadCollections(c *fiber.Ctx) error {
 	path := "./docs/_api/"
 	fileName := "Golang Modular Software.postman_collection.json"
 	c.Set("Content-Disposition", "attachment; filename="+fileName)
