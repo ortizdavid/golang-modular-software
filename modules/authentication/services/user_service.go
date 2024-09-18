@@ -33,7 +33,7 @@ func NewUserService(db *database.Database) *UserService {
 		userApiKeyRepository: repositories.NewUserApiKeyRepository(db),
 	}
 }
-
+/*
 func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUserRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -57,7 +57,6 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	}
 	//--- Create User ----------------------------------------------------------------------
 	user := entities.User{
-		UserId:    0,
 		UserName:  request.UserName,
 		Email:     request.Email,
 		Password:  encryption.HashPassword(request.Password),
@@ -131,6 +130,90 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		return apperrors.NewInternalServerError("error while committing transaction: "+err.Error())
 	}
 	return nil
+}
+*/
+
+func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUserRequest) error {
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	return s.repository.WithTransaction(ctx, func(tx *database.Database) error {
+		exists, err := s.repository.ExistsByName(ctx, request.UserName)
+		if err != nil {
+			return apperrors.NewNotFoundError(err.Error())
+		}
+		if exists {
+			return apperrors.NewConflictError("user "+request.UserName+" already exists")
+		}
+		//--- Create User ----------------------------------------------------------------------
+		user := entities.User{
+			UserName:  request.UserName,
+			Email:     request.Email,
+			Password:  encryption.HashPassword(request.Password),
+			IsActive:  true,
+			UserImage:     "",
+			Token:     encryption.GenerateRandomToken(),
+			BaseEntity: shared.BaseEntity{
+				UniqueId:  encryption.GenerateUUID(),
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+			},
+		}
+		err = s.repository.Create(ctx, user)
+		if err != nil {
+			return apperrors.NewInternalServerError("error while creating user: "+ err.Error())
+		}
+		userId := s.repository.LastInsertId
+		_, err = s.roleRepository.FindById(ctx, request.RoleId)
+		if err != nil {
+			return apperrors.NewNotFoundError("role not found")
+		}
+		//--- Insert Role ----------------------------------------------------------------------
+		userRole := entities.UserRole{
+			UserId:     userId,
+			RoleId:     request.RoleId,
+			BaseEntity: shared.BaseEntity{
+				UniqueId:  encryption.GenerateUUID(),
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+			},
+		}
+		err = s.userRoleRepository.Create(ctx, userRole)
+		if err != nil {
+			return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
+		}
+		//---- Create Login Activity ----------------------------------------------------------------------
+		loginAct := entities.LoginActivity{
+			UserId:   userId,
+			Status: entities.ActivityStatusOffline,
+			BaseEntity: shared.BaseEntity{
+				UniqueId:  encryption.GenerateUUID(),
+				CreatedAt: time.Now().UTC(),
+				UpdatedAt: time.Now().UTC(),
+			},
+		}
+		err = s.loginActRepository.Create(ctx, loginAct)
+		if err != nil {
+			return apperrors.NewInternalServerError("error while creating login activity: "+err.Error())
+		}
+		//--- Create API Key ----------------------------------------------------------------------
+		userApiKey := entities.UserApiKey{
+			UserId:    userId,
+			Key:       encryption.GenerateRandomToken(),
+			IsActive:  true,
+			ExpiresAt: time.Now().AddDate(0, 1, 0),  // Add 1 month to the current time
+			BaseEntity: shared.BaseEntity{
+				UniqueId:  encryption.GenerateUUID(),
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+			},
+		}
+		err = s.userApiKeyRepository.Create(ctx, userApiKey)
+		if err != nil {
+			return apperrors.NewInternalServerError("error while creating api key: "+err.Error())
+		}
+		return nil
+	})
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, userId int64, request entities.UpdateUserRequest) error {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
-	"gorm.io/gorm"
 	shared "github.com/ortizdavid/golang-modular-software/modules/shared/repositories"
 
 )
@@ -23,10 +22,6 @@ func NewUserRepository(db *database.Database) *UserRepository {
 		db: db,
 		BaseRepository: shared.NewBaseRepository[entities.User](db),
 	}
-}
-
-func (repo *UserRepository) BeginTransaction(ctx context.Context) (*gorm.DB, error){
-	return repo.db.BeginTx(ctx)
 }
 
 func (repo *UserRepository) Create(ctx context.Context, user entities.User) error {
