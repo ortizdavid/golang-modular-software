@@ -39,12 +39,6 @@ func (repo *EmployeeRepository) FindAllDataLimit(ctx context.Context, limit int,
 	return employees, result.Error
 }
 
-func (repo *EmployeeRepository) FindByName(ctx context.Context, employeeName string) (entities.Employee, error) {
-	var employee entities.Employee
-	result := repo.db.WithContext(ctx).First(&employee, "first_name=?", employeeName)
-	return employee, result.Error
-}
-
 func (repo *EmployeeRepository) FindByIdentificationNumber(ctx context.Context, identNumber string) (entities.Employee, error) {
 	var employee entities.Employee
 	result := repo.db.WithContext(ctx).First(&employee, "identification_number=?", identNumber)

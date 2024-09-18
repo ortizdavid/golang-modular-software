@@ -4,16 +4,16 @@ import (
 	"context"
 
 	"github.com/ortizdavid/golang-modular-software/database"
-	"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+	//"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 // BaseRepository provides generic CRUD operations for entities.
-type BaseRepository[T entities.Entity] struct {
+type BaseRepository[T any] struct {
 	db *database.Database
 	LastInsertId int64
 }
 
-func NewBaseRepository[T entities.Entity](db *database.Database) *BaseRepository[T] {
+func NewBaseRepository[T any](db *database.Database) *BaseRepository[T] {
 	return &BaseRepository[T]{
 		db: db,
 	}
