@@ -2,15 +2,15 @@ package repositories
 
 import (
 	"context"
-
+	"sync"
 	"github.com/ortizdavid/golang-modular-software/database"
-	//"github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 // BaseRepository provides generic CRUD operations for entities.
 type BaseRepository[T any] struct {
 	db *database.Database
 	LastInsertId int64
+	mu sync.Mutex
 }
 
 func NewBaseRepository[T any](db *database.Database) *BaseRepository[T] {

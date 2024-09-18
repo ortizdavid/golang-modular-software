@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-	"sync"
 
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
@@ -11,7 +10,6 @@ import (
 
 type EmployeeRepository struct {
 	db *database.Database
-	mu sync.Mutex
 	*shared.BaseRepository[entities.Employee]
 }
 
@@ -24,9 +22,7 @@ func NewEmployeeRepository(db *database.Database) *EmployeeRepository {
 
 func (repo *EmployeeRepository) Create(ctx context.Context, employee entities.Employee) error {
 	result := repo.db.WithContext(ctx).Create(&employee)
-	repo.mu.Lock()
-	defer repo.mu.Unlock()
-	repo.LastInsertId = employee.EmployeeId
+	repo.SetLastInsertId(employee.EmployeeId)
 	return result.Error
 }
 
