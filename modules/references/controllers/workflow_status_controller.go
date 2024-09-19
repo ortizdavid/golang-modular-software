@@ -56,7 +56,7 @@ func (ctrl *WorkflowStatusController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/workflow-status/index", fiber.Map{
+	return c.Render("reference/workflow-status/index", fiber.Map{
 		"Title":            "Workflow Statuses",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -75,7 +75,7 @@ func (ctrl *WorkflowStatusController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/workflow-status/details", fiber.Map{
+	return c.Render("reference/workflow-status/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -87,7 +87,7 @@ func (ctrl *WorkflowStatusController) details(c *fiber.Ctx) error {
 func (ctrl *WorkflowStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/workflow-status/create", fiber.Map{
+	return c.Render("reference/workflow-status/create", fiber.Map{
 		"Title":            "Create Workflow Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -118,7 +118,7 @@ func (ctrl *WorkflowStatusController) editForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/workflow-status/edit", fiber.Map{
+	return c.Render("reference/workflow-status/edit", fiber.Map{
 		"Title":            "Edit Workflow Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -150,7 +150,7 @@ func (ctrl *WorkflowStatusController) edit(c *fiber.Ctx) error {
 func (ctrl *WorkflowStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/workflow-status/search", fiber.Map{
+	return c.Render("reference/workflow-status/search", fiber.Map{
 		"Title":            "Search Statuses",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -169,7 +169,7 @@ func (ctrl *WorkflowStatusController) search(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-	return c.Render("references/workflow-status/search-results", fiber.Map{
+	return c.Render("reference/workflow-status/search-results", fiber.Map{
 		"Title":            "Search Results",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -189,7 +189,7 @@ func (ctrl *WorkflowStatusController) removeForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/workflow-status/delete", fiber.Map{
+	return c.Render("reference/workflow-status/delete", fiber.Map{
 		"Title":            "Remove Workflow Status",
 		"WorkflowStatus":   status,
 		"LoggedUser":       loggedUser,

@@ -56,7 +56,7 @@ func (ctrl *CurrencyController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/currency/index", fiber.Map{
+	return c.Render("reference/currency/index", fiber.Map{
 		"Title":            "Currencies",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -75,7 +75,7 @@ func (ctrl *CurrencyController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/currency/details", fiber.Map{
+	return c.Render("reference/currency/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -87,7 +87,7 @@ func (ctrl *CurrencyController) details(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/currency/create", fiber.Map{
+	return c.Render("reference/currency/create", fiber.Map{
 		"Title":            "Create Currency",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -118,7 +118,7 @@ func (ctrl *CurrencyController) editForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/currency/edit", fiber.Map{
+	return c.Render("reference/currency/edit", fiber.Map{
 		"Title":            "Edit Currency",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -150,7 +150,7 @@ func (ctrl *CurrencyController) edit(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/currency/search", fiber.Map{
+	return c.Render("reference/currency/search", fiber.Map{
 		"Title":            "Search Currencies",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -169,7 +169,7 @@ func (ctrl *CurrencyController) search(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-	return c.Render("references/currency/search-results", fiber.Map{
+	return c.Render("reference/currency/search-results", fiber.Map{
 		"Title":            "Search Results",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -189,7 +189,7 @@ func (ctrl *CurrencyController) removeForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/currency/delete", fiber.Map{
+	return c.Render("reference/currency/delete", fiber.Map{
 		"Title":            "Remove Currency",
 		"Currency":         currency,
 		"LoggedUser":       loggedUser,

@@ -42,7 +42,6 @@ func (s *DepartmentService) CreateDepartment(ctx context.Context, request entiti
 		return apperrors.NewBadRequestError("Department already exists for company " + company.CompanyName)
 	}
 	department := entities.Department{
-		DepartmentId:   0,
 		CompanyId:      company.CompanyId,
 		DepartmentName: request.DepartmentName,
 		Acronym:        request.Acronym,

@@ -36,7 +36,7 @@ func (ctrl *RootController) index(c *fiber.Ctx) error {
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
 	statistics, _ := ctrl.statisticsService.GetStatistics(c.Context())
-	return c.Render("references/_root/index", fiber.Map{
+	return c.Render("reference/_root/index", fiber.Map{
 		"Title":                "References",
 		"LoggedUser":           loggedUser,
 		"ModuleFlagStatus":     moduleFlagStatus,

@@ -37,7 +37,6 @@ func (s *DocumentTypeService) CreateDocumentType(ctx context.Context, request en
 		return apperrors.NewBadRequestError("document type already exists")
 	}
 	documentType := entities.DocumentType{
-		TypeId:      0,
 		TypeName:    request.TypeName,
 		Description: request.Description,
 		BaseEntity:  shared.BaseEntity{

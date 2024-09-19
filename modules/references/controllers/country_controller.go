@@ -56,7 +56,7 @@ func (ctrl *CountryController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/country/index", fiber.Map{
+	return c.Render("reference/country/index", fiber.Map{
 		"Title":            "Countries",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -75,7 +75,7 @@ func (ctrl *CountryController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/country/details", fiber.Map{
+	return c.Render("reference/country/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -87,7 +87,7 @@ func (ctrl *CountryController) details(c *fiber.Ctx) error {
 func (ctrl *CountryController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/country/create", fiber.Map{
+	return c.Render("reference/country/create", fiber.Map{
 		"Title":            "Create Country",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -118,7 +118,7 @@ func (ctrl *CountryController) editForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/country/edit", fiber.Map{
+	return c.Render("reference/country/edit", fiber.Map{
 		"Title":            "Edit Country",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -150,7 +150,7 @@ func (ctrl *CountryController) edit(c *fiber.Ctx) error {
 func (ctrl *CountryController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/country/search", fiber.Map{
+	return c.Render("reference/country/search", fiber.Map{
 		"Title":            "Search Countries",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -169,7 +169,7 @@ func (ctrl *CountryController) search(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-	return c.Render("references/country/search-results", fiber.Map{
+	return c.Render("reference/country/search-results", fiber.Map{
 		"Title":            "Search Results",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -189,7 +189,7 @@ func (ctrl *CountryController) removeForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/country/delete", fiber.Map{
+	return c.Render("reference/country/delete", fiber.Map{
 		"Title":            "Remove Country",
 		"Country":          country,
 		"LoggedUser":       loggedUser,

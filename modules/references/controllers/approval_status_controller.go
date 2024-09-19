@@ -56,7 +56,7 @@ func (ctrl *ApprovalStatusController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/approval-status/index", fiber.Map{
+	return c.Render("reference/approval-status/index", fiber.Map{
 		"Title":            "Approval Statuses",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -75,7 +75,7 @@ func (ctrl *ApprovalStatusController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/approval-status/details", fiber.Map{
+	return c.Render("reference/approval-status/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -87,7 +87,7 @@ func (ctrl *ApprovalStatusController) details(c *fiber.Ctx) error {
 func (ctrl *ApprovalStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/approval-status/create", fiber.Map{
+	return c.Render("reference/approval-status/create", fiber.Map{
 		"Title":            "Create Approval Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -118,7 +118,7 @@ func (ctrl *ApprovalStatusController) editForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/approval-status/edit", fiber.Map{
+	return c.Render("reference/approval-status/edit", fiber.Map{
 		"Title":            "Edit Approval Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -150,7 +150,7 @@ func (ctrl *ApprovalStatusController) edit(c *fiber.Ctx) error {
 func (ctrl *ApprovalStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/approval-status/search", fiber.Map{
+	return c.Render("reference/approval-status/search", fiber.Map{
 		"Title":            "Search Statuses",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -169,7 +169,7 @@ func (ctrl *ApprovalStatusController) search(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-	return c.Render("references/approval-status/search-results", fiber.Map{
+	return c.Render("reference/approval-status/search-results", fiber.Map{
 		"Title":            "Search Results",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -189,7 +189,7 @@ func (ctrl *ApprovalStatusController) removeForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/approval-status/delete", fiber.Map{
+	return c.Render("reference/approval-status/delete", fiber.Map{
 		"Title":            "Remove Approval Status",
 		"ApprovalStatus":   status,
 		"LoggedUser":       loggedUser,

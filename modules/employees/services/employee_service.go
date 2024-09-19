@@ -37,7 +37,6 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 		return apperrors.NewBadRequestError("employee already exists")
 	}
 	employee := entities.Employee{
-		EmployeeId:           0,
 		IdentificationTypeId: request.IdentificationTypeId,
 		CountryId:            request.CountryId,
 		MaritalStatusId:      request.MaritalStatusId,

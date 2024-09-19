@@ -43,7 +43,6 @@ func (s *PolicyService) CreatePolicy(ctx context.Context, request entities.Creat
 		return apperrors.NewBadRequestError("Policy already exists for company " + company.CompanyName)
 	}
 	policy := entities.Policy{
-		PolicyId:      0,
 		CompanyId:     company.CompanyId,
 		PolicyName:    request.PolicyName,
 		Description:   request.Description,

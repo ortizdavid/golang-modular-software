@@ -42,7 +42,6 @@ func (s *EmployeeEmailService) CreateEmployeeEmail(ctx context.Context, fiberCtx
 		return apperrors.NewBadRequestError("employee email already exists for employee: "+employee.FirstName)
 	}
 	employeeEmail := entities.EmployeeEmail{
-		EmailId:       0,
 		EmployeeId:    request.EmployeeId,
 		ContactTypeId: request.ContactTypeId,
 		EmailAddress:  request.EmailAddress,

@@ -8,6 +8,7 @@ import (
 
 type Employee struct {
 	EmployeeId				int64 `gorm:"autoIncrement;primaryKey"`
+	UserId					int64 `gorm:"column:user_id"`
 	IdentificationTypeId	int `gorm:"column:identification_type_id"`
 	CountryId				int `gorm:"column:country_id"`
 	MaritalStatusId			int `gorm:"column:marital_status_id"`

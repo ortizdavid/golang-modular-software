@@ -56,7 +56,7 @@ func (ctrl *MaritalStatusController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/marital-status/index", fiber.Map{
+	return c.Render("reference/marital-status/index", fiber.Map{
 		"Title":            "Marital Statuses",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":       loggedUser,
@@ -75,7 +75,7 @@ func (ctrl *MaritalStatusController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/marital-status/details", fiber.Map{
+	return c.Render("reference/marital-status/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -87,7 +87,7 @@ func (ctrl *MaritalStatusController) details(c *fiber.Ctx) error {
 func (ctrl *MaritalStatusController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/marital-status/create", fiber.Map{
+	return c.Render("reference/marital-status/create", fiber.Map{
 		"Title":            "Create Marital Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -118,7 +118,7 @@ func (ctrl *MaritalStatusController) editForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/marital-status/edit", fiber.Map{
+	return c.Render("reference/marital-status/edit", fiber.Map{
 		"Title":            "Edit Marital Status",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -150,7 +150,7 @@ func (ctrl *MaritalStatusController) edit(c *fiber.Ctx) error {
 func (ctrl *MaritalStatusController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/marital-status/search", fiber.Map{
+	return c.Render("reference/marital-status/search", fiber.Map{
 		"Title":            "Search Statuses",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -169,7 +169,7 @@ func (ctrl *MaritalStatusController) search(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-	return c.Render("references/marital-status/search-results", fiber.Map{
+	return c.Render("reference/marital-status/search-results", fiber.Map{
 		"Title":            "Search Results",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -189,7 +189,7 @@ func (ctrl *MaritalStatusController) removeForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/marital-status/delete", fiber.Map{
+	return c.Render("reference/marital-status/delete", fiber.Map{
 		"Title":            "Remove Marital Status",
 		"MaritalStatus":    status,
 		"LoggedUser":       loggedUser,

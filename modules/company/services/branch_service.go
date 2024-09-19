@@ -42,7 +42,6 @@ func (s *BranchService) CreateBranch(ctx context.Context, request entities.Creat
 		return apperrors.NewBadRequestError("Branch already exists for company " + company.CompanyName)
 	}
 	branch := entities.Branch{
-		BranchId:   0,
 		CompanyId:  company.CompanyId,
 		BranchName: request.BranchName,
 		Code:       request.Code,

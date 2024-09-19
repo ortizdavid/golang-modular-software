@@ -43,7 +43,6 @@ func (s *ProjectService) CreateProject(ctx context.Context, request entities.Cre
 		return apperrors.NewBadRequestError("Project already exists for company " + company.CompanyName)
 	}
 	project := entities.Project{
-		ProjectId:   0,
 		ProjectName: request.ProjectName,
 		Description: request.Description,
 		StartDate:   datetime.StringToDate(request.StartDate),

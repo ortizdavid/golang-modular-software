@@ -42,7 +42,6 @@ func (s *OfficeService) CreateOffice(ctx context.Context, request entities.Creat
 		return apperrors.NewBadRequestError("Office already exists for company " + company.CompanyName)
 	}
 	office := entities.Office{
-		OfficeId:   0,
 		CompanyId:  company.CompanyId,
 		OfficeName: request.OfficeName,
 		Code:       request.Code,

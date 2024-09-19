@@ -37,7 +37,6 @@ func (s *JobTitleService) CreateJobTitle(ctx context.Context, request entities.C
 		return apperrors.NewBadRequestError("job title already exists")
 	}
 	jobTitle := entities.JobTitle{
-		JobTitleId:  0,
 		TitleName:   request.TitleName,
 		Description: request.Description,
 		BaseEntity:  shared.BaseEntity{

@@ -52,7 +52,6 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 	}
 	//----------------------------------------
 	document := entities.Document{
-		DocumentId:     0,
 		EmployeeId:     request.EmployeeId,
 		DocumentTypeId: request.DocumentTypeId,
 		DocumentName:   request.DocumentName,

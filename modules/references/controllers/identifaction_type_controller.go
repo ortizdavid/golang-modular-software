@@ -56,7 +56,7 @@ func (ctrl *IdentificationTypeController) index(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/identification-type/index", fiber.Map{
+	return c.Render("reference/identification-type/index", fiber.Map{
 		"Title":            "Identification Types",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
@@ -75,7 +75,7 @@ func (ctrl *IdentificationTypeController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/identification-type/details", fiber.Map{
+	return c.Render("reference/identification-type/details", fiber.Map{
 		"Title":              "Details",
 		"AppConfig":          ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus":   moduleFlagStatus,
@@ -87,7 +87,7 @@ func (ctrl *IdentificationTypeController) details(c *fiber.Ctx) error {
 func (ctrl *IdentificationTypeController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	return c.Render("references/identification-type/create", fiber.Map{
+	return c.Render("reference/identification-type/create", fiber.Map{
 		"Title":            "Create Identification Type",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":       loggedUser,
@@ -118,7 +118,7 @@ func (ctrl *IdentificationTypeController) editForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/identification-type/edit", fiber.Map{
+	return c.Render("reference/identification-type/edit", fiber.Map{
 		"Title":              "Edit Identification Type",
 		"AppConfig":          ctrl.configService.LoadAppConfigurations(c.Context()),
 		"LoggedUser":         loggedUser,
@@ -149,7 +149,7 @@ func (ctrl *IdentificationTypeController) edit(c *fiber.Ctx) error {
 
 func (ctrl *IdentificationTypeController) searchForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	return c.Render("references/identification-type/search", fiber.Map{
+	return c.Render("reference/identification-type/search", fiber.Map{
 		"Title":      "Search Types",
 		"LoggedUser": loggedUser,
 		"AppConfig":  ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -167,7 +167,7 @@ func (ctrl *IdentificationTypeController) search(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' searched for '%v' and found %d results", loggedUser.UserName, request.SearchParam, pagination.MetaData.TotalItems))
-	return c.Render("references/identification-type/search-results", fiber.Map{
+	return c.Render("reference/identification-type/search-results", fiber.Map{
 		"Title":            "Search Results",
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -187,7 +187,7 @@ func (ctrl *IdentificationTypeController) removeForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	return c.Render("references/identification-type/delete", fiber.Map{
+	return c.Render("reference/identification-type/delete", fiber.Map{
 		"Title":              "Remove Identification Type",
 		"IdentificationType": identType,
 		"LoggedUser":         loggedUser,
