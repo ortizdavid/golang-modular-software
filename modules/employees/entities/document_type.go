@@ -5,7 +5,7 @@ import (
 )
 
 type DocumentType struct {
-	TypeId  int    `gorm:"autoIncrement;primaryKey"`
+	TypeId  int `gorm:"autoIncrement;primaryKey"`
 	TypeName   string `gorm:"column:type_name"`
 	Description string `gorm:"column:description"`
 	shared.BaseEntity

@@ -83,6 +83,19 @@ LEFT JOIN reference.contact_types ct ON (ct.type_id = ph.contact_type_id);
 
 
 
+-- view: view_employee_account_data
+CREATE OR REPLACE VIEW employees.view_employee_account_data AS
+SELECT us.user_id, us.unique_id,
+    us.user_name, us.email, 
+    TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    emp.employee_id, emp.first_name,
+    emp.last_name, emp.identification_number
+FROM authentication.users us
+JOIN employees.employees emp ON(emp.user_id = us.user_id);
+
+
+
 -- view: view_statistics_data
 CREATE OR REPLACE VIEW employees.view_statistics_data AS
 SELECT 

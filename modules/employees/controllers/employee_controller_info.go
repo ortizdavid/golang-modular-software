@@ -47,6 +47,10 @@ func (ctrl *EmployeeController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
+	employeeAccount, err := ctrl.accountService.GetEmployeeAccountById(c.Context(), employee.EmployeeId)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
 	return c.Render("employee/employee-info/details", fiber.Map{
 		"Title":             "Details",
 		"AppConfig":         ctrl.configService.LoadAppConfigurations(c.Context()),
@@ -59,6 +63,7 @@ func (ctrl *EmployeeController) details(c *fiber.Ctx) error {
 		"CountPhones":       len(employeePhones),
 		"EmployeeEmails":    employeeEmails,
 		"CountEmails":       len(employeeEmails),
+		"EmployeeAccount": employeeAccount,
 	})
 }
 
@@ -115,7 +120,7 @@ func (ctrl *EmployeeController) create(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created employment '"+request.FirstName+"' successfully")
+	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created employment '"+request.IdentificationNumber+"' successfully")
 	return c.Redirect("/employees/employee-info")
 }
 
@@ -183,7 +188,7 @@ func (ctrl *EmployeeController) edit(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated employment '"+request.FirstName+"' successfully")
+	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Updated employee '"+request.IdentificationNumber+"' successfully")
 	return c.Redirect("/employees/employee-info/" + id + "/details")
 }
 
@@ -249,6 +254,6 @@ func (ctrl *EmployeeController) remove(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed employee '%s'", loggedUser.UserName, employee.FirstName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed employee '%s'", loggedUser.UserName, employee.IdentificationNumber))
 	return c.Redirect("/employees/employee-info")
 }

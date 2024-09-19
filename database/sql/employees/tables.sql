@@ -52,10 +52,11 @@ CREATE TABLE employees.employees(
     CONSTRAINT fk_marital_status FOREIGN KEY(marital_status_id) REFERENCES reference.marital_statuses(status_id),
     CONSTRAINT fk_department FOREIGN KEY(department_id) REFERENCES company.departments(department_id),
     CONSTRAINT fk_job_title FOREIGN KEY(job_title_id) REFERENCES employees.job_titles(job_title_id),
-    CONSTRAINT fk_employment_status FOREIGN KEY(employment_status_id) REFERENCES reference.employment_statuses(status_id),
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES authentication.users(user_id)
+    CONSTRAINT fk_employment_status FOREIGN KEY(employment_status_id) REFERENCES reference.employment_statuses(status_id)
 );
 -- Indexes:
+DROP INDEX IF EXISTS idx_employees_user;
+CREATE INDEX idx_employees_user ON employees.employees(user_id);
 DROP INDEX IF EXISTS idx_employees_first_name;
 CREATE INDEX  IF EXISTS idx_employees_first_name ON employees.employees(first_name);
 DROP INDEX IF EXISTS idx_employees_last_name;

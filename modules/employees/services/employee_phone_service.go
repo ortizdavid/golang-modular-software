@@ -44,7 +44,7 @@ func (s *EmployeePhoneService) CreateEmployeePhone(ctx context.Context, fiberCtx
 	employeePhone := entities.EmployeePhone{
 		EmployeeId:    request.EmployeeId,
 		ContactTypeId: request.ContactTypeId,
-		PhoneNumber:   request.PhoneNumber,
+		PhoneNumber:   request.DialingCode+" "+request.PhoneNumber,
 		BaseEntity:    shared.BaseEntity{
 			UniqueId:      encryption.GenerateUUID(),
 			CreatedAt:     time.Now().UTC(),

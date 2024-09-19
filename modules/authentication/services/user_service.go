@@ -22,6 +22,7 @@ type UserService struct {
 	userRoleRepository *repositories.UserRoleRepository
 	loginActRepository *repositories.LoginActivityRepository
 	userApiKeyRepository *repositories.UserApiKeyRepository
+	userInsertedId	int64
 }
 
 func NewUserService(db *database.Database) *UserService {
@@ -72,6 +73,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 			return apperrors.NewInternalServerError("error while creating user: "+ err.Error())
 		}
 		userId := s.repository.LastInsertId
+		s.userInsertedId = userId
 		_, err = s.roleRepository.FindById(ctx, request.RoleId)
 		if err != nil {
 			return apperrors.NewNotFoundError("role not found")
@@ -482,3 +484,6 @@ func (s *UserService) CountUsersByActivityStatus(ctx context.Context, status ent
 }
 
 
+func (s *UserService) GetUserInsertedId() int64 {
+	return s.userInsertedId
+}

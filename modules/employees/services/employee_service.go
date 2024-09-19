@@ -29,12 +29,12 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	exists, err := s.repository.ExistsByIdentNumber(ctx, request.IdentificationNumber)
+	exists, err := s.repository.ExistsByIdentificationNumber(ctx, request.IdentificationNumber)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("employee already exists")
+		return apperrors.NewBadRequestError("identification number '"+request.IdentificationNumber+"' already exists")
 	}
 	employee := entities.Employee{
 		IdentificationTypeId: request.IdentificationTypeId,
@@ -155,6 +155,20 @@ func (s *EmployeeService) RemoveEmployee(ctx context.Context, uniqueId string) e
 	err = s.repository.Delete(ctx, employee)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing employee: "+ err.Error())
+	}
+	return nil
+}
+
+func (s *EmployeeService) UpdateEmployeeUserId(ctx context.Context, employeeId int64, userId int64) error {
+	employee, err := s.repository.FindById(ctx, employeeId)
+	if err != nil {
+		return apperrors.NewNotFoundError("employee not found")
+	}
+	employee.UserId = userId
+	employee.UpdatedAt = time.Now().UTC()
+	s.repository.Update(ctx, employee)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while updating employee userId: " + err.Error())
 	}
 	return nil
 }

@@ -65,18 +65,6 @@ func (repo *EmployeeRepository) FindAllData(ctx context.Context) ([]entities.Emp
 	return employees, result.Error
 }
 
-func (repo *EmployeeRepository) ExistsByIdentNumber(ctx context.Context, identNumber string) (bool, error) {
-	var employee entities.Employee
-	result := repo.db.WithContext(ctx).Where("identification_number=?", identNumber).Find(&employee)
-	return employee.EmployeeId !=0 , result.Error
-}
-
-func (repo *EmployeeRepository) GetDataByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeData, error) {
-	var employeeData entities.EmployeeData
-	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_data WHERE identification_number=?", identNumber).Scan(&employeeData)
-	return employeeData, result.Error
-}
-
 func (repo *EmployeeRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.EmployeeData, error) {
 	var employees []entities.EmployeeData
 	likeParam := "%" + param + "%"
@@ -96,3 +84,8 @@ func (repo *EmployeeRepository) CountByParam(ctx context.Context, param string) 
         Scan(&count)
     return count, result.Error
 }
+
+func (repo *EmployeeRepository) ExistsByIdentificationNumber(ctx context.Context, identNumber string) (bool, error) {
+	return repo.ExistsField(ctx, "identification_number", identNumber)
+}
+

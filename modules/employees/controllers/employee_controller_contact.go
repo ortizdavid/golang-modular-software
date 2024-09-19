@@ -19,6 +19,10 @@ func (ctrl *EmployeeController) addPhoneForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
+	countries, err := ctrl.countryService.GetAllCountries(c.Context())
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
 	return c.Render("employee/employee-info/add-phone", fiber.Map{
 		"Title":            "Add Employee Phone",
 		"Employee":         employee,
@@ -26,6 +30,7 @@ func (ctrl *EmployeeController) addPhoneForm(c *fiber.Ctx) error {
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"ContactTypes":     contactTypes,
+		"Countries": countries,
 	})
 }
 

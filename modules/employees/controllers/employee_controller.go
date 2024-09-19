@@ -18,6 +18,7 @@ type EmployeeController struct {
 	documentService         *services.DocumentService
 	phoneService            *services.EmployeePhoneService
 	emailService            *services.EmployeeEmailService
+	accountService          *services.EmployeeAccountService
 	documentTypeService     *services.DocumentTypeService
 	identTypeService        *references.IdentificationTypeService
 	countryService          *references.CountryService
@@ -26,6 +27,8 @@ type EmployeeController struct {
 	contactTypeService      *references.ContactTypeService
 	departmentService       *company.DepartmentService
 	authService             *authentication.AuthService
+	userService				*authentication.UserService
+	roleService				*authentication.RoleService
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
@@ -40,6 +43,7 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		documentService:         services.NewDocumentService(db),
 		phoneService:            services.NewEmployeePhoneService(db),
 		emailService:            services.NewEmployeeEmailService(db),
+		accountService:          services.NewEmployeeAccountService(db),
 		documentTypeService:     services.NewDocumentTypeService(db),
 		identTypeService:        references.NewIdentificationTypeService(db),
 		countryService:          references.NewCountryService(db),
@@ -48,10 +52,13 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		contactTypeService:      references.NewContactTypeService(db),
 		departmentService:       company.NewDepartmentService(db),
 		authService:             authentication.NewAuthService(db),
+		userService:             authentication.NewUserService(db),
+		roleService:             authentication.NewRoleService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
 		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
+		BaseController:          shared.BaseController{},
 	}
 }
 
@@ -84,4 +91,7 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 	group.Get("/:empId/edit-document/:docId", ctrl.editDocumentForm)
 	group.Post("/:empId/edit-document/:docId", ctrl.editDocument)
 	group.Get("/display-document/:id", ctrl.displayDocument)
+
+	group.Get("/:id/add-user-account", ctrl.addUserAccountForm)
+	group.Post("/:id/add-user-account", ctrl.addUserAccount)
 }

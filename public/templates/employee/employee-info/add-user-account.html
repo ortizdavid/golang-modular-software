@@ -1,0 +1,56 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/add-user-account" method="POST" enctype="multipart/form-data">
+        <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
+        <div class="ui divider"></div>
+        <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
+        
+        <div class="field">
+            <label for="user_name"><strong>User Name:</strong></label>
+            <input class="ui input" type="text" name="user_name" id="user_name" autofocus>
+        </div>
+        <div class="field">
+            <label for="email"><strong>Email (for verification):</strong></label>
+            <input class="ui input" type="email" name="email" id="email">
+        </div>
+        
+        <div class="field">
+            <label for="role_id"><strong>Role:</strong></label>
+            <select class="ui dropdown" name="role_id" id="role_id" autofocus required>
+                <option value="">Select Role</option>
+                {{ range .Roles }}
+                    <option value="{{ .RoleId }}">{{ .RoleName }}</option>
+                {{ end }}
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="password"><strong>Password:</strong></label>
+            <input class="ui input" type="password" name="password" id="password">
+        </div>
+        <div class="field">
+            <label for="password_conf"><strong>Password Confirmation:</strong></label>
+            <input class="ui input" type="password" name="password_conf" id="password_conf">
+        </div>
+        
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/employees/employee-info/{{.Employee.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}
