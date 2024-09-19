@@ -14,12 +14,7 @@ func (ctrl *EmployeeController) addUserAccountForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	allowedRoles := []any{
-		authentication.RoleAdmin.Code, 
-		authentication.RoleSuperAdmin.Code, 
-		authentication.RoleDeveloper.Code,
-	}
-	roles, err := ctrl.roleService.GetAllEnaledRolesNotIn(c.Context(), allowedRoles)
+	allowedRoles, err := ctrl.accountService.GetEmployeAllowedRoles(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -33,7 +28,7 @@ func (ctrl *EmployeeController) addUserAccountForm(c *fiber.Ctx) error {
 		"LoggedUser":       loggedUser,
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
-		"Roles":     roles,
+		"AllowedRoles":     allowedRoles,
 	})
 }
 

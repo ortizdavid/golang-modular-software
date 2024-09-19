@@ -19,7 +19,7 @@
             <label for="role_id"><strong>Role:</strong></label>
             <select class="ui dropdown" name="role_id" id="role_id" autofocus required>
                 <option value="">Select Role</option>
-                {{ range .Roles }}
+                {{ range .AllowedRoles }}
                     <option value="{{ .RoleId }}">{{ .RoleName }}</option>
                 {{ end }}
             </select>

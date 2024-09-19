@@ -28,7 +28,6 @@ type EmployeeController struct {
 	departmentService       *company.DepartmentService
 	authService             *authentication.AuthService
 	userService				*authentication.UserService
-	roleService				*authentication.RoleService
 	moduleFlagStatusService *configurations.ModuleFlagStatusService
 	configService           *configurations.AppConfigurationService
 	infoLogger              *helpers.Logger
@@ -53,7 +52,6 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		departmentService:       company.NewDepartmentService(db),
 		authService:             authentication.NewAuthService(db),
 		userService:             authentication.NewUserService(db),
-		roleService:             authentication.NewRoleService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
