@@ -166,7 +166,7 @@ func (s *EmployeeService) UpdateEmployeeUserId(ctx context.Context, employeeId i
 	}
 	employee.UserId = userId
 	employee.UpdatedAt = time.Now().UTC()
-	s.repository.Update(ctx, employee)
+	err = s.repository.Update(ctx, employee)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while updating employee userId: " + err.Error())
 	}

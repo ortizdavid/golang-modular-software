@@ -193,6 +193,18 @@ func (s *RoleService) GetAllEnaledRoles(ctx context.Context) ([]entities.Role, e
 	return roles, nil
 }
 
+func (s *RoleService) GetAllEnaledRolesNotIn(ctx context.Context, values []interface{}) ([]entities.Role, error) {
+	_, err := s.repository.Count(ctx)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No roles found")
+	}
+	roles, err := s.repository.FindAllEnabledNotIn(ctx, values)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+	}
+	return roles, nil
+}
+
 func (s *RoleService) GetUnassignedRolesByUser(ctx context.Context, userId int64) ([]entities.Role, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {

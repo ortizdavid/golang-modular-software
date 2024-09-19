@@ -14,7 +14,12 @@ func (ctrl *EmployeeController) addUserAccountForm(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	roles, err := ctrl.roleService.GetAllEnaledRoles(c.Context())
+	allowedRoles := []any{
+		authentication.RoleAdmin.Code, 
+		authentication.RoleSuperAdmin.Code, 
+		authentication.RoleDeveloper.Code,
+	}
+	roles, err := ctrl.roleService.GetAllEnaledRolesNotIn(c.Context(), allowedRoles)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

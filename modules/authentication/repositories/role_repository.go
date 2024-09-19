@@ -27,12 +27,24 @@ func (repo *RoleRepository) FindAllEnabled(ctx context.Context) ([]entities.Role
 	return roles, result.Error
 }
 
+func (repo *RoleRepository) FindAllEnabledNotIn(ctx context.Context, values []interface{}) ([]entities.Role, error) {
+	var roles []entities.Role
+	result := repo.db.WithContext(ctx).Where("status='Enabled' AND code NOT IN (?)", values).Find(&roles)
+	return roles, result.Error
+}
+
+/*func (repo *RoleRepository) FindAllEnabledNotIn(ctx context.Context, values []interface{}) ([]entities.Role, error) {
+	var roles []entities.Role
+	result := repo.db.WithContext(ctx).Where("status = ? AND code NOT IN (?)", "Enabled", values).Find(&roles)
+	return roles, result.Error
+}*/
+
+
 func (repo *RoleRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.RoleData, error) {
 	var roles []entities.RoleData
 	result := repo.db.WithContext(ctx).Table("authentication.view_role_data").Limit(limit).Offset(offset).Find(&roles)
 	return roles, result.Error
 }
-
 
 func (repo *RoleRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.RoleData, error) {
 	var role entities.RoleData
