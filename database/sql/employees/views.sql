@@ -28,6 +28,25 @@ LEFT JOIN employees.job_titles jt ON(jt.job_title_id = emp.job_title_id)
 ORDER BY emp.created_at;
 
 
+-- view: view_professional_data
+CREATE OR REPLACE VIEW employees.view_professional_data AS
+SELECT pr.professional_id, pr.unique_id,
+    TO_CHAR(pr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(pr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    emp.employee_id, 
+    emp.unique_id AS employee_unique_id,
+    emp.first_name, emp.last_name,
+    dpt.department_id, dpt.department_name,
+    es.status_id AS employment_status_id,
+    es.status_name AS employment_status_name,
+    jt.job_title_id, jt.title_name AS job_title_name
+FROM employees.professional_info pr
+LEFT JOIN employees.employees emp ON(emp.employee_id = pr.employee_id)
+LEFT JOIN reference.employment_statuses es ON(es.status_id = emp.employment_status_id)
+LEFT JOIN company.departments dpt ON(dpt.department_id = emp.department_id)
+LEFT JOIN employees.job_titles jt ON(jt.job_title_id = emp.job_title_id);
+
+
 
 -- view: view_document_data
 CREATE OR REPLACE VIEW employees.view_document_data AS

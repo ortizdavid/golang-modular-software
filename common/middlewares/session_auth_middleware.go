@@ -37,6 +37,10 @@ func (mid *SessionAuthMiddleware) AuthenticateRequests(c *fiber.Ctx) error {
 }
 
 func (mid *SessionAuthMiddleware)  CheckLoggedUser(c *fiber.Ctx) error {
+	// Skip session check for API routes
+    if strings.HasPrefix(c.Path(), "/api") {
+        return c.Next() 
+    }
 	loggedUser, err := mid.service.GetLoggedUser(c.Context(), c)
 	if err != nil || loggedUser.UserId == 0 || loggedUser.IsActive == "No" {
 		return c.Redirect("/auth/login")
