@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/go-nopain/conversion"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 )
@@ -28,21 +27,22 @@ func (mid *ApiKeyMiddleware) AllowRoles(roleCodes ...string) fiber.Handler {
 		xApiKey := c.Get("X-API-Key")
 		if xApiKey == "" {
 			return unauthorizedResponse(c, "Unauthorized. API Key missing")
-		}	
-		user, err := mid.userService.GetUserById(c.Context(), conversion.StringToInt64(xUserId))
-		if err != nil {
-			return unauthorizedResponse(c, "Unauthorized. User not found")
 		}
-		userApiKey, err := mid.userService.GetUserApiKey(c.Context(), user.UserId)
+		userApiKey, err := mid.userService.GetUserApiKey(c.Context(), xUserId)
 		if err != nil {
 			unauthorizedResponse(c, "Unauthorized. Error while getting User API Key")
-		}
+		}	
 		if !userApiKey.IsActive {
 			return unauthorizedResponse(c, "Unauthorized. API Key is disabled")
 		}
-		if xApiKey != userApiKey.Key {
+		if xApiKey != userApiKey.XApiKey {
 			return unauthorizedResponse(c, "Unauthorized. Invalid API Key")
 		}
+		user, err := mid.userService.GetUserById(c.Context(), userApiKey.UserId)
+		if err != nil {
+			return unauthorizedResponse(c, "Unauthorized. User not found")
+		}
+		
 		hasRoles, err := mid.userService.UserHasRoles(c.Context(), user.UserId, roleCodes...) 
 		if err != nil {
 			return unauthorizedResponse(c, "Unauthorized. "+err.Error())

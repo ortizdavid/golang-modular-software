@@ -31,7 +31,6 @@ func (api *RoleApi) Routes(router *fiber.App, db *database.Database) {
 
 func (api *RoleApi) getAllRoles(c *fiber.Ctx) error {
 	var params helpers.PaginationParam
-	//loggedUser := c.Locals("loggedUser").(entities.UserData)
 	roles, err := api.service.GetAllRolesPaginated(c.Context(), c, params)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
@@ -40,6 +39,5 @@ func (api *RoleApi) getAllRoles(c *fiber.Ctx) error {
 }
 
 func (api *RoleApi) createRole(c *fiber.Ctx) error {
-	//loggedUser := c.Locals("loggedUser").(entities.UserData)
 	return c.Status(fiber.StatusOK).JSON(nil)
 }

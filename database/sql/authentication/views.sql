@@ -102,7 +102,7 @@ ORDER BY created_at DESC;
 --- View: view_user_api_key_data
 CREATE OR REPLACE VIEW authentication.view_user_api_key_data AS 
 SELECT uak.api_key_id, uak.unique_id,
-    uak.key, 
+    uak.x_user_id, uak.x_api_key, 
     CASE WHEN uak.is_active THEN 'Yes' ELSE 'No' END AS is_active,
     uak.created_by,
     TO_CHAR(uak.expires_at, 'YYYY-MM-DD HH24:MI:SS') AS expires_at,

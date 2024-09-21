@@ -5,7 +5,7 @@ import (
 	"github.com/ortizdavid/golang-modular-software/database"
 )
 
-func RegisterControllerRoutes(router *fiber.App, db *database.Database) {
+func RegisterRoutes(router *fiber.App, db *database.Database) {
 	ApiRootController{}.Routes(router)
 	NewBackOfficeController(db).Routes(router, db)
 }

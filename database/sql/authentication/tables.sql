@@ -290,7 +290,8 @@ DROP TABLE IF EXISTS authentication.user_api_key;
 CREATE TABLE authentication.user_api_key (
     api_key_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
-    key VARCHAR(150) UNIQUE,
+    x_user_id VARCHAR(50) UNIQUE,
+    x_api_key VARCHAR(150) UNIQUE,
     is_active BOOLEAN DEFAULT TRUE,
     created_by INT,
     expires_at TIMESTAMP NOT NULL,
@@ -299,6 +300,4 @@ CREATE TABLE authentication.user_api_key (
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_user_key FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
 );
--- Index
-DROP INDEX IF EXISTS idx_apikey_user_id;
-CREATE INDEX idx_apikey_user_id ON authentication.user_api_key(user_id);
+

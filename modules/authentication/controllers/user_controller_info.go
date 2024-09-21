@@ -36,7 +36,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	userRoles, _ := ctrl.roleService.GetAssignedRolesByUser(c.Context(), user.UserId)
-	userApiKey, _ := ctrl.service.GetUserApiKey(c.Context(), user.UserId)
+	userApiKey, _ := ctrl.service.GetUserApiKeyById(c.Context(), user.UserId)
 	return c.Render("authentication/user/details", fiber.Map{
 		"Title":            "User Details",
 		"LoggedUser":       loggedUser,

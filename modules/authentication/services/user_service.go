@@ -39,7 +39,9 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	// Apply a transaction to ensure all operations are atomic (either all succeed or all fail)
 	return s.repository.WithTransaction(ctx, func(tx *database.Database) error {
+		// --- Check if user with the given name or email already exists
 		existsName, err := s.repository.ExistsByName(ctx, request.UserName)
 		if err != nil {
 			return apperrors.NewNotFoundError(err.Error())
@@ -78,7 +80,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		if err != nil {
 			return apperrors.NewNotFoundError("role not found")
 		}
-		//--- Create Role ----------------------------------------------------------------------
+		// --- Create a new UserRole association
 		userRole := entities.UserRole{
 			UserId:     userId,
 			RoleId:     request.RoleId,
@@ -92,7 +94,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		if err != nil {
 			return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
 		}
-		//---- Create Login Activity ----------------------------------------------------------------------
+		// --- Create Login Activity entry
 		loginAct := entities.LoginActivity{
 			UserId:   userId,
 			Status: entities.ActivityStatusOffline,
@@ -106,10 +108,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		if err != nil {
 			return apperrors.NewInternalServerError("error while creating login activity: "+err.Error())
 		}
-		//--- Create API Key ----------------------------------------------------------------------
+		// --- Generate and assign an API key for the user
 		userApiKey := entities.UserApiKey{
 			UserId:    userId,
-			Key:       encryption.GenerateRandomToken(),
+			XUserId:   encryption.GenerateUUID(),
+			XApiKey:   encryption.GenerateRandomToken(),
 			IsActive:  true,
 			ExpiresAt: time.Now().AddDate(0, 1, 0),  // Add 1 month to the current time
 			BaseEntity: shared.BaseEntity{
@@ -418,7 +421,15 @@ func (s *UserService) GetUserByUniqueId(ctx context.Context, uniqueId string) (e
 	return user, nil
 }
 
-func (s *UserService) GetUserApiKey(ctx context.Context, userId int64) (entities.UserApiKey, error) {
+func (s *UserService) GetUserApiKey(ctx context.Context, xUserId string) (entities.UserApiKey, error) {
+	user, err := s.userApiKeyRepository.FindByXUserId(ctx, xUserId)
+	if err != nil {
+		return entities.UserApiKey{}, apperrors.NewNotFoundError("user api key not found")
+	}
+	return user, nil
+}
+
+func (s *UserService) GetUserApiKeyById(ctx context.Context, userId int64) (entities.UserApiKey, error) {
 	user, err := s.userApiKeyRepository.FindByUserId(ctx, userId)
 	if err != nil {
 		return entities.UserApiKey{}, apperrors.NewNotFoundError("user api key not found")
@@ -482,7 +493,6 @@ func (s *UserService) CountUsersByActivityStatus(ctx context.Context, status ent
 	}
 	return count, nil
 }
-
 
 func (s *UserService) GetUserInsertedId() int64 {
 	return s.userInsertedId

@@ -27,6 +27,6 @@ func RegisterModuleRoutes(router *fiber.App, db *database.Database) {
 		router.Group("/api/reports"+route.Path, flagMiddleware.CheckCoreEntityFlag(route.EntityCode))
 	}
 	// Register additional controller and API routes
-	controllers.RegisterControllerRoutes(router, db)
+	controllers.RegisterRoutes(router, db)
 	api.RegisterApiRoutes(router, db)
 }

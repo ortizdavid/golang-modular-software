@@ -8,6 +8,6 @@ import (
 )
 
 func RegisterModuleRoutes(router *fiber.App, db *database.Database) {
-	controllers.RegisterControllerRoutes(router, db)
-	api.RegisterApiRoutes(router, db)
+	controllers.RegisterRoutes(router, db)
+	api.RegisterRoutes(router, db)
 }

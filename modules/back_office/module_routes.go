@@ -7,5 +7,5 @@ import (
 )
 
 func RegisterModuleRoutes(router *fiber.App, db *database.Database) {
-	controllers.RegisterControllerRoutes(router, db)
+	controllers.RegisterRoutes(router, db)
 }

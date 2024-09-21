@@ -33,6 +33,12 @@ func (repo *UserApiKeyRepository) FindByUserId(ctx context.Context, userId int64
 	return userApiKey, result.Error
 }
 
+func (repo *UserApiKeyRepository) FindByXUserId(ctx context.Context, xUserId string) (entities.UserApiKey, error) {
+	var userApiKey entities.UserApiKey
+	result := repo.db.WithContext(ctx).Where("x_user_id=?", xUserId).First(&userApiKey)
+	return userApiKey, result.Error
+}
+
 func (repo *UserApiKeyRepository) GetDataById(ctx context.Context, userApiKeyId int) (entities.UserApiKeyData, error) {
 	var userApiKey entities.UserApiKeyData
 	result := repo.db.WithContext(ctx).Table("authentication.view_user_api_key_data").Where("user_role_id=?", userApiKeyId).First(&userApiKey)
