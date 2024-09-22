@@ -58,7 +58,6 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		configService:           configurations.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
 		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
-		BaseController:          shared.BaseController{},
 	}
 }
 
@@ -99,4 +98,7 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 
 	group.Get("/:id/add-user-account", ctrl.addUserAccountForm)
 	group.Post("/:id/add-user-account", ctrl.addUserAccount)
+
+	group.Get("/:id/associate-user-account", ctrl.associateUserAccountForm)
+	group.Post("/:id/associate-user-account", ctrl.associateUserAccount)
 }

@@ -193,7 +193,7 @@ func (s *RoleService) GetAllEnaledRoles(ctx context.Context) ([]entities.Role, e
 	return roles, nil
 }
 
-func (s *RoleService) GetAllEnaledRolesNotIn(ctx context.Context, values []interface{}) ([]entities.Role, error) {
+func (s *RoleService) GetAllEnaledRolesNotIn(ctx context.Context, values []string) ([]entities.Role, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No roles found")

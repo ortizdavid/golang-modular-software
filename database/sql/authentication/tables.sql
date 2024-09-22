@@ -65,6 +65,16 @@ CREATE TABLE authentication.user_roles (
 );
 
 
+DROP TABLE IF EXISTS authentication.user_associations;
+CREATE TABLE authentication.user_associations (
+    association_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
+);
+
 
 -- Table: permissions
 DROP TABLE IF EXISTS authentication.permissions;
@@ -236,8 +246,7 @@ INSERT INTO authentication.permissions (code, permission_name, description) VALU
 ('references.workflow-statuses.edit', 'Edit Workflow Status', 'Edit existing workflow status information'),
 ('references.workflow-statuses.search', 'Search Workflow Statuses', 'Search for workflow statuses'),
 ('references.workflow-statuses.search-results', 'View Workflow Status Search Results', 'View the results of workflow status searches'),
-('references.workflow-statuses.delete', 'Delete Workflow Status', 'Remove a workflow status')
-;
+('references.workflow-statuses.delete', 'Delete Workflow Status', 'Remove a workflow status');
 
 
 -- Table: permission_roles

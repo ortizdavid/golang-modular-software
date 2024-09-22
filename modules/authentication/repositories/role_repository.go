@@ -27,7 +27,7 @@ func (repo *RoleRepository) FindAllEnabled(ctx context.Context) ([]entities.Role
 	return roles, result.Error
 }
 
-func (repo *RoleRepository) FindAllEnabledNotIn(ctx context.Context, values []interface{}) ([]entities.Role, error) {
+func (repo *RoleRepository) FindAllEnabledNotIn(ctx context.Context, values []string) ([]entities.Role, error) {
 	var roles []entities.Role
 	result := repo.db.WithContext(ctx).Where("status='Enabled' AND code NOT IN (?)", values).Find(&roles)
 	return roles, result.Error
@@ -51,6 +51,12 @@ func (repo *RoleRepository) FindByName(ctx context.Context, name string) (entiti
 	return role, result.Error
 }
 
+func (repo *RoleRepository) FindByCode(ctx context.Context, code string) (entities.Role, error) {
+	var role entities.Role
+	result := repo.db.WithContext(ctx).Where("code=?", code).First(&role)
+	return role, result.Error
+}
+
 func (repo *RoleRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("authentication.roles").WithContext(ctx).Where("code = ?", code).Count(&count)
@@ -67,7 +73,7 @@ func (repo *RoleRepository) Search(ctx context.Context, param string, limit int,
 	var users []entities.RoleData
 	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
-		Raw("SELECT * FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
+		Raw("SELECT * FROM authentication.view_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
 		Limit(limit).
 		Offset(offset).
 		Scan(&users)
@@ -78,7 +84,7 @@ func (repo *RoleRepository) CountByParam(ctx context.Context, param string) (int
 	var count int64
 	likeParam := "%" + param + "%"
 	result := repo.db.WithContext(ctx).
-		Raw("SELECT COUNT(*) FROM authentication.view_user_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
+		Raw("SELECT COUNT(*) FROM authentication.view_role_data WHERE role_name LIKE ? OR role_code LIKE ?", likeParam, likeParam).
 		Scan(&count)
 	return count, result.Error
 }

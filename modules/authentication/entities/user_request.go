@@ -50,6 +50,14 @@ func (req AssignUserRoleRequest) Validate() error {
 	return nil
 }
 
+type AssociateUserRequest struct {
+	UserId	int64 `json:"user_id" form:"user_id"`
+}
+
+func (req AssociateUserRequest) Validate() error {
+	return nil
+}
+
 // 
 type UpdateUserRequest struct {
 	UserName	string `json:"user_name" form:"user_name"`

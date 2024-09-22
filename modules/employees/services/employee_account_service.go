@@ -40,14 +40,17 @@ func (s *EmployeeAccountService) GetEmployeeAccountByIdentificationNumber(ctx co
 }
 
 func (s *EmployeeAccountService) GetEmployeAllowedRoles(ctx context.Context) ([]authEntities.Role, error) {
-	allowedRoles := []any{
-		authEntities.RoleAdmin.Code, 
-		authEntities.RoleSuperAdmin.Code, 
-		authEntities.RoleDeveloper.Code,
-	}
-	roles, err := s.roleService.GetAllEnaledRolesNotIn(ctx, allowedRoles)
+	roles, err := s.roleService.GetAllEnaledRolesNotIn(ctx, s.GetAllowedRoles())
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("roles not found")
 	}
 	return roles, nil
+}
+
+func (s *EmployeeAccountService) GetAllowedRoles() []string {
+	return []string{
+		authEntities.RoleAdmin.Code, 
+		authEntities.RoleSuperAdmin.Code, 
+		authEntities.RoleDeveloper.Code,
+	}
 }

@@ -48,7 +48,53 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
+	assReq := authentication.AssociateUserRequest{UserId: ctrl.userService.GetUserInsertedId()}
+	err = ctrl.userService.AssociateUserToRole(c.Context(), assReq)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
 	err = ctrl.service.UpdateEmployeeUserId(c.Context(), employee.EmployeeId, ctrl.userService.GetUserInsertedId())
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' added user account to employee '"+employee.IdentificationNumber+"' successfully")
+	return c.Redirect("/employees/employee-info/" +id+ "/details")
+}
+
+func (ctrl *EmployeeController) associateUserAccountForm(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	availableUsers, err := ctrl.userService.GetUsersWithoutAssociation(c.Context(), ctrl.accountService.GetAllowedRoles())
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	return c.Render("employee/employee-info/associate-user-account", fiber.Map{
+		"Title":            "Associate to Existing Account",
+		"Employee":         employee,
+		"LoggedUser":       loggedUser,
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"AvailableUsers":   availableUsers,
+	})
+}
+
+func (ctrl *EmployeeController) associateUserAccount(c *fiber.Ctx) error {
+	id := c.Params("id")
+	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	var request authentication.AssociateUserRequest
+	if err := c.BodyParser(&request); err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	err = ctrl.userService.AssociateUserToRole(c.Context(), request)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

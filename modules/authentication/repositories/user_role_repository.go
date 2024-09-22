@@ -22,9 +22,9 @@ func NewUserRoleRepository(db *database.Database) *UserRoleRepository {
 }
 
 func (repo *UserRoleRepository) FindAllDataByUserId(ctx context.Context, userId int64) ([]entities.UserRoleData, error) {
-	var roles []entities.UserRoleData
-	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_id = ?", userId).Find(&roles)
-	return roles, result.Error
+	var userRoles []entities.UserRoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_id = ?", userId).Find(&userRoles)
+	return userRoles, result.Error
 }
 
 func (repo *UserRoleRepository) GetDataById(ctx context.Context, userRoleId int) (entities.UserRoleData, error) {

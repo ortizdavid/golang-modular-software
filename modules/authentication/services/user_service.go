@@ -20,6 +20,7 @@ type UserService struct {
 	repository *repositories.UserRepository
 	roleRepository *repositories.RoleRepository
 	userRoleRepository *repositories.UserRoleRepository
+	userAssociationRepository *repositories.UserAssociationRepository
 	loginActRepository *repositories.LoginActivityRepository
 	userApiKeyRepository *repositories.UserApiKeyRepository
 	userInsertedId	int64
@@ -27,11 +28,12 @@ type UserService struct {
 
 func NewUserService(db *database.Database) *UserService {
 	return &UserService{
-		repository:           repositories.NewUserRepository(db),
-		roleRepository:       repositories.NewRoleRepository(db),
-		userRoleRepository:   repositories.NewUserRoleRepository(db),
-		loginActRepository:   repositories.NewLoginActivityRepository(db),
-		userApiKeyRepository: repositories.NewUserApiKeyRepository(db),
+		repository:                repositories.NewUserRepository(db),
+		roleRepository:            repositories.NewRoleRepository(db),
+		userRoleRepository:        repositories.NewUserRoleRepository(db),
+		userAssociationRepository: repositories.NewUserAssociationRepository(db),
+		loginActRepository:        repositories.NewLoginActivityRepository(db),
+		userApiKeyRepository:      repositories.NewUserApiKeyRepository(db),
 	}
 }
 
@@ -78,7 +80,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		s.userInsertedId = userId
 		_, err = s.roleRepository.FindById(ctx, request.RoleId)
 		if err != nil {
-			return apperrors.NewNotFoundError("role not found")
+			return apperrors.NewNotFoundError("role not found. invalid role id")
 		}
 		// --- Create a new UserRole association
 		userRole := entities.UserRole{
@@ -135,7 +137,7 @@ func (s *UserService) UpdateUser(ctx context.Context, userId int64, request enti
 	}
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
 	user.UserName = request.UserName
 	err = s.repository.Update(ctx, user)
@@ -151,11 +153,11 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	}
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. inavlid user id")
 	}
 	role, err := s.roleRepository.FindById(ctx, request.RoleId)
 	if err != nil {
-		return apperrors.NewNotFoundError("role not found")
+		return apperrors.NewNotFoundError("role not found. invalid role id")
 	}
 	exists, err := s.userRoleRepository.ExistsByUserAndRole(ctx, userId, request.RoleId)
 	if err != nil {
@@ -180,10 +182,37 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	return nil
 }
 
+func (s *UserService) AssociateUserToRole(ctx context.Context, request entities.AssociateUserRequest) error{
+	user, err := s.repository.FindById(ctx, request.UserId)
+	if err != nil {
+		return apperrors.NewNotFoundError("user not found. inavlid user id")
+	}
+	exists, err := s.userAssociationRepository.ExistsByUserId(ctx, user.UserId)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return apperrors.NewConflictError(fmt.Sprintf("User '%s' already associated ", user.UserName))
+	}
+	userAssociation := entities.UserAssociation{
+		UserId:     user.UserId,
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+	}
+	err = s.userAssociationRepository.Create(ctx, userAssociation)
+	if err != nil {
+		return apperrors.NewInternalServerError("error while associating user to a role: "+ err.Error())
+	}
+	return nil
+}
+
 func (s *UserService) RemoveUserRole(ctx context.Context, uniqueId string) error {
 	userRole, err := s.userRoleRepository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user role not found")
+		return apperrors.NewNotFoundError("user role not found. invalid unique id")
 	}
 	err = s.userRoleRepository.Delete(ctx, userRole)
 	if err != nil {
@@ -198,7 +227,7 @@ func (s *UserService) ChangeUserPassword(ctx context.Context, userId int64, requ
 	}
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. invalid id")
 	}
 	user.Password = encryption.HashPassword(request.NewPassword)
 	user.Token = encryption.GenerateRandomToken()
@@ -216,7 +245,7 @@ func (s *UserService) ResetUserPassword(ctx context.Context, userId int64, reque
 	}
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. invalid id")
 	}
 	user.Password = encryption.HashPassword(request.NewPassword)
 	user.Token = encryption.GenerateRandomToken()
@@ -231,7 +260,7 @@ func (s *UserService) ResetUserPassword(ctx context.Context, userId int64, reque
 func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
 	// remove current image if exists //TODO
 	uploadPath := config.UploadImagePath() + "/users"
@@ -253,7 +282,7 @@ func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, 
 func (s *UserService) ActivateUser(ctx context.Context, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
 	user.IsActive = true
 	user.Token = encryption.GenerateRandomToken()
@@ -268,7 +297,7 @@ func (s *UserService) ActivateUser(ctx context.Context, userId int64) error {
 func (s *UserService) DeactivateUser(ctx context.Context, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. inavlid user id")
 	}
 	user.IsActive = false
 	user.UpdatedAt = time.Now().UTC()
@@ -282,7 +311,7 @@ func (s *UserService) DeactivateUser(ctx context.Context, userId int64) error {
 func (s *UserService) DeleteUser(ctx context.Context, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
 	err = s.repository.Delete(ctx, user)
 	if err != nil {
@@ -408,7 +437,7 @@ func (s *UserService) SearchUsers(ctx context.Context, fiberCtx *fiber.Ctx, requ
 func (s *UserService) GetUserById(ctx context.Context, userId int64) (entities.UserData, error) {
 	user, err := s.repository.GetDataById(ctx, userId)
 	if err != nil {
-		return entities.UserData{}, apperrors.NewNotFoundError("user not found")
+		return entities.UserData{}, apperrors.NewNotFoundError("user not found. invalid id")
 	}
 	return user, nil
 }
@@ -416,7 +445,7 @@ func (s *UserService) GetUserById(ctx context.Context, userId int64) (entities.U
 func (s *UserService) GetUserByUniqueId(ctx context.Context, uniqueId string) (entities.UserData, error) {
 	user, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.UserData{}, apperrors.NewNotFoundError("user not found")
+		return entities.UserData{}, apperrors.NewNotFoundError("user not found. invalid unique id")
 	}
 	return user, nil
 }
@@ -424,7 +453,7 @@ func (s *UserService) GetUserByUniqueId(ctx context.Context, uniqueId string) (e
 func (s *UserService) GetUserApiKey(ctx context.Context, xUserId string) (entities.UserApiKey, error) {
 	user, err := s.userApiKeyRepository.FindByXUserId(ctx, xUserId)
 	if err != nil {
-		return entities.UserApiKey{}, apperrors.NewNotFoundError("user api key not found")
+		return entities.UserApiKey{}, apperrors.NewNotFoundError("user api key not found. invalid x-user-id")
 	}
 	return user, nil
 }
@@ -440,7 +469,7 @@ func (s *UserService) GetUserApiKeyById(ctx context.Context, userId int64) (enti
 func (s *UserService) GetUserByToken(ctx context.Context, token string) (entities.User, error) {
 	user, err := s.repository.FindByToken(ctx, token)
 	if err != nil {
-		return entities.User{}, apperrors.NewNotFoundError("user not found")
+		return entities.User{}, apperrors.NewNotFoundError("user not found. invalid token")
 	}
 	return user, nil
 }
@@ -451,6 +480,14 @@ func (s *UserService) GetUserByEmail(ctx context.Context, token string) (entitie
 		return entities.User{}, apperrors.NewNotFoundError("user not found")
 	}
 	return user, nil
+}
+
+func (s *UserService) GetUsersWithoutAssociation(ctx context.Context, roles []string) ([]entities.User, error) {
+	users, err := s.repository.FindUsersWithoutAssociation(ctx, roles)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("no users found")
+	}
+	return users, nil
 }
 
 func (s *UserService) UserHasRoles(ctx context.Context, userId int64, comparedRoles ...string) (bool, error) {
