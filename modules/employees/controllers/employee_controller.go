@@ -16,6 +16,7 @@ type EmployeeController struct {
 	service                 *services.EmployeeService
 	jobTitleService         *services.JobTitleService
 	documentService         *services.DocumentService
+	professionalInfoService *services.ProfessionalInfoService
 	phoneService            *services.EmployeePhoneService
 	emailService            *services.EmployeeEmailService
 	accountService          *services.EmployeeAccountService
@@ -40,6 +41,7 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		service:                 services.NewEmployeeService(db),
 		jobTitleService:         services.NewJobTitleService(db),
 		documentService:         services.NewDocumentService(db),
+		professionalInfoService: services.NewProfessionalInfoService(db),
 		phoneService:            services.NewEmployeePhoneService(db),
 		emailService:            services.NewEmployeeEmailService(db),
 		accountService:          services.NewEmployeeAccountService(db),
@@ -56,6 +58,7 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		configService:           configurations.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
 		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
+		BaseController:          shared.BaseController{},
 	}
 }
 
@@ -88,6 +91,11 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 	group.Get("/:empId/edit-document/:docId", ctrl.editDocumentForm)
 	group.Post("/:empId/edit-document/:docId", ctrl.editDocument)
 	group.Get("/display-document/:id", ctrl.displayDocument)
+
+	group.Get("/:id/add-professional-info", ctrl.addProfessionalInfoForm)
+	group.Post("/:id/add-professional-info", ctrl.addProfessionalInfo)
+	group.Get("/:empId/edit-professional-info/:proId", ctrl.editProfessionalInfoForm)
+	group.Post("/:empId/edit-professional-info/:proId", ctrl.editProfessionalInfo)
 
 	group.Get("/:id/add-user-account", ctrl.addUserAccountForm)
 	group.Post("/:id/add-user-account", ctrl.addUserAccount)

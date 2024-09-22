@@ -52,33 +52,6 @@
                 {{ end }}
             </select>
         </div>
-        <div class="field">
-            <label for="department_id"><strong>Department:</strong></label>
-            <select class="ui dropdown" name="department_id" id="department_id">
-                <option value="">Select Department</option>
-                {{ range .Departments }}
-                    <option value="{{ .DepartmentId }}">{{ .DepartmentName }}</option>
-                {{ end }}
-            </select>
-        </div>
-        <div class="field">
-            <label for="job_title_id"><strong>Job Title:</strong></label>
-            <select class="ui dropdown" name="job_title_id" id="job_title_id">
-                <option value="">Select Job Title</option>
-                {{ range .JobTitles }}
-                    <option value="{{ .JobTitleId }}">{{ .TitleName }}</option>
-                {{ end }}
-            </select>
-        </div>
-        <div class="field">
-            <label for="employment_status_id"><strong>Employment Status:</strong></label>
-            <select class="ui dropdown" name="employment_status_id" id="employment_status_id" required>
-                <option value="">Select Employment Status</option>
-                {{ range .EmploymentStatuses }}
-                    <option value="{{ .StatusId }}">{{ .StatusName }}</option>
-                {{ end }}
-            </select>
-        </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">
                 <i class="send icon"></i>

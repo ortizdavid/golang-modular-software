@@ -40,9 +40,6 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 		IdentificationTypeId: request.IdentificationTypeId,
 		CountryId:            request.CountryId,
 		MaritalStatusId:      request.MaritalStatusId,
-		DepartmentId:         request.DepartmentId,
-		JobTitleId:           request.JobTitleId,
-		EmploymentStatusId:   request.EmploymentStatusId,
 		FirstName:            request.FirstName,
 		LastName:             request.LastName,
 		IdentificationNumber: request.IdentificationNumber,
@@ -72,9 +69,6 @@ func (s *EmployeeService) UpdateEmployee(ctx context.Context, employeeId int64, 
 	employee.IdentificationTypeId = request.IdentificationTypeId
 	employee.CountryId = request.CountryId
 	employee.MaritalStatusId = request.MaritalStatusId
-	employee.DepartmentId = request.DepartmentId
-	employee.JobTitleId = request.JobTitleId
-	employee.EmploymentStatusId = request.EmploymentStatusId
 	employee.FirstName = request.FirstName
 	employee.LastName = request.LastName
 	employee.IdentificationNumber = request.IdentificationNumber

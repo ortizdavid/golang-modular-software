@@ -21,20 +21,20 @@
                     <tr>
                         <th>ID</th>
                         <th>Full Name</th>
+                        <th>Identification Type</th>
                         <th>Identification Number</th>
                         <th>Gender</th>
-                        <th>Department</th>
                         <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{ range .Pagination.Items }}
                         <tr>
-                            <td class="collapsing">{{.JobTitleId}}</td>
+                            <td class="collapsing">{{.EmployeeId}}</td>
                             <td>{{.FirstName}} {{.LastName}}</td>
+                            <td>{{.IdentificationTypeName}}</td>
                             <td>{{.IdentificationNumber}}</td>
                             <td>{{.Gender}}</td>
-                            <td>{{.DepartmentName}}</td>
                             <td>
                                 <a href="/employees/employee-info/{{.UniqueId}}/details" class="ui icon button" data-tooltip="Details" data-position="top center">
                                     <i class="eye blue icon"></i>

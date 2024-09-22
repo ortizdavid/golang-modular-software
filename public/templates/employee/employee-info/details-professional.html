@@ -1,3 +1,18 @@
-<p><strong>Department:</strong> {{.Employee.DepartmentName}}</p>
-<p><strong>Employment Status:</strong> {{.Employee.EmploymentStatusName}}</p>
-<p><strong>Job Title:</strong> {{.Employee.JobTitleName}}</p>
+{{ if .EmployeeProfessionalInfo.JobTitleName }}
+    <div class="eight wide column" align="right">
+        <a href="/employees/employee-info/{{.Employee.UniqueId}}/edit-professional-info/{{.EmployeeProfessionalInfo.UniqueId}}" class="ui primary button small">
+            <i class="edit icon"></i>
+            Edit
+        </a>
+    </div>
+    <p><strong>Department:</strong> {{.EmployeeProfessionalInfo.DepartmentName}}</p>
+    <p><strong>Employment Status:</strong> {{.EmployeeProfessionalInfo.EmploymentStatusName}}</p>
+    <p><strong>Job Title:</strong> {{.EmployeeProfessionalInfo.JobTitleName}}</p>
+{{ else }}
+    <div class="eight wide column" align="right">
+        <a href="/employees/employee-info/{{.Employee.UniqueId}}/add-professional-info" class="ui primary button small">
+            <i class="plus icon"></i>
+            Add Professional Info
+        </a>
+    </div>
+{{ end }}

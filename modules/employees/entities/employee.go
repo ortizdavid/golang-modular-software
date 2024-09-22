@@ -12,9 +12,6 @@ type Employee struct {
 	IdentificationTypeId	int `gorm:"column:identification_type_id"`
 	CountryId				int `gorm:"column:country_id"`
 	MaritalStatusId			int `gorm:"column:marital_status_id"`
-	DepartmentId			int `gorm:"column:department_id"`
-	JobTitleId				int `gorm:"column:job_title_id"`
-	EmploymentStatusId		int `gorm:"column:employment_status_id"`
 	FirstName				string `gorm:"column:first_name"`
 	LastName				string `gorm:"column:last_name"`
 	IdentificationNumber	string `gorm:"column:identification_number"`
@@ -43,10 +40,4 @@ type EmployeeData struct {
 	CountryName				string `json:"country_name"`
 	MaritalStatusId			int `json:"marital_status_id"`
 	MaritalStatusName		string `json:"marital_status_name"`
-	DepartmentId			int `json:"department_id"`
-	DepartmentName			string `json:"department_name"`
-	EmploymentStatusId		int `json:"employment_status_id"`
-	EmploymentStatusName	string `json:"employment_status_name"`
-	JobTitleId				int `json:"job_title_id"`
-	JobTitleName			string `json:"job_title_name"`
 }

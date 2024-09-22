@@ -1,0 +1,56 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/edit-professional-info/{{.EmployeeProfessionalInfo.UniqueId}}" method="POST" enctype="multipart/form-data">
+        <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
+        <div class="ui divider"></div>
+        <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
+
+        <div class="field">
+            <label for="department_id"><strong>Department:</strong></label>
+            <select class="ui dropdown" name="department_id" id="department_id">
+                <!--<option value="">Select Department</option>-->
+                {{ range .Departments }}
+                    <option value="{{ .DepartmentId }}" {{ if eq .DepartmentId $.EmployeeProfessionalInfo.DepartmentId }}selected{{ end }}>{{ .DepartmentName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="job_title_id"><strong>Job Title:</strong></label>
+            <select class="ui dropdown" name="job_title_id" id="job_title_id">
+                <!--<option value="">Select Job Title</option>-->
+                {{ range .JobTitles }}
+                    <option value="{{ .JobTitleId }}" {{ if eq .JobTitleId $.EmployeeProfessionalInfo.JobTitleId }}selected{{ end }}>{{ .TitleName }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="field">
+            <label for="employment_status_id"><strong>Employment Status:</strong></label>
+            <select class="ui dropdown" name="employment_status_id" id="employment_status_id" required>
+                <!--<option value="">Select Employment Status</option>-->
+                {{ range .EmploymentStatuses }}
+                    <option value="{{ .StatusId }}" {{ if eq .StatusId $.EmployeeProfessionalInfo.EmploymentStatusId }}selected{{ end }}>{{ .StatusName }}</option>
+                {{ end }}
+            </select>
+        </div>
+       
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/employees/employee-info/{{.Employee.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

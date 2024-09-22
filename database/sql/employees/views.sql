@@ -13,23 +13,16 @@ SELECT emp.employee_id, emp.unique_id,
     it.type_name AS identification_type_name,
     co.country_id, co.country_name,
     ms.status_id AS marital_status_id,
-    ms.status_name AS marital_status_name,
-    dpt.department_id, dpt.department_name,
-    es.status_id AS employment_status_id,
-    es.status_name AS employment_status_name,
-    jt.job_title_id, jt.title_name AS job_title_name
+    ms.status_name AS marital_status_name
 FROM employees.employees emp 
 LEFT JOIN reference.identification_types it ON(it.type_id = emp.identification_type_id)
 LEFT JOIN reference.countries co ON(co.country_id = emp.country_id)
 LEFT JOIN reference.marital_statuses ms ON(ms.status_id = emp.marital_status_id)
-LEFT JOIN reference.employment_statuses es ON(es.status_id = emp.employment_status_id)
-LEFT JOIN company.departments dpt ON(dpt.department_id = emp.department_id)
-LEFT JOIN employees.job_titles jt ON(jt.job_title_id = emp.job_title_id)
 ORDER BY emp.created_at;
 
 
--- view: view_professional_data
-CREATE OR REPLACE VIEW employees.view_professional_data AS
+-- view: view_professional_info_data
+CREATE OR REPLACE VIEW employees.view_professional_info_data AS
 SELECT pr.professional_id, pr.unique_id,
     TO_CHAR(pr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(pr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
@@ -42,9 +35,9 @@ SELECT pr.professional_id, pr.unique_id,
     jt.job_title_id, jt.title_name AS job_title_name
 FROM employees.professional_info pr
 LEFT JOIN employees.employees emp ON(emp.employee_id = pr.employee_id)
-LEFT JOIN reference.employment_statuses es ON(es.status_id = emp.employment_status_id)
-LEFT JOIN company.departments dpt ON(dpt.department_id = emp.department_id)
-LEFT JOIN employees.job_titles jt ON(jt.job_title_id = emp.job_title_id);
+LEFT JOIN reference.employment_statuses es ON(es.status_id = pr.employment_status_id)
+LEFT JOIN company.departments dpt ON(dpt.department_id = pr.department_id)
+LEFT JOIN employees.job_titles jt ON(jt.job_title_id = pr.job_title_id);
 
 
 

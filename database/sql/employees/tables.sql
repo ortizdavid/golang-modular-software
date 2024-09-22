@@ -55,8 +55,7 @@ DROP INDEX IF EXISTS idx_employees_first_name;
 CREATE INDEX  IF EXISTS idx_employees_first_name ON employees.employees(first_name);
 DROP INDEX IF EXISTS idx_employees_last_name;
 CREATE INDEX idx_employees_last_name ON employees.employees(last_name);
-DROP INDEX IF EXISTS idx_employees_country;
-CREATE INDEX idx_employees_country ON employees.employees(country_id);
+
 
 
 -- Table: professional_info
