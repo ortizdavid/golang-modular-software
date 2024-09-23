@@ -7,6 +7,7 @@ import (
 type UserAssociation struct {
     AssociationId int64 `gorm:"primaryKey;autoIncrement"`
     UserId     int64 `gorm:"column:user_id"`
+    EntityId   int64 `gorm:"column:entity_id"`
     shared.BaseEntity
 }
 

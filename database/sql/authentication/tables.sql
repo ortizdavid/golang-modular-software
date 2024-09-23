@@ -69,11 +69,15 @@ DROP TABLE IF EXISTS authentication.user_associations;
 CREATE TABLE authentication.user_associations (
     association_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
+    entity_id INT NOT NULL,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES  authentication.users(user_id)
 );
+-- Index
+DROP INDEX IF EXISTS idx_entity_id;
+CREATE INDEX idx_entity_id ON authentication.user_associations(entity_id);
 
 
 -- Table: permissions

@@ -187,7 +187,7 @@ func (s *UserService) AssociateUserToRole(ctx context.Context, request entities.
 	if err != nil {
 		return apperrors.NewNotFoundError("user not found. inavlid user id")
 	}
-	exists, err := s.userAssociationRepository.ExistsByUserId(ctx, user.UserId)
+	exists, err := s.userAssociationRepository.Exists(ctx, request.UserId, request.EntityId)
 	if err != nil {
 		return err
 	}
@@ -196,6 +196,7 @@ func (s *UserService) AssociateUserToRole(ctx context.Context, request entities.
 	}
 	userAssociation := entities.UserAssociation{
 		UserId:     user.UserId,
+		EntityId: request.EntityId,
 		BaseEntity: shared.BaseEntity{
 			UniqueId:  encryption.GenerateUUID(),
 			CreatedAt: time.Now(),
@@ -483,7 +484,7 @@ func (s *UserService) GetUserByEmail(ctx context.Context, token string) (entitie
 }
 
 func (s *UserService) GetUsersWithoutAssociation(ctx context.Context, roles []string) ([]entities.User, error) {
-	users, err := s.repository.FindUsersWithoutAssociation(ctx, roles)
+	users, err := s.repository.FindUsersWithoutAssociation(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("no users found")
 	}

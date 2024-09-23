@@ -57,7 +57,8 @@ ORDER BY created_at DESC;
 
 -- View: view_user_association_data
 CREATE OR REPLACE VIEW authentication.view_user_association_data AS 
-SELECT  ua.association_id, ua.unique_id,
+SELECT  ua.association_id, entity_id,
+    ua.unique_id,
     TO_CHAR(ua.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(ua.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
     ro.role_id, ro.role_name,

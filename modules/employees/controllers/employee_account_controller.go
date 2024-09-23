@@ -48,12 +48,16 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	assReq := authentication.AssociateUserRequest{UserId: ctrl.userService.GetUserInsertedId()}
-	err = ctrl.userService.AssociateUserToRole(c.Context(), assReq)
+	userId := ctrl.userService.GetUserInsertedId()
+	assRequest := authentication.AssociateUserRequest{
+		UserId: userId,
+		EntityId: employee.EmployeeId,
+	}
+	err = ctrl.userService.AssociateUserToRole(c.Context(), assRequest)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateEmployeeUserId(c.Context(), employee.EmployeeId, ctrl.userService.GetUserInsertedId())
+	err = ctrl.service.UpdateEmployeeUserId(c.Context(), employee.EmployeeId, userId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -98,6 +102,10 @@ func (ctrl *EmployeeController) associateUserAccount(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' added user account to employee '"+employee.IdentificationNumber+"' successfully")
+	err = ctrl.service.UpdateEmployeeUserId(c.Context(), employee.EmployeeId, request.UserId)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' associated user account to employee '"+employee.IdentificationNumber+"' successfully")
 	return c.Redirect("/employees/employee-info/" +id+ "/details")
 }
