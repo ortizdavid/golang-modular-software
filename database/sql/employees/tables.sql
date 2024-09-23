@@ -124,6 +124,33 @@ DROP INDEX IF EXISTS idx_document_type_id;
 CREATE INDEX idx_document_type_id ON employees.documents(document_type_id);
 
 
+
+DROP TABLE IF EXISTS employees.address;
+CREATE TABLE employees.address(
+    address_id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL,
+    state VARCHAR(100),
+    city VARCHAR(100),
+    neighborhood VARCHAR(200),
+    street VARCHAR(200),
+    house_number VARCHAR(20),
+    postal_code VARCHAR(20),
+    country_code VARCHAR(3),
+    aditional_details VARCHAR(255),
+    is_current BOOLEAN DEFAULT FALSE,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_address_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id)
+);
+-- Indexes:
+DROP INDEX IF EXISTS idx_address_state;
+CREATE INDEX idx_address_state ON employees.address(state);
+DROP INDEX IF EXISTS idx_address_city;
+CREATE INDEX idx_address_city ON employees.address(city);
+
+
+
 -- Table: employee_phones
 DROP TABLE IF EXISTS employees.employee_phones;
 CREATE TABLE employees.employee_phones(
