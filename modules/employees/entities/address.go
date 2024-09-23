@@ -12,7 +12,7 @@ type Address struct {
 	Neighborhood	string `gorm:"column:neighborhood"`
 	Street			string `gorm:"column:street"`
 	HouseNumber		string `gorm:"house_number"`
-	PostalCode		string `gorm:"post_code"`
+	PostalCode		string `gorm:"postal_code"`
 	CountryCode		string `gorm:"column:country_code"`
 	AditionalDetails	string `gorm:"column:aditional_details"`
 	IsCurrent			bool `gorm:"column:is_current"`
@@ -31,7 +31,7 @@ type AddressData struct {
 	Neighborhood		string `json:"neighborhood"`
 	Street				string `json:"street"`
 	HouseNumber			string `json:"house_number"`
-	PortalCode			string `json:"portal_code"`
+	PostalCode			string `json:"postal_code"`
 	CountryCode			string `json:"country_code"`
 	AditionalDetails	string `json:"aditional_details"`
 	IsCurrent			bool `json:"is_current"`

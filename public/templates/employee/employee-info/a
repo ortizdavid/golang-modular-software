@@ -7,7 +7,7 @@
             </a>
         </div>
         {{ if .IsCurrent }}
-            <i class="ui checkmark circular green icon"></i> Current Address
+            <i class="ui checkmark green icon"></i> Current Address
         {{ end }}
         <p><strong>State:</strong> {{.State}}</p>
         <p><strong>City:</strong> {{.City}}</p>

@@ -19,6 +19,7 @@ type EmployeeController struct {
 	professionalInfoService *services.ProfessionalInfoService
 	phoneService            *services.EmployeePhoneService
 	emailService            *services.EmployeeEmailService
+	addressService			*services.AddressService
 	accountService          *services.EmployeeAccountService
 	documentTypeService     *services.DocumentTypeService
 	identTypeService        *references.IdentificationTypeService
@@ -44,6 +45,7 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		professionalInfoService: services.NewProfessionalInfoService(db),
 		phoneService:            services.NewEmployeePhoneService(db),
 		emailService:            services.NewEmployeeEmailService(db),
+		addressService:          services.NewAddressService(db),
 		accountService:          services.NewEmployeeAccountService(db),
 		documentTypeService:     services.NewDocumentTypeService(db),
 		identTypeService:        references.NewIdentificationTypeService(db),
@@ -58,6 +60,7 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		configService:           configurations.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
 		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
+		BaseController:          shared.BaseController{},
 	}
 }
 
@@ -85,6 +88,11 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 	group.Get("/:empId/edit-email/:contId", ctrl.editEmailForm)
 	group.Post("/:empId/edit-email/:contId", ctrl.editEmail)
 
+	group.Get("/:id/add-address", ctrl.addAddressForm)
+	group.Post("/:id/add-address", ctrl.addAddress)
+	group.Get("/:empId/edit-address/:addId", ctrl.editAddressForm)
+	group.Post("/:empId/edit-address/:addId", ctrl.editAddress)
+
 	group.Get("/:id/add-document", ctrl.addDocumentForm)
 	group.Post("/:id/add-document", ctrl.addDocument)
 	group.Get("/:empId/edit-document/:docId", ctrl.editDocumentForm)
@@ -98,7 +106,6 @@ func (ctrl *EmployeeController) Routes(router *fiber.App, db *database.Database)
 
 	group.Get("/:id/add-user-account", ctrl.addUserAccountForm)
 	group.Post("/:id/add-user-account", ctrl.addUserAccount)
-
 	group.Get("/:id/associate-user-account", ctrl.associateUserAccountForm)
 	group.Post("/:id/associate-user-account", ctrl.associateUserAccount)
 }

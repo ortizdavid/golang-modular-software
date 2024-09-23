@@ -39,14 +39,16 @@ func (ctrl *EmployeeController) details(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	employeeProfessionalInfo, _ := ctrl.professionalInfoService.GetProfessionalInfoByEmployeeId(c.Context(), employee.EmployeeId)
-	/*if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}*/
+
 	employeePhones, err := ctrl.phoneService.GetAllEmployeePhones(c.Context(), employee.EmployeeId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	employeeEmails, err := ctrl.emailService.GetAllEmployeeEmails(c.Context(), employee.EmployeeId)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
+	employeeAddresses, err := ctrl.addressService.GetAllEmployeeAddresses(c.Context(), employee.EmployeeId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -61,6 +63,8 @@ func (ctrl *EmployeeController) details(c *fiber.Ctx) error {
 		"LoggedUser":        loggedUser,
 		"Employee":          employee,
 		"EmployeeDocuments": employeeDocuments,
+		"EmployeeAddresses": employeeAddresses,
+		"CountAddresses": len(employeeAddresses),
 		"EmployeeProfessionalInfo": employeeProfessionalInfo,
 		"CountDocuments":    len(employeeDocuments),
 		"EmployeePhones":    employeePhones,
