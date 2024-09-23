@@ -24,12 +24,12 @@ func (Document) TableName() string {
 
 type DocumentData struct {
 	DocumentId			int64 `json:"document_id"`
+	UniqueId    		string `json:"unique_id"`
 	DocumentName   		string `json:"document_name"`
 	DocumentNumber 		string `json:"document_number"`
 	ExpirationDate		string `json:"expiration_date"`
 	FileName			string `json:"file_name"`
 	Status				string `json:"status"`
-	UniqueId    		string `json:"unique_id"`
 	CreatedAt   		string `json:"created_at"`
 	UpdatedAt			string `json:"updated_at"`
 	EmployeeId			int64 `json:"employee_id"`

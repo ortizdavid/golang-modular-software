@@ -61,6 +61,23 @@ LEFT JOIN employees.document_types dt ON (dt.type_id = doc.document_type_id)
 ORDER BY type_id;
 
 
+-- view: view_address_data
+CREATE OR REPLACE VIEW employees.view_address_data AS
+SELECT ad.address_id, ad.unique_id,
+    ad.state, ad.city,
+    ad.neighborhood, ad.street,
+    ad.house_number, ad.postal_code,
+    ad.country_code, ad.aditional_details,
+    ad.is_current,
+    TO_CHAR(ad.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(ad.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    emp.employee_id, 
+    emp.unique_id AS employee_unique_id,
+    emp.first_name, emp.last_name
+FROM employees.address ad 
+LEFT JOIN employees.employees emp ON(emp.employee_id = ad.employee_id);
+
+
 -- view: view_employee_email_data
 CREATE OR REPLACE VIEW employees.view_employee_email_data AS
 SELECT em.email_id, em.unique_id,
