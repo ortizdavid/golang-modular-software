@@ -75,7 +75,8 @@ SELECT ad.address_id, ad.unique_id,
     emp.unique_id AS employee_unique_id,
     emp.first_name, emp.last_name
 FROM employees.address ad 
-LEFT JOIN employees.employees emp ON(emp.employee_id = ad.employee_id);
+LEFT JOIN employees.employees emp ON(emp.employee_id = ad.employee_id)
+ORDER BY created_at DESC;
 
 
 -- view: view_employee_email_data

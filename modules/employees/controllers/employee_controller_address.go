@@ -78,10 +78,10 @@ func (ctrl *EmployeeController) editAddressForm(c *fiber.Ctx) error {
 }
 
 func (ctrl *EmployeeController) editAddress(c *fiber.Ctx) error {
-	id := c.Params("id")
+	empId := c.Params("empId")
 	addId := c.Params("addId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -99,5 +99,5 @@ func (ctrl *EmployeeController) editAddress(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' updated address for employee '%s'", loggedUser.UserName, employee.FirstName))
-	return c.Redirect("/employees/employee-info/" + id + "/details")
+	return c.Redirect("/employees/employee-info/" + empId + "/details")
 }

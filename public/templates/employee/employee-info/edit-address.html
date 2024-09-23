@@ -1,0 +1,79 @@
+{{ template "_partials/header-back" .}}
+
+<div class="ui segment">
+    <form class="ui form" action="/employees/employee-info/{{.Employee.UniqueId}}/edit-address/{{.EmployeeAddress.UniqueId}}" method="POST" enctype="multipart/form-data">
+        <h3 class="ui header">Employee: {{.Employee.FirstName}} {{.Employee.LastName}}</h3>
+        <div class="ui divider"></div>
+        <input type="hidden" name="employee_id" value="{{.Employee.EmployeeId}}">
+        
+        <div class="field">
+            <label for="state"><strong>State:</strong></label>
+            <input class="ui input" type="text" name="state" id="state" value="{{.EmployeeAddress.State}}" autofocus>
+        </div>
+
+        <div class="field">
+            <label for="city"><strong>City:</strong></label>
+            <input class="ui input" type="text" name="city" id="city" value="{{.EmployeeAddress.City}}">
+        </div>
+
+        <div class="field">
+            <label for="neighborhood"><strong>Neighborhood:</strong></label>
+            <input class="ui input" type="text" name="neighborhood" id="neighborhood"value="{{.EmployeeAddress.Neighborhood}}">
+        </div>
+
+        <div class="field">
+            <label for="street"><strong>Street:</strong></label>
+            <input class="ui input" type="text" name="street" id="street" value="{{.EmployeeAddress.Street}}">
+        </div>
+
+        <div class="field">
+            <label for="house-number"><strong>House Number:</strong></label>
+            <input class="ui input" type="text" name="house_number" id="street" value="{{.EmployeeAddress.HouseNumber}}">
+        </div>
+
+        <div class="field">
+            <label for="postal-code"><strong>Postal Code:</strong></label>
+            <input class="ui input" type="text" name="postal_code" id="street" value="{{.EmployeeAddress.PostalCode}}">
+        </div>
+
+        <div class="field">
+            <label for="country_code"><strong>Country Code:</strong></label>
+            <div class="ui fluid search selection dropdown">
+                <input type="hidden" name="country_code" id="country_code" value="{{.EmployeeAddress.CountryCode}}" required>
+                <i class="dropdown icon"></i>
+                <div class="default text">Select Country Code</div>
+                <div class="menu">
+                    {{ range .Countries }}
+                        <div class="item" data-value="{{ .IsoCode }}">
+                            <i class="{{ .IsoCodeLower }} flag"></i>{{ .IsoCode }}
+                        </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="aditional details"><strong>Aditional details:</strong></label>
+            <textarea class="ui input" type="text" name="aditional_details" cols="20" rows="5" id="aditional-details">{{.EmployeeAddress.AditionalDetails}}</textarea>
+        </div>
+
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/employees/employee-info/{{.Employee.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

@@ -45,6 +45,6 @@ func (repo *AddressRepository) Exists(ctx context.Context, request entities.Crea
 }
 
 func (repo *AddressRepository) UpdateCurrent(ctx context.Context, employeeId int64) error {
-	result := repo.db.Raw("UPDATE employees.address SET is_current = false WHERE employee_id = ?", employeeId)
+	result := repo.db.WithContext(ctx).Table("employees.address").Where("employee_id=?", employeeId).Update("is_current", false)
 	return result.Error
 }
