@@ -35,7 +35,7 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	var request entities.ResetPasswordRequest
+	var request entities.UpdatePasswordRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

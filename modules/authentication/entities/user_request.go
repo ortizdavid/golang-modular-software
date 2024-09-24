@@ -1,5 +1,7 @@
 package entities
 
+import "errors"
+
 // -- Change Password
 type CreateUserRequest struct {
 	UserName		string `json:"user_name" form:"user_name"`
@@ -13,24 +15,18 @@ func (req CreateUserRequest) Validate() error {
 }
 
 // -- Change Password
-type ChangePasswordRequest struct {
+type UpdatePasswordRequest struct {
 	NewPassword		string `json:"new_password" form:"new_password"`
 	PasswordConf	string `json:"password_conf" form:"password_conf"`
 }
 
-func (req ChangePasswordRequest) Validate() error {
+func (req UpdatePasswordRequest) Validate() error {
+	if req.NewPassword != req.PasswordConf {
+		return errors.New("password and confirmation do not match")
+	}
 	return nil
 }
 
-// -- Change Password
-type ResetPasswordRequest struct {
-	NewPassword		string `json:"new_password" form:"new_password"`
-	PasswordConf	string `json:"password_conf" form:"password_conf"`
-}
-
-func (req ResetPasswordRequest) Validate() error {
-	return nil
-}
 
 // -- Change Profile Image
 type ChangeImageRequest struct {

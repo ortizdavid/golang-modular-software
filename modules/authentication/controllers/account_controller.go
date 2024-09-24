@@ -78,7 +78,7 @@ func (ctrl *AccountController) changePasswordForm(c *fiber.Ctx) error {
 }
 
 func (ctrl *AccountController) changePassword(c *fiber.Ctx) error {
-	var request entities.ChangePasswordRequest
+	var request entities.UpdatePasswordRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
