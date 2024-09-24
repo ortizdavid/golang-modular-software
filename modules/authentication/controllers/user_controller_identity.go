@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
-	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 )
 
@@ -18,7 +17,7 @@ func (ctrl *UserController) resetPasswordForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	if loggedUser.UserId == user.UserId {
-		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
+		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("You cannot reset your own password"))
 	}
 	return c.Render("authentication/user/reset-password", fiber.Map{
 		"Title":            "Reset Password",
@@ -41,7 +40,7 @@ func (ctrl *UserController) resetPassword(c *fiber.Ctx) error {
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
-		return helpers.HandleHttpErrors(c, apperrors.NewConflictError("You cannot reset your own password"))
+		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("You cannot reset your own password"))
 	}
 	err = ctrl.service.ResetUserPassword(c.Context(), user.UserId, request)
 	if err != nil {

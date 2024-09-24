@@ -62,25 +62,25 @@ func (ctrl *AuthApi) refresh(c *fiber.Ctx) error {
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
 	if tokenString == "" {
-		return helpers.HandleHttpErrorsApi(c, apperrors.NewBadRequestError("Refresh token is required"))
+		return ctrl.HandleErrorsApi(c, apperrors.NewBadRequestError("Refresh token is required"))
 	}
 	// Validate and parse the refresh token
 	parsedToken, claims, err := ctrl.jwtService.ParseToken(tokenString)
 	if err != nil || !parsedToken.Valid {
 		ctrl.errorLogger.Error(c, fmt.Sprintf("Invalid refresh token: %v", err))
-		return helpers.HandleHttpErrorsApi(c, apperrors.NewUnauthorizedError("Invalid or expired refresh token"))
+		return ctrl.HandleErrorsApi(c, apperrors.NewUnauthorizedError("Invalid or expired refresh token"))
 	}
 	// Extract user ID from the token claims
 	userId, ok := claims["user_id"].(int64)
 	if !ok {
 		ctrl.errorLogger.Error(c, "Failed to extract user ID from refresh token")
-		return helpers.HandleHttpErrorsApi(c, apperrors.NewUnauthorizedError("Invalid refresh token"))
+		return ctrl.HandleErrorsApi(c, apperrors.NewUnauthorizedError("Invalid refresh token"))
 	}
 	// Generate new access token
 	newToken, err := ctrl.jwtService.GenerateJwtToken(userId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, fmt.Sprintf("Error generating new token: %v", err))
-		return helpers.HandleHttpErrorsApi(c, apperrors.NewInternalServerError("Error generating new token"))
+		return ctrl.HandleErrorsApi(c, apperrors.NewInternalServerError("Error generating new token"))
 	}
 	// Log successful token refresh
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%d' refreshed token successfully", userId))

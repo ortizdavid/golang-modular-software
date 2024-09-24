@@ -62,7 +62,7 @@ func (ctrl *RoleController) createForm(c *fiber.Ctx) error {
 func (ctrl *RoleController) create(c *fiber.Ctx) error {
 	csrfToken := c.FormValue("csrf_token")
 	if !helpers.ValidateCsrfToken(c, csrfToken) {
-		return helpers.HandleHttpErrors(c, apperrors.NewForbiddenError("Invalid CSRF token"))
+		return ctrl.HandleErrorsWeb(c, apperrors.NewForbiddenError("Invalid CSRF token"))
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	var request entities.CreateRoleRequest
