@@ -53,6 +53,7 @@ func (req AssignUserRoleRequest) Validate() error {
 type AssociateUserRequest struct {
 	UserId		int64 `json:"user_id" form:"user_id"`
 	EntityId	int64 `json:"entity_id" form:"entity_id"`
+	EntityName	string `json:"entity_name" form:"entity_name"`
 }
 
 func (req AssociateUserRequest) Validate() error {

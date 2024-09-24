@@ -58,14 +58,20 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		if existsEmail {
 			return apperrors.NewConflictError("email '"+request.Email+"' already exists")
 		}
+		// Check Role ------------------
+		role, err := s.roleRepository.FindById(ctx, request.RoleId)
+		if err != nil {
+			return apperrors.NewNotFoundError("role not found. invalid role id")
+		}
 		//--- Create User ----------------------------------------------------------------------
 		user := entities.User{
 			UserName:  request.UserName,
 			Email:     request.Email,
 			Password:  encryption.HashPassword(request.Password),
 			IsActive:  true,
-			UserImage:     "",
+			UserImage: "",
 			Token:     encryption.GenerateRandomToken(),
+			InitialRole: role.Code,
 			BaseEntity: shared.BaseEntity{
 				UniqueId:  encryption.GenerateUUID(),
 				CreatedAt: time.Now(),
@@ -78,10 +84,6 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		}
 		userId := s.repository.LastInsertId
 		s.userInsertedId = userId
-		_, err = s.roleRepository.FindById(ctx, request.RoleId)
-		if err != nil {
-			return apperrors.NewNotFoundError("role not found. invalid role id")
-		}
 		// --- Create a new UserRole association
 		userRole := entities.UserRole{
 			UserId:     userId,
@@ -197,6 +199,7 @@ func (s *UserService) AssociateUserToRole(ctx context.Context, request entities.
 	userAssociation := entities.UserAssociation{
 		UserId:     user.UserId,
 		EntityId: request.EntityId,
+		EntityName: request.EntityName,
 		BaseEntity: shared.BaseEntity{
 			UniqueId:  encryption.GenerateUUID(),
 			CreatedAt: time.Now(),
@@ -484,7 +487,7 @@ func (s *UserService) GetUserByEmail(ctx context.Context, token string) (entitie
 }
 
 func (s *UserService) GetUsersWithoutAssociation(ctx context.Context, roles []string) ([]entities.User, error) {
-	users, err := s.repository.FindUsersWithoutAssociation(ctx)
+	users, err := s.repository.FindUsersWithoutAssociation(ctx, roles)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("no users found")
 	}

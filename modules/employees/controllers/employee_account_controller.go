@@ -52,6 +52,7 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 	assRequest := authentication.AssociateUserRequest{
 		UserId: userId,
 		EntityId: employee.EmployeeId,
+		EntityName: "employee",
 	}
 	err = ctrl.userService.AssociateUserToRole(c.Context(), assRequest)
 	if err != nil {

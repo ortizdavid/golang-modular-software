@@ -49,8 +49,7 @@ func (s *EmployeeAccountService) GetEmployeAllowedRoles(ctx context.Context) ([]
 
 func (s *EmployeeAccountService) GetAllowedRoles() []string {
 	return []string{
-		authEntities.RoleAdmin.Code, 
-		authEntities.RoleSuperAdmin.Code, 
-		authEntities.RoleDeveloper.Code,
+		authEntities.RoleEmployee.Code, 
+		authEntities.RoleManager.Code, 
 	}
 }

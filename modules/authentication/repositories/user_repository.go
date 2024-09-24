@@ -198,11 +198,11 @@ func (repo *UserRepository) CountByParam(ctx context.Context, param string) (int
     return count, result.Error
 }
 
-func (repo *UserRepository) FindUsersWithoutAssociation(ctx context.Context) ([]entities.User, error) {
+func (repo *UserRepository) FindUsersWithoutAssociation(ctx context.Context, roles []string) ([]entities.User, error) {
 	var users []entities.User
 	result := repo.db.WithContext(ctx).
 		Table("authentication.users").
-		Where("user_id NOT IN(SELECT user_id FROM authentication.user_associations)").
+		Where("user_id NOT IN(SELECT user_id FROM authentication.user_associations) AND initial_role IN(?)", roles).
 		Order("created_at DESC").
 		Find(&users)
 	return users, result.Error

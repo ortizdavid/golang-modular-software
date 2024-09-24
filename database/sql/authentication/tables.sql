@@ -39,6 +39,7 @@ CREATE TABLE authentication.users (
     user_image VARCHAR(100), 
     is_active BOOLEAN DEFAULT TRUE,
     token VARCHAR(150) UNIQUE,
+    initial_role VARCHAR(20),
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
@@ -70,6 +71,7 @@ CREATE TABLE authentication.user_associations (
     association_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     entity_id INT NOT NULL,
+    entity_name VARCHAR(50),
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
@@ -78,6 +80,9 @@ CREATE TABLE authentication.user_associations (
 -- Index
 DROP INDEX IF EXISTS idx_entity_id;
 CREATE INDEX idx_entity_id ON authentication.user_associations(entity_id);
+DROP INDEX IF EXISTS idx_entity_name;
+CREATE INDEX idx_entity_name ON authentication.user_associations(entity_name);
+
 
 
 -- Table: permissions

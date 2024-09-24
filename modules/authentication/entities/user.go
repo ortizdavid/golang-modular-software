@@ -11,6 +11,7 @@ type User struct {
 	Password  	string `gorm:"column:password"`
 	IsActive  	bool `gorm:"column:is_active"`
 	UserImage  	string `gorm:"column:user_image"`
+	InitialRole	string `gorm:"column:initial_role"`
 	Token  		string `gorm:"column:token"`
 	shared.BaseEntity
 }
