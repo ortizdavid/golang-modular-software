@@ -25,7 +25,6 @@ func NewBackOfficeController(db *database.Database) *BackOfficeController {
 
 func (ctrl *BackOfficeController) Routes(router *fiber.App, db *database.Database) {
 	router.Get("/", ctrl.index)
-
 	group := router.Group("/account")
 	group.Get("/home", ctrl.home)
 	group.Get("/notifications", ctrl.notifications)

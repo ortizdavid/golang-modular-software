@@ -1,5 +1,10 @@
 package entities
 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
 // --------- CREATE-------------------------
 type CreatePermissionRequest struct {
 	Code string `json:"code" form:"code"`
@@ -8,6 +13,14 @@ type CreatePermissionRequest struct {
 }
 
 func (req CreatePermissionRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -18,6 +31,14 @@ type UpdatePermissionRequest struct {
 }
 
 func (req UpdatePermissionRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -27,6 +48,14 @@ type AssignRolePermissionRequest struct {
 }
 
 func (req AssignRolePermissionRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 

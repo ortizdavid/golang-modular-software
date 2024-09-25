@@ -1,5 +1,10 @@
 package entities
 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
 //--CREATE
 type CreateModuleRequest struct {
     ModuleName  string    `json:":module_name" form:"module_name"`
@@ -8,6 +13,14 @@ type CreateModuleRequest struct {
 }
 
 func (req CreateModuleRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -20,6 +33,14 @@ type UpdateModuleRequest struct {
 }
 
 func (req UpdateModuleRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 

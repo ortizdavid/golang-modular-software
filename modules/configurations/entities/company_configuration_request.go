@@ -1,5 +1,10 @@
 package entities
 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
 type UpdateCompanyConfigurationRequest struct {
 	CompanyName      string `json:"company_name" form:"company_name"`
 	CompanyAcronym   string `json:"company_acronym" form:"company_acronym"`
@@ -9,5 +14,13 @@ type UpdateCompanyConfigurationRequest struct {
 }
 
 func (req UpdateCompanyConfigurationRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }

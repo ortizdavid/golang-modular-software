@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"path/filepath"
-
 	"github.com/gofiber/fiber/v2"
 )
 

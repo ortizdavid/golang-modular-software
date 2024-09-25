@@ -1,5 +1,10 @@
 package entities
 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
 // ---- Create
 type CreateBranchRequest struct {
 	CompanyId    int `json:"company_id" form:"company_id"`
@@ -11,6 +16,14 @@ type CreateBranchRequest struct {
 }
 
 func (req CreateBranchRequest) Validate() error  {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -25,6 +38,14 @@ type UpdateBranchRequest struct {
 }
 
 func (req UpdateBranchRequest) Validate() error  {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 

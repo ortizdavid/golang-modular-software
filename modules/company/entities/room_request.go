@@ -1,5 +1,10 @@
 package entities
 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
 // ---- Create
 type CreateRoomRequest struct {
 	CompanyId      int `json:"company_id" form:"company_id"`
@@ -10,6 +15,14 @@ type CreateRoomRequest struct {
 }
 
 func (req CreateRoomRequest) Validate() error  {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -23,6 +36,14 @@ type UpdateRoomRequest struct {
 }
 
 func (req UpdateRoomRequest) Validate() error  {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 

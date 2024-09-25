@@ -1,6 +1,11 @@
 package entities
 
-// --- CREATE 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
+// --- CREATE
 type CreateStatusRequest struct {
 	StatusName  string `json:"status_name" form:"status_name"`
 	Code        string `json:"code" form:"code"`
@@ -11,6 +16,14 @@ type CreateStatusRequest struct {
 }
 
 func (req CreateStatusRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -25,6 +38,14 @@ type UpdateStatusRequest struct {
 }
 
 func (req UpdateStatusRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 

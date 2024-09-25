@@ -1,5 +1,10 @@
 package entities
 
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
+)
+
 // -- Login
 type LoginRequest struct {
 	UserName 	string `json:"user_name" form:"user_name"` // can be UserName, Email or Other
@@ -7,6 +12,14 @@ type LoginRequest struct {
 }	
 
 func (req LoginRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -17,6 +30,14 @@ type RecoverPasswordRequest struct {
 }
 
 func (req RecoverPasswordRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -26,6 +47,14 @@ type GetRecoverLinkRequest struct {
 }
 
 func (req GetRecoverLinkRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }
 
@@ -35,5 +64,13 @@ type RefreshTokenRequest struct {
 }
 
 func (req RefreshTokenRequest) Validate() error {
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return helpers.ValidatorFormatErrors(errs)
+		}
+		return err
+	}
 	return nil
 }

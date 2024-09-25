@@ -114,18 +114,18 @@ func (eg *ExcelGenerator) getCellBackgroundColorStyle() *xlsx.Style {
 	return style
 }
 
-func (eg *ExcelGenerator) SaveToFile(ctx *fiber.Ctx, fileName string) error {
+func (eg *ExcelGenerator) SaveToFile(c *fiber.Ctx, fileName string) error {
 	var buf bytes.Buffer
 	// Write the Excel data to the buffer
 	err := eg.File.Write(&buf)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).SendString("Error writing Excel data")
+		return c.Status(fiber.StatusInternalServerError).SendString("Error writing Excel data")
 	}
 	// Set response headers for Excel download
-	ctx.Response().Header.Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	ctx.Response().Header.Set("Content-Disposition", "attachment; filename="+fileName+"")
+	c.Response().Header.Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	c.Response().Header.Set("Content-Disposition", "attachment; filename="+fileName+"")
 	// Send the Excel data to the client
-	_, err = ctx.Write(buf.Bytes())
+	_, err = c.Write(buf.Bytes())
 	if err != nil {
 		return err
 	}
