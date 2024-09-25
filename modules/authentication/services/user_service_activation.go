@@ -26,7 +26,7 @@ func (s *UserService) ActivateUser(ctx context.Context, userId int64) error {
 func (s *UserService) DeactivateUser(ctx context.Context, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. inavlid user id")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
 	user.IsActive = false
 	user.UpdatedAt = time.Now().UTC()

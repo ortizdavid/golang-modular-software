@@ -20,8 +20,8 @@ func NewUserAssociationRepository(db *database.Database) *UserAssociationReposit
 	}
 }
 
-func (repo *UserAssociationRepository) Exists(ctx context.Context, userId int64, entityId int64) (bool, error) {
+func (repo *UserAssociationRepository) Exists(ctx context.Context, entityId int64) (bool, error) {
 	var association entities.UserAssociation
-	result := repo.db.WithContext(ctx).Where("user_id=? AND entity_id=?", userId, entityId).Find(&association)
-	return association.UserId !=0 , result.Error
+	result := repo.db.WithContext(ctx).Where("entity_id=?", entityId).Find(&association)
+	return association.AssociationId !=0 , result.Error
 }

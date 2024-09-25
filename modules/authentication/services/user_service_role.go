@@ -17,7 +17,7 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 	}
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. inavlid user id")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
 	role, err := s.roleRepository.FindById(ctx, request.RoleId)
 	if err != nil {
@@ -49,14 +49,14 @@ func (s *UserService) AssignUserRole(ctx context.Context, userId int64, request 
 func (s *UserService) AssociateUserToRole(ctx context.Context, request entities.AssociateUserRequest) error {
 	user, err := s.repository.FindById(ctx, request.UserId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. inavlid user id")
+		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}
-	exists, err := s.userAssociationRepository.Exists(ctx, request.UserId, request.EntityId)
+	exists, err := s.userAssociationRepository.Exists(ctx, request.EntityId)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewConflictError(fmt.Sprintf("User '%s' already associated ", user.UserName))
+		return apperrors.NewConflictError("entity already associated to an user.")
 	}
 	userAssociation := entities.UserAssociation{
 		UserId:     user.UserId,

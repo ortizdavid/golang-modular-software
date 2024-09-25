@@ -18,7 +18,12 @@
                 Login
             </button>
         </div>
-        <div class="ui error message"></div>
+        {{ if .ErrorMessage }}
+            <div class="ui error message">
+                <div class="header">Login Failed</div>
+                <p>{{ .ErrorMessage }}</p>
+            </div>
+        {{ end }}
     </form>
 
     <div class="ui message">

@@ -58,7 +58,7 @@ func (ctrl *AuthController) login(c *fiber.Ctx) error {
 	err := ctrl.service.Authenticate(c.Context(), c, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, fmt.Sprintf("User '%s' failed to login", request.UserName))
-		return c.Status(fiber.StatusUnauthorized).Redirect("/auth/login")
+		return c.Status(fiber.StatusUnauthorized).Render("authentication/auth/login", nil)
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' authenticated sucessful!", request.UserName))
 	return c.Status(fiber.StatusOK).Redirect("/account/home")

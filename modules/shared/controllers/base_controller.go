@@ -35,6 +35,14 @@ func (ctrl *BaseController) HandleErrorsApi(c *fiber.Ctx, err error) error {
 	})
 }
 
+func (ctrl *BaseController) HandleLoginError(c *fiber.Ctx, err error) error {
+	errMap := fiber.Map{
+		"Title":   "Login",
+		"ErrorMessage": err.Error(),
+	}
+	return c.Status(fiber.StatusUnauthorized).Render("authentication/auth/login", errMap)
+}
+
 func formatHtmlErrors(errorMessage string) string {
 	str := strings.ReplaceAll(errorMessage, "\n", "<br/>")
 	return strings.ReplaceAll(str, "\t", "&nbsp;")
