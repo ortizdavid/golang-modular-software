@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ortizdavid/go-nopain/encryption"
+	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
@@ -23,7 +24,10 @@ func NewCompanyConfigurationService(db *database.Database) *CompanyConfiguration
 }
 
 func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Context, request entities.UpdateCompanyConfigurationRequest) error {
-    // Attempt to retrieve the existing configuration
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	// Attempt to retrieve the existing configuration
     conf, err := s.repository.FindLast(ctx)
     if err != nil {
 		conf = entities.CompanyConfiguration{

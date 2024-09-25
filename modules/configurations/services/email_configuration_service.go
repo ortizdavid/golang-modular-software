@@ -7,6 +7,7 @@ import (
 
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/go-nopain/mailer"
+	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/configurations/repositories"
@@ -24,7 +25,10 @@ func NewEmailConfigurationService(db *database.Database) *EmailConfigurationServ
 }
 
 func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context, request entities.UpdateEmailConfigurationRequest) error {
-    // Attempt to retrieve the existing configuration
+	if err := request.Validate(); err != nil {
+		return apperrors.NewBadRequestError(err.Error())
+	}
+	// Attempt to retrieve the existing configuration
     conf, err := s.repository.FindLast(ctx)
     if err != nil {
 		// Create a new configuration if none exists
