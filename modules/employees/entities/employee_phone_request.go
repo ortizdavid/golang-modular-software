@@ -6,13 +6,14 @@ import (
 )
 
 // -- Create
-type CreateEmployeeEmailRequest struct {
-	EmployeeId		int64 `json:"employee_id" form:"employee_id"`
-	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id"`
-	EmailAddress   	string `json:"email_address" form:"email_address"`
+type CreateEmployeePhoneRequest struct {
+	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
+	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id" validate:"required"`
+	DialingCode   	string `json:"dialing_code" form:"dialing_code" validate:"required,max=7"`
+	PhoneNumber   	string `json:"phone_number" form:"phone_number" validate:"required,max=30"`
 }
 
-func (req CreateEmployeeEmailRequest) Validate() error {
+func (req CreateEmployeePhoneRequest) Validate() error {
 	validate := validator.New()
 	err := validate.Struct(req)
 	if err != nil {
@@ -25,13 +26,14 @@ func (req CreateEmployeeEmailRequest) Validate() error {
 }
 
 // -- Updaye 
-type UpdateEmployeeEmailRequest struct {
-	EmployeeId		int64 `json:"employee_id" form:"employee_id"`
-	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id"`
-	EmailAddress   	string `json:"email_address" form:"email_address"`
+type UpdateEmployeePhoneRequest struct {
+	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
+	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id" validate:"required"`
+	DialingCode   	string `json:"dialing_code" form:"dialing_code" validate:"required,max=7"`
+	PhoneNumber   	string `json:"phone_number" form:"phone_number" validate:"required,max=30"`
 }
 
-func (req UpdateEmployeeEmailRequest) Validate() error {
+func (req UpdateEmployeePhoneRequest) Validate() error {
 	validate := validator.New()
 	err := validate.Struct(req)
 	if err != nil {
@@ -43,6 +45,6 @@ func (req UpdateEmployeeEmailRequest) Validate() error {
 	return nil
 }
 
-type SearchEmployeeEmailRequest struct {
+type SearchEmployeePhoneRequest struct {
 	SearchParam string `json:"search_param" form:"search_param"`
 }

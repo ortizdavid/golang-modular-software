@@ -6,14 +6,13 @@ import (
 )
 
 // -- Create
-type CreateEmployeePhoneRequest struct {
-	EmployeeId		int64 `json:"employee_id" form:"employee_id"`
-	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id"`
-	DialingCode   	string `json:"dialing_code" form:"dialing_code"`
-	PhoneNumber   	string `json:"phone_number" form:"phone_number"`
+type CreateEmployeeEmailRequest struct {
+	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
+	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id" validate:"required"`
+	EmailAddress   	string `json:"email_address" form:"email_address" validate:"required,max=150"`
 }
 
-func (req CreateEmployeePhoneRequest) Validate() error {
+func (req CreateEmployeeEmailRequest) Validate() error {
 	validate := validator.New()
 	err := validate.Struct(req)
 	if err != nil {
@@ -26,14 +25,13 @@ func (req CreateEmployeePhoneRequest) Validate() error {
 }
 
 // -- Updaye 
-type UpdateEmployeePhoneRequest struct {
-	EmployeeId		int64 `json:"employee_id" form:"employee_id"`
-	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id"`
-	DialingCode   	string `json:"dialing_code" form:"dialing_code"`
-	PhoneNumber   	string `json:"phone_number" form:"phone_number"`
+type UpdateEmployeeEmailRequest struct {
+	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
+	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id" validate:"required"`
+	EmailAddress   	string `json:"email_address" form:"email_address" validate:"required,max=150"`
 }
 
-func (req UpdateEmployeePhoneRequest) Validate() error {
+func (req UpdateEmployeeEmailRequest) Validate() error {
 	validate := validator.New()
 	err := validate.Struct(req)
 	if err != nil {
@@ -45,6 +43,6 @@ func (req UpdateEmployeePhoneRequest) Validate() error {
 	return nil
 }
 
-type SearchEmployeePhoneRequest struct {
+type SearchEmployeeEmailRequest struct {
 	SearchParam string `json:"search_param" form:"search_param"`
 }

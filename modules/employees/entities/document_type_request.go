@@ -7,8 +7,8 @@ import (
 
 // -- Create
 type CreateDocumentTypeRequest struct {
-	TypeName   string `json:"type_name" form:"type_name"`
-	Description string `json:"description" form:"description"`
+	TypeName   string `json:"type_name" form:"type_name" validate:"required,max=100"`
+	Description string `json:"description" form:"description" validate:"max=255"`
 }
 
 func (req CreateDocumentTypeRequest) Validate() error {
@@ -25,8 +25,8 @@ func (req CreateDocumentTypeRequest) Validate() error {
 
 // -- Update
 type UpdateDocumentTypeRequest struct {
-	TypeName   string `json:"type_name" form:"type_name"`
-	Description string `json:"description" form:"description"`
+	TypeName   string `json:"type_name" form:"type_name" validate:"required,max=100"`
+	Description string `json:"description" form:"description" validate:"max=255"`
 }
 
 func (req UpdateDocumentTypeRequest) Validate() error {

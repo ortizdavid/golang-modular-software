@@ -7,12 +7,12 @@ import (
 
 // --- CREATE
 type CreateStatusRequest struct {
-	StatusName  string `json:"status_name" form:"status_name"`
-	Code        string `json:"code" form:"code"`
+	StatusName  string `json:"status_name" form:"status_name" validate:"required,max=100"`
+	Code        string `json:"code" form:"code" validate:"required,max=30"`
 	Weight      int `json:"weight" form:"weight"`
-	LblColor    string `json:"lbl_color" form:"lbl_color"`
-	BgColor     string `json:"bg_color" form:"bg_color"`
-	Description string `json:"description" form:"description"`
+	LblColor    string `json:"lbl_color" form:"lbl_color" validate:"max=20"`
+	BgColor     string `json:"bg_color" form:"bg_color" validate:"max=20"`
+	Description string `json:"description" form:"description" validate:"max=255"`
 }
 
 func (req CreateStatusRequest) Validate() error {
@@ -29,12 +29,12 @@ func (req CreateStatusRequest) Validate() error {
 
 // --- UPDATE 
 type UpdateStatusRequest struct {
-	StatusName  string `json:"status_name" form:"status_name"`
-	Code        string `json:"code" form:"code"`
+	StatusName  string `json:"status_name" form:"status_name" validate:"required,max=100"`
+	Code        string `json:"code" form:"code" validate:"required,max=30"`
 	Weight      int `json:"weight" form:"weight"`
-	LblColor    string `json:"lbl_color" form:"lbl_color"`
-	BgColor     string `json:"bg_color" form:"bg_color"`
-	Description string `json:"description" form:"description"`
+	LblColor    string `json:"lbl_color" form:"lbl_color" validate:"max=20"`
+	BgColor     string `json:"bg_color" form:"bg_color" validate:"max=20"`
+	Description string `json:"description" form:"description" validate:"max=255"`
 }
 
 func (req UpdateStatusRequest) Validate() error {

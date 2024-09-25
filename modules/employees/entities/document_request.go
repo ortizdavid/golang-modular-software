@@ -7,12 +7,12 @@ import (
 
 // -- Create
 type CreateDocumentRequest struct {
-	EmployeeId		int64 `json:"employee_id" form:"employee_id"`
-	DocumentTypeId	int	`json:"document_type_id" form:"document_type_id"`
-	DocumentName   	string `json:"document_name" form:"document_name"`
-	DocumentNumber 	string `json:"document_number" form:"document_number"`
+	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
+	DocumentTypeId	int	`json:"document_type_id" form:"document_type_id" validate:"required"`
+	DocumentName   	string `json:"document_name" form:"document_name" validate:"required,max=150"`
+	DocumentNumber 	string `json:"document_number" form:"document_number" validate:"required,max=40"`
 	ExpirationDate	string `json:"expiration_date" form:"expiration_date"`
-	Status			string `json:"status" form:"status"`
+	Status			string `json:"status" form:"status" validate:"required,oneof=Expired Active"`
 }
 
 func (req CreateDocumentRequest) Validate() error {
@@ -29,11 +29,12 @@ func (req CreateDocumentRequest) Validate() error {
 
 // -- Updaye 
 type UpdateDocumentRequest struct {
-	EmployeeId		int64 `json:"employee_id" form:"employee_id"`
-	DocumentTypeId	int	`json:"document_type_id" form:"document_type_id"`
-	DocumentName   	string `json:"document_name" form:"document_name"`
-	DocumentNumber 	string `json:"document_number" form:"document_number"`
+	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
+	DocumentTypeId	int	`json:"document_type_id" form:"document_type_id" validate:"required"`
+	DocumentName   	string `json:"document_name" form:"document_name" validate:"required,max=150"`
+	DocumentNumber 	string `json:"document_number" form:"document_number" validate:"required,max=40"`
 	ExpirationDate	string `json:"expiration_date" form:"expiration_date"`
+	Status			string `json:"status" form:"status" validate:"required,oneof=Expired Active"`
 }
 
 func (req UpdateDocumentRequest) Validate() error {

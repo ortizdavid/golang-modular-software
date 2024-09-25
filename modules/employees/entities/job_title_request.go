@@ -7,8 +7,8 @@ import (
 
 // -- Create
 type CreateJobTitleRequest struct {
-	TitleName   string `json:"title_name" form:"title_name"`
-	Description string `json:"description" form:"description"`
+	TitleName   string `json:"title_name" form:"title_name" validate:"required,max=150"`
+	Description string `json:"description" form:"description" validate:"required,max=255"`
 }
 
 func (req CreateJobTitleRequest) Validate() error {
@@ -25,8 +25,8 @@ func (req CreateJobTitleRequest) Validate() error {
 
 // -- Update
 type UpdateJobTitleRequest struct {
-	TitleName   string `json:"title_name" form:"title_name"`
-	Description string `json:"description" form:"description"`
+	TitleName   string `json:"title_name" form:"title_name" validate:"required,max=150"`
+	Description string `json:"description" form:"description" validate:"required,max=255"`
 }
 
 func (req UpdateJobTitleRequest) Validate() error {

@@ -7,12 +7,12 @@ import (
 
 // ---- Create
 type CreateOfficeRequest struct {
-	CompanyId    int `json:"company_id" form:"company_id"`
-    OfficeName   string `json:"office_name" form:"office_name"`
-    Code         string `json:"code" form:"code"`
-    Address      string `json:"address" form:"address"`
-    Phone        string `json:"phone" form:"phone"`
-    Email        string `json:"email" form:"email"`
+	CompanyId    int `json:"company_id" form:"company_id" validate:"required"`
+    Code         string `json:"code" form:"code" validate:"max=20"`
+    OfficeName   string `json:"office_name" form:"office_name" validate:"required,max=100"`
+    Address      string `json:"address" form:"address" validate:"max=2500"`
+    Phone        string `json:"phone" form:"phone" validate:"max=20"`
+    Email        string `json:"email" form:"email" validate:"max=150"`
 }
 
 func (req CreateOfficeRequest) Validate() error  {
@@ -29,12 +29,12 @@ func (req CreateOfficeRequest) Validate() error  {
 
 // ---- Update
 type UpdateOfficeRequest struct {
-	CompanyId    int `json:"company_id" form:"company_id"`
-    Code         string `json:"code" form:"code"`
-    OfficeName   string `json:"office_name" form:"office_name"`
-    Address      string `json:"address" form:"address"`
-    Phone        string `json:"phone" form:"phone"`
-    Email        string `json:"email" form:"email"`
+	CompanyId    int `json:"company_id" form:"company_id" validate:"required"`
+    Code         string `json:"code" form:"code" validate:"max=20"`
+    OfficeName   string `json:"office_name" form:"office_name" validate:"required,max=100"`
+    Address      string `json:"address" form:"address" validate:"max=2500"`
+    Phone        string `json:"phone" form:"phone" validate:"max=20"`
+    Email        string `json:"email" form:"email" validate:"max=150"`
 }
 
 func (req UpdateOfficeRequest) Validate() error  {

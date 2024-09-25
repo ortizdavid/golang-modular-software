@@ -6,17 +6,16 @@ import (
 )
 
 // ------ Create --
-// CreateCompanyRequest represents the request structure for creating a new company.
 type CreateCompanyRequest struct {
-	CompanyName    string    `json:"company_name" form:"company_name"`
-    CompanyAcronym string    `json:"company_acronym" form:"company_acronym"`
-    CompanyType    string    `json:"company_type" form:"company_type"`
-    Industry       string    `json:"industry" form:"industry"`
-    FoundedDate    string `json:"founded_date" form:"founded_date" `
-    Address        string    `json:"address" form:"address"`
-    Phone          string    `json:"phone" form:"phone"`
-    Email          string    `json:"email" form:"email"`
-    WebsiteURL     string    `json:"website_url" form:"website_url"`
+	CompanyName    string    `json:"company_name" form:"company_name" validate:"required,max=100"`
+    CompanyAcronym string    `json:"company_acronym" form:"company_acronym" validate:"max=20"`
+    CompanyType    string    `json:"company_type" form:"company_type" validate:"max=50"`
+    Industry       string    `json:"industry" form:"industry" validate:"max=50"`
+    FoundedDate    string `json:"founded_date" form:"founded_date"`
+    Address        string    `json:"address" form:"address" validate:"max=255"`
+    Phone          string    `json:"phone" form:"phone" validate:"max=20"`
+    Email          string    `json:"email" form:"email" validate:"max=100"`
+    WebsiteURL     string    `json:"website_url" form:"website_url" validate:"max=100"`
 }
 
 func (req CreateCompanyRequest) Validate() error {
@@ -32,17 +31,16 @@ func (req CreateCompanyRequest) Validate() error {
 }
 
 // ------ Update --
-// UpdateCompanyRequest represents the request structure for updating an existing company.
 type UpdateCompanyRequest struct {
-	CompanyName    string    `json:"company_name" form:"company_name"`
-    CompanyAcronym string    `json:"company_acronym" form:"company_acronym"`
-    CompanyType    string    `json:"company_type" form:"company_type"`
-    Industry       string    `json:"industry" form:"industry"`
+	CompanyName    string    `json:"company_name" form:"company_name" validate:"required,max=100"`
+    CompanyAcronym string    `json:"company_acronym" form:"company_acronym" validate:"max=20"`
+    CompanyType    string    `json:"company_type" form:"company_type" validate:"max=50"`
+    Industry       string    `json:"industry" form:"industry" validate:"max=50"`
     FoundedDate    string `json:"founded_date" form:"founded_date"`
-    Address        string    `json:"address" form:"address"`
-    Phone          string    `json:"phone" form:"phone"`
-    Email          string    `json:"email" form:"email"`
-    WebsiteURL     string    `json:"website_url" form:"website_url"`
+    Address        string    `json:"address" form:"address" validate:"max=255"`
+    Phone          string    `json:"phone" form:"phone" validate:"max=20"`
+    Email          string    `json:"email" form:"email" validate:"max=100"`
+    WebsiteURL     string    `json:"website_url" form:"website_url" validate:"max=100"`
 }
 
 func (req UpdateCompanyRequest) Validate() error {

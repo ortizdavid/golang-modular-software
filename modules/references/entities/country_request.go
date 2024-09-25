@@ -7,9 +7,9 @@ import (
 
 // -- Create
 type CreateCountryRequest struct {
-	CountryName 	string `json:"country_name" form:"country_name"`
-	IsoCode 		string `json:"iso_code" form:"iso_code"`
-	DialingCode 	string `json:"dialing_code" form:"dialing_code"`
+	CountryName 	string `json:"country_name" form:"country_name" validate:"required,max=150"`
+	IsoCode 		string `json:"iso_code" form:"iso_code" validate:"required,max=3"`
+	DialingCode 	string `json:"dialing_code" form:"dialing_code" validate:"required,max=7"`
 }
 
 func (req CreateCountryRequest) Validate() error {
@@ -26,9 +26,9 @@ func (req CreateCountryRequest) Validate() error {
 
 // -- Update
 type UpdateCountryRequest struct {
-	CountryName 	string `json:"country_name" form:"country_name"`
-	IsoCode 		string `json:"iso_code" form:"iso_code"`
-	DialingCode 	string `json:"dialing_code" form:"dialing_code"`
+	CountryName 	string `json:"country_name" form:"country_name" validate:"required,max=150"`
+	IsoCode 		string `json:"iso_code" form:"iso_code" validate:"required,max=3"`
+	DialingCode 	string `json:"dialing_code" form:"dialing_code" validate:"required,max=7"`
 }
 
 func (req UpdateCountryRequest) Validate() error {

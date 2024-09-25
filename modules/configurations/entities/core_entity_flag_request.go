@@ -7,8 +7,8 @@ import (
 )
 
 type ManageCoreEntityFlagRequest struct {
-	FlagId int    `json:"flag_id" form:"flag_id"`
-	Status string `json:"statuses" form:"status"`
+	FlagId int    `json:"flag_id" form:"flag_id" validate:"required"`
+	Status string `json:"statuses" form:"status" validate:"required,oneof=Enabled Disabled"`
 }
 
 func (req ManageCoreEntityFlagRequest) Validate() error {

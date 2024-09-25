@@ -70,7 +70,6 @@ func ValidatorFormatErrors(errs validator.ValidationErrors) error {
 		default:
 			message = fmt.Sprintf("Field '%s' is invalid.", e.Field())
 		}
-		// Prepend a hyphen to each message
 		messages = append(messages, fmt.Sprintf("\t\t- %s", message))
 	}
 	return fmt.Errorf("validation errors:\n%s", strings.Join(messages, "\n"))

@@ -7,10 +7,10 @@ import (
 
 // ---- Create
 type CreateDepartmentRequest struct {
-	CompanyId      int `json:"company_id" form:"company_id"`
-	DepartmentName string `json:"department_name" form:"department_name"`
-	Acronym        string `json:"acronym" form:"acronym"`
-	Description    string `json:"description" form:"description"`
+	CompanyId      int `json:"company_id" form:"company_id" validate:"required"`
+	DepartmentName string `json:"department_name" form:"department_name" validate:"required,max=150"`
+	Acronym        string `json:"acronym" form:"acronym" validate:"max=20"`
+	Description    string `json:"description" form:"description" validate:"max=255"`
 }
 
 func (req CreateDepartmentRequest) Validate() error  {
@@ -27,10 +27,10 @@ func (req CreateDepartmentRequest) Validate() error  {
 
 // ---- Update
 type UpdateDepartmentRequest struct {
-	CompanyId      int `json:"company_id" form:"company_id"`
-	DepartmentName string `json:"department_name" form:"department_name"`
-	Acronym        string `json:"acronym" form:"acronym"`
-	Description    string `json:"description" form:"description"`
+	CompanyId      int `json:"company_id" form:"company_id" validate:"required"`
+	DepartmentName string `json:"department_name" form:"department_name" validate:"required,max=150"`
+	Acronym        string `json:"acronym" form:"acronym" validate:"max=20"`
+	Description    string `json:"description" form:"description" validate:"max=255"`
 }
 
 func (req UpdateDepartmentRequest) Validate() error  {

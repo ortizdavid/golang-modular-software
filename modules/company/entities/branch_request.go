@@ -7,12 +7,12 @@ import (
 
 // ---- Create
 type CreateBranchRequest struct {
-	CompanyId    int `json:"company_id" form:"company_id"`
-    BranchName   string `json:"branch_name" form:"branch_name"`
-    Code         string `json:"code" form:"code"`
-    Address      string `json:"address" form:"address"`
-    Phone        string `json:"phone" form:"phone"`
-    Email        string `json:"email" form:"email"`
+	CompanyId    int `json:"company_id" form:"company_id" validate:"required"`
+    BranchName   string `json:"branch_name" form:"branch_name" validate:"required,max=100"`
+    Code         string `json:"code" form:"code" validate:"max=20"`
+    Address      string `json:"address" form:"address" validate:"max=255"`
+    Phone        string `json:"phone" form:"phone" validate:"max=20"`
+    Email        string `json:"email" form:"email" validate:"max=100"`
 }
 
 func (req CreateBranchRequest) Validate() error  {
@@ -29,12 +29,12 @@ func (req CreateBranchRequest) Validate() error  {
 
 // ---- Update
 type UpdateBranchRequest struct {
-	CompanyId    int `json:"company_id" form:"company_id"`
-    Code         string `json:"code" form:"code"`
-    BranchName   string `json:"branch_name" form:"branch_name"`
-    Address      string `json:"address" form:"address"`
-    Phone        string `json:"phone" form:"phone"`
-    Email        string `json:"email" form:"email"`
+	CompanyId    int `json:"company_id" form:"company_id" validate:"required"`
+    BranchName   string `json:"branch_name" form:"branch_name" validate:"required,max=100"`
+    Code         string `json:"code" form:"code" validate:"max=20"`
+    Address      string `json:"address" form:"address" validate:"max=255"`
+    Phone        string `json:"phone" form:"phone" validate:"max=20"`
+    Email        string `json:"email" form:"email" validate:"max=100"`
 }
 
 func (req UpdateBranchRequest) Validate() error  {

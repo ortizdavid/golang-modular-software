@@ -7,8 +7,8 @@ import (
 
 // --- CREATE
 type CreateTypeRequest struct {
-	TypeName  string `json:"type_name" form:"type_name"`
-	Code        string `json:"code" form:"code"`
+	TypeName  string `json:"type_name" form:"type_name" validate:"required,max=100"`
+	Code        string `json:"code" form:"code" validate:"required,max=30"`
 }
 
 func (req CreateTypeRequest) Validate() error {
@@ -25,8 +25,8 @@ func (req CreateTypeRequest) Validate() error {
 
 // --- UPDATE 
 type UpdateTypeRequest struct {
-	TypeName  string `json:"type_name" form:"type_name"`
-	Code        string `json:"code" form:"code"`
+	TypeName  string `json:"type_name" form:"type_name" validate:"required,max=100"`
+	Code        string `json:"code" form:"code" validate:"required,max=30"`
 }
 
 func (req UpdateTypeRequest) Validate() error {

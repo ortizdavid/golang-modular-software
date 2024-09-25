@@ -7,8 +7,9 @@ import (
 
 // -- Create
 type CreateCurrencyRequest struct {
-	CurrencyName string    `json:"currency_name" form:"currency_name"`
-	Code         string    `json:"code" form:"code"`
+	CurrencyName string    `json:"currency_name" form:"currency_name" validate:"required,max=100"`
+	Code         string    `json:"code" form:"code" validate:"required,max=3"`
+	Symbol       string  `json:"symbol" form:"symbol" validate:"max=10"`
 }
 
 func (req CreateCurrencyRequest) Validate() error {
@@ -25,9 +26,9 @@ func (req CreateCurrencyRequest) Validate() error {
 
 // -- Update
 type UpdateCurrencyRequest struct {
-	CurrencyName string    `json:"currency_name" form:"currency_name"`
-	Code         string    `json:"code" form:"code"`
-	Symbol       string  `json:"symbol" form:"symbol"`
+	CurrencyName string    `json:"currency_name" form:"currency_name" validate:"required,max=100"`
+	Code         string    `json:"code" form:"code" validate:"required,max=3"`
+	Symbol       string  `json:"symbol" form:"symbol" validate:"max=10"`
 }
 
 func (req UpdateCurrencyRequest) Validate() error {

@@ -7,11 +7,11 @@ import (
 
 // ---- Create
 type CreateRoomRequest struct {
-	CompanyId      int `json:"company_id" form:"company_id"`
-	BranchId    int `json:"branch_id" form:"branch_id"`
-	RoomName  string `json:"room_name" form:"room_name"`
-	Number    string `json:"number" form:"number"`
-	Capacity  int `json:"capacity" form:"capacity"`
+	CompanyId      int `json:"company_id" form:"company_id" validate:"required"`
+	BranchId    int `json:"branch_id" form:"branch_id" validate:"required"`
+	RoomName  string `json:"room_name" form:"room_name" validate:"required,max=50"`
+	Number    string `json:"number" form:"number" validate:"max=10"`
+	Capacity  int `json:"capacity" form:"capacity" validate:"required"`
 }
 
 func (req CreateRoomRequest) Validate() error  {
@@ -28,11 +28,11 @@ func (req CreateRoomRequest) Validate() error  {
 
 // ---- Update
 type UpdateRoomRequest struct {
-	CompanyId      int `json:"company_id" form:"company_id"`
-	BranchId    int `json:"branch_id" form:"branch_id"`
-	RoomName  string `json:"room_name" form:"room_name"`
-	Number    string `json:"number" form:"number"`
-	Capacity  int `json:"capacity" form:"capacity"`
+	CompanyId      int `json:"company_id" form:"company_id" validate:"required"`
+	BranchId    int `json:"branch_id" form:"branch_id" validate:"required"`
+	RoomName  string `json:"room_name" form:"room_name" validate:"required,max=50"`
+	Number    string `json:"number" form:"number" validate:"max=10"`
+	Capacity  int `json:"capacity" form:"capacity" validate:"required"`
 }
 
 func (req UpdateRoomRequest) Validate() error  {

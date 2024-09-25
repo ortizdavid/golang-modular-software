@@ -17,6 +17,7 @@ CREATE TABLE company.companies (
 );
 CREATE INDEX idx_company_name ON company.companies(company_name);
 
+
 -- Table: branches
 DROP TABLE IF EXISTS company.branches;
 CREATE TABLE company.branches (
@@ -26,7 +27,7 @@ CREATE TABLE company.branches (
     code VARCHAR(20) UNIQUE,
     address TEXT,
     phone VARCHAR(20),
-    email VARCHAR(255),
+    email VARCHAR(100),
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
@@ -68,6 +69,7 @@ CREATE TABLE company.departments (
 );
 CREATE INDEX idx_department_name ON company.departments(department_name);
 
+
 -- Table: rooms
 DROP TABLE IF EXISTS company.rooms;
 CREATE TABLE company.rooms (
@@ -75,7 +77,7 @@ CREATE TABLE company.rooms (
     company_id INT NOT NULL,
     branch_id INT NOT NULL,
     room_name VARCHAR(50),
-    number VARCHAR(10),  -- Increased size to accommodate more room numbering formats
+    number VARCHAR(10), 
     capacity INT NOT NULL,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -84,6 +86,7 @@ CREATE TABLE company.rooms (
     CONSTRAINT fk_company_room FOREIGN KEY (company_id) REFERENCES company.companies(company_id)
 );
 CREATE INDEX idx_room_name ON company.rooms(room_name);
+
 
 -- Table: projects
 DROP TABLE IF EXISTS company.projects;
@@ -100,6 +103,7 @@ CREATE TABLE company.projects (
     updated_at TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (company_id) REFERENCES company.companies(company_id)
 );
+
 
 -- Table: policies
 DROP TABLE IF EXISTS company.policies;

@@ -28,6 +28,7 @@ INSERT INTO employees.job_titles (title_name, description) VALUES
 ('HRIS Analyst', 'Maintains and optimizes the Human Resources Information System (HRIS) for data management and reporting.');
 
 
+
 -- Table: employees
 DROP TABLE IF EXISTS employees.employees;
 CREATE TABLE employees.employees(
@@ -48,7 +49,7 @@ CREATE TABLE employees.employees(
     CONSTRAINT fk_country FOREIGN KEY(country_id) REFERENCES reference.countries(country_id),
     CONSTRAINT fk_marital_status FOREIGN KEY(marital_status_id) REFERENCES reference.marital_statuses(status_id)
 );
--- Indexes:
+-- Indexes
 DROP INDEX IF EXISTS idx_employees_user;
 CREATE INDEX idx_employees_user ON employees.employees(user_id);
 DROP INDEX IF EXISTS idx_employees_first_name;
@@ -106,7 +107,7 @@ CREATE TABLE employees.documents(
     document_id SERIAL PRIMARY KEY,
     employee_id INT NOT NULL,
     document_type_id INT NOT NULL,
-    document_name VARCHAR(200),
+    document_name VARCHAR(150),
     document_number VARCHAR(40),
     expiration_date DATE,
     file_name VARCHAR(150),
@@ -124,7 +125,7 @@ DROP INDEX IF EXISTS idx_document_type_id;
 CREATE INDEX idx_document_type_id ON employees.documents(document_type_id);
 
 
-
+-- Table: address
 DROP TABLE IF EXISTS employees.address;
 CREATE TABLE employees.address(
     address_id SERIAL PRIMARY KEY,
@@ -143,12 +144,11 @@ CREATE TABLE employees.address(
     updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT fk_address_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id)
 );
--- Indexes:
+-- Indexes
 DROP INDEX IF EXISTS idx_address_state;
 CREATE INDEX idx_address_state ON employees.address(state);
 DROP INDEX IF EXISTS idx_address_city;
 CREATE INDEX idx_address_city ON employees.address(city);
-
 
 
 -- Table: employee_phones
@@ -164,6 +164,7 @@ CREATE TABLE employees.employee_phones(
     CONSTRAINT fk_contact_employee FOREIGN KEY (employee_id) REFERENCES employees.employees(employee_id),
     CONSTRAINT fk_contact_type FOREIGN KEY (contact_type_id) REFERENCES reference.contact_types(type_id)
 );
+
 
 -- Table: employee_emails
 DROP TABLE IF EXISTS employees.employee_emails;

@@ -7,10 +7,10 @@ import (
 
 //--CREATE
 type CreateCoreEntityRequest struct {
-    ModuleId    int    `json:"module_id" form:"module_id"`
-    Code        string   `json:"code" form:"code"`
-    EntityName  string    `json:"entity_name" form:"entity_name"`
-    Description string    `json:"description" form:"description"`
+    ModuleId    int    `json:"module_id" form:"module_id" validate:"required"`
+    Code        string   `json:"code" form:"code" validate:"required,min=4,max=50"`
+    EntityName  string    `json:"entity_name" form:"entity_name" validate:"required,min=5,max=100"`
+    Description string    `json:"description" form:"description" validate:"required,max=255"`
 }
 
 func (req CreateCoreEntityRequest) Validate() error {
@@ -27,10 +27,10 @@ func (req CreateCoreEntityRequest) Validate() error {
 
 //--CREATE
 type UpdateCoreEntityRequest struct {
-    ModuleId    int    `json:"module_id" form:"module_id"`
-    Code        string   `json:"code" form:"code"`
-    EntityName  string    `json:"entity_name" form:"entity_name"`
-    Description string    `json:"description" form:"description"`
+    ModuleId    int    `json:"module_id" form:"module_id" validate:"required"`
+    Code        string   `json:"code" form:"code" validate:"required,min=4,max=50"`
+    EntityName  string    `json:"entity_name" form:"entity_name" validate:"required,min=5,max=100"`
+    Description string    `json:"description" form:"description" validate:"required,max=255"`
 }
 
 func (req UpdateCoreEntityRequest) Validate() error {

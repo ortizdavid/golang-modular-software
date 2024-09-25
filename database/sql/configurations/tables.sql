@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS configurations.email_configuration;
 CREATE TABLE configurations.email_configuration (
     configuration_id SERIAL PRIMARY KEY,
     smtp_server VARCHAR(50),
-    smtp_port VARCHAR(4),
+    smtp_port VARCHAR(6),
     sender_email VARCHAR(100),
     sender_password VARCHAR(150),
     unique_id VARCHAR(50) UNIQUE,
@@ -91,7 +91,7 @@ DROP TABLE IF EXISTS configurations.module_flag;
 CREATE TABLE configurations.module_flag(
     flag_id SERIAL PRIMARY KEY,
     module_id INT NOT NULL,
-    status coonfigurations.TYPE_FLAG_STATUS DEFAULT 'Disabled',
+    status configurations.TYPE_FLAG_STATUS DEFAULT 'Disabled',
     unique_id VARCHAR(50) UNIQUE DEFAULT uuid_generate_v4()::text,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),

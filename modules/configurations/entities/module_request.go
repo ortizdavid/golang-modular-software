@@ -7,9 +7,9 @@ import (
 
 //--CREATE
 type CreateModuleRequest struct {
-    ModuleName  string    `json:":module_name" form:"module_name"`
-    Code        string    `json:":code" form:"code"`
-    Description string    `json:":description" form:"description"`
+    ModuleName  string `json:":module_name" form:"module_name" validate:"required,min=5,max=100"`
+    Code        string `json:":code" form:"code" validate:"required,min=4,max=30"`
+    Description string `json:":description" form:"description" validate:"required,max=255"`
 }
 
 func (req CreateModuleRequest) Validate() error {
@@ -27,9 +27,9 @@ func (req CreateModuleRequest) Validate() error {
 
 //--CREATE
 type UpdateModuleRequest struct {
-    ModuleName  string    `json:":module_name" form:"module_name"`
-    Code        string    `json:":code" form:"code"`
-    Description string    `json:":description" form:"description"`
+    ModuleName  string `json:":module_name" form:"module_name" validate:"required,min=5,max=100"`
+    Code        string `json:":code" form:"code" validate:"required,min=4,max=30"`
+    Description string `json:":description" form:"description" validate:"required,max=255"`
 }
 
 func (req UpdateModuleRequest) Validate() error {

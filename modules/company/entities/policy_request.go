@@ -7,9 +7,9 @@ import (
 
 // ---- Create
 type CreatePolicyRequest struct {
-	CompanyId      	int `json:"company_id" form:"company_id"`
-    PolicyName   	string `json:"policy_name" form:"policy_name"`
-    Description  	string `json:"description" form:"description"`
+	CompanyId      	int `json:"company_id" form:"company_id" validate:"required"`
+    PolicyName   	string `json:"policy_name" form:"policy_name" validate:"required,max=100"`
+    Description  	string `json:"description" form:"description" validate:"max=255"`
     EffectiveDate 	string `json:"effective_date" form:"effective_date"`
 }
 
@@ -27,9 +27,9 @@ func (req CreatePolicyRequest) Validate() error  {
 
 // ---- Update
 type UpdatePolicyRequest struct {
-    CompanyId      	int `json:"company_id" form:"company_id"`
-    PolicyName   	string `json:"policy_name" form:"policy_name"`
-    Description  	string `json:"description" form:"description"`
+    CompanyId      	int `json:"company_id" form:"company_id" validate:"required"`
+    PolicyName   	string `json:"policy_name" form:"policy_name" validate:"required,max=100"`
+    Description  	string `json:"description" form:"description" validate:"max=255"`
     EffectiveDate 	string `json:"effective_date" form:"effective_date"`
 }
 
