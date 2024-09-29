@@ -27,8 +27,8 @@ func NewRoleController(db *database.Database) *RoleController {
 		permissionService:       services.NewPermissionService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:              helpers.NewInfoLogger("users-info.log"),
-		errorLogger:             helpers.NewInfoLogger("users-error.log"),
+		infoLogger:              helpers.NewInfoLogger(userInfoLogFile),
+		errorLogger:             helpers.NewInfoLogger(userErrorLogFile),
 	}
 }
 

@@ -28,8 +28,8 @@ func NewPermissionController(db *database.Database) *PermissionController {
 		authService:             services.NewAuthService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:              helpers.NewInfoLogger("users-info.log"),
-		errorLogger:             helpers.NewInfoLogger("users-error.log"),
+		infoLogger:              helpers.NewInfoLogger(userInfoLogFile),
+		errorLogger:             helpers.NewInfoLogger(userErrorLogFile),
 	}
 }
 

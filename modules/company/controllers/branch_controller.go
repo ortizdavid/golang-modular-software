@@ -32,8 +32,8 @@ func NewBranchController(db *database.Database) *BranchController {
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		authService:             authentication.NewAuthService(db),
 		configService:           configurations.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("company-info.log"),
-		errorLogger:             helpers.NewErrorLogger("company-error.log"),
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

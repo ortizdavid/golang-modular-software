@@ -27,8 +27,8 @@ func NewCompanyController(db *database.Database) *CompanyController {
 		authService:             authentication.NewAuthService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		configService:           configurations.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("company-info.log"),
-		errorLogger:             helpers.NewErrorLogger("company-error.log"),
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

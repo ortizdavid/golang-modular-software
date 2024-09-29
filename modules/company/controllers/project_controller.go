@@ -32,8 +32,8 @@ func NewProjectController(db *database.Database) *ProjectController {
 		authService:             authentication.NewAuthService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:              helpers.NewInfoLogger("company-info.log"),
-		errorLogger:             helpers.NewErrorLogger("company-error.log"),
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

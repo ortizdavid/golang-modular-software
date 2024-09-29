@@ -28,8 +28,8 @@ func NewAuthController(db *database.Database) *AuthController {
 		userService:        services.NewUserService(db),
 		configService:      configurations.NewBasicConfigurationService(db),
 		emailConfigService: configurations.NewEmailConfigurationService(db),
-		infoLogger:         helpers.NewInfoLogger("auth-info.log"),
-		errorLogger:        helpers.NewInfoLogger("auth-error.log"),
+		infoLogger:         helpers.NewInfoLogger(authInfoLogFile),
+		errorLogger:        helpers.NewInfoLogger(authInfoLogFile),
 	}
 }
 

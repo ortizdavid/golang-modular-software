@@ -30,8 +30,8 @@ func NewCoreEntityController(db *database.Database) *CoreEntityController {
 		moduleFlagStatusService: services.NewModuleFlagStatusService(db),
 		authService:             authentication.NewAuthService(db),
 		configService:           services.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:             helpers.NewErrorLogger("configurations-error.log"),
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(erroLogFile),
 	}
 }
 

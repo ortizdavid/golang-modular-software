@@ -32,8 +32,8 @@ func NewCoreEntityFlagController(db *database.Database) *CoreEntityFlagControlle
 		coreEntityFlagStatusService: services.NewCoreEntityFlagStatusService(db),
 		authService:                 authentication.NewAuthService(db),
 		configService:               services.NewAppConfigurationService(db),
-		infoLogger:                  helpers.NewInfoLogger("configurations-info.log"),
-		errorLogger:                 helpers.NewErrorLogger("configurations-error.log"),
+		infoLogger:                  helpers.NewInfoLogger(infoLogFile),
+		errorLogger:                 helpers.NewErrorLogger(erroLogFile),
 	}
 }
 

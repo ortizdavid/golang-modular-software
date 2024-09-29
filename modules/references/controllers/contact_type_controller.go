@@ -29,8 +29,8 @@ func NewContactTypeController(db *database.Database) *ContactTypeController {
 		authService:             authentication.NewAuthService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:              helpers.NewInfoLogger("references-info.log"),
-		errorLogger:             helpers.NewErrorLogger("references-error.log"),
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 
