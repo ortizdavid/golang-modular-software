@@ -95,12 +95,13 @@ func (ctrl *PolicyController) createForm(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	return c.Render("company/policy/create", fiber.Map{
-		"Title":           "Create Policy",
-		"AppConfig":       ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStaus": moduleFlagStatus,
-		"LoggedUser":      loggedUser,
-		"Companies":       companies,
-		"PolicyCode":      encryption.GenerateCode("POL-"),
+		"Title":            "Create Policy",
+		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
+		"ModuleFlagStatus": moduleFlagStatus,
+		"LoggedUser":       loggedUser,
+		"Companies":        companies,
+		"PolicyCode":       encryption.GenerateCode("POL-"),
+		"DateInfo":         helpers.GetDateInfo(),
 	})
 }
 

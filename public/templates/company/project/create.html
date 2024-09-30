@@ -4,7 +4,7 @@
     <form class="ui form" action="/company/projects/create" method="POST">
         <div class="field">
             <label for="company_id"><strong>Company:</strong></label>
-            <select class="ui dropdown" id="company_id" name="company_id" required>
+            <select class="ui dropdown" id="company_id" name="company_id" autofocus required>
                 <option value="">Select Company</option>
                 {{ range .Companies }}
                     <option value="{{.CompanyId}}">{{.CompanyName}}</option>
@@ -18,11 +18,11 @@
        
         <div class="field">
             <label for="start_date"><strong>Start Date:</strong></label>
-            <input class="ui input" type="date" name="start_date" id="start_date" required>
+            <input class="ui input" type="date" name="start_date" id="start_date" value="{{.DateInfo.CurrentDate}}" required>
         </div>
         <div class="field">
             <label for="end_date"><strong>End Date:</strong></label>
-            <input class="ui input" type="date" name="end_date" id="end_date">
+            <input class="ui input" type="date" name="end_date" id="end_date" value="{{.DateInfo.LastDayOfCurrentYear}}">
         </div>
         <div class="field">
             <select class="ui dropdown" id="status" name="status" required>

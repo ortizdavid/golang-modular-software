@@ -4,7 +4,7 @@
     <form class="ui form" action="/company/projects/{{.Project.UniqueId}}/edit" method="POST">
         <div class="field">
             <label for="company_id"><strong>Company:</strong></label>
-            <select class="ui dropdown" id="company_id" name="company_id" required>
+            <select class="ui dropdown" id="company_id" name="company_id" autofocus required>
                 <option value="{{.Project.CompanyId}}">{{.Project.CompanyName}}</option>
                 {{ range .Companies }}
                     <option value="{{.CompanyId}}">{{.CompanyName}}</option>

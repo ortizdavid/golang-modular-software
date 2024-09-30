@@ -4,7 +4,7 @@
     <form class="ui form" action="/company/policies/create" method="POST">
         <div class="field">
             <label for="company_id"><strong>Company:</strong></label>
-            <select class="ui dropdown" id="company_id" name="company_id" required>
+            <select class="ui dropdown" id="company_id" name="company_id" autofocus required>
                 <option value="">Select Company</option>
                 {{ range .Companies }}
                     <option value="{{.CompanyId}}">{{.CompanyName}}</option>
@@ -17,7 +17,7 @@
         </div>
         <div class="field">
             <label for="effective_date"><strong>Effective Date:</strong></label>
-            <input class="ui input" type="date" name="effective_date" id="effective_date" required>
+            <input class="ui input" type="date" name="effective_date" id="effective_date" value="{{.DateInfo.CurrentDate}}" required>
         </div>
         <div class="field">
             <label for="description"><strong>Description:</strong></label>

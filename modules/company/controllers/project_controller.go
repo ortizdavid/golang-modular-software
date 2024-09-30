@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	//"github.com/ortizdavid/go-nopain/datetime"
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -100,7 +101,8 @@ func (ctrl *ProjectController) createForm(c *fiber.Ctx) error {
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
 		"Companies":        companies,
-		"ProjectCode":      encryption.GenerateCode("DPT-"),
+		"ProjectCode":      encryption.GenerateCode("PRJ-"),
+		"DateInfo": helpers.GetDateInfo(),
 	})
 }
 

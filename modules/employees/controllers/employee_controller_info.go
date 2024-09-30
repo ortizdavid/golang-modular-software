@@ -114,6 +114,7 @@ func (ctrl *EmployeeController) createForm(c *fiber.Ctx) error {
 		"MaritalStatuses":     maritalStatuses,
 		"EmploymentStatuses":  employmentStatuses,
 		"Departments":         departments,
+		"DateInfo": helpers.GetDateInfo(),
 	})
 }
 

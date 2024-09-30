@@ -78,7 +78,7 @@ func (ctrl *EmploymentStatusController) details(c *fiber.Ctx) error {
 	return c.Render("reference/employment-status/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStaus":  moduleFlagStatus,
+		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
 		"EmploymentStatus": status,
 	})
