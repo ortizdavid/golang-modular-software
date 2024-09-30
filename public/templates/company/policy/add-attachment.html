@@ -1,0 +1,33 @@
+{{ template "_partials/header-back" .}}
+<div class="ui segment">
+    <form class="ui form" action="/company/policies/{{.Policy.UniqueId}}/add-attachment" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="policy_id" value="{{.Policy.PolicyId}}">
+        <input type="hidden" name="company_id" value="{{.Policy.CompanyId}}">
+        <div class="field">
+            <label for="attachment_name"><strong>Attachment Name:</strong></label>
+            <input class="ui input" type="text" name="attachment_name" id="attachment_name" placeholder="Enter Attachment Name" required>
+        </div>
+        <div class="field">
+            <label for="attachment_file"><strong>Upload Attachment:</strong></label>
+            <input class="ui input" type="file" name="attachment_file" id="attachment_file" accept=".pdf,.doc,.docx" required>
+        </div>
+        <div class="ui buttons">
+            <button type="submit" class="ui primary button">
+                <i class="send icon"></i>
+                Submit
+            </button>
+            <div class="or"></div>
+            <button type="reset" class="ui button">
+                <i class="eraser icon"></i>
+                Clear
+            </button>
+            <div class="or"></div>
+            <a href="/company/policies/{{.Policy.UniqueId}}/details" class="ui red button">
+                <i class="x icon"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+{{ template "_partials/footer-back" .}}

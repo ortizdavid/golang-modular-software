@@ -118,3 +118,19 @@ CREATE TABLE company.policies (
     updated_at TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (company_id) REFERENCES company.companies(company_id)
 );
+
+
+-- Table: policy_attachments
+DROP TABLE IF EXISTS company.policy_attachments;
+CREATE TABLE company.policy_attachments (
+    attachment_id SERIAL PRIMARY KEY,
+    policy_id INT NOT NULL,
+    company_id INT,
+    attachment_name VARCHAR(100) NOT NULL,
+    file_name VARCHAR(150) NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (company_id) REFERENCES company.companies(company_id),
+    FOREIGN KEY (policy_id) REFERENCES company.policies(policy_id)
+);

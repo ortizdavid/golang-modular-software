@@ -21,6 +21,46 @@
     <p><strong>Creation Date:</strong> {{.Policy.CreatedAt}}</p>
     <p><strong>Last Update:</strong> {{.Policy.UpdatedAt}}</p>
     <p><strong>Description:</strong> {{.Policy.Description}}</p>
+    
+    <div class="ui divider"></div>
+    <p><strong>Attachments: </strong>{{.CountAttachments}}</p>
+    <div class="ui container"  align="right">
+        <a href="/company/policies/{{.Policy.UniqueId}}/add-attachment" class="ui primary button small">
+            <i class="paperclip icon"></i>
+            Add Attachment
+        </a>
+    </div>
+    {{ if .CountAttachments }}
+        <table class="ui selectable small table blue">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Attachment Name</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .PolicyAttachments }}
+                    <tr>
+                        <td>{{.AttachmentId}}</td>
+                        <td>{{.AttachmentName}}</td>
+                        <td>
+                            <a target="_blank" href="/company/policies/display-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Display">
+                                <i class="pdf file red blue icon"></i>
+                            </a>
+                            <a href="/company/policies/edit-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Edit Info">
+                                <i class="pencil blue icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <div class="ui warning message">
+            No documents found
+        </div>
+    {{ end }}
 </div>
 
 {{ template "_partials/footer-back" .}}
