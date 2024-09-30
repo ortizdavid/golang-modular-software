@@ -29,9 +29,15 @@ func NewDocumentService(db *database.Database) *DocumentService {
 }
 
 func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateDocumentRequest) error {
+	//----- Validation
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	expirationDate, err := datetime.StringToDate(request.ExpirationDate)
+	if err != nil {
+		return err
+	}
+	//-----------------------
 	employee, err := s.employeeRepository.FindById(ctx, request.EmployeeId)
 	if err != nil {
 		return apperrors.NewNotFoundError("employee not found")
@@ -56,7 +62,7 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 		DocumentTypeId: request.DocumentTypeId,
 		DocumentName:   request.DocumentName,
 		DocumentNumber: request.DocumentNumber,
-		ExpirationDate: datetime.StringToDate(request.ExpirationDate),
+		ExpirationDate: expirationDate,
 		FileName:       info.FinalName,
 		Status:         request.Status,
 		BaseEntity:     shared.BaseEntity{
@@ -76,6 +82,10 @@ func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int64, 
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	expirationDate, err := datetime.StringToDate(request.ExpirationDate)
+	if err != nil {
+		return err
+	}
 	document, err := s.repository.FindById(ctx, documentId)
 	if err != nil {
 		return apperrors.NewNotFoundError("document not found")
@@ -83,7 +93,7 @@ func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int64, 
 	document.DocumentTypeId = request.DocumentTypeId
 	document.DocumentName = request.DocumentName
 	document.DocumentNumber = request.DocumentNumber
-	document.ExpirationDate = datetime.StringToDate(request.ExpirationDate)
+	document.ExpirationDate = expirationDate
 	document.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, document)
 	if err != nil {

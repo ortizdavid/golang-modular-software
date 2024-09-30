@@ -31,6 +31,14 @@ func (s *ProjectService) CreateProject(ctx context.Context, request entities.Cre
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	startDate, err := datetime.StringToDate(request.StartDate)
+	if err != nil {
+		return err
+	}
+	endDate, err := datetime.StringToDate(request.EndDate)
+	if err != nil {
+		return err
+	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
@@ -45,8 +53,8 @@ func (s *ProjectService) CreateProject(ctx context.Context, request entities.Cre
 	project := entities.Project{
 		ProjectName: request.ProjectName,
 		Description: request.Description,
-		StartDate:   datetime.StringToDate(request.StartDate),
-		EndDate:     datetime.StringToDate(request.EndDate),
+		StartDate:   startDate,
+		EndDate:     endDate,
 		Status:      request.Status,
 		CompanyId:   company.CompanyId,
 		BaseEntity: shared.BaseEntity{
@@ -66,6 +74,14 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectId int, reque
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	startDate, err := datetime.StringToDate(request.StartDate)
+	if err != nil {
+		return err
+	}
+	endDate, err := datetime.StringToDate(request.EndDate)
+	if err != nil {
+		return err
+	}
 	project, err := s.repository.FindById(ctx, projectId)
 	if err != nil {
 		return apperrors.NewNotFoundError("project not found")
@@ -76,8 +92,8 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectId int, reque
 	}
 	project.CompanyId = request.CompanyId
 	project.ProjectName = request.ProjectName
-	project.StartDate = datetime.StringToDate(request.StartDate)
-	project.EndDate = datetime.StringToDate(request.EndDate)
+	project.StartDate = startDate
+	project.EndDate = endDate
 	project.Status = request.Status
 	project.Description = request.Description
 	project.UpdatedAt = time.Now().UTC()

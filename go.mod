@@ -39,7 +39,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/ortizdavid/go-nopain v0.0.0-20240724110659-04355dfeaca8
+	github.com/ortizdavid/go-nopain v0.0.0-20240930094553-9b4ad5d6be54
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/tealeg/xlsx v1.0.5
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

@@ -28,12 +28,16 @@ func (s *CompanyService) CreateCompany(ctx context.Context, request entities.Cre
     if err := request.Validate(); err != nil {
         return apperrors.NewBadRequestError(err.Error())
     }
+	foundedDate, err := datetime.StringToDate(request.FoundedDate)
+	if err != nil {
+		return err
+	}
     company := entities.Company{
         CompanyName:    request.CompanyName,
         CompanyAcronym: request.CompanyAcronym,
         CompanyType:    request.CompanyType,
         Industry:       request.Industry,
-        FoundedDate:    datetime.StringToDate(request.FoundedDate),
+        FoundedDate:    foundedDate,
         Address:        request.Address,
         Phone:          request.Phone,
         Email:          request.Email,
@@ -44,7 +48,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, request entities.Cre
 			UpdatedAt:      time.Now().UTC(),
 		},
     }
-    err := s.repository.Create(ctx, company)
+    err = s.repository.Create(ctx, company)
     if err != nil {
         return apperrors.NewInternalServerError("error while creating company: " + err.Error())
     }
@@ -55,6 +59,10 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, companyId int, reque
     if err := request.Validate(); err != nil {
         return apperrors.NewBadRequestError(err.Error())
     }
+	foundedDate, err := datetime.StringToDate(request.FoundedDate)
+	if err != nil {
+		return err
+	}
     company, err := s.repository.FindById(ctx, companyId)
     if err != nil {
         return apperrors.NewNotFoundError("company not found")
@@ -63,7 +71,7 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, companyId int, reque
     company.CompanyAcronym = request.CompanyAcronym
     company.CompanyType = request.CompanyType
     company.Industry = request.Industry
-    company.FoundedDate = datetime.StringToDate(request.FoundedDate)
+    company.FoundedDate = foundedDate
     company.Address = request.Address
     company.Phone = request.Phone
     company.Email = request.Email

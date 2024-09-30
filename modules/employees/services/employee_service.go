@@ -29,6 +29,10 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	dateOfBirth, err := datetime.StringToDate(request.DateOfBirth)
+	if err != nil {
+		return err
+	}
 	exists, err := s.repository.ExistsByIdentificationNumber(ctx, request.IdentificationNumber)
 	if err != nil {
 		return err
@@ -44,7 +48,7 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 		LastName:             request.LastName,
 		IdentificationNumber: request.IdentificationNumber,
 		Gender:               request.Gender,
-		DateOfBirth:          datetime.StringToDate(request.DateOfBirth),
+		DateOfBirth:          dateOfBirth,
 		BaseEntity:           shared.BaseEntity{
 			UniqueId:             encryption.GenerateUUID(),
 			CreatedAt:            time.Now().UTC(),
@@ -62,6 +66,10 @@ func (s *EmployeeService) UpdateEmployee(ctx context.Context, employeeId int64, 
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	dateOfBirth, err := datetime.StringToDate(request.DateOfBirth)
+	if err != nil {
+		return err
+	}
 	employee, err := s.repository.FindById(ctx, employeeId)
 	if err != nil {
 		return apperrors.NewNotFoundError("employee not found")
@@ -73,7 +81,7 @@ func (s *EmployeeService) UpdateEmployee(ctx context.Context, employeeId int64, 
 	employee.LastName = request.LastName
 	employee.IdentificationNumber = request.IdentificationNumber
 	employee.Gender = request.Gender
-	employee.DateOfBirth = datetime.StringToDate(request.DateOfBirth)
+	employee.DateOfBirth = dateOfBirth
 	employee.UpdatedAt = time.Now().UTC()
 	//Update
 	err = s.repository.Update(ctx, employee)

@@ -31,6 +31,10 @@ func (s *PolicyService) CreatePolicy(ctx context.Context, request entities.Creat
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	effectiveDate, err := datetime.StringToDate(request.EffectiveDate)
+	if err != nil {
+		return err
+	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("company not found")
@@ -46,7 +50,7 @@ func (s *PolicyService) CreatePolicy(ctx context.Context, request entities.Creat
 		CompanyId:     company.CompanyId,
 		PolicyName:    request.PolicyName,
 		Description:   request.Description,
-		EffectiveDate: datetime.StringToDate(request.EffectiveDate),
+		EffectiveDate: effectiveDate,
 		BaseEntity: shared.BaseEntity{
 			UniqueId:      encryption.GenerateUUID(),
 			CreatedAt:     time.Now().UTC(),
@@ -64,6 +68,10 @@ func (s *PolicyService) UpdatePolicy(ctx context.Context, policyId int, request 
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
+	effectiveDate, err := datetime.StringToDate(request.EffectiveDate)
+	if err != nil {
+		return err
+	}
 	policy, err := s.repository.FindById(ctx, policyId)
 	if err != nil {
 		return apperrors.NewNotFoundError("policy not found")
@@ -75,7 +83,7 @@ func (s *PolicyService) UpdatePolicy(ctx context.Context, policyId int, request 
 	policy.CompanyId = request.CompanyId
 	policy.PolicyName = request.PolicyName
 	policy.CompanyId = request.CompanyId
-	policy.EffectiveDate = datetime.StringToDate(request.EffectiveDate)
+	policy.EffectiveDate = effectiveDate
 	policy.Description = request.Description
 	policy.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, policy)
