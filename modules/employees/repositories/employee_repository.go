@@ -59,7 +59,7 @@ func (repo *EmployeeRepository) GetDataByUniqueId(ctx context.Context, uniqueId 
 	return employeeData, result.Error
 }
 
-func (repo *EmployeeRepository) GetDataByIndentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeData, error) {
+func (repo *EmployeeRepository) GetDataByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeData, error) {
 	var employeeData entities.EmployeeData
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_data WHERE identification_number=?", identNumber).Scan(&employeeData)
 	return employeeData, result.Error

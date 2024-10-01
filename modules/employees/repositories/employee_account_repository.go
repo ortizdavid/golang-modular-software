@@ -18,13 +18,13 @@ func NewEmployeeAccountRepository(db *database.Database) *EmployeeAccountReposit
 }
 
 func (repo *EmployeeAccountRepository) GetDataByEmployeeId(ctx context.Context, id int64) (entities.EmployeeAccountData, error) {
-	var userData entities.EmployeeAccountData
-	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_account_data WHERE employee_id=?", id).Scan(&userData)
-	return userData, result.Error
+	var accountData entities.EmployeeAccountData
+	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_account_data WHERE employee_id=?", id).Scan(&accountData)
+	return accountData, result.Error
 }
 
 func (repo *EmployeeAccountRepository) GetDataByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeAccountData, error) {
-	var userData entities.EmployeeAccountData
-	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_account_data WHERE identification_number=?", identNumber).Scan(&userData)
-	return userData, result.Error
+	var accountData entities.EmployeeAccountData
+	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_account_data WHERE identification_number=?", identNumber).Scan(&accountData)
+	return accountData, result.Error
 }

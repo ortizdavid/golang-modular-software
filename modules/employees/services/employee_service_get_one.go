@@ -19,7 +19,7 @@ func (s *EmployeeService) GetEmployeeByUniqueId(ctx context.Context, uniqueId st
 }
 
 func (s *EmployeeService) GetEmployeeByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeData, error) {
-	employee, err := s.repository.GetDataByIndentificationNumber(ctx, identNumber)
+	employee, err := s.repository.GetDataByIdentificationNumber(ctx, identNumber)
 	if err != nil {
 		return entities.EmployeeData{}, apperrors.NewNotFoundError("employee not found")
 	}
