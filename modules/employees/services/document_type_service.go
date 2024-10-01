@@ -129,11 +129,7 @@ func (s *DocumentTypeService) GetDocumentTypeByUniqueId(ctx context.Context, uni
 }
 
 func (s *DocumentTypeService) RemoveDocumentType(ctx context.Context, uniqueId string) error {
-	documentType, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("document type not found")
-	}
-	err = s.repository.Delete(ctx, documentType)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing document type: "+ err.Error())
 	}

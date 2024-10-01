@@ -168,7 +168,7 @@ func (ctrl *PermissionController) delete(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.DeletePermission(c.Context(), permission.PermissionId)
+	err = ctrl.service.RemovePermission(c.Context(), permission.PermissionId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

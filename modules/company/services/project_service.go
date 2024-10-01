@@ -162,12 +162,16 @@ func (s *ProjectService) GetProjectByUniqueId(ctx context.Context, uniqueId stri
 	return project, nil
 }
 
-func (s *ProjectService) RemoveProject(ctx context.Context, uniqueId string) error {
-	project, err := s.repository.FindByUniqueId(ctx, uniqueId)
+func (s *ProjectService) GetProjectById(ctx context.Context, projectId int) (entities.Project, error) {
+	project, err := s.repository.FindById(ctx, projectId)
 	if err != nil {
-		return apperrors.NewNotFoundError("project not found")
+		return entities.Project{}, apperrors.NewNotFoundError("project not found")
 	}
-	err = s.repository.Delete(ctx, project)
+	return project, nil
+}
+
+func (s *ProjectService) RemoveProject(ctx context.Context, uniqueId string) error {
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing project: "+ err.Error())
 	}

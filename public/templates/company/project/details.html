@@ -24,6 +24,50 @@
     <p><strong>Creation Date:</strong> {{.Project.CreatedAt}}</p>
     <p><strong>Last Update:</strong> {{.Project.UpdatedAt}}</p>
     <p><strong>Description:</strong> {{.Project.Description}}</p>
+
+    <div class="ui divider"></div>
+    <p><strong>Attachments: </strong>{{.CountAttachments}}</p>
+    <div class="ui container"  align="right">
+        <a href="/company/projects/{{.Project.UniqueId}}/add-attachment" class="ui primary button small">
+            <i class="paperclip icon"></i>
+            Add Attachment
+        </a>
+    </div>
+
+    {{ if .CountAttachments }}
+        <table class="ui selectable small table blue">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Attachment Name</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .ProjectAttachments }}
+                    <tr>
+                        <td>{{.AttachmentId}}</td>
+                        <td>{{.AttachmentName}}</td>
+                        <td>
+                            <a target="_blank" href="/company/projects/display-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Display">
+                                <i class="pdf file red blue icon"></i>
+                            </a>
+                            <a href="/company/projects/edit-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Edit Info">
+                                <i class="pencil blue icon"></i>
+                            </a>
+                            <a href="/company/projects/delete-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Delete Attachment">
+                                <i class="trash alternate red icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <div class="ui warning message">
+            No attachments found
+        </div>
+    {{ end }}
     
 </div>
 

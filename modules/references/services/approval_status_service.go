@@ -129,11 +129,7 @@ func (s *ApprovalStatusService) GetApprovalStatusByUniqueId(ctx context.Context,
 }
 
 func (s *ApprovalStatusService) RemoveApprovalStatus(ctx context.Context, uniqueId string) error {
-	approvalStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("status not found")
-	}
-	err = s.repository.Delete(ctx, approvalStatus)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing approvalStatus: "+ err.Error())
 	}

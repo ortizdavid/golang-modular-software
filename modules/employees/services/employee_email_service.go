@@ -136,11 +136,7 @@ func (s *EmployeeEmailService) GetEmployeeEmailByUniqueId(ctx context.Context, u
 }
 
 func (s *EmployeeEmailService) RemoveEmployeeEmail(ctx context.Context, uniqueId string) error {
-	employeeEmail, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("employee email not found")
-	}
-	err = s.repository.Delete(ctx, employeeEmail)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing employee email: "+ err.Error())
 	}

@@ -117,11 +117,7 @@ func (s *AddressService) GetAddressByUniqueId(ctx context.Context, uniqueId stri
 }
 
 func (s *AddressService) RemoveAddress(ctx context.Context, uniqueId string) error {
-	address, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("address not found")
-	}
-	err = s.repository.Delete(ctx, address)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing address: "+ err.Error())
 	}

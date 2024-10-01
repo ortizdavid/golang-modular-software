@@ -21,9 +21,9 @@ func NewPolicyAttachmentRepository(db *database.Database) *PolicyAttachmentRepos
 }
 
 func (repo *PolicyAttachmentRepository) FindAllByPolicyId(ctx context.Context, policyId int) ([]entities.PolicyAttachment, error) {
-	var policies []entities.PolicyAttachment
-	result := repo.db.WithContext(ctx).Where("policy_id = ?", policyId).Find(&policies)
-	return policies, result.Error
+	var attachments []entities.PolicyAttachment
+	result := repo.db.WithContext(ctx).Where("policy_id = ?", policyId).Find(&attachments)
+	return attachments, result.Error
 }
 
 

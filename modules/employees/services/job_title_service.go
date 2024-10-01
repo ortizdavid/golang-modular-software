@@ -129,11 +129,7 @@ func (s *JobTitleService) GetJobTitleByUniqueId(ctx context.Context, uniqueId st
 }
 
 func (s *JobTitleService) RemoveJobTitle(ctx context.Context, uniqueId string) error {
-	jobTitle, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("job title not found")
-	}
-	err = s.repository.Delete(ctx, jobTitle)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing job title: "+ err.Error())
 	}

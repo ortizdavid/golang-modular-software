@@ -129,11 +129,7 @@ func (s *ContactTypeService) GetContactTypeByUniqueId(ctx context.Context, uniqu
 }
 
 func (s *ContactTypeService) RemoveContactType(ctx context.Context, uniqueId string) error {
-	contactType, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("type not found")
-	}
-	err = s.repository.Delete(ctx, contactType)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing type: "+ err.Error())
 	}

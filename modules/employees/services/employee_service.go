@@ -150,11 +150,7 @@ func (s *EmployeeService) GetEmployeeByUniqueId(ctx context.Context, uniqueId st
 }
 
 func (s *EmployeeService) RemoveEmployee(ctx context.Context, uniqueId string) error {
-	employee, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("employee not found")
-	}
-	err = s.repository.Delete(ctx, employee)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing employee: "+ err.Error())
 	}

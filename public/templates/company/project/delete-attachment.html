@@ -1,10 +1,10 @@
 {{ template "_partials/header-back" .}}
 
 <div class="ui segment">
-    <form class="ui form" action="/company/projects/{{.Project.UniqueId}}/delete" method="POST">
+    <form class="ui form" action="/company/projects/delete-attachment/{{.ProjectAttachment.UniqueId}}" method="POST">
         <div class="field">
-            <label for="project_name"><strong>Project:</strong></label>
-            <input class="ui input" type="text" value="{{.Project.ProjectName}}" name="project_name" readonly>
+            <label for="attachment_name"><strong>Attachment Name:</strong></label>
+            <input class="ui input" type="text" value="{{.ProjectAttachment.AttachmentName}}" name="attachment_name" readonly>
         </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">

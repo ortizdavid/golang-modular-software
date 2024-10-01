@@ -139,7 +139,7 @@ func (ctrl *RoleController) delete(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.DeleteRole(c.Context(), role.RoleId)
+	err = ctrl.service.RemoveRole(c.Context(), role.RoleId)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

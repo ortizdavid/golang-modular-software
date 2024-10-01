@@ -76,11 +76,7 @@ func (s *UserService) AssociateUserToRole(ctx context.Context, request entities.
 }
 
 func (s *UserService) RemoveUserRole(ctx context.Context, uniqueId string) error {
-	userRole, err := s.userRoleRepository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("user role not found. invalid unique id")
-	}
-	err = s.userRoleRepository.Delete(ctx, userRole)
+	err := s.userRoleRepository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing role: " + err.Error())
 	}

@@ -3,8 +3,8 @@
 <div class="ui segment">
     <form class="ui form" action="/company/policies/{{.Policy.UniqueId}}/delete" method="POST">
         <div class="field">
-            <label for="username"><strong>Policy:</strong></label>
-            <input class="ui input" type="text" value="{{.Policy.PolicyName}}" name="user_name" readonly>
+            <label for="policy_name"><strong>Policy:</strong></label>
+            <input class="ui input" type="text" value="{{.Policy.PolicyName}}" name="policy_name" readonly>
         </div>
         <div class="ui buttons">
             <button type="submit" class="ui primary button">

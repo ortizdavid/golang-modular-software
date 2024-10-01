@@ -51,6 +51,9 @@
                             <a href="/company/policies/edit-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Edit Info">
                                 <i class="pencil blue icon"></i>
                             </a>
+                            <a href="/company/policies/delete-attachment/{{.UniqueId}}" class="ui icon button" data-tooltip="Delete Attachment">
+                                <i class="trash alternate red icon"></i>
+                            </a>
                         </td>
                     </tr>
                 {{ end }}
@@ -58,7 +61,7 @@
         </table>
     {{ else }}
         <div class="ui warning message">
-            No documents found
+            No attachments found
         </div>
     {{ end }}
 </div>

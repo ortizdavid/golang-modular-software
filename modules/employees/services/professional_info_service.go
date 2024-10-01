@@ -95,11 +95,7 @@ func (s *ProfessionalInfoService) GetProfessionalInfoByEmployeeId(ctx context.Co
 }
 
 func (s *ProfessionalInfoService) RemoveProfessionalInfo(ctx context.Context, uniqueId string) error {
-	professionalInfo, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("professional info not found")
-	}
-	err = s.repository.Delete(ctx, professionalInfo)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing professional info: "+ err.Error())
 	}

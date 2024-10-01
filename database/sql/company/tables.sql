@@ -104,6 +104,21 @@ CREATE TABLE company.projects (
     FOREIGN KEY (company_id) REFERENCES company.companies(company_id)
 );
 
+-- Table: project_attachments
+DROP TABLE IF EXISTS company.project_attachments;
+CREATE TABLE company.project_attachments (
+    attachment_id SERIAL PRIMARY KEY,
+    project_id INT NOT NULL,
+    company_id INT,
+    attachment_name VARCHAR(100) NOT NULL,
+    file_name VARCHAR(150) NOT NULL,
+    unique_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (company_id) REFERENCES company.companies(company_id),
+    FOREIGN KEY (project_id) REFERENCES company.projects(project_id)
+);
+
 
 -- Table: policies
 DROP TABLE IF EXISTS company.policies;

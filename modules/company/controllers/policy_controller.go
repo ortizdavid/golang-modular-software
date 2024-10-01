@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/encryption"
-	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/services"
@@ -56,6 +55,8 @@ func (ctrl *PolicyController) Routes(router *fiber.App, db *database.Database) {
 	group.Get("/:id/add-attachment", ctrl.addAttachmentForm)
 	group.Post("/:id/add-attachment", ctrl.addAttachment)
 	group.Get("/display-attachment/:id", ctrl.displayAttachment)
+	group.Get("/delete-attachment/:id", ctrl.deleteAttachmentForm)
+	group.Post("/delete-attachment/:id", ctrl.deleteAttachment)
 }
 
 func (ctrl *PolicyController) index(c *fiber.Ctx) error {
@@ -239,54 +240,4 @@ func (ctrl *PolicyController) remove(c *fiber.Ctx) error {
 	}
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' removed policy '%s'", loggedUser.UserName, policy.PolicyName))
 	return c.Redirect("/company/policies")
-}
-
-
-func (ctrl *PolicyController) addAttachmentForm(c *fiber.Ctx) error {
-	id := c.Params("id")
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	return c.Render("company/policy/add-attachment", fiber.Map{
-		"Title":            "Add Attachment",
-		"Policy":           policy,
-		"LoggedUser":       loggedUser,
-		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
-		"ModuleFlagStatus": moduleFlagStatus,
-	})
-}
-
-func (ctrl *PolicyController) addAttachment(c *fiber.Ctx) error {
-	id := c.Params("id")
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	var request entities.CreatePolicyAttachmentRequest
-	if err := c.BodyParser(&request); err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	err = ctrl.attachmentService.CreatePolicyAttachment(c.Context(), c, request)
-	if err != nil {
-		ctrl.errorLogger.Error(c, err.Error())
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' added policy attachment for policy '%s'", loggedUser.UserName, attachment.PolicyName))
-	return c.Redirect("/company/policies/" + id + "/details")
-}
-
-func (ctrl *PolicyController) displayAttachment(c *fiber.Ctx) error {
-	id := c.Params("id")
-	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.attachmentService.GetPolicyAttachmentByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	documentPath := config.UploadDocumentPath() + "/company"
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' policy attachment '%s'", loggedUser.UserName, attachment.AttachmentName))
-	return c.SendFile(documentPath + "/" + attachment.FileName)
 }

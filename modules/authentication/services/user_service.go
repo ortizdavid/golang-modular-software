@@ -171,12 +171,8 @@ func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, 
 	return nil
 }
 
-func (s *UserService) DeleteUser(ctx context.Context, userId int64) error {
-	user, err := s.repository.FindById(ctx, userId)
-	if err != nil {
-		return apperrors.NewNotFoundError("user not found. invalid user id")
-	}
-	err = s.repository.Delete(ctx, user)
+func (s *UserService) RemoveUser(ctx context.Context, uniqueId string) error {
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while deleting user: "+ err.Error())
 	}

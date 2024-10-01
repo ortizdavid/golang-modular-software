@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	//"github.com/ortizdavid/go-nopain/datetime"
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -17,6 +16,7 @@ import (
 
 type ProjectController struct {
 	service                 *services.ProjectService
+	attachmentService		*services.ProjectAttachmentService
 	companyService          *services.CompanyService
 	authService             *authentication.AuthService
 	configService           *configurations.AppConfigurationService
@@ -29,12 +29,14 @@ type ProjectController struct {
 func NewProjectController(db *database.Database) *ProjectController {
 	return &ProjectController{
 		service:                 services.NewProjectService(db),
+		attachmentService:       services.NewProjectAttachmentService(db),
 		companyService:          services.NewCompanyService(db),
 		authService:             authentication.NewAuthService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		infoLogger:              helpers.NewInfoLogger(infoLogFile),
 		errorLogger:             helpers.NewErrorLogger(errorLogFile),
+		BaseController:          shared.BaseController{},
 	}
 }
 
@@ -50,6 +52,11 @@ func (ctrl *ProjectController) Routes(router *fiber.App, db *database.Database) 
 	group.Get("/search-results", ctrl.search)
 	group.Get("/:id/delete", ctrl.removeForm)
 	group.Post("/:id/delete", ctrl.remove)
+	group.Get("/:id/add-attachment", ctrl.addAttachmentForm)
+	group.Post("/:id/add-attachment", ctrl.addAttachment)
+	group.Get("/display-attachment/:id", ctrl.displayAttachment)
+	group.Get("/delete-attachment/:id", ctrl.deleteAttachmentForm)
+	group.Post("/delete-attachment/:id", ctrl.deleteAttachment)
 }
 
 func (ctrl *ProjectController) index(c *fiber.Ctx) error {
@@ -79,12 +86,18 @@ func (ctrl *ProjectController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
+	attachments, err := ctrl.attachmentService.GetAllAttachmentsByProjectId(c.Context(), project.ProjectId)
+	if err != nil {
+		return ctrl.HandleErrorsWeb(c, err)
+	}
 	return c.Render("company/project/details", fiber.Map{
 		"Title":            "Details",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
 		"Project":          project,
+		"ProjectAttachments": attachments,
+		"CountAttachments": len(attachments),
 	})
 }
 

@@ -131,7 +131,7 @@ func (s *RoleService) AssignRolePermission(ctx context.Context, roleId int, requ
 	return nil
 }
 
-func (s *RoleService) DeleteRole(ctx context.Context, roleId int) error {
+func (s *RoleService) RemoveRole(ctx context.Context, roleId int) error {
     role, err := s.repository.FindById(ctx, roleId)
     if err != nil {
         return apperrors.NewNotFoundError("role not found")

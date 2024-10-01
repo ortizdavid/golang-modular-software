@@ -136,11 +136,7 @@ func (s *EmployeePhoneService) GetEmployeePhoneByUniqueId(ctx context.Context, u
 }
 
 func (s *EmployeePhoneService) RemoveEmployeePhone(ctx context.Context, uniqueId string) error {
-	employeePhone, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("employee phone not found")
-	}
-	err = s.repository.Delete(ctx, employeePhone)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing employee phone: "+ err.Error())
 	}

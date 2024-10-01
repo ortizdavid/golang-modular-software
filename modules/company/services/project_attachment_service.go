@@ -15,27 +15,27 @@ import (
 	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
-type PolicyAttachmentService struct {
-	repository *repositories.PolicyAttachmentRepository
-	policyRepository *repositories.PolicyRepository
+type ProjectAttachmentService struct {
+	repository *repositories.ProjectAttachmentRepository
+	projectRepository *repositories.ProjectRepository
 	companyRepository *repositories.CompanyRepository
 }
 
-func NewPolicyAttachmentService(db *database.Database) *PolicyAttachmentService {
-	return &PolicyAttachmentService{
-		repository:        repositories.NewPolicyAttachmentRepository(db),
-		policyRepository:  repositories.NewPolicyRepository(db),
+func NewProjectAttachmentService(db *database.Database) *ProjectAttachmentService {
+	return &ProjectAttachmentService{
+		repository:        repositories.NewProjectAttachmentRepository(db),
+		projectRepository:  repositories.NewProjectRepository(db),
 		companyRepository: repositories.NewCompanyRepository(db),
 	}
 }
 
-func (s *PolicyAttachmentService) CreatePolicyAttachment(ctx context.Context, fiberCtx *fiber.Ctx,   request entities.CreatePolicyAttachmentRequest) error {
+func (s *ProjectAttachmentService) CreateProjectAttachment(ctx context.Context, fiberCtx *fiber.Ctx,   request entities.CreateProjectAttachmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	policy, err := s.policyRepository.FindById(ctx, request.PolicyId)
+	project, err := s.projectRepository.FindById(ctx, request.ProjectId)
 	if err != nil {
-		return apperrors.NewNotFoundError("Policy not found. Invalid id")
+		return apperrors.NewNotFoundError("Project not found. Invalid id")
 	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
@@ -48,8 +48,8 @@ func (s *PolicyAttachmentService) CreatePolicyAttachment(ctx context.Context, fi
 	if err != nil {
 		return apperrors.NewNotFoundError("error while uploading attachment document: "+err.Error())
 	}
-	policyAttachment := entities.PolicyAttachment{
-		PolicyId:       policy.PolicyId,
+	projectAttachment := entities.ProjectAttachment{
+		ProjectId:       project.ProjectId,
 		CompanyId:      company.CompanyId,
 		AttachmentName: request.AttachmentName,
 		FileName: 		info.FinalName,
@@ -59,44 +59,44 @@ func (s *PolicyAttachmentService) CreatePolicyAttachment(ctx context.Context, fi
 			UpdatedAt:     time.Now().UTC(),
 		},
 	}
-	err = s.repository.Create(ctx, policyAttachment)
+	err = s.repository.Create(ctx, projectAttachment)
 	if err != nil {
 		return apperrors.NewInternalServerError("")
 	}
 	return nil
 }
 
-func (s *PolicyAttachmentService) UpdatePolicyAttachment(ctx context.Context, request entities.UpdatePolicyAttachmentRequest) error {
+func (s *ProjectAttachmentService) UpdateProjectAttachment(ctx context.Context, request entities.UpdateProjectAttachmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
 	return nil
 }
 
-func (s *PolicyAttachmentService) GetAllAttachmentsByPolicyId(ctx context.Context, policyId int) ([]entities.PolicyAttachment, error) {
+func (s *ProjectAttachmentService) GetAllAttachmentsByProjectId(ctx context.Context, projectId int) ([]entities.ProjectAttachment, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No attachments found")
 	}
-	attachments, err := s.repository.FindAllByPolicyId(ctx, policyId)
+	attachments, err := s.repository.FindAllByProjectId(ctx, projectId)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
 	return attachments, nil
 }
 
-func (s *PolicyAttachmentService) GetPolicyAttachmentByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyAttachment, error) {
-	policyAttachment, err := s.repository.FindByUniqueId(ctx, uniqueId)
+func (s *ProjectAttachmentService) GetProjectAttachmentByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectAttachment, error) {
+	projectAttachment, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.PolicyAttachment{}, apperrors.NewNotFoundError("policy attachment not found")
+		return entities.ProjectAttachment{}, apperrors.NewNotFoundError("project attachment not found")
 	}
-	return policyAttachment, nil
+	return projectAttachment, nil
 }
 
-func (s *PolicyAttachmentService) RemovePolicyAttachment(ctx context.Context, uniqueId string) error {
+func (s *ProjectAttachmentService) RemoveProjectAttachment(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing policy attachment: "+err.Error())
+		return apperrors.NewInternalServerError("error while removing project attachment: "+err.Error())
 	}
 	return nil
 }

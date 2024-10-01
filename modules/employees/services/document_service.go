@@ -161,11 +161,7 @@ func (s *DocumentService) GetDocumentByUniqueId(ctx context.Context, uniqueId st
 }
 
 func (s *DocumentService) RemoveDocument(ctx context.Context, uniqueId string) error {
-	document, err := s.repository.FindByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return apperrors.NewNotFoundError("document not found")
-	}
-	err = s.repository.Delete(ctx, document)
+	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing document: "+ err.Error())
 	}

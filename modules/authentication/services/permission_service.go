@@ -72,7 +72,7 @@ func (s *PermissionService) UpdatePermission(ctx context.Context, permissionId i
 	return nil
 }
 
-func (s *PermissionService) DeletePermission(ctx context.Context, permissionId int) error {
+func (s *PermissionService) RemovePermission(ctx context.Context, permissionId int) error {
 	permission, err := s.repository.FindById(ctx, permissionId)
 	if err != nil {
 		return apperrors.NewNotFoundError("permission not found")
