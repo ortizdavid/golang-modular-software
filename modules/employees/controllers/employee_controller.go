@@ -58,9 +58,8 @@ func NewEmployeeController(db *database.Database) *EmployeeController {
 		userService:             authentication.NewUserService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		configService:           configurations.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
-		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
-		BaseController:          shared.BaseController{},
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

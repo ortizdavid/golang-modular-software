@@ -29,8 +29,8 @@ func NewJobTitleController(db *database.Database) *JobTitleController {
 		authService:             authentication.NewAuthService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
 		configService:           configurations.NewAppConfigurationService(db),
-		infoLogger:              helpers.NewInfoLogger("employees-info.log"),
-		errorLogger:             helpers.NewErrorLogger("employees-error.log"),
+		infoLogger:              helpers.NewInfoLogger(infoLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

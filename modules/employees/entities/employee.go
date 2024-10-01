@@ -41,3 +41,13 @@ type EmployeeData struct {
 	MaritalStatusId			int `json:"marital_status_id"`
 	MaritalStatusName		string `json:"marital_status_name"`
 }
+
+type EmployeeCompleteData struct {
+    PersonalInfo        EmployeeData        `json:"personal_info,omitempty"`
+    ProfessionalInfo    ProfessionalInfo    `json:"professional_info,omitempty"`
+    Documents           []Document          `json:"documents,omitempty"` // Will be omitted if nil or empty
+    Phones              []EmployeePhone     `json:"phones,omitempty"`    // Will be omitted if nil or empty
+    Emails              []EmployeeEmail     `json:"emails,omitempty"`    // Will be omitted if nil or empty
+    Address             Address             `json:"address,omitempty"`
+    UserAccount         EmployeeAccountData `json:"user_account,omitempty"`
+}

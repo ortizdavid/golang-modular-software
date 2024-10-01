@@ -141,13 +141,6 @@ func (s *EmployeeService) SearchEmployees(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *EmployeeService) GetEmployeeByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeeData, error) {
-	employee, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
-	if err != nil {
-		return entities.EmployeeData{}, apperrors.NewNotFoundError("employee not found")
-	}
-	return employee, nil
-}
 
 func (s *EmployeeService) RemoveEmployee(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
