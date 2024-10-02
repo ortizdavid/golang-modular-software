@@ -47,6 +47,12 @@ func (repo *EmployeeEmailRepository) GetDataByUniqueId(ctx context.Context, uniq
 	return employeeEmail, result.Error
 }
 
+func (repo *EmployeeEmailRepository) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.EmployeeEmailData, error) {
+	var employeeEmails []entities.EmployeeEmailData
+	result := repo.db.WithContext(ctx).Table("employees.view_employee_email_data").Where("employee_unique_id=?", uniqueId).Find(&employeeEmails)
+	return employeeEmails, result.Error
+}
+
 func (repo *EmployeeEmailRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeeEmail, error) {
 	var employeeEmail entities.EmployeeEmail
 	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&employeeEmail)

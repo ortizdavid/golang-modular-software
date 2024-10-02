@@ -47,6 +47,12 @@ func (repo *DocumentRepository) GetDataByUniqueId(ctx context.Context, uniqueId 
 	return document, result.Error
 }
 
+func (repo *DocumentRepository) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.DocumentData, error) {
+	var documents []entities.DocumentData
+	result := repo.db.WithContext(ctx).Table("employees.view_document_data").Where("employee_unique_id=?", uniqueId).Find(&documents)
+	return documents, result.Error
+}
+
 func (repo *DocumentRepository) CountByEmployee(ctx context.Context, employeeId int64) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("employees.documents").Where("employee_id=?", employeeId).Count(&count)

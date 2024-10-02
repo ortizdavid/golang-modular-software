@@ -28,3 +28,9 @@ func (repo *EmployeeAccountRepository) GetDataByIdentificationNumber(ctx context
 	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_account_data WHERE identification_number=?", identNumber).Scan(&accountData)
 	return accountData, result.Error
 }
+
+func (repo *EmployeeAccountRepository) GetDataByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.EmployeeAccountData, error) {
+	var accountData entities.EmployeeAccountData
+	result := repo.db.WithContext(ctx).Raw("SELECT * FROM employees.view_employee_account_data WHERE employee_unique_id=?", uniqueId).Scan(&accountData)
+	return accountData, result.Error
+}

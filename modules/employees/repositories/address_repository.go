@@ -32,6 +32,12 @@ func (repo *AddressRepository) GetDataByUniqueId(ctx context.Context, uniqueId s
 	return address, result.Error
 }
 
+func (repo *AddressRepository) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.AddressData, error) {
+	var addresses []entities.AddressData
+	result := repo.db.WithContext(ctx).Table("employees.view_address_data").Where("employee_unique_id=?", uniqueId).Find(&addresses)
+	return addresses, result.Error
+}
+
 func (repo *AddressRepository) CountByEmployee(ctx context.Context, employeeId int64) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("employees.address").Where("employee_id=?", employeeId).Count(&count)

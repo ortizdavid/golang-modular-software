@@ -132,7 +132,18 @@ func (s *EmployeeEmailService) GetByUniqueId(ctx context.Context, uniqueId strin
 	if err != nil {
 		return entities.EmployeeEmailData{}, apperrors.NewNotFoundError("employee email not found")
 	}
+	if employeeEmail.EmployeeId == 0 {
+		return entities.EmployeeEmailData{}, apperrors.NewNotFoundError("employee email not found")
+	}
 	return employeeEmail, nil
+}
+
+func (s *EmployeeEmailService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.EmployeeEmailData, error) {
+	employeeEmails, err := s.repository.GetAllByEmployeeUniqueId(ctx, uniqueId)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("employee email not found")
+	}
+	return employeeEmails, nil
 }
 
 func (s *EmployeeEmailService) Remove(ctx context.Context, uniqueId string) error {

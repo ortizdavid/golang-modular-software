@@ -39,6 +39,14 @@ func (s *EmployeeAccountService) GetByIdentificationNumber(ctx context.Context, 
 	return employee, nil
 }
 
+func (s *EmployeeAccountService) GetByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.EmployeeAccountData, error) {
+	employee, err := s.repository.GetDataByEmployeeUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
+	}
+	return employee, nil
+}
+
 func (s *EmployeeAccountService) GetAllowedRoles(ctx context.Context) ([]authEntities.Role, error) {
 	roles, err := s.roleService.GetAllEnaledRolesNotIn(ctx, s.AllowedRolesList())
 	if err != nil {

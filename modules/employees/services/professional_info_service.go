@@ -83,6 +83,9 @@ func (s *ProfessionalInfoService) GetByUniqueId(ctx context.Context, uniqueId st
 	if err != nil {
 		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
 	}
+	if professionalInfo.EmployeeId == 0 {
+		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+	}
 	return professionalInfo, nil
 }
 
@@ -91,12 +94,18 @@ func (s *ProfessionalInfoService) GetByEmployeeId(ctx context.Context, employeeI
 	if err != nil {
 		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
 	}
+	if professionalInfo.EmployeeId == 0 {
+		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+	}
 	return professionalInfo, nil
 }
 
 func (s *ProfessionalInfoService) GetByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
 	professionalInfo, err := s.repository.GetDataByEmployeeUniqueId(ctx, uniqueId)
 	if err != nil {
+		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+	}
+	if professionalInfo.EmployeeId == 0 {
 		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
 	}
 	return professionalInfo, nil

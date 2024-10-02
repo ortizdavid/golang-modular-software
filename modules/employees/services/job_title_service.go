@@ -24,7 +24,6 @@ func NewJobTitleService(db *database.Database) *JobTitleService {
 	}
 }
 
-
 func (s *JobTitleService) Create(ctx context.Context, request entities.CreateJobTitleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -123,6 +122,9 @@ func (s *JobTitleService) Search(ctx context.Context, fiberCtx *fiber.Ctx, reque
 func (s *JobTitleService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.JobTitle, error) {
 	jobTitle, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
+		return entities.JobTitle{}, apperrors.NewNotFoundError("job title not found")
+	}
+	if jobTitle.JobTitleId == 0 {
 		return entities.JobTitle{}, apperrors.NewNotFoundError("job title not found")
 	}
 	return jobTitle, nil

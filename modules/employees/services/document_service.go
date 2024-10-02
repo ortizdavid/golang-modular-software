@@ -157,7 +157,18 @@ func (s *DocumentService) GetByUniqueId(ctx context.Context, uniqueId string) (e
 	if err != nil {
 		return entities.DocumentData{}, apperrors.NewNotFoundError("document not found")
 	}
+	if document.EmployeeId == 0 {
+		return entities.DocumentData{}, apperrors.NewNotFoundError("document not found")
+	}
 	return document, nil
+}
+
+func (s *DocumentService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.DocumentData, error) {
+	documents, err := s.repository.GetAllByEmployeeUniqueId(ctx, uniqueId)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("document not found")
+	}
+	return documents, nil
 }
 
 func (s *DocumentService) Remove(ctx context.Context, uniqueId string) error {

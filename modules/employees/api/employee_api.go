@@ -4,13 +4,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
+	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/services"
 	shared "github.com/ortizdavid/golang-modular-software/modules/shared/controllers"
 )
 
 type EmployeeApi struct {
 	service					*services.EmployeeService
-	completeDataService			*services.EmployeeCompleteDataService
+	completeDataService		*services.EmployeeCompleteDataService
 	documentService         *services.DocumentService
 	professionalInfoService *services.ProfessionalInfoService
 	phoneService            *services.EmployeePhoneService
@@ -25,7 +26,7 @@ type EmployeeApi struct {
 func NewEmployeeApi(db *database.Database) *EmployeeApi {
 	return &EmployeeApi{
 		service:                 services.NewEmployeeService(db),
-		completeDataService:         services.NewEmployeeCompleteDataService(db),
+		completeDataService:     services.NewEmployeeCompleteDataService(db),
 		documentService:         services.NewDocumentService(db),
 		professionalInfoService: services.NewProfessionalInfoService(db),
 		phoneService:            services.NewEmployeePhoneService(db),
@@ -41,6 +42,7 @@ func NewEmployeeApi(db *database.Database) *EmployeeApi {
 func (api *EmployeeApi) Routes(router *fiber.App) {
 	group := router.Group("/api/employees/employee-info")
 	group.Get("", api.getAll)
+	group.Get("/search-results", api.search)
 	group.Get("/:id", api.getByUniqueId)
 	group.Get("/by-identification/:identNumber", api.getByIdentificationNumber)
 	group.Get("/:id/personal-info", api.getPersonalInfo)
@@ -59,6 +61,19 @@ func (api *EmployeeApi) getAll(c *fiber.Ctx) error {
 		return api.HandleErrorsApi(c, err)
 	}
 	return c.JSON(employees)
+}
+
+func (api *EmployeeApi) search(c *fiber.Ctx) error {
+	searchParam := c.Query("param")
+	params := helpers.GetPaginationParams(c)
+	request := entities.SearchEmployeeRequest{
+		SearchParam: searchParam,
+	}
+	results, err := api.service.Search(c.Context(), c, request, params)
+	if err != nil {
+		return api.HandleErrorsApi(c, err)
+	}
+	return c.JSON(results)
 }
 
 func (api *EmployeeApi) getByUniqueId(c *fiber.Ctx) error {
@@ -99,7 +114,7 @@ func (api *EmployeeApi) getProfessionalInfo(c *fiber.Ctx) error {
 
 func (api *EmployeeApi) getAddresses(c *fiber.Ctx) error {
 	id := c.Params("id")
-	addresses, err := api.completeDataService.GetByUniqueId(c.Context(), id)
+	addresses, err := api.addressService.GetAllByEmployeeUniqueId(c.Context(), id)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
@@ -108,7 +123,7 @@ func (api *EmployeeApi) getAddresses(c *fiber.Ctx) error {
 
 func (api *EmployeeApi) getDocuments(c *fiber.Ctx) error {
 	id := c.Params("id")
-	documents, err := api.completeDataService.GetByUniqueId(c.Context(), id)
+	documents, err := api.documentService.GetAllByEmployeeUniqueId(c.Context(), id)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
@@ -117,7 +132,7 @@ func (api *EmployeeApi) getDocuments(c *fiber.Ctx) error {
 
 func (api *EmployeeApi) getEmails(c *fiber.Ctx) error {
 	id := c.Params("id")
-	emails, err := api.completeDataService.GetByUniqueId(c.Context(), id)
+	emails, err := api.emailService.GetAllByEmployeeUniqueId(c.Context(), id)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
@@ -126,7 +141,7 @@ func (api *EmployeeApi) getEmails(c *fiber.Ctx) error {
 
 func (api *EmployeeApi) getPhones(c *fiber.Ctx) error {
 	id := c.Params("id")
-	phones, err := api.completeDataService.GetByUniqueId(c.Context(), id)
+	phones, err := api.phoneService.GetAllByEmployeeUniqueId(c.Context(), id)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
@@ -135,7 +150,7 @@ func (api *EmployeeApi) getPhones(c *fiber.Ctx) error {
 
 func (api *EmployeeApi) getAccount(c *fiber.Ctx) error {
 	id := c.Params("id")
-	account, err := api.completeDataService.GetByUniqueId(c.Context(), id)
+	account, err := api.accountService.GetByEmployeeUniqueId(c.Context(), id)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}

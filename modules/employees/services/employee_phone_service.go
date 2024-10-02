@@ -132,7 +132,18 @@ func (s *EmployeePhoneService) GetByUniqueId(ctx context.Context, uniqueId strin
 	if err != nil {
 		return entities.EmployeePhoneData{}, apperrors.NewNotFoundError("employee phone not found")
 	}
+	if employeePhone.EmployeeId == 0 {
+		return entities.EmployeePhoneData{}, apperrors.NewNotFoundError("employee phone not found")
+	}
 	return employeePhone, nil
+}
+
+func (s *EmployeePhoneService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.EmployeePhoneData, error) {
+	employeePhones, err := s.repository.GetAllByEmployeeUniqueId(ctx, uniqueId)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("employee phone not found")
+	}
+	return employeePhones, nil
 }
 
 func (s *EmployeePhoneService) Remove(ctx context.Context, uniqueId string) error {

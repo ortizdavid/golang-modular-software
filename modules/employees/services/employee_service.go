@@ -141,7 +141,6 @@ func (s *EmployeeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, reque
 	return pagination, nil
 }
 
-
 func (s *EmployeeService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {

@@ -119,8 +119,10 @@ SELECT us.user_id, us.unique_id,
     us.user_name, us.email, 
     TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-    emp.employee_id, emp.first_name,
-    emp.last_name, emp.identification_number
+    emp.employee_id, 
+    emp.unique_id AS employee_unique_id,
+    emp.first_name, emp.last_name, 
+    emp.identification_number
 FROM authentication.users us
 JOIN employees.employees emp ON(emp.user_id = us.user_id);
 

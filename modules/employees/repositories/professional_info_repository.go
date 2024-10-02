@@ -34,7 +34,7 @@ func (repo *ProfessionalInfoRepository) GetDataByEmployeeId(ctx context.Context,
 
 func (repo *ProfessionalInfoRepository) GetDataByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
 	var professionalInfo entities.ProfessionalInfoData
-	result := repo.db.WithContext(ctx).Table("employees.view_professional_info_data").Where("unique_id=?", uniqueId).First(&professionalInfo)
+	result := repo.db.WithContext(ctx).Table("employees.view_professional_info_data").Where("employee_unique_id=?", uniqueId).First(&professionalInfo)
 	return professionalInfo, result.Error
 }
 

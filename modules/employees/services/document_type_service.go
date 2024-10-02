@@ -24,7 +24,6 @@ func NewDocumentTypeService(db *database.Database) *DocumentTypeService {
 	}
 }
 
-
 func (s *DocumentTypeService) Create(ctx context.Context, request entities.CreateDocumentTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -123,6 +122,9 @@ func (s *DocumentTypeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, r
 func (s *DocumentTypeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentType, error) {
 	documentType, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
+		return entities.DocumentType{}, apperrors.NewNotFoundError("document type not found")
+	}
+	if documentType.TypeId == 0 {
 		return entities.DocumentType{}, apperrors.NewNotFoundError("document type not found")
 	}
 	return documentType, nil

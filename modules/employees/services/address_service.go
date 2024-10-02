@@ -116,6 +116,14 @@ func (s *AddressService) GetByUniqueId(ctx context.Context, uniqueId string) (en
 	return address, nil
 }
 
+func (s *AddressService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.AddressData, error) {
+	addresses, err := s.repository.GetAllByEmployeeUniqueId(ctx, uniqueId)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("address not found")
+	}
+	return addresses, nil
+}
+
 func (s *AddressService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {

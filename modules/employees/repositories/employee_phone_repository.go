@@ -47,6 +47,12 @@ func (repo *EmployeePhoneRepository) GetDataByUniqueId(ctx context.Context, uniq
 	return employeePhone, result.Error
 }
 
+func (repo *EmployeePhoneRepository) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.EmployeePhoneData, error) {
+	var employeePhones []entities.EmployeePhoneData
+	result := repo.db.WithContext(ctx).Table("employees.view_employee_phone_data").Where("employee_unique_id=?", uniqueId).Find(&employeePhones)
+	return employeePhones, result.Error
+}
+
 func (repo *EmployeePhoneRepository) CountByEmployee(ctx context.Context, employeeId int64) (int64, error) {
 	var count int64
 	result := repo.db.WithContext(ctx).Table("employees.employee_phones").Where("employee_id=?", employeeId).Count(&count)
