@@ -52,7 +52,7 @@ func (ctrl *JobTitleController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllJobTitlesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllPaginated(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -71,7 +71,7 @@ func (ctrl *JobTitleController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
+	jobTitle, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -101,7 +101,7 @@ func (ctrl *JobTitleController) create(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.CreateJobTitle(c.Context(), request)
+	err := ctrl.service.Create(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -114,7 +114,7 @@ func (ctrl *JobTitleController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
+	jobTitle, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -130,7 +130,7 @@ func (ctrl *JobTitleController) editForm(c *fiber.Ctx) error {
 func (ctrl *JobTitleController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
+	jobTitle, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -138,7 +138,7 @@ func (ctrl *JobTitleController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateJobTitle(c.Context(), jobTitle.JobTitleId, request)
+	err = ctrl.service.Update(c.Context(), jobTitle.JobTitleId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -164,7 +164,7 @@ func (ctrl *JobTitleController) search(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.SearchJobTitles(c.Context(), c, request, params)
+	pagination, err := ctrl.service.Search(c.Context(), c, request, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -185,7 +185,7 @@ func (ctrl *JobTitleController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
+	jobTitle, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -201,11 +201,11 @@ func (ctrl *JobTitleController) removeForm(c *fiber.Ctx) error {
 func (ctrl *JobTitleController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	jobTitle, err := ctrl.service.GetJobTitleByUniqueId(c.Context(), id)
+	jobTitle, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.RemoveJobTitle(c.Context(), id)
+	err = ctrl.service.Remove(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

@@ -24,7 +24,7 @@ func NewCompanyService(db *database.Database) *CompanyService {
 	}
 }
 
-func (s *CompanyService) CreateCompany(ctx context.Context, request entities.CreateCompanyRequest) error {
+func (s *CompanyService) Create(ctx context.Context, request entities.CreateCompanyRequest) error {
     if err := request.Validate(); err != nil {
         return apperrors.NewBadRequestError(err.Error())
     }
@@ -55,7 +55,7 @@ func (s *CompanyService) CreateCompany(ctx context.Context, request entities.Cre
     return nil
 }
 
-func (s *CompanyService) UpdateCompany(ctx context.Context, companyId int, request entities.UpdateCompanyRequest) error {
+func (s *CompanyService) Update(ctx context.Context, companyId int, request entities.UpdateCompanyRequest) error {
     if err := request.Validate(); err != nil {
         return apperrors.NewBadRequestError(err.Error())
     }
@@ -84,7 +84,7 @@ func (s *CompanyService) UpdateCompany(ctx context.Context, companyId int, reque
     return nil
 }
 
-func (s *CompanyService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CompanyData], error) {
+func (s *CompanyService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CompanyData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -103,7 +103,7 @@ func (s *CompanyService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx 
 	return pagination, nil
 }
 
-func (s *CompanyService) GetAllCompanies(ctx context.Context) ([]entities.Company, error) {
+func (s *CompanyService) GetAll(ctx context.Context) ([]entities.Company, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No companies found")
@@ -115,7 +115,7 @@ func (s *CompanyService) GetAllCompanies(ctx context.Context) ([]entities.Compan
 	return companies, nil
 }
 
-func (s *CompanyService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCompanyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CompanyData], error) {
+func (s *CompanyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCompanyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CompanyData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No companies found")
@@ -134,7 +134,7 @@ func (s *CompanyService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ct
 	return pagination, nil
 }
 
-func (s *CompanyService) GetCompanyByUniqueId(ctx context.Context, uniqueId string) (entities.CompanyData, error) {
+func (s *CompanyService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.CompanyData, error) {
 	company, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.CompanyData{}, apperrors.NewNotFoundError("company not found")

@@ -11,7 +11,7 @@ func (ctrl *EmployeeController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllEmployeesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllPaginated(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -30,7 +30,7 @@ func (ctrl *EmployeeController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -38,21 +38,21 @@ func (ctrl *EmployeeController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeProfessionalInfo, _ := ctrl.professionalInfoService.GetProfessionalInfoByEmployeeId(c.Context(), employee.EmployeeId)
+	employeeProfessionalInfo, _ := ctrl.professionalInfoService.GetByEmployeeId(c.Context(), employee.EmployeeId)
 
-	employeePhones, err := ctrl.phoneService.GetAllEmployeePhones(c.Context(), employee.EmployeeId)
+	employeePhones, err := ctrl.phoneService.GetAll(c.Context(), employee.EmployeeId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeEmails, err := ctrl.emailService.GetAllEmployeeEmails(c.Context(), employee.EmployeeId)
+	employeeEmails, err := ctrl.emailService.GetAll(c.Context(), employee.EmployeeId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeAddresses, err := ctrl.addressService.GetAllEmployeeAddresses(c.Context(), employee.EmployeeId)
+	employeeAddresses, err := ctrl.addressService.GetAll(c.Context(), employee.EmployeeId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeAccount, err := ctrl.accountService.GetEmployeeAccountById(c.Context(), employee.EmployeeId)
+	employeeAccount, err := ctrl.accountService.GetById(c.Context(), employee.EmployeeId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -79,27 +79,27 @@ func (ctrl *EmployeeController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 
-	jobTitles, err := ctrl.jobTitleService.GetAllJobTitles(c.Context())
+	jobTitles, err := ctrl.jobTitleService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	identificationTypes, err := ctrl.identTypeService.GetAllIdentificationTypes(c.Context())
+	identificationTypes, err := ctrl.identTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	countries, err := ctrl.countryService.GetAllCountries(c.Context())
+	countries, err := ctrl.countryService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	maritalStatuses, err := ctrl.maritalStatusService.GetAllStatuses(c.Context())
+	maritalStatuses, err := ctrl.maritalStatusService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employmentStatuses, err := ctrl.employmentStatusService.GetAllStatuses(c.Context())
+	employmentStatuses, err := ctrl.employmentStatusService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	departments, err := ctrl.departmentService.GetAllDepartments(c.Context())
+	departments, err := ctrl.departmentService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -124,7 +124,7 @@ func (ctrl *EmployeeController) create(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.CreateEmployee(c.Context(), request)
+	err := ctrl.service.Create(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -137,32 +137,32 @@ func (ctrl *EmployeeController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 
-	jobTitles, err := ctrl.jobTitleService.GetAllJobTitles(c.Context())
+	jobTitles, err := ctrl.jobTitleService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	identificationTypes, err := ctrl.identTypeService.GetAllIdentificationTypes(c.Context())
+	identificationTypes, err := ctrl.identTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	countries, err := ctrl.countryService.GetAllCountries(c.Context())
+	countries, err := ctrl.countryService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	maritalStatuses, err := ctrl.maritalStatusService.GetAllStatuses(c.Context())
+	maritalStatuses, err := ctrl.maritalStatusService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employmentStatuses, err := ctrl.employmentStatusService.GetAllStatuses(c.Context())
+	employmentStatuses, err := ctrl.employmentStatusService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	departments, err := ctrl.departmentService.GetAllDepartments(c.Context())
+	departments, err := ctrl.departmentService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -184,7 +184,7 @@ func (ctrl *EmployeeController) editForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -192,7 +192,7 @@ func (ctrl *EmployeeController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateEmployee(c.Context(), employee.EmployeeId, request)
+	err = ctrl.service.Update(c.Context(), employee.EmployeeId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -218,7 +218,7 @@ func (ctrl *EmployeeController) search(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.SearchEmployees(c.Context(), c, request, params)
+	pagination, err := ctrl.service.Search(c.Context(), c, request, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -239,7 +239,7 @@ func (ctrl *EmployeeController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -255,11 +255,11 @@ func (ctrl *EmployeeController) removeForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.RemoveEmployee(c.Context(), id)
+	err = ctrl.service.Remove(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

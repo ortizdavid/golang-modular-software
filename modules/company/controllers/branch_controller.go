@@ -53,7 +53,7 @@ func (ctrl *BranchController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllBranchesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllPaginated(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -72,7 +72,7 @@ func (ctrl *BranchController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
+	branch, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -88,7 +88,7 @@ func (ctrl *BranchController) details(c *fiber.Ctx) error {
 func (ctrl *BranchController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
+	companies, err := ctrl.companyService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -108,7 +108,7 @@ func (ctrl *BranchController) create(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.CreateBranch(c.Context(), request)
+	err := ctrl.service.Create(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -121,7 +121,7 @@ func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
+	branch, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -137,7 +137,7 @@ func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 func (ctrl *BranchController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	branch, err := ctrl.service.GetBranchByUniqueId(c.Context(), id)
+	branch, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -145,7 +145,7 @@ func (ctrl *BranchController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateBranch(c.Context(), branch.BranchId, request)
+	err = ctrl.service.Update(c.Context(), branch.BranchId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -171,7 +171,7 @@ func (ctrl *BranchController) search(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.SearchBranches(c.Context(), c, request, params)
+	pagination, err := ctrl.service.Search(c.Context(), c, request, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

@@ -10,15 +10,15 @@ func (ctrl *EmployeeController) addUserAccountForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	allowedRoles, err := ctrl.accountService.GetEmployeAllowedRoles(c.Context())
+	allowedRoles, err := ctrl.accountService.GetAllowedRoles(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeAccount, _ := ctrl.accountService.GetEmployeeAccountById(c.Context(), employee.EmployeeId)
+	employeeAccount, _ := ctrl.accountService.GetById(c.Context(), employee.EmployeeId)
 	if employeeAccount.UserName != "" {
 		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("Employee '"+employee.FirstName+"' already have account"))
 	}
@@ -35,7 +35,7 @@ func (ctrl *EmployeeController) addUserAccountForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -58,7 +58,7 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateEmployeeUserId(c.Context(), employee.EmployeeId, userId)
+	err = ctrl.service.UpdateUserId(c.Context(), employee.EmployeeId, userId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -70,11 +70,11 @@ func (ctrl *EmployeeController) associateUserAccountForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	availableUsers, err := ctrl.userService.GetUsersWithoutAssociation(c.Context(), ctrl.accountService.GetAllowedRoles())
+	availableUsers, err := ctrl.userService.GetUsersWithoutAssociation(c.Context(), ctrl.accountService.AllowedRolesList())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -91,7 +91,7 @@ func (ctrl *EmployeeController) associateUserAccountForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) associateUserAccount(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -103,7 +103,7 @@ func (ctrl *EmployeeController) associateUserAccount(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateEmployeeUserId(c.Context(), employee.EmployeeId, request.UserId)
+	err = ctrl.service.UpdateUserId(c.Context(), employee.EmployeeId, request.UserId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

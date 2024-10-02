@@ -21,7 +21,7 @@ func NewCoreEntityFlagStatusService(db *database.Database) *CoreEntityFlagStatus
 
 func (s *CoreEntityFlagStatusService) LoadCoreEntityFlagStatus(ctx context.Context) (entities.CoreEntityFlagStatus, error) {
 	// Fetch the status of each core entity flag
-	flagMap, err := s.GetAllEntityCoreFlags(ctx)
+	flagMap, err := s.GetAll(ctx)
 	if err != nil {
 		return entities.CoreEntityFlagStatus{}, err
 	}
@@ -86,7 +86,7 @@ func (s *CoreEntityFlagStatusService) LoadCoreEntityFlagStatus(ctx context.Conte
 }
 
 
-func (s *CoreEntityFlagStatusService) GetAllEntityCoreFlags(ctx context.Context) (map[string]string, error) {
+func (s *CoreEntityFlagStatusService) GetAll(ctx context.Context) (map[string]string, error) {
 	flagMap, err := s.repository.FindAllFlagsMap(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error fetching all core entity flags: %w", err)

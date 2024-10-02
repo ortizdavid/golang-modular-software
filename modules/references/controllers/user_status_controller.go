@@ -52,7 +52,7 @@ func (ctrl *UserStatusController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllStatusesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllPaginated(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -71,7 +71,7 @@ func (ctrl *UserStatusController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	status, err := ctrl.service.GetUserStatusByUniqueId(c.Context(), id)
+	status, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -101,7 +101,7 @@ func (ctrl *UserStatusController) create(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.CreateUserStatus(c.Context(), request)
+	err := ctrl.service.Create(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -114,7 +114,7 @@ func (ctrl *UserStatusController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	status, err := ctrl.service.GetUserStatusByUniqueId(c.Context(), id)
+	status, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -130,7 +130,7 @@ func (ctrl *UserStatusController) editForm(c *fiber.Ctx) error {
 func (ctrl *UserStatusController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetUserStatusByUniqueId(c.Context(), id)
+	status, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -138,7 +138,7 @@ func (ctrl *UserStatusController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateUserStatus(c.Context(), status.StatusId, request)
+	err = ctrl.service.Update(c.Context(), status.StatusId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -164,7 +164,7 @@ func (ctrl *UserStatusController) search(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.SearchStatuses(c.Context(), c, request, params)
+	pagination, err := ctrl.service.Search(c.Context(), c, request, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -185,7 +185,7 @@ func (ctrl *UserStatusController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	status, err := ctrl.service.GetUserStatusByUniqueId(c.Context(), id)
+	status, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -201,11 +201,11 @@ func (ctrl *UserStatusController) removeForm(c *fiber.Ctx) error {
 func (ctrl *UserStatusController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	status, err := ctrl.service.GetUserStatusByUniqueId(c.Context(), id)
+	status, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.RemoveUserStatus(c.Context(), id)
+	err = ctrl.service.Remove(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

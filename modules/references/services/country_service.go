@@ -25,7 +25,7 @@ func NewCountryService(db *database.Database) *CountryService {
 	}
 }
 
-func (s *CountryService) CreateCountry(ctx context.Context, request entities.CreateCountryRequest) error {
+func (s *CountryService) Create(ctx context.Context, request entities.CreateCountryRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -53,7 +53,7 @@ func (s *CountryService) CreateCountry(ctx context.Context, request entities.Cre
 	return nil
 }
 
-func (s *CountryService) UpdateCountry(ctx context.Context, countryId int, request entities.UpdateCountryRequest) error {
+func (s *CountryService) Update(ctx context.Context, countryId int, request entities.UpdateCountryRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -72,7 +72,7 @@ func (s *CountryService) UpdateCountry(ctx context.Context, countryId int, reque
 	return nil
 }
 
-func (s *CountryService) GetAllCountriesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CountryData], error) {
+func (s *CountryService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CountryData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -91,7 +91,7 @@ func (s *CountryService) GetAllCountriesPaginated(ctx context.Context, fiberCtx 
 	return pagination, nil
 }
 
-func (s *CountryService) GetAllCountries(ctx context.Context) ([]entities.CountryData, error) {
+func (s *CountryService) GetAll(ctx context.Context) ([]entities.CountryData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No countries found")
@@ -103,7 +103,7 @@ func (s *CountryService) GetAllCountries(ctx context.Context) ([]entities.Countr
 	return countries, nil
 }
 
-func (s *CountryService) SearchCountries(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCountryRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CountryData], error) {
+func (s *CountryService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCountryRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CountryData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No countries found")
@@ -122,7 +122,7 @@ func (s *CountryService) SearchCountries(ctx context.Context, fiberCtx *fiber.Ct
 	return pagination, nil
 }
 
-func (s *CountryService) GetCountryByUniqueId(ctx context.Context, uniqueId string) (entities.CountryData, error) {
+func (s *CountryService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.CountryData, error) {
 	country, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.CountryData{}, apperrors.NewNotFoundError("country not found")
@@ -130,7 +130,7 @@ func (s *CountryService) GetCountryByUniqueId(ctx context.Context, uniqueId stri
 	return country, nil
 }
 
-func (s *CountryService) RemoveCountry(ctx context.Context, uniqueId string) error {
+func (s *CountryService) Remove(ctx context.Context, uniqueId string) error {
 	country, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("country not found")

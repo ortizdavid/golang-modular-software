@@ -25,7 +25,7 @@ func NewJobTitleService(db *database.Database) *JobTitleService {
 }
 
 
-func (s *JobTitleService) CreateJobTitle(ctx context.Context, request entities.CreateJobTitleRequest) error {
+func (s *JobTitleService) Create(ctx context.Context, request entities.CreateJobTitleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *JobTitleService) CreateJobTitle(ctx context.Context, request entities.C
 	return nil
 }
 
-func (s *JobTitleService) UpdateJobTitle(ctx context.Context, jobTitleId int, request entities.UpdateJobTitleRequest) error {
+func (s *JobTitleService) Update(ctx context.Context, jobTitleId int, request entities.UpdateJobTitleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *JobTitleService) UpdateJobTitle(ctx context.Context, jobTitleId int, re
 	return nil
 }
 
-func (s *JobTitleService) GetAllJobTitlesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.JobTitle], error) {
+func (s *JobTitleService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.JobTitle], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (s *JobTitleService) GetAllJobTitlesPaginated(ctx context.Context, fiberCtx
 	return pagination, nil
 }
 
-func (s *JobTitleService) GetAllJobTitles(ctx context.Context) ([]entities.JobTitle, error) {
+func (s *JobTitleService) GetAll(ctx context.Context) ([]entities.JobTitle, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No job titles found")
@@ -101,7 +101,7 @@ func (s *JobTitleService) GetAllJobTitles(ctx context.Context) ([]entities.JobTi
 	return jobTitles, nil
 }
 
-func (s *JobTitleService) SearchJobTitles(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchJobTitleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.JobTitle], error) {
+func (s *JobTitleService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchJobTitleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.JobTitle], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No job titles found")
@@ -120,7 +120,7 @@ func (s *JobTitleService) SearchJobTitles(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *JobTitleService) GetJobTitleByUniqueId(ctx context.Context, uniqueId string) (entities.JobTitle, error) {
+func (s *JobTitleService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.JobTitle, error) {
 	jobTitle, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.JobTitle{}, apperrors.NewNotFoundError("job title not found")
@@ -128,7 +128,7 @@ func (s *JobTitleService) GetJobTitleByUniqueId(ctx context.Context, uniqueId st
 	return jobTitle, nil
 }
 
-func (s *JobTitleService) RemoveJobTitle(ctx context.Context, uniqueId string) error {
+func (s *JobTitleService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing job title: "+ err.Error())

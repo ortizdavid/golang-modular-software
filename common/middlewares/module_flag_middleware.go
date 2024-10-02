@@ -19,7 +19,7 @@ func NewModuleFlagMiddleware(db *database.Database) *ModuleFlagMiddleware {
 // CheckModule dynamically checks if a module is enabled
 func (mid *ModuleFlagMiddleware) CheckModule(moduleCode string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		flagStatus, err := mid.flagService.GetAllModuleFlags(c.Context())
+		flagStatus, err := mid.flagService.GetAll(c.Context())
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString("Error retrieving module status")
 		}

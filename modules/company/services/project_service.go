@@ -27,7 +27,7 @@ func NewProjectService(db *database.Database) *ProjectService {
 	}
 }
 
-func (s *ProjectService) CreateProject(ctx context.Context, request entities.CreateProjectRequest) error {
+func (s *ProjectService) Create(ctx context.Context, request entities.CreateProjectRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *ProjectService) CreateProject(ctx context.Context, request entities.Cre
 	return nil
 }
 
-func (s *ProjectService) UpdateProject(ctx context.Context, projectId int, request entities.UpdateProjectRequest) error {
+func (s *ProjectService) Update(ctx context.Context, projectId int, request entities.UpdateProjectRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -104,7 +104,7 @@ func (s *ProjectService) UpdateProject(ctx context.Context, projectId int, reque
 	return nil
 }
 
-func (s *ProjectService) GetAllProjectsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ProjectData], error) {
+func (s *ProjectService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ProjectData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -123,7 +123,7 @@ func (s *ProjectService) GetAllProjectsPaginated(ctx context.Context, fiberCtx *
 	return pagination, nil
 }
 
-func (s *ProjectService) GetAllProjects(ctx context.Context) ([]entities.Project, error) {
+func (s *ProjectService) GetAll(ctx context.Context) ([]entities.Project, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No projects found")
@@ -135,7 +135,7 @@ func (s *ProjectService) GetAllProjects(ctx context.Context) ([]entities.Project
 	return projects, nil
 }
 
-func (s *ProjectService) SearchProjects(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchProjectRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.ProjectData], error) {
+func (s *ProjectService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchProjectRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.ProjectData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No projects found")
@@ -154,7 +154,7 @@ func (s *ProjectService) SearchProjects(ctx context.Context, fiberCtx *fiber.Ctx
 	return pagination, nil
 }
 
-func (s *ProjectService) GetProjectByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectData, error) {
+func (s *ProjectService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectData, error) {
 	project, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ProjectData{}, apperrors.NewNotFoundError("project not found")
@@ -162,7 +162,7 @@ func (s *ProjectService) GetProjectByUniqueId(ctx context.Context, uniqueId stri
 	return project, nil
 }
 
-func (s *ProjectService) GetProjectById(ctx context.Context, projectId int) (entities.Project, error) {
+func (s *ProjectService) GetById(ctx context.Context, projectId int) (entities.Project, error) {
 	project, err := s.repository.FindById(ctx, projectId)
 	if err != nil {
 		return entities.Project{}, apperrors.NewNotFoundError("project not found")
@@ -170,7 +170,7 @@ func (s *ProjectService) GetProjectById(ctx context.Context, projectId int) (ent
 	return project, nil
 }
 
-func (s *ProjectService) RemoveProject(ctx context.Context, uniqueId string) error {
+func (s *ProjectService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing project: "+ err.Error())

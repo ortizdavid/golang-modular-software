@@ -26,7 +26,7 @@ func NewBranchService(db *database.Database) *BranchService {
 	}
 }
 
-func (s *BranchService) CreateBranch(ctx context.Context, request entities.CreateBranchRequest) error {
+func (s *BranchService) Create(ctx context.Context, request entities.CreateBranchRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -61,7 +61,7 @@ func (s *BranchService) CreateBranch(ctx context.Context, request entities.Creat
 	return nil
 }
 
-func (s *BranchService) UpdateBranch(ctx context.Context, branchId int, request entities.UpdateBranchRequest) error {
+func (s *BranchService) Update(ctx context.Context, branchId int, request entities.UpdateBranchRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -86,7 +86,7 @@ func (s *BranchService) UpdateBranch(ctx context.Context, branchId int, request 
 	return nil
 }
 
-func (s *BranchService) GetAllBranchesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
+func (s *BranchService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -105,7 +105,7 @@ func (s *BranchService) GetAllBranchesPaginated(ctx context.Context, fiberCtx *f
 	return pagination, nil
 }
 
-func (s *BranchService) GetAllBranches(ctx context.Context) ([]entities.Branch, error) {
+func (s *BranchService) GetAll(ctx context.Context) ([]entities.Branch, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No branchs found")
@@ -117,7 +117,7 @@ func (s *BranchService) GetAllBranches(ctx context.Context) ([]entities.Branch, 
 	return branchs, nil
 }
 
-func (s *BranchService) SearchBranches(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchBranchRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
+func (s *BranchService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchBranchRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No branches found")
@@ -136,7 +136,7 @@ func (s *BranchService) SearchBranches(ctx context.Context, fiberCtx *fiber.Ctx,
 	return pagination, nil
 }
 
-func (s *BranchService) GetBranchByUniqueId(ctx context.Context, uniqueId string) (entities.BranchData, error) {
+func (s *BranchService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.BranchData, error) {
 	branch, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.BranchData{}, apperrors.NewNotFoundError("branch not found")

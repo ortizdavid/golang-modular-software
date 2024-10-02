@@ -23,7 +23,7 @@ func NewAddressService(db *database.Database) *AddressService {
 	}
 }
 
-func (s *AddressService) CreateAddress(ctx context.Context, request entities.CreateAddressRequest) error {
+func (s *AddressService) Create(ctx context.Context, request entities.CreateAddressRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -68,7 +68,7 @@ func (s *AddressService) CreateAddress(ctx context.Context, request entities.Cre
 	return nil
 }
 
-func (s *AddressService) UpdateAddress(ctx context.Context, addressId int64, request entities.UpdateAddressRequest) error {
+func (s *AddressService) Update(ctx context.Context, addressId int64, request entities.UpdateAddressRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -96,7 +96,7 @@ func (s *AddressService) UpdateAddress(ctx context.Context, addressId int64, req
 	return nil
 }
 
-func (s *AddressService) GetAllEmployeeAddresses(ctx context.Context, employeeId int64) ([]entities.AddressData, error) {
+func (s *AddressService) GetAll(ctx context.Context, employeeId int64) ([]entities.AddressData, error) {
 	_, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No addresss found")
@@ -108,7 +108,7 @@ func (s *AddressService) GetAllEmployeeAddresses(ctx context.Context, employeeId
 	return addresss, nil
 }
 
-func (s *AddressService) GetAddressByUniqueId(ctx context.Context, uniqueId string) (entities.AddressData, error) {
+func (s *AddressService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.AddressData, error) {
 	address, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.AddressData{}, apperrors.NewNotFoundError("address not found")
@@ -116,7 +116,7 @@ func (s *AddressService) GetAddressByUniqueId(ctx context.Context, uniqueId stri
 	return address, nil
 }
 
-func (s *AddressService) RemoveAddress(ctx context.Context, uniqueId string) error {
+func (s *AddressService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing address: "+ err.Error())

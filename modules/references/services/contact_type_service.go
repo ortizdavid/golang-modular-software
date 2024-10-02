@@ -25,7 +25,7 @@ func NewContactTypeService(db *database.Database) *ContactTypeService {
 	}
 }
 
-func (s *ContactTypeService) CreateContactType(ctx context.Context, request entities.CreateTypeRequest) error {
+func (s *ContactTypeService) Create(ctx context.Context, request entities.CreateTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *ContactTypeService) CreateContactType(ctx context.Context, request enti
 	return nil
 }
 
-func (s *ContactTypeService) UpdateContactType(ctx context.Context, contactTypeId int, request entities.UpdateTypeRequest) error {
+func (s *ContactTypeService) Update(ctx context.Context, contactTypeId int, request entities.UpdateTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *ContactTypeService) UpdateContactType(ctx context.Context, contactTypeI
 	return nil
 }
 
-func (s *ContactTypeService) GetAllContactTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ContactType], error) {
+func (s *ContactTypeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ContactType], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (s *ContactTypeService) GetAllContactTypesPaginated(ctx context.Context, fi
 	return pagination, nil
 }
 
-func (s *ContactTypeService) GetAllContactTypes(ctx context.Context) ([]entities.ContactType, error) {
+func (s *ContactTypeService) GetAll(ctx context.Context) ([]entities.ContactType, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No types found")
@@ -101,7 +101,7 @@ func (s *ContactTypeService) GetAllContactTypes(ctx context.Context) ([]entities
 	return types, nil
 }
 
-func (s *ContactTypeService) SearchTypes(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchTypeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.ContactType], error) {
+func (s *ContactTypeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchTypeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.ContactType], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No types found")
@@ -120,7 +120,7 @@ func (s *ContactTypeService) SearchTypes(ctx context.Context, fiberCtx *fiber.Ct
 	return pagination, nil
 }
 
-func (s *ContactTypeService) GetContactTypeByUniqueId(ctx context.Context, uniqueId string) (entities.ContactType, error) {
+func (s *ContactTypeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ContactType, error) {
 	contactType, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ContactType{}, apperrors.NewNotFoundError("type not found")
@@ -128,7 +128,7 @@ func (s *ContactTypeService) GetContactTypeByUniqueId(ctx context.Context, uniqu
 	return contactType, nil
 }
 
-func (s *ContactTypeService) RemoveContactType(ctx context.Context, uniqueId string) error {
+func (s *ContactTypeService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing type: "+ err.Error())

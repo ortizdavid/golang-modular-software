@@ -46,7 +46,7 @@ func (ctrl *ModuleFlagController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 
-	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
+	moduleFlags, err := ctrl.service.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -62,7 +62,7 @@ func (ctrl *ModuleFlagController) index(c *fiber.Ctx) error {
 func (ctrl *ModuleFlagController) manageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	moduleFlags, err := ctrl.service.GetAllModuleFlags(c.Context())
+	moduleFlags, err := ctrl.service.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

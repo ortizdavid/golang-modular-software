@@ -52,7 +52,7 @@ func (ctrl *CurrencyController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllCurrenciesPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllPaginated(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -71,7 +71,7 @@ func (ctrl *CurrencyController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
+	currency, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -101,7 +101,7 @@ func (ctrl *CurrencyController) create(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.CreateCurrency(c.Context(), request)
+	err := ctrl.service.Create(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -114,7 +114,7 @@ func (ctrl *CurrencyController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
+	currency, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -130,7 +130,7 @@ func (ctrl *CurrencyController) editForm(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
+	currency, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -138,7 +138,7 @@ func (ctrl *CurrencyController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateCurrency(c.Context(), currency.CurrencyId, request)
+	err = ctrl.service.Update(c.Context(), currency.CurrencyId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -164,7 +164,7 @@ func (ctrl *CurrencyController) search(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.SearchCurrencies(c.Context(), c, request, params)
+	pagination, err := ctrl.service.Search(c.Context(), c, request, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -185,7 +185,7 @@ func (ctrl *CurrencyController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
+	currency, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -201,11 +201,11 @@ func (ctrl *CurrencyController) removeForm(c *fiber.Ctx) error {
 func (ctrl *CurrencyController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	currency, err := ctrl.service.GetCurrencyByUniqueId(c.Context(), id)
+	currency, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.RemoveCurrency(c.Context(), id)
+	err = ctrl.service.Remove(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

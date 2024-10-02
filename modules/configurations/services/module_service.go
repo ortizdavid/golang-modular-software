@@ -24,7 +24,7 @@ func NewModuleService(db *database.Database) *ModuleService {
 	}
 }
 
-func (s *ModuleService) CreateModule(ctx context.Context, request entities.CreateModuleRequest) error {
+func (s *ModuleService) Create(ctx context.Context, request entities.CreateModuleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *ModuleService) CreateModule(ctx context.Context, request entities.Creat
 	return nil
 }
 
-func (s *ModuleService) UpdateModule(ctx context.Context, moduleId int, request entities.UpdateModuleRequest) error {
+func (s *ModuleService) Update(ctx context.Context, moduleId int, request entities.UpdateModuleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -71,7 +71,7 @@ func (s *ModuleService) UpdateModule(ctx context.Context, moduleId int, request 
 	return nil
 }
 
-func (s *ModuleService) GetAllModulesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
+func (s *ModuleService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -90,7 +90,7 @@ func (s *ModuleService) GetAllModulesPaginated(ctx context.Context, fiberCtx *fi
 	return pagination, nil
 }
 
-func (s *ModuleService) GetAllModules(ctx context.Context) ([]entities.Module, error) {
+func (s *ModuleService) GetAll(ctx context.Context) ([]entities.Module, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No modules found")
@@ -102,7 +102,7 @@ func (s *ModuleService) GetAllModules(ctx context.Context) ([]entities.Module, e
 	return modules, nil
 }
 
-func (s *ModuleService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchModuleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
+/*func (s *ModuleService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchModuleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No modules found")
@@ -119,9 +119,9 @@ func (s *ModuleService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx
 		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
-}
+}*/
 
-func (s *ModuleService) GetModuleByUniqueId(ctx context.Context, uniqueId string) (entities.Module, error) {
+func (s *ModuleService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.Module, error) {
 	module, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.Module{}, apperrors.NewNotFoundError("module not found")
@@ -129,7 +129,7 @@ func (s *ModuleService) GetModuleByUniqueId(ctx context.Context, uniqueId string
 	return module, nil
 }
 
-func (s *ModuleService) SearchModules(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchModuleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
+func (s *ModuleService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchModuleRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Module], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No modules found")

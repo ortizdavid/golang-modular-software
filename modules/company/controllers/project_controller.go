@@ -63,7 +63,7 @@ func (ctrl *ProjectController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllProjectsPaginated(c.Context(), c, params)
+	pagination, err := ctrl.service.GetAllPaginated(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -82,11 +82,11 @@ func (ctrl *ProjectController) details(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	project, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	project, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	attachments, err := ctrl.attachmentService.GetAllAttachmentsByProjectId(c.Context(), project.ProjectId)
+	attachments, err := ctrl.attachmentService.GetAllByProjectId(c.Context(), project.ProjectId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -104,7 +104,7 @@ func (ctrl *ProjectController) details(c *fiber.Ctx) error {
 func (ctrl *ProjectController) createForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
+	companies, err := ctrl.companyService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -125,7 +125,7 @@ func (ctrl *ProjectController) create(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.CreateProject(c.Context(), request)
+	err := ctrl.service.Create(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -138,11 +138,11 @@ func (ctrl *ProjectController) editForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	companies, err := ctrl.companyService.GetAllCompanies(c.Context())
+	companies, err := ctrl.companyService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	project, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	project, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -159,7 +159,7 @@ func (ctrl *ProjectController) editForm(c *fiber.Ctx) error {
 func (ctrl *ProjectController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	project, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	project, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -167,7 +167,7 @@ func (ctrl *ProjectController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateProject(c.Context(), project.ProjectId, request)
+	err = ctrl.service.Update(c.Context(), project.ProjectId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -193,7 +193,7 @@ func (ctrl *ProjectController) search(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.SearchProjects(c.Context(), c, request, params)
+	pagination, err := ctrl.service.Search(c.Context(), c, request, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -214,7 +214,7 @@ func (ctrl *ProjectController) removeForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	project, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	project, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -230,11 +230,11 @@ func (ctrl *ProjectController) removeForm(c *fiber.Ctx) error {
 func (ctrl *ProjectController) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	project, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	project, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.RemoveProject(c.Context(), id)
+	err = ctrl.service.Remove(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

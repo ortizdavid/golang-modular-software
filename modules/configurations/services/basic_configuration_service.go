@@ -23,7 +23,7 @@ func NewBasicConfigurationService(db *database.Database) *BasicConfigurationServ
 	}
 }
 
-func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context, request entities.UpdateBasicConfigurationRequest) error {
+func (s *BasicConfigurationService) Update(ctx context.Context, request entities.UpdateBasicConfigurationRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -64,7 +64,7 @@ func (s *BasicConfigurationService) UpdateBasicConfiguration(ctx context.Context
 }
 
 
-func (s *BasicConfigurationService) GetBasicConfiguration(ctx context.Context) (entities.BasicConfiguration, error) {
+func (s *BasicConfigurationService) GetCurrent(ctx context.Context) (entities.BasicConfiguration, error) {
 	conf, err := s.repository.FindLast(ctx)
 	maxRecords := 20
 	if conf.MaxRecordsPerPage < maxRecords {

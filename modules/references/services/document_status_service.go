@@ -25,7 +25,7 @@ func NewDocumentStatusService(db *database.Database) *DocumentStatusService {
 	}
 }
 
-func (s *DocumentStatusService) CreateDocumentStatus(ctx context.Context, request entities.CreateStatusRequest) error {
+func (s *DocumentStatusService) Create(ctx context.Context, request entities.CreateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -55,7 +55,7 @@ func (s *DocumentStatusService) CreateDocumentStatus(ctx context.Context, reques
 	return nil
 }
 
-func (s *DocumentStatusService) UpdateDocumentStatus(ctx context.Context, documentStatusId int, request entities.UpdateStatusRequest) error {
+func (s *DocumentStatusService) Update(ctx context.Context, documentStatusId int, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -76,7 +76,7 @@ func (s *DocumentStatusService) UpdateDocumentStatus(ctx context.Context, docume
 	return nil
 }
 
-func (s *DocumentStatusService) GetAllStatusesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DocumentStatus], error) {
+func (s *DocumentStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DocumentStatus], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -95,7 +95,7 @@ func (s *DocumentStatusService) GetAllStatusesPaginated(ctx context.Context, fib
 	return pagination, nil
 }
 
-func (s *DocumentStatusService) GetAllStatuses(ctx context.Context) ([]entities.DocumentStatus, error) {
+func (s *DocumentStatusService) GetAll(ctx context.Context) ([]entities.DocumentStatus, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -107,7 +107,7 @@ func (s *DocumentStatusService) GetAllStatuses(ctx context.Context) ([]entities.
 	return statuses, nil
 }
 
-func (s *DocumentStatusService) SearchStatuses(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.DocumentStatus], error) {
+func (s *DocumentStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.DocumentStatus], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -126,7 +126,7 @@ func (s *DocumentStatusService) SearchStatuses(ctx context.Context, fiberCtx *fi
 	return pagination, nil
 }
 
-func (s *DocumentStatusService) GetDocumentStatusByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentStatus, error) {
+func (s *DocumentStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentStatus, error) {
 	documentStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.DocumentStatus{}, apperrors.NewNotFoundError("status not found")
@@ -134,7 +134,7 @@ func (s *DocumentStatusService) GetDocumentStatusByUniqueId(ctx context.Context,
 	return documentStatus, nil
 }
 
-func (s *DocumentStatusService) RemoveDocumentStatus(ctx context.Context, uniqueId string) error {
+func (s *DocumentStatusService) Remove(ctx context.Context, uniqueId string) error {
 	documentStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")

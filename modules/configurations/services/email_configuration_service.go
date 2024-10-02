@@ -24,7 +24,7 @@ func NewEmailConfigurationService(db *database.Database) *EmailConfigurationServ
 	}
 }
 
-func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context, request entities.UpdateEmailConfigurationRequest) error {
+func (s *EmailConfigurationService) Update(ctx context.Context, request entities.UpdateEmailConfigurationRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -63,7 +63,7 @@ func (s *EmailConfigurationService) UpdateEmailConfiguration(ctx context.Context
 }
 
 
-func (s *EmailConfigurationService) GetEmailConfiguration(ctx context.Context) (entities.EmailConfiguration, error) {
+func (s *EmailConfigurationService) GetCurrent(ctx context.Context) (entities.EmailConfiguration, error) {
 	conf, err := s.repository.FindLast(ctx)
 	if err != nil {
 		return entities.EmailConfiguration{}, fmt.Errorf("failed to retrieve email configuration: %s", err.Error())
@@ -72,7 +72,7 @@ func (s *EmailConfigurationService) GetEmailConfiguration(ctx context.Context) (
 }
 
 func (s *EmailConfigurationService) GetDefaultEmailService(ctx context.Context) (*mailer.EmailService, error) {
-	conf, err := s.GetEmailConfiguration(ctx)
+	conf, err := s.GetCurrent(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed get default mail service: %s", err.Error())
 	}

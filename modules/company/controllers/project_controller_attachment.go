@@ -13,7 +13,7 @@ func (ctrl *ProjectController) addAttachmentForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	project, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	project, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -29,7 +29,7 @@ func (ctrl *ProjectController) addAttachmentForm(c *fiber.Ctx) error {
 func (ctrl *ProjectController) addAttachment(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.service.GetProjectByUniqueId(c.Context(), id)
+	attachment, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -37,7 +37,7 @@ func (ctrl *ProjectController) addAttachment(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.attachmentService.CreateProjectAttachment(c.Context(), c, request)
+	err = ctrl.attachmentService.Create(c.Context(), c, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -49,7 +49,7 @@ func (ctrl *ProjectController) addAttachment(c *fiber.Ctx) error {
 func (ctrl *ProjectController) displayAttachment(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.attachmentService.GetProjectAttachmentByUniqueId(c.Context(), id)
+	attachment, err := ctrl.attachmentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -62,11 +62,11 @@ func (ctrl *ProjectController) deleteAttachmentForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	attachment, err := ctrl.attachmentService.GetProjectAttachmentByUniqueId(c.Context(), id)
+	attachment, err := ctrl.attachmentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	project, err := ctrl.service.GetProjectById(c.Context(), attachment.ProjectId)
+	project, err := ctrl.service.GetById(c.Context(), attachment.ProjectId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -83,15 +83,15 @@ func (ctrl *ProjectController) deleteAttachmentForm(c *fiber.Ctx) error {
 func (ctrl *ProjectController) deleteAttachment(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.attachmentService.GetProjectAttachmentByUniqueId(c.Context(), id)
+	attachment, err := ctrl.attachmentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	project, err := ctrl.service.GetProjectById(c.Context(), attachment.ProjectId)
+	project, err := ctrl.service.GetById(c.Context(), attachment.ProjectId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.attachmentService.RemoveProjectAttachment(c.Context(), attachment.UniqueId)
+	err = ctrl.attachmentService.Remove(c.Context(), attachment.UniqueId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

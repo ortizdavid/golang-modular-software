@@ -78,7 +78,7 @@ func (s *ProfessionalInfoService) UpdateProfessionalInfo(ctx context.Context, pr
 	return nil
 }
 
-func (s *ProfessionalInfoService) GetProfessionalInfoByUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
+func (s *ProfessionalInfoService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
 	professionalInfo, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
@@ -86,7 +86,7 @@ func (s *ProfessionalInfoService) GetProfessionalInfoByUniqueId(ctx context.Cont
 	return professionalInfo, nil
 }
 
-func (s *ProfessionalInfoService) GetProfessionalInfoByEmployeeId(ctx context.Context, employeeId int64) (entities.ProfessionalInfoData, error) {
+func (s *ProfessionalInfoService) GetByEmployeeId(ctx context.Context, employeeId int64) (entities.ProfessionalInfoData, error) {
 	professionalInfo, err := s.repository.GetDataByEmployeeId(ctx, employeeId)
 	if err != nil {
 		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
@@ -94,7 +94,15 @@ func (s *ProfessionalInfoService) GetProfessionalInfoByEmployeeId(ctx context.Co
 	return professionalInfo, nil
 }
 
-func (s *ProfessionalInfoService) RemoveProfessionalInfo(ctx context.Context, uniqueId string) error {
+func (s *ProfessionalInfoService) GetByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
+	professionalInfo, err := s.repository.GetDataByEmployeeUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+	}
+	return professionalInfo, nil
+}
+
+func (s *ProfessionalInfoService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing professional info: "+ err.Error())

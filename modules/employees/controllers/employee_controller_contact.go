@@ -11,15 +11,15 @@ func (ctrl *EmployeeController) addPhoneForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	contactTypes, err := ctrl.contactTypeService.GetAllContactTypes(c.Context())
+	contactTypes, err := ctrl.contactTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	countries, err := ctrl.countryService.GetAllCountries(c.Context())
+	countries, err := ctrl.countryService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -37,7 +37,7 @@ func (ctrl *EmployeeController) addPhoneForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) addPhone(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -45,7 +45,7 @@ func (ctrl *EmployeeController) addPhone(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.phoneService.CreateEmployeePhone(c.Context(), c, request)
+	err = ctrl.phoneService.Create(c.Context(), c, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -59,15 +59,15 @@ func (ctrl *EmployeeController) editPhoneForm(c *fiber.Ctx) error {
 	contId := c.Params("contId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeePhone, err := ctrl.phoneService.GetEmployeePhoneByUniqueId(c.Context(), contId)
+	employeePhone, err := ctrl.phoneService.GetByUniqueId(c.Context(), contId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	contactTypes, err := ctrl.contactTypeService.GetAllContactTypes(c.Context())
+	contactTypes, err := ctrl.contactTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -86,11 +86,11 @@ func (ctrl *EmployeeController) editPhone(c *fiber.Ctx) error {
 	empId := c.Params("empId")
 	contId := c.Params("contId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeePhone, err := ctrl.phoneService.GetEmployeePhoneByUniqueId(c.Context(), contId)
+	employeePhone, err := ctrl.phoneService.GetByUniqueId(c.Context(), contId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -98,7 +98,7 @@ func (ctrl *EmployeeController) editPhone(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.phoneService.UpdateEmployeePhone(c.Context(), employeePhone.PhoneId, request)
+	err = ctrl.phoneService.Update(c.Context(), employeePhone.PhoneId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -111,11 +111,11 @@ func (ctrl *EmployeeController) addEmailForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	contactTypes, err := ctrl.contactTypeService.GetAllContactTypes(c.Context())
+	contactTypes, err := ctrl.contactTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -132,7 +132,7 @@ func (ctrl *EmployeeController) addEmailForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) addEmail(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -140,7 +140,7 @@ func (ctrl *EmployeeController) addEmail(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.emailService.CreateEmployeeEmail(c.Context(), c, request)
+	err = ctrl.emailService.Create(c.Context(), c, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -154,15 +154,15 @@ func (ctrl *EmployeeController) editEmailForm(c *fiber.Ctx) error {
 	contId := c.Params("contId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeEmail, err := ctrl.emailService.GetEmployeeEmailByUniqueId(c.Context(), contId)
+	employeeEmail, err := ctrl.emailService.GetByUniqueId(c.Context(), contId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	contactTypes, err := ctrl.contactTypeService.GetAllContactTypes(c.Context())
+	contactTypes, err := ctrl.contactTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -181,11 +181,11 @@ func (ctrl *EmployeeController) editEmail(c *fiber.Ctx) error {
 	empId := c.Params("empId")
 	contId := c.Params("contId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employeeEmail, err := ctrl.emailService.GetEmployeeEmailByUniqueId(c.Context(), contId)
+	employeeEmail, err := ctrl.emailService.GetByUniqueId(c.Context(), contId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -193,7 +193,7 @@ func (ctrl *EmployeeController) editEmail(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.emailService.UpdateEmployeeEmail(c.Context(), employeeEmail.EmailId, request)
+	err = ctrl.emailService.Update(c.Context(), employeeEmail.EmailId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

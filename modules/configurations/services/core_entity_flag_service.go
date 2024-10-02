@@ -48,7 +48,7 @@ func (s *CoreEntityFlagService) ManageCoreEntityFlags(ctx context.Context, reque
     return nil
 }
 
-func (s *CoreEntityFlagService) GetAllCoreEntityFlagsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityFlagData], error) {
+func (s *CoreEntityFlagService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityFlagData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -67,7 +67,7 @@ func (s *CoreEntityFlagService) GetAllCoreEntityFlagsPaginated(ctx context.Conte
 	return pagination, nil
 }
 
-func (s *CoreEntityFlagService) GetAllCoreEntityFlags(ctx context.Context) ([]entities.CoreEntityFlagData, error) {
+func (s *CoreEntityFlagService) GetAll(ctx context.Context) ([]entities.CoreEntityFlagData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entities found")
@@ -79,7 +79,7 @@ func (s *CoreEntityFlagService) GetAllCoreEntityFlags(ctx context.Context) ([]en
 	return coreEntities, nil
 }
 
-func (s *CoreEntityFlagService) GetCoreEntityFlagByUniqueId(ctx context.Context, uniqueId string) (entities.CoreEntityFlagData, error) {
+func (s *CoreEntityFlagService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.CoreEntityFlagData, error) {
 	coreEntity, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
@@ -87,7 +87,7 @@ func (s *CoreEntityFlagService) GetCoreEntityFlagByUniqueId(ctx context.Context,
 	return coreEntity, nil
 }
 
-func (s *CoreEntityFlagService) GetCoreEntityFlagByCode(ctx context.Context, code string) (entities.CoreEntityFlagData, error) {
+func (s *CoreEntityFlagService) GetByCode(ctx context.Context, code string) (entities.CoreEntityFlagData, error) {
 	coreEntity, err := s.repository.FindByEntityCode(ctx, code)
 	if err != nil {
 		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")

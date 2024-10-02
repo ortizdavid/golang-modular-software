@@ -24,7 +24,7 @@ func NewCoreEntityService(db *database.Database) *CoreEntityService {
 	}
 }
 
-func (s *CoreEntityService) CreateCoreEntity(ctx context.Context, request entities.CreateCoreEntityRequest) error {
+func (s *CoreEntityService) Create(ctx context.Context, request entities.CreateCoreEntityRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -54,7 +54,7 @@ func (s *CoreEntityService) CreateCoreEntity(ctx context.Context, request entiti
 	return nil
 }
 
-func (s *CoreEntityService) UpdateCoreEntity(ctx context.Context, entityId int, request entities.UpdateCoreEntityRequest) error {
+func (s *CoreEntityService) Update(ctx context.Context, entityId int, request entities.UpdateCoreEntityRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -74,7 +74,7 @@ func (s *CoreEntityService) UpdateCoreEntity(ctx context.Context, entityId int, 
 	return nil
 }
 
-func (s *CoreEntityService) GetAllCoreEntitiesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityData], error) {
+func (s *CoreEntityService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -93,7 +93,7 @@ func (s *CoreEntityService) GetAllCoreEntitiesPaginated(ctx context.Context, fib
 	return pagination, nil
 }
 
-func (s *CoreEntityService) GetAllCoreEntities(ctx context.Context) ([]entities.CoreEntity, error) {
+func (s *CoreEntityService) GetAll(ctx context.Context) ([]entities.CoreEntity, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entities found")
@@ -105,7 +105,7 @@ func (s *CoreEntityService) GetAllCoreEntities(ctx context.Context) ([]entities.
 	return coreEntities, nil
 }
 
-func (s *CoreEntityService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCoreEntityRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityData], error) {
+/*func (s *CoreEntityService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCoreEntityRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entities found")
@@ -122,7 +122,7 @@ func (s *CoreEntityService) SearchCompanies(ctx context.Context, fiberCtx *fiber
 		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
-}
+}*/
 
 func (s *CoreEntityService) GetCoreEntityByUniqueId(ctx context.Context, uniqueId string) (entities.CoreEntityData, error) {
 	coreEntity, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
@@ -132,7 +132,7 @@ func (s *CoreEntityService) GetCoreEntityByUniqueId(ctx context.Context, uniqueI
 	return coreEntity, nil
 }
 
-func (s *CoreEntityService) SearchCoreEntities(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCoreEntityRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityData], error) {
+func (s *CoreEntityService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCoreEntityRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CoreEntityData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No core entities found")

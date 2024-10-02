@@ -25,7 +25,7 @@ func NewMaritalStatusService(db *database.Database) *MaritalStatusService {
 	}
 }
 
-func (s *MaritalStatusService) CreateMaritalStatus(ctx context.Context, request entities.CreateStatusRequest) error {
+func (s *MaritalStatusService) Create(ctx context.Context, request entities.CreateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *MaritalStatusService) CreateMaritalStatus(ctx context.Context, request 
 	return nil
 }
 
-func (s *MaritalStatusService) UpdateMaritalStatus(ctx context.Context, maritalStatusId int, request entities.UpdateStatusRequest) error {
+func (s *MaritalStatusService) Update(ctx context.Context, maritalStatusId int, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *MaritalStatusService) UpdateMaritalStatus(ctx context.Context, maritalS
 	return nil
 }
 
-func (s *MaritalStatusService) GetAllStatusesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.MaritalStatus], error) {
+func (s *MaritalStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.MaritalStatus], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (s *MaritalStatusService) GetAllStatusesPaginated(ctx context.Context, fibe
 	return pagination, nil
 }
 
-func (s *MaritalStatusService) GetAllStatuses(ctx context.Context) ([]entities.MaritalStatus, error) {
+func (s *MaritalStatusService) GetAll(ctx context.Context) ([]entities.MaritalStatus, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -101,7 +101,7 @@ func (s *MaritalStatusService) GetAllStatuses(ctx context.Context) ([]entities.M
 	return statuses, nil
 }
 
-func (s *MaritalStatusService) SearchStatuses(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.MaritalStatus], error) {
+func (s *MaritalStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.MaritalStatus], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -120,7 +120,7 @@ func (s *MaritalStatusService) SearchStatuses(ctx context.Context, fiberCtx *fib
 	return pagination, nil
 }
 
-func (s *MaritalStatusService) GetMaritalStatusByUniqueId(ctx context.Context, uniqueId string) (entities.MaritalStatus, error) {
+func (s *MaritalStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.MaritalStatus, error) {
 	maritalStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.MaritalStatus{}, apperrors.NewNotFoundError("status not found")
@@ -128,7 +128,7 @@ func (s *MaritalStatusService) GetMaritalStatusByUniqueId(ctx context.Context, u
 	return maritalStatus, nil
 }
 
-func (s *MaritalStatusService) RemoveMaritalStatus(ctx context.Context, uniqueId string) error {
+func (s *MaritalStatusService) Remove(ctx context.Context, uniqueId string) error {
 	maritalStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")

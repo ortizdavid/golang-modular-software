@@ -19,7 +19,7 @@ func NewCoreEntityFlagFlagMiddleware(db *database.Database) *CoreEntityFlagMiddl
 // CheckCoreEntityFlag dynamically checks if a core entity is enabled
 func (mid *CoreEntityFlagMiddleware) CheckCoreEntityFlag(coreEntityCode string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		flagStatus, err := mid.flagService.GetAllEntityCoreFlags(c.Context())
+		flagStatus, err := mid.flagService.GetAll(c.Context())
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString("Error retrieving module status")
 		}

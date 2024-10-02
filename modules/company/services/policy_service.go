@@ -27,7 +27,7 @@ func NewPolicyService(db *database.Database) *PolicyService {
 	}
 }
 
-func (s *PolicyService) CreatePolicy(ctx context.Context, request entities.CreatePolicyRequest) error {
+func (s *PolicyService) Create(ctx context.Context, request entities.CreatePolicyRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -64,7 +64,7 @@ func (s *PolicyService) CreatePolicy(ctx context.Context, request entities.Creat
 	return nil
 }
 
-func (s *PolicyService) UpdatePolicy(ctx context.Context, policyId int, request entities.UpdatePolicyRequest) error {
+func (s *PolicyService) Update(ctx context.Context, policyId int, request entities.UpdatePolicyRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -93,7 +93,7 @@ func (s *PolicyService) UpdatePolicy(ctx context.Context, policyId int, request 
 	return nil
 }
 
-func (s *PolicyService) GetAllPoliciesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.PolicyData], error) {
+func (s *PolicyService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.PolicyData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -112,7 +112,7 @@ func (s *PolicyService) GetAllPoliciesPaginated(ctx context.Context, fiberCtx *f
 	return pagination, nil
 }
 
-func (s *PolicyService) GetAllPolicies(ctx context.Context) ([]entities.Policy, error) {
+func (s *PolicyService) GetAll(ctx context.Context) ([]entities.Policy, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No policies found")
@@ -124,7 +124,7 @@ func (s *PolicyService) GetAllPolicies(ctx context.Context) ([]entities.Policy, 
 	return policies, nil
 }
 
-func (s *PolicyService) SearchPolicies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchPolicyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.PolicyData], error) {
+func (s *PolicyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchPolicyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.PolicyData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No policies found")
@@ -143,7 +143,7 @@ func (s *PolicyService) SearchPolicies(ctx context.Context, fiberCtx *fiber.Ctx,
 	return pagination, nil
 }
 
-func (s *PolicyService) GetPolicyByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyData, error) {
+func (s *PolicyService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyData, error) {
 	policy, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.PolicyData{}, apperrors.NewNotFoundError("policy not found")
@@ -159,7 +159,7 @@ func (s *PolicyService) GetPolicyById(ctx context.Context, policyId int) (entiti
 	return policy, nil
 }
 
-func (s *PolicyService) RemovePolicy(ctx context.Context, uniqueId string) error {
+func (s *PolicyService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing policy: "+ err.Error())

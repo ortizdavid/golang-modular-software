@@ -28,8 +28,8 @@ func NewLoginActivityController(db *database.Database) *LoginActivityController 
 		authService:             services.NewAuthService(db),
 		configService:           configurations.NewAppConfigurationService(db),
 		moduleFlagStatusService: configurations.NewModuleFlagStatusService(db),
-		infoLogger:              helpers.NewInfoLogger("auth-info.log"),
-		errorLogger:             helpers.NewInfoLogger("auth-error.log"),
+		infoLogger:              helpers.NewInfoLogger(authInfoLogFile),
+		errorLogger:             helpers.NewInfoLogger(authErrorLogFile),
 	}
 }
 

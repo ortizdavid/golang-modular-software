@@ -29,7 +29,7 @@ func NewProjectAttachmentService(db *database.Database) *ProjectAttachmentServic
 	}
 }
 
-func (s *ProjectAttachmentService) CreateProjectAttachment(ctx context.Context, fiberCtx *fiber.Ctx,   request entities.CreateProjectAttachmentRequest) error {
+func (s *ProjectAttachmentService) Create(ctx context.Context, fiberCtx *fiber.Ctx,   request entities.CreateProjectAttachmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -66,14 +66,14 @@ func (s *ProjectAttachmentService) CreateProjectAttachment(ctx context.Context, 
 	return nil
 }
 
-func (s *ProjectAttachmentService) UpdateProjectAttachment(ctx context.Context, request entities.UpdateProjectAttachmentRequest) error {
+func (s *ProjectAttachmentService) Update(ctx context.Context, request entities.UpdateProjectAttachmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
 	return nil
 }
 
-func (s *ProjectAttachmentService) GetAllAttachmentsByProjectId(ctx context.Context, projectId int) ([]entities.ProjectAttachment, error) {
+func (s *ProjectAttachmentService) GetAllByProjectId(ctx context.Context, projectId int) ([]entities.ProjectAttachment, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No attachments found")
@@ -85,7 +85,7 @@ func (s *ProjectAttachmentService) GetAllAttachmentsByProjectId(ctx context.Cont
 	return attachments, nil
 }
 
-func (s *ProjectAttachmentService) GetProjectAttachmentByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectAttachment, error) {
+func (s *ProjectAttachmentService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectAttachment, error) {
 	projectAttachment, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ProjectAttachment{}, apperrors.NewNotFoundError("project attachment not found")
@@ -93,7 +93,7 @@ func (s *ProjectAttachmentService) GetProjectAttachmentByUniqueId(ctx context.Co
 	return projectAttachment, nil
 }
 
-func (s *ProjectAttachmentService) RemoveProjectAttachment(ctx context.Context, uniqueId string) error {
+func (s *ProjectAttachmentService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing project attachment: "+err.Error())

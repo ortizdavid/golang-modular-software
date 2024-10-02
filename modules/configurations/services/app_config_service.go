@@ -23,17 +23,17 @@ func NewAppConfigurationService(db *database.Database) *AppConfigurationService 
 }
 
 func(s *AppConfigurationService) LoadAppConfigurations(ctx context.Context) *entities.AppConfiguration {
-	basicConfig, err := s.basicService.GetBasicConfiguration(ctx)
+	basicConfig, err := s.basicService.GetCurrent(ctx)
 	if err != nil {
 		log.Printf("Failed to load basic configuration: %v", err)
 		basicConfig = entities.BasicConfiguration{} 
 	}
-	companyConfig, err := s.companyService.GetCompanyConfiguration(ctx)
+	companyConfig, err := s.companyService.GetCurrent(ctx)
 	if err != nil {
 		log.Printf("Failed to load company configuration: %v", err)
 		companyConfig = entities.CompanyConfiguration{} 
 	}
-	emailConfig, err := s.emailService.GetEmailConfiguration(ctx)
+	emailConfig, err := s.emailService.GetCurrent(ctx)
 	if err != nil {
 		log.Printf("Failed to load email configuration: %v", err)
 		emailConfig = entities.EmailConfiguration{} 

@@ -19,7 +19,7 @@ func NewEmployeeCompleteDataService(db *database.Database)  *EmployeeCompleteDat
 	}
 }
 
-func (s *EmployeeCompleteDataService) GetEmployeeCompleteDataByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeCompleteData, error) {
+func (s *EmployeeCompleteDataService) GetByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeCompleteData, error) {
 	employee, err := s.repository.GetByIdentificationNumber(ctx, identNumber)
 	if err != nil {
 		return entities.EmployeeCompleteData{}, apperrors.NewNotFoundError("employee not found")
@@ -30,7 +30,7 @@ func (s *EmployeeCompleteDataService) GetEmployeeCompleteDataByIdentificationNum
 	return employee, nil
 }
 
-func (s *EmployeeCompleteDataService) GetEmployeeCompleteDataByUniqueId(ctx context.Context, identNumber string) (entities.EmployeeCompleteData, error) {
+func (s *EmployeeCompleteDataService) GetByUniqueId(ctx context.Context, identNumber string) (entities.EmployeeCompleteData, error) {
 	employee, err := s.repository.GetByUniqueId(ctx, identNumber)
 	if err != nil {
 		return entities.EmployeeCompleteData{}, apperrors.NewNotFoundError("employee not found")

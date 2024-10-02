@@ -69,7 +69,7 @@ func (ctrl *EmailConfigurationController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err := ctrl.service.UpdateEmailConfiguration(c.Context(), request)
+	err := ctrl.service.Update(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

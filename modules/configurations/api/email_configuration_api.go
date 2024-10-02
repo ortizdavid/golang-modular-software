@@ -40,7 +40,7 @@ func (api *EmailConfigurationApi) getEmailConfiguration(c *fiber.Ctx) error {
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
-	emailConfig, err := api.service.GetEmailConfiguration(c.Context())
+	emailConfig, err := api.service.GetCurrent(c.Context())
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
@@ -56,7 +56,7 @@ func (api *EmailConfigurationApi) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
-	err = api.service.UpdateEmailConfiguration(c.Context(), request)
+	err = api.service.Update(c.Context(), request)
 	if err != nil {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)

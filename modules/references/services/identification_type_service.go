@@ -25,7 +25,7 @@ func NewIdentificationTypeService(db *database.Database) *IdentificationTypeServ
 	}
 }
 
-func (s *IdentificationTypeService) CreateIdentificationType(ctx context.Context, request entities.CreateTypeRequest) error {
+func (s *IdentificationTypeService) Create(ctx context.Context, request entities.CreateTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *IdentificationTypeService) CreateIdentificationType(ctx context.Context
 	return nil
 }
 
-func (s *IdentificationTypeService) UpdateIdentificationType(ctx context.Context, identTypeId int, request entities.UpdateTypeRequest) error {
+func (s *IdentificationTypeService) Update(ctx context.Context, identTypeId int, request entities.UpdateTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *IdentificationTypeService) UpdateIdentificationType(ctx context.Context
 	return nil
 }
 
-func (s *IdentificationTypeService) GetAllIdentificationTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.IdentificationType], error) {
+func (s *IdentificationTypeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.IdentificationType], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (s *IdentificationTypeService) GetAllIdentificationTypesPaginated(ctx conte
 	return pagination, nil
 }
 
-func (s *IdentificationTypeService) GetAllIdentificationTypes(ctx context.Context) ([]entities.IdentificationType, error) {
+func (s *IdentificationTypeService) GetAll(ctx context.Context) ([]entities.IdentificationType, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No types found")
@@ -101,7 +101,7 @@ func (s *IdentificationTypeService) GetAllIdentificationTypes(ctx context.Contex
 	return types, nil
 }
 
-func (s *IdentificationTypeService) SearchTypes(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchTypeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.IdentificationType], error) {
+func (s *IdentificationTypeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchTypeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.IdentificationType], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No types found")
@@ -120,7 +120,7 @@ func (s *IdentificationTypeService) SearchTypes(ctx context.Context, fiberCtx *f
 	return pagination, nil
 }
 
-func (s *IdentificationTypeService) GetIdentificationTypeByUniqueId(ctx context.Context, uniqueId string) (entities.IdentificationType, error) {
+func (s *IdentificationTypeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.IdentificationType, error) {
 	identType, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.IdentificationType{}, apperrors.NewNotFoundError("type not found")
@@ -128,7 +128,7 @@ func (s *IdentificationTypeService) GetIdentificationTypeByUniqueId(ctx context.
 	return identType, nil
 }
 
-func (s *IdentificationTypeService) RemoveIdentificationType(ctx context.Context, uniqueId string) error {
+func (s *IdentificationTypeService) Remove(ctx context.Context, uniqueId string) error {
 	identType, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("type not found")

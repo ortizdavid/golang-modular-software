@@ -28,7 +28,7 @@ func NewRoomService(db *database.Database) *RoomService {
 	}
 }
 
-func (s *RoomService) CreateRoom(ctx context.Context, request entities.CreateRoomRequest) error {
+func (s *RoomService) Create(ctx context.Context, request entities.CreateRoomRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -66,7 +66,7 @@ func (s *RoomService) CreateRoom(ctx context.Context, request entities.CreateRoo
 	return nil
 }
 
-func (s *RoomService) UpdateRoom(ctx context.Context, roomId int, request entities.UpdateRoomRequest) error {
+func (s *RoomService) Update(ctx context.Context, roomId int, request entities.UpdateRoomRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -91,7 +91,7 @@ func (s *RoomService) UpdateRoom(ctx context.Context, roomId int, request entiti
 	return nil
 }
 
-func (s *RoomService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.RoomData], error) {
+func (s *RoomService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.RoomData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -110,7 +110,7 @@ func (s *RoomService) GetAllCompaniesPaginated(ctx context.Context, fiberCtx *fi
 	return pagination, nil
 }
 
-func (s *RoomService) GetAllRooms(ctx context.Context) ([]entities.Room, error) {
+func (s *RoomService) GetAll(ctx context.Context) ([]entities.Room, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No rooms found")
@@ -122,7 +122,7 @@ func (s *RoomService) GetAllRooms(ctx context.Context) ([]entities.Room, error) 
 	return rooms, nil
 }
 
-func (s *RoomService) SearchRooms(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchRoomRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.RoomData], error) {
+func (s *RoomService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchRoomRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.RoomData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No rooms found")
@@ -141,7 +141,7 @@ func (s *RoomService) SearchRooms(ctx context.Context, fiberCtx *fiber.Ctx, requ
 	return pagination, nil
 }
 
-func (s *RoomService) GetRoomByUniqueId(ctx context.Context, uniqueId string) (entities.RoomData, error) {
+func (s *RoomService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.RoomData, error) {
 	room, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.RoomData{}, apperrors.NewNotFoundError("room not found")

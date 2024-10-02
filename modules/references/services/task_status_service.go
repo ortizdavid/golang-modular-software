@@ -25,7 +25,7 @@ func NewTaskStatusService(db *database.Database) *TaskStatusService {
 	}
 }
 
-func (s *TaskStatusService) CreateTaskStatus(ctx context.Context, request entities.CreateStatusRequest) error {
+func (s *TaskStatusService) Create(ctx context.Context, request entities.CreateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -55,7 +55,7 @@ func (s *TaskStatusService) CreateTaskStatus(ctx context.Context, request entiti
 	return nil
 }
 
-func (s *TaskStatusService) UpdateTaskStatus(ctx context.Context, taskStatusId int, request entities.UpdateStatusRequest) error {
+func (s *TaskStatusService) Update(ctx context.Context, taskStatusId int, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -76,7 +76,7 @@ func (s *TaskStatusService) UpdateTaskStatus(ctx context.Context, taskStatusId i
 	return nil
 }
 
-func (s *TaskStatusService) GetAllStatusesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.TaskStatus], error) {
+func (s *TaskStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.TaskStatus], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -107,7 +107,7 @@ func (s *TaskStatusService) GetAllStatuses(ctx context.Context) ([]entities.Task
 	return statuses, nil
 }
 
-func (s *TaskStatusService) SearchStatuses(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.TaskStatus], error) {
+func (s *TaskStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.TaskStatus], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -126,7 +126,7 @@ func (s *TaskStatusService) SearchStatuses(ctx context.Context, fiberCtx *fiber.
 	return pagination, nil
 }
 
-func (s *TaskStatusService) GetTaskStatusByUniqueId(ctx context.Context, uniqueId string) (entities.TaskStatus, error) {
+func (s *TaskStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.TaskStatus, error) {
 	taskStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.TaskStatus{}, apperrors.NewNotFoundError("status not found")
@@ -134,7 +134,7 @@ func (s *TaskStatusService) GetTaskStatusByUniqueId(ctx context.Context, uniqueI
 	return taskStatus, nil
 }
 
-func (s *TaskStatusService) RemoveTaskStatus(ctx context.Context, uniqueId string) error {
+func (s *TaskStatusService) Remove(ctx context.Context, uniqueId string) error {
 	taskStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")

@@ -25,7 +25,7 @@ func NewCurrencyService(db *database.Database) *CurrencyService {
 	}
 }
 
-func (s *CurrencyService) CreateCurrency(ctx context.Context, request entities.CreateCurrencyRequest) error {
+func (s *CurrencyService) Create(ctx context.Context, request entities.CreateCurrencyRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *CurrencyService) CreateCurrency(ctx context.Context, request entities.C
 	return nil
 }
 
-func (s *CurrencyService) UpdateCurrency(ctx context.Context, currencyId int, request entities.UpdateCurrencyRequest) error {
+func (s *CurrencyService) Update(ctx context.Context, currencyId int, request entities.UpdateCurrencyRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -71,7 +71,7 @@ func (s *CurrencyService) UpdateCurrency(ctx context.Context, currencyId int, re
 	return nil
 }
 
-func (s *CurrencyService) GetAllCurrenciesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Currency], error) {
+func (s *CurrencyService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Currency], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -90,7 +90,7 @@ func (s *CurrencyService) GetAllCurrenciesPaginated(ctx context.Context, fiberCt
 	return pagination, nil
 }
 
-func (s *CurrencyService) GetAllCurrencies(ctx context.Context) ([]entities.Currency, error) {
+func (s *CurrencyService) GetAll(ctx context.Context) ([]entities.Currency, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No currencies found")
@@ -102,7 +102,7 @@ func (s *CurrencyService) GetAllCurrencies(ctx context.Context) ([]entities.Curr
 	return currencies, nil
 }
 
-func (s *CurrencyService) SearchCurrencies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCurrencyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Currency], error) {
+func (s *CurrencyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCurrencyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Currency], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No currencies found")
@@ -121,7 +121,7 @@ func (s *CurrencyService) SearchCurrencies(ctx context.Context, fiberCtx *fiber.
 	return pagination, nil
 }
 
-func (s *CurrencyService) GetCurrencyByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
+func (s *CurrencyService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
 	currency, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
@@ -129,7 +129,7 @@ func (s *CurrencyService) GetCurrencyByUniqueId(ctx context.Context, uniqueId st
 	return currency, nil
 }
 
-func (s *CurrencyService) RemoveCurrency(ctx context.Context, uniqueId string) error {
+func (s *CurrencyService) Remove(ctx context.Context, uniqueId string) error {
 	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("currency not found")

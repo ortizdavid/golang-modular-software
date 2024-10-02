@@ -29,7 +29,7 @@ func NewPolicyAttachmentService(db *database.Database) *PolicyAttachmentService 
 	}
 }
 
-func (s *PolicyAttachmentService) CreatePolicyAttachment(ctx context.Context, fiberCtx *fiber.Ctx,   request entities.CreatePolicyAttachmentRequest) error {
+func (s *PolicyAttachmentService) Create(ctx context.Context, fiberCtx *fiber.Ctx,   request entities.CreatePolicyAttachmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -66,14 +66,14 @@ func (s *PolicyAttachmentService) CreatePolicyAttachment(ctx context.Context, fi
 	return nil
 }
 
-func (s *PolicyAttachmentService) UpdatePolicyAttachment(ctx context.Context, request entities.UpdatePolicyAttachmentRequest) error {
+func (s *PolicyAttachmentService) Update(ctx context.Context, request entities.UpdatePolicyAttachmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
 	return nil
 }
 
-func (s *PolicyAttachmentService) GetAllAttachmentsByPolicyId(ctx context.Context, policyId int) ([]entities.PolicyAttachment, error) {
+func (s *PolicyAttachmentService) GetAllByPolicyId(ctx context.Context, policyId int) ([]entities.PolicyAttachment, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No attachments found")
@@ -85,7 +85,7 @@ func (s *PolicyAttachmentService) GetAllAttachmentsByPolicyId(ctx context.Contex
 	return attachments, nil
 }
 
-func (s *PolicyAttachmentService) GetPolicyAttachmentByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyAttachment, error) {
+func (s *PolicyAttachmentService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyAttachment, error) {
 	policyAttachment, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.PolicyAttachment{}, apperrors.NewNotFoundError("policy attachment not found")
@@ -93,7 +93,7 @@ func (s *PolicyAttachmentService) GetPolicyAttachmentByUniqueId(ctx context.Cont
 	return policyAttachment, nil
 }
 
-func (s *PolicyAttachmentService) RemovePolicyAttachment(ctx context.Context, uniqueId string) error {
+func (s *PolicyAttachmentService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing policy attachment: "+err.Error())

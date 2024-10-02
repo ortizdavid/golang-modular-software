@@ -26,7 +26,7 @@ func NewDepartmentService(db *database.Database) *DepartmentService {
 	}
 }
 
-func (s *DepartmentService) CreateDepartment(ctx context.Context, request entities.CreateDepartmentRequest) error {
+func (s *DepartmentService) Create(ctx context.Context, request entities.CreateDepartmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -59,7 +59,7 @@ func (s *DepartmentService) CreateDepartment(ctx context.Context, request entiti
 	return nil
 }
 
-func (s *DepartmentService) UpdateDepartment(ctx context.Context, departmentId int, request entities.UpdateDepartmentRequest) error {
+func (s *DepartmentService) Update(ctx context.Context, departmentId int, request entities.UpdateDepartmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -84,7 +84,7 @@ func (s *DepartmentService) UpdateDepartment(ctx context.Context, departmentId i
 	return nil
 }
 
-func (s *DepartmentService) GetAllDepartmentsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DepartmentData], error) {
+func (s *DepartmentService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DepartmentData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -103,7 +103,7 @@ func (s *DepartmentService) GetAllDepartmentsPaginated(ctx context.Context, fibe
 	return pagination, nil
 }
 
-func (s *DepartmentService) GetAllDepartments(ctx context.Context) ([]entities.Department, error) {
+func (s *DepartmentService) GetAll(ctx context.Context) ([]entities.Department, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No departments found")
@@ -115,7 +115,7 @@ func (s *DepartmentService) GetAllDepartments(ctx context.Context) ([]entities.D
 	return departments, nil
 }
 
-func (s *DepartmentService) SearchDepartments(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchDepartmentRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.DepartmentData], error) {
+func (s *DepartmentService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchDepartmentRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.DepartmentData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No departments found")
@@ -134,7 +134,7 @@ func (s *DepartmentService) SearchDepartments(ctx context.Context, fiberCtx *fib
 	return pagination, nil
 }
 
-func (s *DepartmentService) GetDepartmentByUniqueId(ctx context.Context, uniqueId string) (entities.DepartmentData, error) {
+func (s *DepartmentService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.DepartmentData, error) {
 	department, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.DepartmentData{}, apperrors.NewNotFoundError("department not found")

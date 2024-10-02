@@ -12,11 +12,11 @@ func (ctrl *EmployeeController) addDocumentForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	documentTypes, err := ctrl.documentTypeService.GetAllDocumentTypes(c.Context())
+	documentTypes, err := ctrl.documentTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -33,7 +33,7 @@ func (ctrl *EmployeeController) addDocumentForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) addDocument(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -41,7 +41,7 @@ func (ctrl *EmployeeController) addDocument(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.documentService.CreateDocument(c.Context(), c, request)
+	err = ctrl.documentService.Create(c.Context(), c, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -55,15 +55,15 @@ func (ctrl *EmployeeController) editDocumentForm(c *fiber.Ctx) error {
 	docId := c.Params("docId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	document, err := ctrl.documentService.GetDocumentByUniqueId(c.Context(), docId)
+	document, err := ctrl.documentService.GetByUniqueId(c.Context(), docId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	documentTypes, err := ctrl.documentTypeService.GetAllDocumentTypes(c.Context())
+	documentTypes, err := ctrl.documentTypeService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -82,11 +82,11 @@ func (ctrl *EmployeeController) editDocument(c *fiber.Ctx) error {
 	empId := c.Params("empId")
 	docId := c.Params("docId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	document, err := ctrl.documentService.GetDocumentByUniqueId(c.Context(), docId)
+	document, err := ctrl.documentService.GetByUniqueId(c.Context(), docId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -94,7 +94,7 @@ func (ctrl *EmployeeController) editDocument(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.documentService.UpdateDocument(c.Context(), document.DocumentId, request)
+	err = ctrl.documentService.Update(c.Context(), document.DocumentId, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -106,7 +106,7 @@ func (ctrl *EmployeeController) editDocument(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) displayDocument(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	document, err := ctrl.documentService.GetDocumentByUniqueId(c.Context(), id)
+	document, err := ctrl.documentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

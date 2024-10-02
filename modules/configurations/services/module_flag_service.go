@@ -49,7 +49,7 @@ func (s *ModuleFlagService) ManageModuleFlags(ctx context.Context, requests []en
 }
 
 
-func (s *ModuleFlagService) GetAllModuleFlagsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ModuleFlagData], error) {
+func (s *ModuleFlagService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ModuleFlagData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -68,7 +68,7 @@ func (s *ModuleFlagService) GetAllModuleFlagsPaginated(ctx context.Context, fibe
 	return pagination, nil
 }
 
-func (s *ModuleFlagService) GetAllModuleFlags(ctx context.Context) ([]entities.ModuleFlagData, error) {
+func (s *ModuleFlagService) GetAll(ctx context.Context) ([]entities.ModuleFlagData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No modules found")
@@ -80,7 +80,7 @@ func (s *ModuleFlagService) GetAllModuleFlags(ctx context.Context) ([]entities.M
 	return modules, nil
 }
 
-func (s *ModuleFlagService) GetModuleFlagByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlagData, error) {
+func (s *ModuleFlagService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ModuleFlagData, error) {
 	module, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ModuleFlagData{}, apperrors.NewNotFoundError("module not found")
@@ -88,7 +88,7 @@ func (s *ModuleFlagService) GetModuleFlagByUniqueId(ctx context.Context, uniqueI
 	return module, nil
 }
 
-func (s *ModuleFlagService) GetModuleFlagByCode(ctx context.Context, code string) (entities.ModuleFlagData, error) {
+func (s *ModuleFlagService) GetByCode(ctx context.Context, code string) (entities.ModuleFlagData, error) {
 	moduleFlag, err := s.repository.FindByModuleCode(ctx, code)
 	if err != nil {
 		return entities.ModuleFlagData{}, apperrors.NewNotFoundError("module flag not found")

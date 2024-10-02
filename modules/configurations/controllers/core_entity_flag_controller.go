@@ -48,7 +48,7 @@ func (ctrl *CoreEntityFlagController) index(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	coreEntityFlagStatus, _ := ctrl.coreEntityFlagStatusService.LoadCoreEntityFlagStatus(c.Context())
-	coreEntityFlags, err := ctrl.service.GetAllCoreEntityFlags(c.Context())
+	coreEntityFlags, err := ctrl.service.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -65,7 +65,7 @@ func (ctrl *CoreEntityFlagController) index(c *fiber.Ctx) error {
 func (ctrl *CoreEntityFlagController) manageForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	coreEntityFlags, err := ctrl.service.GetAllCoreEntityFlags(c.Context())
+	coreEntityFlags, err := ctrl.service.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

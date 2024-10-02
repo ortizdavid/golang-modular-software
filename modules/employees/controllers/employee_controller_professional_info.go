@@ -11,19 +11,19 @@ func (ctrl *EmployeeController) addProfessionalInfoForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	jobTitles, err := ctrl.jobTitleService.GetAllJobTitles(c.Context())
+	jobTitles, err := ctrl.jobTitleService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employmentStatuses, err := ctrl.employmentStatusService.GetAllStatuses(c.Context())
+	employmentStatuses, err := ctrl.employmentStatusService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	departments, err := ctrl.departmentService.GetAllDepartments(c.Context())
+	departments, err := ctrl.departmentService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -42,7 +42,7 @@ func (ctrl *EmployeeController) addProfessionalInfoForm(c *fiber.Ctx) error {
 func (ctrl *EmployeeController) addProfessionalInfo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), id)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -64,23 +64,23 @@ func (ctrl *EmployeeController) editProfessionalInfoForm(c *fiber.Ctx) error {
 	proId := c.Params("proId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	professionalInfo, err := ctrl.professionalInfoService.GetProfessionalInfoByUniqueId(c.Context(), proId)
+	professionalInfo, err := ctrl.professionalInfoService.GetByUniqueId(c.Context(), proId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	jobTitles, err := ctrl.jobTitleService.GetAllJobTitles(c.Context())
+	jobTitles, err := ctrl.jobTitleService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	employmentStatuses, err := ctrl.employmentStatusService.GetAllStatuses(c.Context())
+	employmentStatuses, err := ctrl.employmentStatusService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	departments, err := ctrl.departmentService.GetAllDepartments(c.Context())
+	departments, err := ctrl.departmentService.GetAll(c.Context())
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -101,11 +101,11 @@ func (ctrl *EmployeeController) editProfessionalInfo(c *fiber.Ctx) error {
 	empId := c.Params("empId")
 	proId := c.Params("proId")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	employee, err := ctrl.service.GetEmployeeByUniqueId(c.Context(), empId)
+	employee, err := ctrl.service.GetByUniqueId(c.Context(), empId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	professionalInfo, err := ctrl.professionalInfoService.GetProfessionalInfoByUniqueId(c.Context(), proId)
+	professionalInfo, err := ctrl.professionalInfoService.GetByUniqueId(c.Context(), proId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

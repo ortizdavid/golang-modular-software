@@ -25,7 +25,7 @@ func NewWorkflowStatusService(db *database.Database) *WorkflowStatusService {
 	}
 }
 
-func (s *WorkflowStatusService) CreateWorkflowStatus(ctx context.Context, request entities.CreateStatusRequest) error {
+func (s *WorkflowStatusService) Create(ctx context.Context, request entities.CreateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -55,7 +55,7 @@ func (s *WorkflowStatusService) CreateWorkflowStatus(ctx context.Context, reques
 	return nil
 }
 
-func (s *WorkflowStatusService) UpdateWorkflowStatus(ctx context.Context, workflowStatusId int, request entities.UpdateStatusRequest) error {
+func (s *WorkflowStatusService) Update(ctx context.Context, workflowStatusId int, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -76,7 +76,7 @@ func (s *WorkflowStatusService) UpdateWorkflowStatus(ctx context.Context, workfl
 	return nil
 }
 
-func (s *WorkflowStatusService) GetAllStatusesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.WorkflowStatus], error) {
+func (s *WorkflowStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.WorkflowStatus], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -95,7 +95,7 @@ func (s *WorkflowStatusService) GetAllStatusesPaginated(ctx context.Context, fib
 	return pagination, nil
 }
 
-func (s *WorkflowStatusService) GetAllStatuses(ctx context.Context) ([]entities.WorkflowStatus, error) {
+func (s *WorkflowStatusService) GetAll(ctx context.Context) ([]entities.WorkflowStatus, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -107,7 +107,7 @@ func (s *WorkflowStatusService) GetAllStatuses(ctx context.Context) ([]entities.
 	return statuses, nil
 }
 
-func (s *WorkflowStatusService) SearchStatuses(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.WorkflowStatus], error) {
+func (s *WorkflowStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.WorkflowStatus], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -126,7 +126,7 @@ func (s *WorkflowStatusService) SearchStatuses(ctx context.Context, fiberCtx *fi
 	return pagination, nil
 }
 
-func (s *WorkflowStatusService) GetWorkflowStatusByUniqueId(ctx context.Context, uniqueId string) (entities.WorkflowStatus, error) {
+func (s *WorkflowStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.WorkflowStatus, error) {
 	workflowStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.WorkflowStatus{}, apperrors.NewNotFoundError("status not found")
@@ -134,7 +134,7 @@ func (s *WorkflowStatusService) GetWorkflowStatusByUniqueId(ctx context.Context,
 	return workflowStatus, nil
 }
 
-func (s *WorkflowStatusService) RemoveWorkflowStatus(ctx context.Context, uniqueId string) error {
+func (s *WorkflowStatusService) Remove(ctx context.Context, uniqueId string) error {
 	workflowStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")

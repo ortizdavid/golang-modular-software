@@ -26,7 +26,7 @@ func NewEmployeePhoneService(db *database.Database) *EmployeePhoneService {
 	}
 }
 
-func (s *EmployeePhoneService) CreateEmployeePhone(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateEmployeePhoneRequest) error {
+func (s *EmployeePhoneService) Create(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateEmployeePhoneRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -58,7 +58,7 @@ func (s *EmployeePhoneService) CreateEmployeePhone(ctx context.Context, fiberCtx
 	return nil
 }
 
-func (s *EmployeePhoneService) UpdateEmployeePhone(ctx context.Context, employeePhoneId int64, request entities.UpdateEmployeePhoneRequest) error {
+func (s *EmployeePhoneService) Update(ctx context.Context, employeePhoneId int64, request entities.UpdateEmployeePhoneRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -77,7 +77,7 @@ func (s *EmployeePhoneService) UpdateEmployeePhone(ctx context.Context, employee
 	return nil
 }
 
-func (s *EmployeePhoneService) GetAllEmployeePhonesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.EmployeePhoneData], error) {
+func (s *EmployeePhoneService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.EmployeePhoneData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -96,7 +96,7 @@ func (s *EmployeePhoneService) GetAllEmployeePhonesPaginated(ctx context.Context
 	return pagination, nil
 }
 
-func (s *EmployeePhoneService) GetAllEmployeePhones(ctx context.Context, employeeId int64) ([]entities.EmployeePhoneData, error) {
+func (s *EmployeePhoneService) GetAll(ctx context.Context, employeeId int64) ([]entities.EmployeePhoneData, error) {
 	_, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No employee phones found")
@@ -108,7 +108,7 @@ func (s *EmployeePhoneService) GetAllEmployeePhones(ctx context.Context, employe
 	return employeePhones, nil
 }
 
-func (s *EmployeePhoneService) SearchEmployeePhones(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchEmployeePhoneRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.EmployeePhone], error) {
+func (s *EmployeePhoneService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchEmployeePhoneRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.EmployeePhone], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No employee phones found")
@@ -127,7 +127,7 @@ func (s *EmployeePhoneService) SearchEmployeePhones(ctx context.Context, fiberCt
 	return pagination, nil
 }
 
-func (s *EmployeePhoneService) GetEmployeePhoneByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeePhoneData, error) {
+func (s *EmployeePhoneService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeePhoneData, error) {
 	employeePhone, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.EmployeePhoneData{}, apperrors.NewNotFoundError("employee phone not found")
@@ -135,7 +135,7 @@ func (s *EmployeePhoneService) GetEmployeePhoneByUniqueId(ctx context.Context, u
 	return employeePhone, nil
 }
 
-func (s *EmployeePhoneService) RemoveEmployeePhone(ctx context.Context, uniqueId string) error {
+func (s *EmployeePhoneService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing employee phone: "+ err.Error())

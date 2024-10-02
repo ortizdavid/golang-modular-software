@@ -25,7 +25,7 @@ func NewDocumentTypeService(db *database.Database) *DocumentTypeService {
 }
 
 
-func (s *DocumentTypeService) CreateDocumentType(ctx context.Context, request entities.CreateDocumentTypeRequest) error {
+func (s *DocumentTypeService) Create(ctx context.Context, request entities.CreateDocumentTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *DocumentTypeService) CreateDocumentType(ctx context.Context, request en
 	return nil
 }
 
-func (s *DocumentTypeService) UpdateDocumentType(ctx context.Context, documentTypeId int, request entities.UpdateDocumentTypeRequest) error {
+func (s *DocumentTypeService) Update(ctx context.Context, documentTypeId int, request entities.UpdateDocumentTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *DocumentTypeService) UpdateDocumentType(ctx context.Context, documentTy
 	return nil
 }
 
-func (s *DocumentTypeService) GetAllDocumentTypesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DocumentType], error) {
+func (s *DocumentTypeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.DocumentType], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (s *DocumentTypeService) GetAllDocumentTypesPaginated(ctx context.Context, 
 	return pagination, nil
 }
 
-func (s *DocumentTypeService) GetAllDocumentTypes(ctx context.Context) ([]entities.DocumentType, error) {
+func (s *DocumentTypeService) GetAll(ctx context.Context) ([]entities.DocumentType, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No document types found")
@@ -101,7 +101,7 @@ func (s *DocumentTypeService) GetAllDocumentTypes(ctx context.Context) ([]entiti
 	return documentTypes, nil
 }
 
-func (s *DocumentTypeService) SearchDocumentTypes(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchDocumentTypeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.DocumentType], error) {
+func (s *DocumentTypeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchDocumentTypeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.DocumentType], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No document types found")
@@ -120,7 +120,7 @@ func (s *DocumentTypeService) SearchDocumentTypes(ctx context.Context, fiberCtx 
 	return pagination, nil
 }
 
-func (s *DocumentTypeService) GetDocumentTypeByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentType, error) {
+func (s *DocumentTypeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentType, error) {
 	documentType, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.DocumentType{}, apperrors.NewNotFoundError("document type not found")
@@ -128,7 +128,7 @@ func (s *DocumentTypeService) GetDocumentTypeByUniqueId(ctx context.Context, uni
 	return documentType, nil
 }
 
-func (s *DocumentTypeService) RemoveDocumentType(ctx context.Context, uniqueId string) error {
+func (s *DocumentTypeService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing document type: "+ err.Error())

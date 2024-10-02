@@ -25,7 +25,7 @@ func NewEmployeeService(db *database.Database) *EmployeeService {
 	}
 }
 
-func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.CreateEmployeeRequest) error {
+func (s *EmployeeService) Create(ctx context.Context, request entities.CreateEmployeeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -62,7 +62,7 @@ func (s *EmployeeService) CreateEmployee(ctx context.Context, request entities.C
 	return nil
 }
 
-func (s *EmployeeService) UpdateEmployee(ctx context.Context, employeeId int64, request entities.UpdateEmployeeRequest) error {
+func (s *EmployeeService) Update(ctx context.Context, employeeId int64, request entities.UpdateEmployeeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -91,7 +91,7 @@ func (s *EmployeeService) UpdateEmployee(ctx context.Context, employeeId int64, 
 	return nil
 }
 
-func (s *EmployeeService) GetAllEmployeesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.EmployeeData], error) {
+func (s *EmployeeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.EmployeeData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -110,7 +110,7 @@ func (s *EmployeeService) GetAllEmployeesPaginated(ctx context.Context, fiberCtx
 	return pagination, nil
 }
 
-func (s *EmployeeService) GetAllEmployees(ctx context.Context) ([]entities.Employee, error) {
+func (s *EmployeeService) GetAll(ctx context.Context) ([]entities.Employee, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No employees found")
@@ -122,7 +122,7 @@ func (s *EmployeeService) GetAllEmployees(ctx context.Context) ([]entities.Emplo
 	return employees, nil
 }
 
-func (s *EmployeeService) SearchEmployees(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchEmployeeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.EmployeeData], error) {
+func (s *EmployeeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchEmployeeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.EmployeeData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No employees found")
@@ -142,7 +142,7 @@ func (s *EmployeeService) SearchEmployees(ctx context.Context, fiberCtx *fiber.C
 }
 
 
-func (s *EmployeeService) RemoveEmployee(ctx context.Context, uniqueId string) error {
+func (s *EmployeeService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing employee: "+ err.Error())
@@ -150,7 +150,7 @@ func (s *EmployeeService) RemoveEmployee(ctx context.Context, uniqueId string) e
 	return nil
 }
 
-func (s *EmployeeService) UpdateEmployeeUserId(ctx context.Context, employeeId int64, userId int64) error {
+func (s *EmployeeService) UpdateUserId(ctx context.Context, employeeId int64, userId int64) error {
 	employee, err := s.repository.FindById(ctx, employeeId)
 	if err != nil {
 		return apperrors.NewNotFoundError("employee not found")

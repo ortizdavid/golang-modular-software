@@ -21,7 +21,7 @@ func NewModuleFlagStatusService(db *database.Database) *ModuleFlagStatusService 
 
 func (s *ModuleFlagStatusService) LoadModuleFlagStatus(ctx context.Context) (entities.ModuleFlagStatus, error) {
 	// Fetch all module flags in a single query
-	flagMap, err := s.GetAllModuleFlags(ctx)
+	flagMap, err := s.GetAll(ctx)
 	if err != nil {
 		return entities.ModuleFlagStatus{}, err
 	}
@@ -37,7 +37,7 @@ func (s *ModuleFlagStatusService) LoadModuleFlagStatus(ctx context.Context) (ent
 	return flagStatus, nil
 }
 
-func (s *ModuleFlagStatusService) GetAllModuleFlags(ctx context.Context) (map[string]string, error) {
+func (s *ModuleFlagStatusService) GetAll(ctx context.Context) (map[string]string, error) {
 	flagMap, err := s.repository.FindAllFlagsMap(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error fetching all module flags: %w", err)

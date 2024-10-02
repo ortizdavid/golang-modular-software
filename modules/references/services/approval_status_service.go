@@ -25,7 +25,7 @@ func NewApprovalStatusService(db *database.Database) *ApprovalStatusService {
 	}
 }
 
-func (s *ApprovalStatusService) CreateApprovalStatus(ctx context.Context, request entities.CreateStatusRequest) error {
+func (s *ApprovalStatusService) Create(ctx context.Context, request entities.CreateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -52,7 +52,7 @@ func (s *ApprovalStatusService) CreateApprovalStatus(ctx context.Context, reques
 	return nil
 }
 
-func (s *ApprovalStatusService) UpdateApprovalStatus(ctx context.Context, approvalStatusId int, request entities.UpdateStatusRequest) error {
+func (s *ApprovalStatusService) Update(ctx context.Context, approvalStatusId int, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *ApprovalStatusService) UpdateApprovalStatus(ctx context.Context, approv
 	return nil
 }
 
-func (s *ApprovalStatusService) GetAllStatusesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ApprovalStatus], error) {
+func (s *ApprovalStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.ApprovalStatus], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (s *ApprovalStatusService) GetAllStatusesPaginated(ctx context.Context, fib
 	return pagination, nil
 }
 
-func (s *ApprovalStatusService) GetAllStatuses(ctx context.Context) ([]entities.ApprovalStatus, error) {
+func (s *ApprovalStatusService) GetAll(ctx context.Context) ([]entities.ApprovalStatus, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -101,7 +101,7 @@ func (s *ApprovalStatusService) GetAllStatuses(ctx context.Context) ([]entities.
 	return statuses, nil
 }
 
-func (s *ApprovalStatusService) SearchStatuses(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.ApprovalStatus], error) {
+func (s *ApprovalStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchStatusRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.ApprovalStatus], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -120,7 +120,7 @@ func (s *ApprovalStatusService) SearchStatuses(ctx context.Context, fiberCtx *fi
 	return pagination, nil
 }
 
-func (s *ApprovalStatusService) GetApprovalStatusByUniqueId(ctx context.Context, uniqueId string) (entities.ApprovalStatus, error) {
+func (s *ApprovalStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ApprovalStatus, error) {
 	approvalStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ApprovalStatus{}, apperrors.NewNotFoundError("status not found")
@@ -128,7 +128,7 @@ func (s *ApprovalStatusService) GetApprovalStatusByUniqueId(ctx context.Context,
 	return approvalStatus, nil
 }
 
-func (s *ApprovalStatusService) RemoveApprovalStatus(ctx context.Context, uniqueId string) error {
+func (s *ApprovalStatusService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing approvalStatus: "+ err.Error())

@@ -26,7 +26,7 @@ func NewOfficeService(db *database.Database) *OfficeService {
 	}
 }
 
-func (s *OfficeService) CreateOffice(ctx context.Context, request entities.CreateOfficeRequest) error {
+func (s *OfficeService) Create(ctx context.Context, request entities.CreateOfficeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -61,7 +61,7 @@ func (s *OfficeService) CreateOffice(ctx context.Context, request entities.Creat
 	return nil
 }
 
-func (s *OfficeService) UpdateOffice(ctx context.Context, officeId int, request entities.UpdateOfficeRequest) error {
+func (s *OfficeService) Update(ctx context.Context, officeId int, request entities.UpdateOfficeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -86,7 +86,7 @@ func (s *OfficeService) UpdateOffice(ctx context.Context, officeId int, request 
 	return nil
 }
 
-func (s *OfficeService) GetAllOfficesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
+func (s *OfficeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -105,7 +105,7 @@ func (s *OfficeService) GetAllOfficesPaginated(ctx context.Context, fiberCtx *fi
 	return pagination, nil
 }
 
-func (s *OfficeService) GetAllOffices(ctx context.Context) ([]entities.Office, error) {
+func (s *OfficeService) GetAll(ctx context.Context) ([]entities.Office, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No offices found")
@@ -117,7 +117,7 @@ func (s *OfficeService) GetAllOffices(ctx context.Context) ([]entities.Office, e
 	return offices, nil
 }
 
-func (s *OfficeService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchOfficeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
+/*func (s *OfficeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchOfficeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No offices found")
@@ -134,9 +134,9 @@ func (s *OfficeService) SearchCompanies(ctx context.Context, fiberCtx *fiber.Ctx
 		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
-}
+}*/
 
-func (s *OfficeService) GetOfficeByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
+func (s *OfficeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
 	office, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.OfficeData{}, apperrors.NewNotFoundError("office not found")
@@ -144,7 +144,7 @@ func (s *OfficeService) GetOfficeByUniqueId(ctx context.Context, uniqueId string
 	return office, nil
 }
 
-func (s *OfficeService) SearchOffices(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchOfficeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
+func (s *OfficeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchOfficeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No offices found")

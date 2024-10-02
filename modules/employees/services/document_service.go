@@ -28,7 +28,7 @@ func NewDocumentService(db *database.Database) *DocumentService {
 	}
 }
 
-func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateDocumentRequest) error {
+func (s *DocumentService) Create(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateDocumentRequest) error {
 	//----- Validation
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
@@ -78,7 +78,7 @@ func (s *DocumentService) CreateDocument(ctx context.Context, fiberCtx *fiber.Ct
 	return nil
 }
 
-func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int64, request entities.UpdateDocumentRequest) error {
+func (s *DocumentService) Update(ctx context.Context, documentId int64, request entities.UpdateDocumentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -102,7 +102,7 @@ func (s *DocumentService) UpdateDocument(ctx context.Context, documentId int64, 
 	return nil
 }
 
-func (s *DocumentService) GetAllEmployeeDocumentsPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.DocumentData], error) {
+func (s *DocumentService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.DocumentData], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -133,7 +133,7 @@ func (s *DocumentService) GetAllEmployeeDocuments(ctx context.Context, employeeI
 	return documents, nil
 }
 
-func (s *DocumentService) SearchDocuments(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchDocumentRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Document], error) {
+func (s *DocumentService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchDocumentRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Document], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No documents found")
@@ -152,7 +152,7 @@ func (s *DocumentService) SearchDocuments(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *DocumentService) GetDocumentByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentData, error) {
+func (s *DocumentService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.DocumentData, error) {
 	document, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.DocumentData{}, apperrors.NewNotFoundError("document not found")
@@ -160,7 +160,7 @@ func (s *DocumentService) GetDocumentByUniqueId(ctx context.Context, uniqueId st
 	return document, nil
 }
 
-func (s *DocumentService) RemoveDocument(ctx context.Context, uniqueId string) error {
+func (s *DocumentService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewInternalServerError("error while removing document: "+ err.Error())

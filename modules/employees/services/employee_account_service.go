@@ -23,7 +23,7 @@ func NewEmployeeAccountService(db *database.Database) *EmployeeAccountService {
 	}
 }
 
-func (s *EmployeeAccountService) GetEmployeeAccountById(ctx context.Context, employeeId int64) (entities.EmployeeAccountData, error) {
+func (s *EmployeeAccountService) GetById(ctx context.Context, employeeId int64) (entities.EmployeeAccountData, error) {
 	employee, err := s.repository.GetDataByEmployeeId(ctx, employeeId)
 	if err != nil {
 		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
@@ -31,7 +31,7 @@ func (s *EmployeeAccountService) GetEmployeeAccountById(ctx context.Context, emp
 	return employee, nil
 }
 
-func (s *EmployeeAccountService) GetEmployeeAccountByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeAccountData, error) {
+func (s *EmployeeAccountService) GetByIdentificationNumber(ctx context.Context, identNumber string) (entities.EmployeeAccountData, error) {
 	employee, err := s.repository.GetDataByIdentificationNumber(ctx, identNumber)
 	if err != nil {
 		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
@@ -39,15 +39,15 @@ func (s *EmployeeAccountService) GetEmployeeAccountByIdentificationNumber(ctx co
 	return employee, nil
 }
 
-func (s *EmployeeAccountService) GetEmployeAllowedRoles(ctx context.Context) ([]authEntities.Role, error) {
-	roles, err := s.roleService.GetAllEnaledRolesNotIn(ctx, s.GetAllowedRoles())
+func (s *EmployeeAccountService) GetAllowedRoles(ctx context.Context) ([]authEntities.Role, error) {
+	roles, err := s.roleService.GetAllEnaledRolesNotIn(ctx, s.AllowedRolesList())
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("roles not found")
 	}
 	return roles, nil
 }
 
-func (s *EmployeeAccountService) GetAllowedRoles() []string {
+func (s *EmployeeAccountService) AllowedRolesList() []string {
 	return []string{
 		authEntities.RoleEmployee.Code, 
 		authEntities.RoleManager.Code, 

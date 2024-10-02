@@ -13,7 +13,7 @@ func (ctrl *PolicyController) addAttachmentForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	policy, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
+	policy, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -29,7 +29,7 @@ func (ctrl *PolicyController) addAttachmentForm(c *fiber.Ctx) error {
 func (ctrl *PolicyController) addAttachment(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.service.GetPolicyByUniqueId(c.Context(), id)
+	attachment, err := ctrl.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -37,7 +37,7 @@ func (ctrl *PolicyController) addAttachment(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.attachmentService.CreatePolicyAttachment(c.Context(), c, request)
+	err = ctrl.attachmentService.Create(c.Context(), c, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
@@ -49,7 +49,7 @@ func (ctrl *PolicyController) addAttachment(c *fiber.Ctx) error {
 func (ctrl *PolicyController) displayAttachment(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.attachmentService.GetPolicyAttachmentByUniqueId(c.Context(), id)
+	attachment, err := ctrl.attachmentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -62,7 +62,7 @@ func (ctrl *PolicyController) deleteAttachmentForm(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
-	attachment, err := ctrl.attachmentService.GetPolicyAttachmentByUniqueId(c.Context(), id)
+	attachment, err := ctrl.attachmentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -83,7 +83,7 @@ func (ctrl *PolicyController) deleteAttachmentForm(c *fiber.Ctx) error {
 func (ctrl *PolicyController) deleteAttachment(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	attachment, err := ctrl.attachmentService.GetPolicyAttachmentByUniqueId(c.Context(), id)
+	attachment, err := ctrl.attachmentService.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -91,7 +91,7 @@ func (ctrl *PolicyController) deleteAttachment(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.attachmentService.RemovePolicyAttachment(c.Context(), attachment.UniqueId)
+	err = ctrl.attachmentService.Remove(c.Context(), attachment.UniqueId)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

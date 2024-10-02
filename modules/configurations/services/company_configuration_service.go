@@ -23,7 +23,7 @@ func NewCompanyConfigurationService(db *database.Database) *CompanyConfiguration
 	}
 }
 
-func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Context, request entities.UpdateCompanyConfigurationRequest) error {
+func (s *CompanyConfigurationService) Update(ctx context.Context, request entities.UpdateCompanyConfigurationRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -64,7 +64,7 @@ func (s *CompanyConfigurationService) UpdateCompanyConfiguration(ctx context.Con
     return nil
 }
 
-func (s *CompanyConfigurationService) GetCompanyConfiguration(ctx context.Context) (entities.CompanyConfiguration, error) {
+func (s *CompanyConfigurationService) GetCurrent(ctx context.Context) (entities.CompanyConfiguration, error) {
 	conf, err := s.repository.FindLast(ctx)
 	if err != nil {
 		return entities.CompanyConfiguration{}, fmt.Errorf("failed to retrieve company configuration: %s", err.Error())

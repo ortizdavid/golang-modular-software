@@ -25,7 +25,7 @@ func NewEmploymentStatusService(db *database.Database) *EmploymentStatusService 
 	}
 }
 
-func (s *EmploymentStatusService) CreateEmploymentStatus(ctx context.Context, request entities.CreateStatusRequest) error {
+func (s *EmploymentStatusService) Create(ctx context.Context, request entities.CreateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -53,7 +53,7 @@ func (s *EmploymentStatusService) CreateEmploymentStatus(ctx context.Context, re
 	return nil
 }
 
-func (s *EmploymentStatusService) UpdateEmploymentStatus(ctx context.Context, employmentStatusId int, request entities.UpdateStatusRequest) error {
+func (s *EmploymentStatusService) Update(ctx context.Context, employmentStatusId int, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -72,7 +72,7 @@ func (s *EmploymentStatusService) UpdateEmploymentStatus(ctx context.Context, em
 	return nil
 }
 
-func (s *EmploymentStatusService) GetAllStatusesPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.EmploymentStatus], error) {
+func (s *EmploymentStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.EmploymentStatus], error) {
 	if err := params.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
@@ -91,7 +91,7 @@ func (s *EmploymentStatusService) GetAllStatusesPaginated(ctx context.Context, f
 	return pagination, nil
 }
 
-func (s *EmploymentStatusService) GetAllStatuses(ctx context.Context) ([]entities.EmploymentStatus, error) {
+func (s *EmploymentStatusService) GetAll(ctx context.Context) ([]entities.EmploymentStatus, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
@@ -122,7 +122,7 @@ func (s *EmploymentStatusService) SearchStatuses(ctx context.Context, fiberCtx *
 	return pagination, nil
 }
 
-func (s *EmploymentStatusService) GetEmploymentStatusByUniqueId(ctx context.Context, uniqueId string) (entities.EmploymentStatus, error) {
+func (s *EmploymentStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.EmploymentStatus, error) {
 	employmentStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.EmploymentStatus{}, apperrors.NewNotFoundError("status not found")
@@ -130,7 +130,7 @@ func (s *EmploymentStatusService) GetEmploymentStatusByUniqueId(ctx context.Cont
 	return employmentStatus, nil
 }
 
-func (s *EmploymentStatusService) RemoveEmploymentStatus(ctx context.Context, uniqueId string) error {
+func (s *EmploymentStatusService) Remove(ctx context.Context, uniqueId string) error {
 	employmentStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")
