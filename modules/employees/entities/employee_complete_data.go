@@ -5,13 +5,13 @@ type EmployeeCompleteData struct {
 	UniqueId            string `json:"unique_id"`
 	CreatedAt           string `json:"created_at"`
 	UpdatedAt           string `json:"updated_at"`
-	PersonalInfo        PersonalBasic`json:"personal_info,omitempty"`
-	ProfessionalInfo    ProfessionalBasic `json:"professional_info,omitempty"`
-	Documents           []DocumentBasic `json:"documents,omitempty"`
-	Phones              []PhoneBasic `json:"phones,omitempty"`
-	Emails              []EmailBasic `json:"emails,omitempty"`
-	Addresses           []AddressBasic `json:"addresses,omitempty"`
-	UserAccount         AccountBasic `json:"user_account,omitempty"`
+	PersonalInfo        PersonalBasic`json:"personal_info"`
+	ProfessionalInfo    ProfessionalBasic `json:"professional_info"`
+	Documents           []DocumentBasic `json:"documents"`
+	Phones              []PhoneBasic `json:"phones"`
+	Emails              []EmailBasic `json:"emails"`
+	Addresses           []AddressBasic `json:"addresses"`
+	UserAccount         AccountBasic `json:"user_account"`
 }
 
 type PersonalBasic struct {
@@ -27,45 +27,45 @@ type PersonalBasic struct {
 }
 
 type ProfessionalBasic struct {
-	DepartmentName           string `json:"department_name"`
-	EmploymentStatusName     string `json:"employment_status_name"`
-	JobTitleName             string `json:"job_title_name"`
+	DepartmentName           string `json:"department_name,omitempty"`
+	EmploymentStatusName     string `json:"employment_status_name,omitempty"`
+	JobTitleName             string `json:"job_title_name,omitempty"`
 }
 
 type DocumentBasic struct {
-	DocumentName             string `json:"document_name"`
-	DocumentNumber           string `json:"document_number"`
-	ExpirationDate           string `json:"expiration_date"`
-	FileName                 string `json:"file_name"`
-	Status                   string `json:"status"`
-	DocumentTypeName         string `json:"document_type"`
+	DocumentName             string `json:"document_name,omitempty"`
+	DocumentNumber           string `json:"document_number,omitempty"`
+	ExpirationDate           string `json:"expiration_date,omitempty"`
+	FileName                 string `json:"file_name,omitempty"`
+	Status                   string `json:"status,omitempty"`
+	DocumentTypeName         string `json:"document_type,omitempty"`
 }
 
 type PhoneBasic struct {
-	PhoneNumber              string `json:"phone_number"`
-	ContactTypeName          string `json:"contact_type"`
+	PhoneNumber              string `json:"phone_number,omitempty"`
+	ContactTypeName          string `json:"contact_type,omitempty"`
 }
 
 type EmailBasic struct {
-	EmailAddress             string `json:"email_address"`
-	ContactTypeName          string `json:"contact_type"`
+	EmailAddress             string `json:"email_address,omitempty"`
+	ContactTypeName          string `json:"contact_type,omitempty"`
 }
 
 type AddressBasic struct {
-	State                   string `json:"state"`
-	City                    string `json:"city"`
-	Neighborhood            string `json:"neighborhood"`
-	Street                  string `json:"street"`
-	HouseNumber             string `json:"house_number"`
-	PostalCode              string `json:"postal_code"`
-	CountryCode             string `json:"country_code"`
-	AdditionalDetails       string `json:"additional_details"`
-	IsCurrent               bool   `json:"is_current"`
+	State                   string `json:"state,omitempty"`
+	City                    string `json:"city,omitempty"`
+	Neighborhood            string `json:"neighborhood,omitempty"`
+	Street                  string `json:"street,omitempty"`
+	HouseNumber             string `json:"house_number,omitempty"`
+	PostalCode              string `json:"postal_code,omitempty"`
+	CountryCode             string `json:"country_code,omitempty"`
+	AdditionalDetails       string `json:"additional_details,omitempty"`
+	IsCurrent               bool   `json:"is_current,omitempty"`
 }
 
 type AccountBasic struct {
-	UserName                string `json:"user_name"`
-	UserEmail               string `json:"user_email"`
+	UserName                string `json:"user_name,omitempty"`
+	UserEmail               string `json:"user_email,omitempty"`
 }
 
 
