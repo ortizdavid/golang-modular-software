@@ -29,7 +29,7 @@ func (req CreateEmployeePhoneRequest) Validate() error {
 type UpdateEmployeePhoneRequest struct {
 	EmployeeId		int64 `json:"employee_id" form:"employee_id" validate:"required"`
 	ContactTypeId	int	`json:"contact_type_id" form:"contact_type_id" validate:"required"`
-	DialingCode   	string `json:"dialing_code" form:"dialing_code" validate:"required,max=7"`
+	DialingCode   	string `json:"dialing_code" form:"dialing_code" validate:"max=7"`
 	PhoneNumber   	string `json:"phone_number" form:"phone_number" validate:"required,max=30"`
 }
 

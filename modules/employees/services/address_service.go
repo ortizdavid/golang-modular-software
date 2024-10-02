@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"time"
+
 	"github.com/ortizdavid/go-nopain/encryption"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -12,7 +13,7 @@ import (
 )
 
 type AddressService struct {
-	repository *repositories.AddressRepository
+	repository         *repositories.AddressRepository
 	employeeRepository *repositories.EmployeeRepository
 }
 
@@ -36,7 +37,7 @@ func (s *AddressService) Create(ctx context.Context, request entities.CreateAddr
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("address already exists for employee: "+employee.FirstName)
+		return apperrors.NewBadRequestError("address already exists for employee: " + employee.FirstName)
 	}
 	// Update Current Address as false
 	err = s.repository.UpdateCurrent(ctx, employee.EmployeeId)
@@ -45,20 +46,20 @@ func (s *AddressService) Create(ctx context.Context, request entities.CreateAddr
 	}
 	// Create Address
 	address := entities.Address{
-		EmployeeId:       request.EmployeeId,
-		State:            request.State,
-		City:             request.City,
-		Neighborhood:     request.Neighborhood,
-		Street:           request.Street,
-		HouseNumber:      request.HouseNumber,
-		PostalCode:       request.PostalCode,
-		CountryCode:      request.CountryCode,
-		AditionalDetails: request.AditionalDetails,
-		IsCurrent:        true,
-		BaseEntity:     shared.BaseEntity{
-			UniqueId:       encryption.GenerateUUID(),
-			CreatedAt:      time.Now().UTC(),
-			UpdatedAt:      time.Now().UTC(),
+		EmployeeId:        request.EmployeeId,
+		State:             request.State,
+		City:              request.City,
+		Neighborhood:      request.Neighborhood,
+		Street:            request.Street,
+		HouseNumber:       request.HouseNumber,
+		PostalCode:        request.PostalCode,
+		CountryCode:       request.CountryCode,
+		AdditionalDetails: request.AdditionalDetails,
+		IsCurrent:         true,
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
 		},
 	}
 	err = s.repository.Create(ctx, address)
@@ -87,7 +88,7 @@ func (s *AddressService) Update(ctx context.Context, addressId int64, request en
 	address.HouseNumber = request.HouseNumber
 	address.PostalCode = request.PostalCode
 	address.CountryCode = request.CountryCode
-	address.AditionalDetails = request.AditionalDetails
+	address.AdditionalDetails = request.AdditionalDetails
 	address.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, address)
 	if err != nil {
@@ -127,7 +128,7 @@ func (s *AddressService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId 
 func (s *AddressService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing address: "+ err.Error())
+		return apperrors.NewInternalServerError("error while removing address: " + err.Error())
 	}
 	return nil
 }

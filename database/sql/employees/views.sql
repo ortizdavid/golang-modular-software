@@ -21,6 +21,7 @@ LEFT JOIN reference.marital_statuses ms ON(ms.status_id = emp.marital_status_id)
 ORDER BY emp.created_at;
 
 
+
 -- view: view_professional_info_data
 CREATE OR REPLACE VIEW employees.view_professional_info_data AS
 SELECT pr.professional_id, pr.unique_id,
@@ -61,13 +62,14 @@ LEFT JOIN employees.document_types dt ON (dt.type_id = doc.document_type_id)
 ORDER BY type_id;
 
 
+
 -- view: view_address_data
 CREATE OR REPLACE VIEW employees.view_address_data AS
 SELECT ad.address_id, ad.unique_id,
     ad.state, ad.city,
     ad.neighborhood, ad.street,
     ad.house_number, ad.postal_code,
-    ad.country_code, ad.aditional_details,
+    ad.country_code, ad.additional_details,
     ad.is_current,
     TO_CHAR(ad.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(ad.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
@@ -77,6 +79,7 @@ SELECT ad.address_id, ad.unique_id,
 FROM employees.address ad 
 LEFT JOIN employees.employees emp ON(emp.employee_id = ad.employee_id)
 ORDER BY created_at DESC;
+
 
 
 -- view: view_employee_email_data
@@ -125,6 +128,66 @@ SELECT us.user_id, us.unique_id,
     emp.identification_number
 FROM authentication.users us
 JOIN employees.employees emp ON(emp.user_id = us.user_id);
+
+
+
+-- VIEW employees.view_employee_complete_data
+DROP VIEW IF EXISTS employees.view_employee_complete_data;
+CREATE VIEW employees.view_employee_complete_data AS
+SELECT emp.employee_id, emp.unique_id,
+    TO_CHAR(emp.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
+    TO_CHAR(emp.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
+    emp.first_name, emp.last_name,
+    emp.identification_number,
+    emp.gender, 
+    TO_CHAR(emp.date_of_birth, 'YYYY-MM-DD') AS date_of_birth,
+    it.type_name AS identification_type_name,
+    co.country_name,
+    ms.status_name AS marital_status_name,
+    -- Professional Info
+    es.status_name AS employment_status_name,
+    dpt.department_name,
+    jt.title_name AS job_title_name,
+    -- Documents
+    doc.document_name, doc.document_number, 
+    TO_CHAR(doc.expiration_date, 'YYYY-MM-DD') AS expiration_date,
+    doc.file_name, doc.status AS document_status,
+    dt.type_name AS document_type_name,
+    -- Phones
+    ph.phone_number, 
+    ct_phone.type_name AS phone_contact_type_name, -- Separate JOIN for phone contact type
+    -- Emails
+    em.email_address, 
+    ct_email.type_name AS email_contact_type_name, -- Separate JOIN for email contact type
+    -- Addresses
+    ad.state, ad.city, ad.neighborhood, 
+    ad.street, ad.house_number, 
+    ad.postal_code, ad.country_code, 
+    ad.additional_details, ad.is_current,
+    -- User Account
+    us.user_name, us.email
+FROM employees.employees emp
+LEFT JOIN reference.identification_types it ON it.type_id = emp.identification_type_id
+LEFT JOIN reference.countries co ON co.country_id = emp.country_id
+LEFT JOIN reference.marital_statuses ms ON ms.status_id = emp.marital_status_id
+-- Professional Information
+LEFT JOIN employees.professional_info pr ON pr.employee_id = emp.employee_id
+LEFT JOIN reference.employment_statuses es ON es.status_id = pr.employment_status_id
+LEFT JOIN company.departments dpt ON dpt.department_id = pr.department_id
+LEFT JOIN employees.job_titles jt ON jt.job_title_id = pr.job_title_id
+-- Documents
+LEFT JOIN employees.documents doc ON doc.employee_id = emp.employee_id
+LEFT JOIN employees.document_types dt ON dt.type_id = doc.document_type_id
+-- Phones
+LEFT JOIN employees.employee_phones ph ON ph.employee_id = emp.employee_id
+LEFT JOIN reference.contact_types ct_phone ON ct_phone.type_id = ph.contact_type_id -- Separate JOIN for phone contact type
+-- Emails
+LEFT JOIN employees.employee_emails em ON em.employee_id = emp.employee_id
+LEFT JOIN reference.contact_types ct_email ON ct_email.type_id = em.contact_type_id -- Separate JOIN for email contact type
+-- Addresses
+LEFT JOIN employees.address ad ON ad.employee_id = emp.employee_id
+-- User Account
+LEFT JOIN authentication.users us ON us.user_id = emp.user_id;
 
 
 

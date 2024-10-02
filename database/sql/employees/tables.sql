@@ -137,7 +137,7 @@ CREATE TABLE employees.address(
     house_number VARCHAR(20),
     postal_code VARCHAR(20),
     country_code VARCHAR(3),
-    aditional_details VARCHAR(255),
+    additional_details VARCHAR(255),
     is_current BOOLEAN DEFAULT FALSE,
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),
