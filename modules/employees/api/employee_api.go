@@ -52,8 +52,12 @@ func (api *EmployeeApi) Routes(router *fiber.App) {
 	group.Get("/:id/personal-info", api.getPersonalInfo)
 
 	group.Get("/:id/professional-info", api.getProfessionalInfo)
+	group.Post("/:id/professional-info", api.addProfessionalInfo)
+	group.Put("/:id/professional-info", api.updateProfessionalInfo)
 
 	group.Get("/:id/addresses", api.getAddresses)
+	group.Post("/:id/addresses", api.addAddress)
+	group.Put("/:id/addresses", api.updateAddress)
 
 	group.Get("/:id/documents", api.getDocuments)
 
@@ -141,24 +145,6 @@ func (api *EmployeeApi) getPersonalInfo(c *fiber.Ctx) error {
 		return api.HandleErrorsApi(c, err)
 	}
 	return c.JSON(personalInfo)
-}
-
-func (api *EmployeeApi) getProfessionalInfo(c *fiber.Ctx) error {
-	id := c.Params("id")
-	professionalInfo, err := api.professionalInfoService.GetByEmployeeUniqueId(c.Context(), id)
-	if err != nil {
-		return api.HandleErrorsApi(c, err)
-	}
-	return c.JSON(professionalInfo)
-}
-
-func (api *EmployeeApi) getAddresses(c *fiber.Ctx) error {
-	id := c.Params("id")
-	addresses, err := api.addressService.GetAllByEmployeeUniqueId(c.Context(), id)
-	if err != nil {
-		return api.HandleErrorsApi(c, err)
-	}
-	return c.JSON(addresses)
 }
 
 func (api *EmployeeApi) getDocuments(c *fiber.Ctx) error {
