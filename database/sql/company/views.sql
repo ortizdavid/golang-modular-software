@@ -1,7 +1,8 @@
 -- views for 'company' schema 
 
 -- View: view_company_data
-CREATE OR REPLACE VIEW company.view_company_data AS
+DROP VIEW IF EXISTS company.view_company_data;
+CREATE VIEW company.view_company_data AS
 SELECT co.company_id, co.unique_id,
     co.company_name, co.company_acronym,
     co.company_type, co.industry,
@@ -16,7 +17,8 @@ ORDER BY created_at DESC;
 
 
 -- View: view_branch_data
-CREATE OR REPLACE VIEW company.view_branch_data AS
+DROP VIEW IF EXISTS company.view_branch_data;
+CREATE VIEW company.view_branch_data AS
 SELECT br.branch_id, br.unique_id,
     br.branch_name, br.code,
     br.address,br.phone, 
@@ -30,7 +32,8 @@ ORDER BY created_at DESC;
 
 
 -- View: view_office_data
-CREATE OR REPLACE VIEW company.view_office_data AS
+DROP VIEW IF EXISTS company.view_office_data;
+CREATE VIEW company.view_office_data AS
 SELECT of.office_id, of.unique_id,
     of.office_name, of.address,
     of.phone, of.email,
@@ -43,7 +46,8 @@ ORDER BY created_at DESC;
 
 
 -- View: view_department_data
-CREATE OR REPLACE VIEW company.view_department_data AS
+DROP VIEW IF EXISTS company.view_department_data;
+CREATE VIEW company.view_department_data AS
 SELECT dpt.department_id, dpt.unique_id,
     dpt.department_name, dpt.acronym,
     dpt.description,
@@ -56,7 +60,8 @@ ORDER BY created_at DESC;
 
 
 -- View: view_room_data
-CREATE OR REPLACE VIEW company.view_room_data AS
+DROP VIEW IF EXISTS company.view_room_data;
+CREATE VIEW company.view_room_data AS
 SELECT rm.room_id, rm.unique_id,
     rm.room_name, rm.number,
     rm.capacity,
@@ -71,7 +76,8 @@ ORDER BY created_at DESC;
 
 
 -- View: view_policy_data
-CREATE OR REPLACE VIEW company.view_policy_data AS
+DROP VIEW IF EXISTS company.view_policy_data;
+CREATE VIEW company.view_policy_data AS
 SELECT pl.policy_id, pl.unique_id,
     pl.policy_name, pl.description,
     TO_CHAR(pl.effective_date, 'YYYY-MM-DD') AS effective_date,
@@ -84,7 +90,8 @@ ORDER BY created_at DESC;
 
 
 -- View: view_project_data
-CREATE OR REPLACE VIEW company.view_project_data AS
+DROP VIEW IF EXISTS company.view_project_data;
+CREATE VIEW company.view_project_data AS
 SELECT pr.project_id, pr.unique_id,
     pr.project_name, pr.description,
     TO_CHAR(pr.start_date, 'YYYY-MM-DD') AS start_date,
@@ -100,7 +107,8 @@ ORDER BY created_at DESC;
 
 
 -- view: view_statistics_data
-CREATE OR REPLACE VIEW company.view_statistics_data AS
+DROP VIEW IF EXISTS company.view_statistics_data;
+CREATE VIEW company.view_statistics_data AS
 SELECT 
     (SELECT COUNT(*) FROM company.branches) AS branches,
     (SELECT COUNT(*) FROM company.offices) AS offices,
@@ -108,4 +116,5 @@ SELECT
     (SELECT COUNT(*) FROM company.rooms) AS rooms,
     (SELECT COUNT(*) FROM company.projects) AS projects,
     (SELECT COUNT(*) FROM company.policies) AS policies;
+
 

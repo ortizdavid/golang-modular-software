@@ -1,5 +1,6 @@
 -- view: view_country_data
-CREATE OR REPLACE VIEW reference.view_country_data AS 
+DROP VIEW IF EXISTS reference.view_country_data;
+CREATE VIEW reference.view_country_data AS 
 SELECT 
     co.country_id, 
     co.unique_id,
@@ -15,7 +16,8 @@ ORDER BY co.created_at DESC;
 
 
 -- view: view_statistics_data
-CREATE OR REPLACE VIEW reference.view_statistics_data AS
+DROP VIEW IF EXISTS reference.view_statistics_data;
+CREATE VIEW reference.view_statistics_data AS
 SELECT 
     (SELECT COUNT(*) FROM reference.countries) AS countries,
     (SELECT COUNT(*) FROM reference.currencies) AS currencies,

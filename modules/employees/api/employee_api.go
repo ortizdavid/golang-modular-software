@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -42,6 +44,7 @@ func NewEmployeeApi(db *database.Database) *EmployeeApi {
 func (api *EmployeeApi) Routes(router *fiber.App) {
 	group := router.Group("/api/employees/employee-info")
 	group.Get("", api.getAll)
+	group.Post("", api.create)
 	group.Get("/search-results", api.search)
 	group.Get("/:id", api.getByUniqueId)
 	group.Get("/by-identification/:identNumber", api.getByIdentificationNumber)
@@ -52,6 +55,21 @@ func (api *EmployeeApi) Routes(router *fiber.App) {
 	group.Get("/:id/emails", api.getEmails)
 	group.Get("/:id/phones", api.getPhones)
 	group.Get("/:id/account", api.getAccount)
+}
+
+func (api *EmployeeApi) create(c *fiber.Ctx) error {
+	var request entities.CreateEmployeeRequest
+	if err := c.BodyParser(&request); err != nil {
+		return api.HandleErrorsApi(c, err)
+	}
+	err := api.service.Create(c.Context(), request)
+	if err != nil {
+		api.errorLogger.Error(c, err.Error())
+		return api.HandleErrorsApi(c, err)
+	}
+	msg := fmt.Sprintf("Employee '%s %s' created", request.FirstName, request.LastName)
+	api.infoLogger.Info(c, msg)
+	return c.JSON(msg)
 }
 
 func (api *EmployeeApi) getAll(c *fiber.Ctx) error {

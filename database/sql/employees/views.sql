@@ -1,7 +1,9 @@
 -- views for 'employees' schema 
 
+
 -- View: view_employee_data
-CREATE OR REPLACE VIEW employees.view_employee_data AS
+DROP VIEW employees.view_employee_data;
+CREATE VIEW employees.view_employee_data AS
 SELECT emp.employee_id, emp.unique_id,
     emp.first_name, emp.last_name,
     emp.identification_number,
@@ -18,12 +20,13 @@ FROM employees.employees emp
 LEFT JOIN reference.identification_types it ON(it.type_id = emp.identification_type_id)
 LEFT JOIN reference.countries co ON(co.country_id = emp.country_id)
 LEFT JOIN reference.marital_statuses ms ON(ms.status_id = emp.marital_status_id)
-ORDER BY emp.created_at;
+ORDER BY emp.created_at DESC;
 
 
 
 -- view: view_professional_info_data
-CREATE OR REPLACE VIEW employees.view_professional_info_data AS
+DROP VIEW IF EXISTS employees.view_professional_info_data;
+CREATE VIEW employees.view_professional_info_data AS
 SELECT pr.professional_id, pr.unique_id,
     TO_CHAR(pr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(pr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
@@ -43,7 +46,8 @@ LEFT JOIN employees.job_titles jt ON(jt.job_title_id = pr.job_title_id);
 
 
 -- view: view_document_data
-CREATE OR REPLACE VIEW employees.view_document_data AS
+DROP VIEW IF EXISTS employees.view_document_data;
+CREATE VIEW employees.view_document_data AS
 SELECT doc.document_id, doc.unique_id,
     doc.document_name, doc.document_number,
     TO_CHAR(doc.expiration_date, 'YYYY-MM-DD') AS expiration_date,
@@ -64,7 +68,8 @@ ORDER BY type_id;
 
 
 -- view: view_address_data
-CREATE OR REPLACE VIEW employees.view_address_data AS
+DROP VIEW IF EXISTS employees.view_address_data;
+CREATE VIEW employees.view_address_data AS
 SELECT ad.address_id, ad.unique_id,
     ad.state, ad.city,
     ad.neighborhood, ad.street,
@@ -83,7 +88,8 @@ ORDER BY created_at DESC;
 
 
 -- view: view_employee_email_data
-CREATE OR REPLACE VIEW employees.view_employee_email_data AS
+DROP VIEW IF EXISTS employees.view_employee_email_data;
+CREATE VIEW employees.view_employee_email_data AS
 SELECT em.email_id, em.unique_id,
     em.email_address,
     TO_CHAR(em.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
@@ -100,7 +106,8 @@ LEFT JOIN reference.contact_types ct ON (ct.type_id = em.contact_type_id);
 
 
 -- view: view_employee_phone_data
-CREATE OR REPLACE VIEW employees.view_employee_phone_data AS
+DROP VIEW IF EXISTS employees.view_employee_phone_data;
+CREATE VIEW employees.view_employee_phone_data AS
 SELECT ph.phone_id, ph.unique_id,
     ph.phone_number,
     TO_CHAR(ph.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
@@ -117,7 +124,8 @@ LEFT JOIN reference.contact_types ct ON (ct.type_id = ph.contact_type_id);
 
 
 -- view: view_employee_account_data
-CREATE OR REPLACE VIEW employees.view_employee_account_data AS
+DROP VIEW IF EXISTS employees.view_employee_account_data;
+CREATE VIEW employees.view_employee_account_data AS
 SELECT us.user_id, us.unique_id,
     us.user_name, us.email, 
     TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
@@ -192,11 +200,10 @@ LEFT JOIN authentication.users us ON us.user_id = emp.user_id;
 
 
 -- view: view_statistics_data
-CREATE OR REPLACE VIEW employees.view_statistics_data AS
+DROP VIEW IF EXISTS employees.view_statistics_data;
+CREATE VIEW employees.view_statistics_data AS
 SELECT 
     (SELECT COUNT(*) FROM employees.job_titles) AS job_titles,
     (SELECT COUNT(*) FROM employees.employees) AS employees,
     (SELECT COUNT(*) FROM employees.document_types) AS document_types;
-
-
 

@@ -1,7 +1,10 @@
 package entities
 
 import (
+	"fmt"
+
 	"github.com/go-playground/validator/v10"
+	"github.com/ortizdavid/go-nopain/datetime"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 )
 
@@ -28,6 +31,9 @@ func (req CreateEmployeeRequest) Validate() error {
 			return helpers.ValidatorFormatErrors(errs)
 		}
 		return err
+	}
+	if !datetime.IsValidDate(req.DateOfBirth) {
+		return fmt.Errorf("invalid format for 'Date of birth'. must be YYYY-MM-DD")
 	}
 	return nil
 }
