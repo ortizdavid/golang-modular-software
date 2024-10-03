@@ -100,9 +100,9 @@ type EmployeeCompleteDataRaw struct {
 
     // Phones and Emails
     PhoneNumber          string `json:"phone_number"`
-    PhoneContactTypeName string `json:"contact_type"`
+    PhoneContactTypeName string `json:"phone_contact_type"`
     EmailAddress         string `json:"email_address"`
-    EmailContactTypeName string `json:"contact_type"`
+    EmailContactTypeName string `json:"email_contact_type"`
 
     // Addresses
     State                string `json:"state"`
