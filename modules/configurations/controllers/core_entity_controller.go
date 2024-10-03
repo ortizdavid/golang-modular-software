@@ -134,15 +134,11 @@ func (ctrl *CoreEntityController) editForm(c *fiber.Ctx) error {
 func (ctrl *CoreEntityController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	coreEntity, err := ctrl.service.GetCoreEntityByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
 	var request entities.UpdateCoreEntityRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.Update(c.Context(), coreEntity.EntityId, request)
+	err := ctrl.service.Update(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

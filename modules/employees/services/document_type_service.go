@@ -51,11 +51,11 @@ func (s *DocumentTypeService) Create(ctx context.Context, request entities.Creat
 	return nil
 }
 
-func (s *DocumentTypeService) Update(ctx context.Context, documentTypeId int, request entities.UpdateDocumentTypeRequest) error {
+func (s *DocumentTypeService) Update(ctx context.Context, uniqueId string, request entities.UpdateDocumentTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	documentType, err := s.repository.FindById(ctx, documentTypeId)
+	documentType, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("document type not found")
 	}

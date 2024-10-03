@@ -68,15 +68,15 @@ func (s *RoleService) CreateRole(ctx context.Context, request entities.CreateRol
 	return nil
 }
 
-func (s *RoleService) UpdateRole(ctx context.Context, roleId int, request entities.UpdateRoleRequest) error {
+func (s *RoleService) UpdateRole(ctx context.Context, uniqueId string, request entities.UpdateRoleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	role, err := s.repository.FindById(ctx, roleId)
+	role, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("role not found")
 	}
-	exists, err := s.userRoleRepository.ExistsByRoleId(ctx, roleId)
+	exists, err := s.userRoleRepository.ExistsByRoleId(ctx, role.RoleId)
     if err != nil {
         return err
     }

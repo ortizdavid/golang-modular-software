@@ -47,15 +47,15 @@ func (s *PermissionService) CreatePermission(ctx context.Context, request entiti
 	return nil
 }
 
-func (s *PermissionService) UpdatePermission(ctx context.Context, permissionId int, request entities.UpdatePermissionRequest) error {
+func (s *PermissionService) UpdatePermission(ctx context.Context, uniqueId string, request entities.UpdatePermissionRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	permission, err := s.repository.FindById(ctx, permissionId)
+	permission, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("permission not found")
 	}
-	exists, err := s.permissionRoleRepository.ExistsByPermissionId(ctx, permissionId)
+	exists, err := s.permissionRoleRepository.ExistsByPermissionId(ctx, permission.PermissionId)
     if err != nil {
         return err
     }

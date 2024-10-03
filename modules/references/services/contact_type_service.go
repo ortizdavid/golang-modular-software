@@ -52,11 +52,11 @@ func (s *ContactTypeService) Create(ctx context.Context, request entities.Create
 	return nil
 }
 
-func (s *ContactTypeService) Update(ctx context.Context, contactTypeId int, request entities.UpdateTypeRequest) error {
+func (s *ContactTypeService) Update(ctx context.Context, uniqueId string, request entities.UpdateTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	contactType, err := s.repository.FindById(ctx, contactTypeId)
+	contactType, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("type not found")
 	}

@@ -59,11 +59,11 @@ func (s *DepartmentService) Create(ctx context.Context, request entities.CreateD
 	return nil
 }
 
-func (s *DepartmentService) Update(ctx context.Context, departmentId int, request entities.UpdateDepartmentRequest) error {
+func (s *DepartmentService) Update(ctx context.Context, uniqueId string, request entities.UpdateDepartmentRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	department, err := s.repository.FindById(ctx, departmentId)
+	department, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("department not found")
 	}

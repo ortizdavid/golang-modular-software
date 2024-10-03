@@ -45,15 +45,21 @@ func (api *EmployeeApi) Routes(router *fiber.App) {
 	group := router.Group("/api/employees/employee-info")
 	group.Get("", api.getAll)
 	group.Post("", api.create)
-	group.Get("/search-results", api.search)
+	group.Put("/:id", api.update)
 	group.Get("/:id", api.getByUniqueId)
 	group.Get("/by-identification/:identNumber", api.getByIdentificationNumber)
+	group.Get("/search-results", api.search)
 	group.Get("/:id/personal-info", api.getPersonalInfo)
+
 	group.Get("/:id/professional-info", api.getProfessionalInfo)
+
 	group.Get("/:id/addresses", api.getAddresses)
+
 	group.Get("/:id/documents", api.getDocuments)
+
 	group.Get("/:id/emails", api.getEmails)
 	group.Get("/:id/phones", api.getPhones)
+	
 	group.Get("/:id/account", api.getAccount)
 }
 
@@ -68,6 +74,22 @@ func (api *EmployeeApi) create(c *fiber.Ctx) error {
 		return api.HandleErrorsApi(c, err)
 	}
 	msg := fmt.Sprintf("Employee '%s %s' created", request.FirstName, request.LastName)
+	api.infoLogger.Info(c, msg)
+	return c.JSON(msg)
+}
+
+func (api *EmployeeApi) update(c *fiber.Ctx) error {
+	id := c.Params("id")
+	var request entities.UpdateEmployeeRequest
+	if err := c.BodyParser(&request); err != nil {
+		return api.HandleErrorsApi(c, err)
+	}
+	err := api.service.Update(c.Context(), id, request)
+	if err != nil {
+		api.errorLogger.Error(c, err.Error())
+		return api.HandleErrorsApi(c, err)
+	}
+	msg := fmt.Sprintf("Employee '%s %s' updated", request.FirstName, request.LastName)
 	api.infoLogger.Info(c, msg)
 	return c.JSON(msg)
 }

@@ -55,7 +55,7 @@ func (s *CompanyService) Create(ctx context.Context, request entities.CreateComp
     return nil
 }
 
-func (s *CompanyService) Update(ctx context.Context, companyId int, request entities.UpdateCompanyRequest) error {
+func (s *CompanyService) Update(ctx context.Context, uniqueId string, request entities.UpdateCompanyRequest) error {
     if err := request.Validate(); err != nil {
         return apperrors.NewBadRequestError(err.Error())
     }
@@ -63,7 +63,7 @@ func (s *CompanyService) Update(ctx context.Context, companyId int, request enti
 	if err != nil {
 		return err
 	}
-    company, err := s.repository.FindById(ctx, companyId)
+    company, err := s.repository.FindByUniqueId(ctx, uniqueId)
     if err != nil {
         return apperrors.NewNotFoundError("company not found")
     }

@@ -131,11 +131,7 @@ func (ctrl *PermissionController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	permission, err := ctrl.service.GetPermissionByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	err = ctrl.service.UpdatePermission(c.Context(), permission.PermissionId, request)
+	err := ctrl.service.UpdatePermission(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

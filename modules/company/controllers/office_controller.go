@@ -137,15 +137,11 @@ func (ctrl *OfficeController) editForm(c *fiber.Ctx) error {
 func (ctrl *OfficeController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	office, err := ctrl.service.GetByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
 	var request entities.UpdateOfficeRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.Update(c.Context(), office.OfficeId, request)
+	err := ctrl.service.Update(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

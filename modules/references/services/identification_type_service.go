@@ -52,11 +52,11 @@ func (s *IdentificationTypeService) Create(ctx context.Context, request entities
 	return nil
 }
 
-func (s *IdentificationTypeService) Update(ctx context.Context, identTypeId int, request entities.UpdateTypeRequest) error {
+func (s *IdentificationTypeService) Update(ctx context.Context, uniqueId string, request entities.UpdateTypeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	identType, err := s.repository.FindById(ctx, identTypeId)
+	identType, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("type not found")
 	}

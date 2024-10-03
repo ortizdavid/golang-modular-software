@@ -133,11 +133,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 	})
 }
 
-func (s *UserService) UpdateUser(ctx context.Context, userId int64, request entities.UpdateUserRequest) error {
+func (s *UserService) UpdateUser(ctx context.Context, uniqueId string, request entities.UpdateUserRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	user, err := s.repository.FindById(ctx, userId)
+	user, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("user not found. invalid user id")
 	}

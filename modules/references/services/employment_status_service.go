@@ -53,11 +53,11 @@ func (s *EmploymentStatusService) Create(ctx context.Context, request entities.C
 	return nil
 }
 
-func (s *EmploymentStatusService) Update(ctx context.Context, employmentStatusId int, request entities.UpdateStatusRequest) error {
+func (s *EmploymentStatusService) Update(ctx context.Context, uniqueId string, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	employmentStatus, err := s.repository.FindById(ctx, employmentStatusId)
+	employmentStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")
 	}

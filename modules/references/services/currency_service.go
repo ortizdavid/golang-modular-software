@@ -52,11 +52,11 @@ func (s *CurrencyService) Create(ctx context.Context, request entities.CreateCur
 	return nil
 }
 
-func (s *CurrencyService) Update(ctx context.Context, currencyId int, request entities.UpdateCurrencyRequest) error {
+func (s *CurrencyService) Update(ctx context.Context, uniqueId string, request entities.UpdateCurrencyRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	currency, err := s.repository.FindById(ctx, currencyId)
+	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("currency not found")
 	}

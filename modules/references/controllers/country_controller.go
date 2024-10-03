@@ -130,15 +130,11 @@ func (ctrl *CountryController) editForm(c *fiber.Ctx) error {
 func (ctrl *CountryController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	country, err := ctrl.service.GetByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
 	var request entities.UpdateCountryRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.Update(c.Context(), country.CountryId, request)
+	err := ctrl.service.Update(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

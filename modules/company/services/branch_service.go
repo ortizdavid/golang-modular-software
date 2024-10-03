@@ -61,11 +61,11 @@ func (s *BranchService) Create(ctx context.Context, request entities.CreateBranc
 	return nil
 }
 
-func (s *BranchService) Update(ctx context.Context, branchId int, request entities.UpdateBranchRequest) error {
+func (s *BranchService) Update(ctx context.Context, uniqueId string, request entities.UpdateBranchRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	branch, err := s.repository.FindById(ctx, branchId)
+	branch, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("branch not found")
 	}

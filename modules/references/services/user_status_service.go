@@ -52,11 +52,11 @@ func (s *UserStatusService) Create(ctx context.Context, request entities.CreateS
 	return nil
 }
 
-func (s *UserStatusService) Update(ctx context.Context, userStatusId int, request entities.UpdateStatusRequest) error {
+func (s *UserStatusService) Update(ctx context.Context, uniqueId string, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	userStatus, err := s.repository.FindById(ctx, userStatusId)
+	userStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")
 	}

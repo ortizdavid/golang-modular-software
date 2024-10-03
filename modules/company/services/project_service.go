@@ -70,7 +70,7 @@ func (s *ProjectService) Create(ctx context.Context, request entities.CreateProj
 	return nil
 }
 
-func (s *ProjectService) Update(ctx context.Context, projectId int, request entities.UpdateProjectRequest) error {
+func (s *ProjectService) Update(ctx context.Context, uniqueId string, request entities.UpdateProjectRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -82,7 +82,7 @@ func (s *ProjectService) Update(ctx context.Context, projectId int, request enti
 	if err != nil {
 		return err
 	}
-	project, err := s.repository.FindById(ctx, projectId)
+	project, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("project not found")
 	}

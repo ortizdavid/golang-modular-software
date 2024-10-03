@@ -64,7 +64,7 @@ func (s *PolicyService) Create(ctx context.Context, request entities.CreatePolic
 	return nil
 }
 
-func (s *PolicyService) Update(ctx context.Context, policyId int, request entities.UpdatePolicyRequest) error {
+func (s *PolicyService) Update(ctx context.Context, uniqueId string, request entities.UpdatePolicyRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -72,7 +72,7 @@ func (s *PolicyService) Update(ctx context.Context, policyId int, request entiti
 	if err != nil {
 		return err
 	}
-	policy, err := s.repository.FindById(ctx, policyId)
+	policy, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("policy not found")
 	}

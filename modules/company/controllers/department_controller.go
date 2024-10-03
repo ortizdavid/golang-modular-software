@@ -142,15 +142,11 @@ func (ctrl *DepartmentController) editForm(c *fiber.Ctx) error {
 func (ctrl *DepartmentController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	department, err := ctrl.service.GetByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
 	var request entities.UpdateDepartmentRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.Update(c.Context(), department.DepartmentId, request)
+	err := ctrl.service.Update(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

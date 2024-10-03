@@ -137,15 +137,11 @@ func (ctrl *BranchController) editForm(c *fiber.Ctx) error {
 func (ctrl *BranchController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
-	branch, err := ctrl.service.GetByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
 	var request entities.UpdateBranchRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.Update(c.Context(), branch.BranchId, request)
+	err := ctrl.service.Update(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)

@@ -52,11 +52,11 @@ func (s *ModuleService) Create(ctx context.Context, request entities.CreateModul
 	return nil
 }
 
-func (s *ModuleService) Update(ctx context.Context, moduleId int, request entities.UpdateModuleRequest) error {
+func (s *ModuleService) Update(ctx context.Context, uniqueId string, request entities.UpdateModuleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	module, err := s.repository.FindById(ctx, moduleId)
+	module, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("module not found")
 	}

@@ -62,7 +62,7 @@ func (s *EmployeeService) Create(ctx context.Context, request entities.CreateEmp
 	return nil
 }
 
-func (s *EmployeeService) Update(ctx context.Context, employeeId int64, request entities.UpdateEmployeeRequest) error {
+func (s *EmployeeService) Update(ctx context.Context, uniqueId string, request entities.UpdateEmployeeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
@@ -70,7 +70,7 @@ func (s *EmployeeService) Update(ctx context.Context, employeeId int64, request 
 	if err != nil {
 		return err
 	}
-	employee, err := s.repository.FindById(ctx, employeeId)
+	employee, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("employee not found")
 	}

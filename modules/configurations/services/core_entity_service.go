@@ -54,11 +54,11 @@ func (s *CoreEntityService) Create(ctx context.Context, request entities.CreateC
 	return nil
 }
 
-func (s *CoreEntityService) Update(ctx context.Context, entityId int, request entities.UpdateCoreEntityRequest) error {
+func (s *CoreEntityService) Update(ctx context.Context, uniqueId string, request entities.UpdateCoreEntityRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	coreEntity, err := s.repository.FindById(ctx, entityId)
+	coreEntity, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("coreEntity not found")
 	}

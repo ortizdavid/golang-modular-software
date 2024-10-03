@@ -98,20 +98,16 @@ func (ctrl *UserController) editForm(c *fiber.Ctx) error {
 
 func (ctrl *UserController) edit(c *fiber.Ctx) error {
 	id := c.Params("id")
-	user, err := ctrl.service.GetUserByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
 	var request entities.UpdateUserRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	err = ctrl.service.UpdateUser(c.Context(), user.UserId, request)
+	err := ctrl.service.UpdateUser(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User '"+user.UserName+"' edited successfuly")
+	ctrl.infoLogger.Info(c, "User '"+request.UserName+"' edited successfuly")
 	return c.Redirect("/user-management/users")
 }
 

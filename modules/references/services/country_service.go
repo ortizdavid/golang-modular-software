@@ -53,11 +53,11 @@ func (s *CountryService) Create(ctx context.Context, request entities.CreateCoun
 	return nil
 }
 
-func (s *CountryService) Update(ctx context.Context, countryId int, request entities.UpdateCountryRequest) error {
+func (s *CountryService) Update(ctx context.Context, uniqueId string, request entities.UpdateCountryRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	country, err := s.repository.FindById(ctx, countryId)
+	country, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("country not found")
 	}

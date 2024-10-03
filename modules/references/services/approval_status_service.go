@@ -52,11 +52,11 @@ func (s *ApprovalStatusService) Create(ctx context.Context, request entities.Cre
 	return nil
 }
 
-func (s *ApprovalStatusService) Update(ctx context.Context, approvalStatusId int, request entities.UpdateStatusRequest) error {
+func (s *ApprovalStatusService) Update(ctx context.Context, uniqueId string, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	approvalStatus, err := s.repository.FindById(ctx, approvalStatusId)
+	approvalStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")
 	}

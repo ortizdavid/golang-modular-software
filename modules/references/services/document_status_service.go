@@ -55,11 +55,11 @@ func (s *DocumentStatusService) Create(ctx context.Context, request entities.Cre
 	return nil
 }
 
-func (s *DocumentStatusService) Update(ctx context.Context, documentStatusId int, request entities.UpdateStatusRequest) error {
+func (s *DocumentStatusService) Update(ctx context.Context, uniqueId string, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	documentStatus, err := s.repository.FindById(ctx, documentStatusId)
+	documentStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")
 	}

@@ -61,11 +61,11 @@ func (s *OfficeService) Create(ctx context.Context, request entities.CreateOffic
 	return nil
 }
 
-func (s *OfficeService) Update(ctx context.Context, officeId int, request entities.UpdateOfficeRequest) error {
+func (s *OfficeService) Update(ctx context.Context, uniqueId string, request entities.UpdateOfficeRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	office, err := s.repository.FindById(ctx, officeId)
+	office, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("office not found")
 	}
@@ -116,25 +116,6 @@ func (s *OfficeService) GetAll(ctx context.Context) ([]entities.Office, error) {
 	}
 	return offices, nil
 }
-
-/*func (s *OfficeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchOfficeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
-	count, err := s.repository.CountByParam(ctx, request.SearchParam)
-	if err != nil {
-		return nil, apperrors.NewNotFoundError("No offices found")
-	}
-	if err := paginationParams.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
-	}
-	offices, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
-	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
-	}
-	pagination, err := helpers.NewPagination(fiberCtx, offices, count, paginationParams.CurrentPage, paginationParams.Limit)
-	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
-	}
-	return pagination, nil
-}*/
 
 func (s *OfficeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
 	office, err := s.repository.GetDataByUniqueId(ctx, uniqueId)

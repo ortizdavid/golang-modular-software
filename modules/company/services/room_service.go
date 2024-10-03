@@ -66,11 +66,11 @@ func (s *RoomService) Create(ctx context.Context, request entities.CreateRoomReq
 	return nil
 }
 
-func (s *RoomService) Update(ctx context.Context, roomId int, request entities.UpdateRoomRequest) error {
+func (s *RoomService) Update(ctx context.Context, uniqueId string, request entities.UpdateRoomRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	room, err := s.repository.FindById(ctx, roomId)
+	room, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("room not found")
 	}

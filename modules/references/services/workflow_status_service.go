@@ -55,11 +55,11 @@ func (s *WorkflowStatusService) Create(ctx context.Context, request entities.Cre
 	return nil
 }
 
-func (s *WorkflowStatusService) Update(ctx context.Context, workflowStatusId int, request entities.UpdateStatusRequest) error {
+func (s *WorkflowStatusService) Update(ctx context.Context, uniqueId string, request entities.UpdateStatusRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	workflowStatus, err := s.repository.FindById(ctx, workflowStatusId)
+	workflowStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("status not found")
 	}

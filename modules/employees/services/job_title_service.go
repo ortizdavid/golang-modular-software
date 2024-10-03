@@ -51,11 +51,11 @@ func (s *JobTitleService) Create(ctx context.Context, request entities.CreateJob
 	return nil
 }
 
-func (s *JobTitleService) Update(ctx context.Context, jobTitleId int, request entities.UpdateJobTitleRequest) error {
+func (s *JobTitleService) Update(ctx context.Context, uniqueId string, request entities.UpdateJobTitleRequest) error {
 	if err := request.Validate(); err != nil {
 		return apperrors.NewBadRequestError(err.Error())
 	}
-	jobTitle, err := s.repository.FindById(ctx, jobTitleId)
+	jobTitle, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return apperrors.NewNotFoundError("job title not found")
 	}

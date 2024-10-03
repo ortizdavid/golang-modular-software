@@ -102,11 +102,7 @@ func (ctrl *RoleController) edit(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	role, err := ctrl.service.GetRoleByUniqueId(c.Context(), id)
-	if err != nil {
-		return ctrl.HandleErrorsWeb(c, err)
-	}
-	err = ctrl.service.UpdateRole(c.Context(), role.RoleId, request)
+	err := ctrl.service.UpdateRole(c.Context(), id, request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
