@@ -20,7 +20,7 @@ func (api *EmployeeApi) addProfessionalInfo(c *fiber.Ctx) error {
 	return c.JSON(professionalInfo)
 }
 
-func (api *EmployeeApi) updateProfessionalInfo(c *fiber.Ctx) error {
+func (api *EmployeeApi) editProfessionalInfo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	professionalInfo, err := api.professionalInfoService.GetByEmployeeUniqueId(c.Context(), id)
 	if err != nil {

@@ -20,7 +20,7 @@ func (api *EmployeeApi) addAddress(c *fiber.Ctx) error {
 	return c.JSON(addresses)
 }
 
-func (api *EmployeeApi) updateAddress(c *fiber.Ctx) error {
+func (api *EmployeeApi) editAddress(c *fiber.Ctx) error {
 	id := c.Params("id")
 	addresses, err := api.addressService.GetAllByEmployeeUniqueId(c.Context(), id)
 	if err != nil {

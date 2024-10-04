@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"fmt"
+	"slices"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	authentication "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
@@ -43,6 +46,9 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
+	if !slices.Contains(ctrl.accountService.AllowedRolesIdList(), request.RoleId) {
+		return ctrl.HandleErrorsWeb(c, fmt.Errorf("role id '%d' not allowed", request.RoleId))
+	}
 	err = ctrl.userService.CreateUser(c.Context(), request)
 	if err != nil {
 		ctrl.errorLogger.Error(c, err.Error())
@@ -52,7 +58,7 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 	assRequest := authentication.AssociateUserRequest{
 		UserId: userId,
 		EntityId: employee.EmployeeId,
-		EntityName: "employee",
+		EntityName: authentication.RoleEmployee.Code,
 	}
 	err = ctrl.userService.AssociateUserToRole(c.Context(), assRequest)
 	if err != nil {
@@ -98,6 +104,9 @@ func (ctrl *EmployeeController) associateUserAccount(c *fiber.Ctx) error {
 	var request authentication.AssociateUserRequest
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
+	}
+	if !slices.Contains(ctrl.accountService.AllowedRolesList(), request.EntityName) {
+		return ctrl.HandleErrorsApi(c, fmt.Errorf("role code '%s' not allowed", request.EntityName))
 	}
 	err = ctrl.userService.AssociateUserToRole(c.Context(), request)
 	if err != nil {

@@ -28,6 +28,9 @@ func (s *EmployeeAccountService) GetById(ctx context.Context, employeeId int64) 
 	if err != nil {
 		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
 	}
+	if employee.EmployeeId == 0 {
+		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
+	}
 	return employee, nil
 }
 
@@ -36,12 +39,18 @@ func (s *EmployeeAccountService) GetByIdentificationNumber(ctx context.Context, 
 	if err != nil {
 		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
 	}
+	if employee.EmployeeId == 0 {
+		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
+	}
 	return employee, nil
 }
 
 func (s *EmployeeAccountService) GetByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.EmployeeAccountData, error) {
 	employee, err := s.repository.GetDataByEmployeeUniqueId(ctx, uniqueId)
 	if err != nil {
+		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
+	}
+	if employee.EmployeeId == 0 {
 		return entities.EmployeeAccountData{}, apperrors.NewNotFoundError("employee account not found")
 	}
 	return employee, nil
@@ -59,5 +68,12 @@ func (s *EmployeeAccountService) AllowedRolesList() []string {
 	return []string{
 		authEntities.RoleEmployee.Code, 
 		authEntities.RoleManager.Code, 
+	}
+}
+
+func (s *EmployeeAccountService) AllowedRolesIdList() []int {
+	return []int{
+		authEntities.RoleEmployee.Id, 
+		authEntities.RoleManager.Id, 
 	}
 }
