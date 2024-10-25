@@ -25,6 +25,9 @@ Example of a complete modular sofware, written in Golang
 ![Modular Arquitecure](docs/_diagrams/Modular%20Architecture.png)
 
 
+## Dependencies Between Modules
+![Dependencies Between Modules](docs/_diagrams/Dependency%20Between%20Modules.png)
+
 ## Module Structure
 ![Structure](docs/_diagrams/Module%20Structure.png)
 
