@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.5 Chrome/126.0.6478.183 Electron/31.3.0 Safari/537.36" version="24.7.5" pages="10">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.5 Chrome/126.0.6478.183 Electron/31.3.0 Safari/537.36" version="24.7.5" pages="7">
   <diagram id="Zslj2A6eSNTsKpFCIRMD" name="Module Creation">
     <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -154,7 +154,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="-jQ-jkX4-1PRMYwYVaUP" name="Dependency Between Modules">
-    <mxGraphModel dx="1375" dy="606" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1900" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -508,220 +508,21 @@
     </mxGraphModel>
   </diagram>
   <diagram id="HpkBo99gjJ2DwrZsj5hr" name="Schema-Objects">
-    <mxGraphModel dx="1477" dy="887" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="520" dy="606" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="XjIlxkY459PRsCvaJ7Lo-1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCF0DB;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="150" y="230" width="440" height="460" as="geometry" />
+        <mxCell id="XjIlxkY459PRsCvaJ7Lo-1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCF0DB;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="120" y="230" width="460" height="470" as="geometry" />
         </mxCell>
-        <mxCell id="XjIlxkY459PRsCvaJ7Lo-2" value="&lt;font style=&quot;font-size: 38px;&quot;&gt;Schema Objects&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=38;fontStyle=1" parent="1" vertex="1">
+        <mxCell id="XjIlxkY459PRsCvaJ7Lo-2" value="&lt;font style=&quot;font-size: 38px;&quot;&gt;Schema Objects&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=38;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="115" y="280" width="470" height="30" as="geometry" />
         </mxCell>
-        <object placeholders="1" c4Name="" c4Type="ContainerScopeBoundary" c4Application="Database Schema for each Module" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;span&gt;&lt;div style=&quot;text-align: center&quot;&gt;%c4Name%&lt;/div&gt;&lt;/span&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Application%&lt;/div&gt;" id="XjIlxkY459PRsCvaJ7Lo-10">
-          <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=1 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];fontStyle=3" parent="1" vertex="1">
-            <mxGeometry x="130" y="210" width="480" height="520" as="geometry" />
+        <object placeholders="1" c4Name="" c4Type="ContainerScopeBoundary" c4Application="Schema for each Module" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;span&gt;&lt;div style=&quot;text-align: center&quot;&gt;%c4Name%&lt;/div&gt;&lt;/span&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Application%&lt;/div&gt;" id="XjIlxkY459PRsCvaJ7Lo-10">
+          <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=1 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];fontStyle=3" vertex="1" parent="1">
+            <mxGeometry x="100" y="210" width="490" height="530" as="geometry" />
           </mxCell>
         </object>
-        <mxCell id="Q_e8Dqy2_4CtafEeQYr3-1" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Schema.View&lt;/b&gt;&lt;/font&gt;" style="html=1;whiteSpace=wrap;rounded=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
-          <mxGeometry x="390" y="350" width="170" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="JEUFsUBIcLCGvoaK76ck-1" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Schema.Table&lt;/b&gt;&lt;/span&gt;" style="html=1;whiteSpace=wrap;rounded=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
-          <mxGeometry x="180" y="350" width="180" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="JEUFsUBIcLCGvoaK76ck-2" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Schema.Procedure&lt;/b&gt;&lt;/font&gt;" style="html=1;whiteSpace=wrap;rounded=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
-          <mxGeometry x="180" y="460" width="180" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="JEUFsUBIcLCGvoaK76ck-3" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Schema.Trigger&lt;/b&gt;&lt;/font&gt;" style="html=1;whiteSpace=wrap;rounded=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
-          <mxGeometry x="390" y="460" width="170" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="JEUFsUBIcLCGvoaK76ck-4" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Shema.Function&lt;/b&gt;&lt;/font&gt;" style="html=1;whiteSpace=wrap;rounded=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
-          <mxGeometry x="180" y="570" width="180" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="JEUFsUBIcLCGvoaK76ck-5" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Schema.Other&lt;/b&gt;&lt;/font&gt;" style="html=1;whiteSpace=wrap;rounded=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
-          <mxGeometry x="390" y="570" width="170" height="80" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="KUg_0bMVlHvCroeKolpB" name="Modular Database">
-    <mxGraphModel dx="890" dy="1022" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-1" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#666666;shadow=0;dashed=0;shape=mxgraph.ios7.icons.data;fillColor=#f5f5f5;gradientColor=#b3b3b3;labelBorderColor=#66B2FF;" parent="1" vertex="1">
-          <mxGeometry x="180" y="120" width="350" height="410" as="geometry" />
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-2" value="Schema A" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=18;" parent="1" vertex="1">
-          <mxGeometry x="290" y="260" width="115" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-3" value="Schema B&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=18;" parent="1" vertex="1">
-          <mxGeometry x="297.5" y="360" width="115" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-4" value="Schema C" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=18;" parent="1" vertex="1">
-          <mxGeometry x="297.5" y="460" width="115" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-6" value="&lt;ul style=&quot;font-size: 13px;&quot;&gt;&lt;li style=&quot;font-size: 13px;&quot;&gt;Tables&lt;/li&gt;&lt;li style=&quot;font-size: 13px;&quot;&gt;Views&lt;/li&gt;&lt;li style=&quot;font-size: 13px;&quot;&gt;Procedures&lt;/li&gt;&lt;li style=&quot;font-size: 13px;&quot;&gt;Triggers&lt;/li&gt;&lt;li style=&quot;font-size: 13px;&quot;&gt;Functions&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;/li&gt;&lt;li style=&quot;font-size: 13px;&quot;&gt;Others&lt;/li&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;shadow=0;fontSize=13;fontStyle=3" parent="1" vertex="1">
-          <mxGeometry x="620" y="180" width="120" height="110" as="geometry" />
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBorderColor=#6acff0;labelBackgroundColor=#3399FF;fillColor=#1ba1e2;strokeColor=#006EAF;entryX=0.1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.011;exitY=0.511;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="xPIfBnfbizgaGiUJFqI3-1" target="xPIfBnfbizgaGiUJFqI3-10" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="620" y="230" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-10" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="620" y="185" width="20" height="105" as="geometry" />
-        </mxCell>
-        <mxCell id="xPIfBnfbizgaGiUJFqI3-15" value="Modular Database" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=25;" parent="1" vertex="1">
-          <mxGeometry x="240" y="160" width="230" height="30" as="geometry" />
-        </mxCell>
-        <object placeholders="1" c4Name="Modular Database" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;/div&gt;" id="uSoucQjS3T9MpitNGDIk-1">
-          <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
-            <mxGeometry x="150" y="100" width="600" height="470" as="geometry" />
-          </mxCell>
-        </object>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="htjiSxEN57CovFc47MET" name="Routes ">
-    <mxGraphModel dx="1187" dy="1362" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="jLpQ8vooyf42GrANBk5j-1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#C9DBC8;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="260" y="300" width="740" height="740" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="1" vertex="1">
-          <mxGeometry x="380" y="435" width="495" height="495" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-3" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#7B9E6E;strokeColor=#3A5431;gradientDirection=north;fontColor=#ffffff;gradientColor=#86C2A2;" parent="1" vertex="1">
-          <mxGeometry x="513.75" y="568.75" width="227.5" height="227.5" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-4" value="&lt;font style=&quot;font-size: 25px;&quot;&gt;Controller Routes&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="509" y="667.5" width="242" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-5" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 29px;&quot;&gt;Module Routes&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;" parent="1" vertex="1">
-          <mxGeometry x="509" y="500" width="224" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-6" value="&lt;font size=&quot;1&quot; style=&quot;&quot;&gt;&lt;b style=&quot;font-size: 29px;&quot;&gt;Application Routes&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="488.75" y="370" width="277.5" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-8" value="http://app.domain/module/controller" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=23;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="1310" y="380" width="300" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-13" value="/controller" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=23;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="1090" y="660" width="200" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-14" value="/module/controller" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=23;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="1190" y="510" width="230" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="jLpQ8vooyf42GrANBk5j-20" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="733" y="685" as="sourcePoint" />
-            <mxPoint x="1130" y="680" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <object placeholders="1" c4Name="Application Routes" c4Type="SystemScopeBoundary" c4Application="Software System" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="LBr3_Q_nMz_RCjk1HByQ-2">
-          <mxCell style="rounded=0;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="240" y="280" width="1430" height="780" as="geometry" />
-          </mxCell>
-        </object>
-        <mxCell id="LBr3_Q_nMz_RCjk1HByQ-4" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="820" y="530" as="sourcePoint" />
-            <mxPoint x="1190" y="530" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="LBr3_Q_nMz_RCjk1HByQ-5" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="880" y="397.75" as="sourcePoint" />
-            <mxPoint x="1260" y="398" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="4muSBOOMRHle7wxFtj3l" name="Communication by Messaging">
-    <mxGraphModel dx="1056" dy="1212" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <object placeholders="1" c4Name="Module Commuminication by Messaging" c4Type="SystemScopeBoundary" c4Application="Software System" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="fMJiMuw9cCGgAMzBKRTZ-1">
-          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
-            <mxGeometry x="50" y="250" width="1100" height="590" as="geometry" />
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Name="&#xa;Message Bus " c4Type="Container" c4Technology="" c4Description="" label="&lt;font style=&quot;font-size: 28px;&quot;&gt;&lt;b style=&quot;font-size: 28px;&quot;&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-size: 28px;&quot;&gt;%c4Technology%&lt;/div&gt;&lt;br style=&quot;font-size: 28px;&quot;&gt;&lt;div style=&quot;font-size: 28px;&quot;&gt;&lt;font style=&quot;font-size: 28px;&quot;&gt;&lt;font style=&quot;font-size: 28px;&quot; color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="fMJiMuw9cCGgAMzBKRTZ-2">
-          <mxCell style="shape=cylinder3;size=15;direction=south;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#f8cecc;fontSize=28;align=center;strokeColor=#b85450;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
-            <mxGeometry x="470" y="570" width="240" height="120" as="geometry" />
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Name="&#xa;Module A" c4Type="Component" c4Technology="e.g. Spring Service" c4Description="" label="&lt;font style=&quot;font-size: 28px;&quot;&gt;&lt;b style=&quot;font-size: 28px;&quot;&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-size: 28px;&quot;&gt;&lt;/div&gt;&lt;br style=&quot;font-size: 28px;&quot;&gt;&lt;div style=&quot;font-size: 28px;&quot;&gt;&lt;font style=&quot;font-size: 28px;&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="fMJiMuw9cCGgAMzBKRTZ-5">
-          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#647687;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#314354;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];fontSize=28;" parent="1" vertex="1">
-            <mxGeometry x="80" y="320" width="240" height="120" as="geometry" />
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Name="&#xa;Module B" c4Type="Component" c4Technology="e.g. Spring Service" c4Description="" label="&lt;font style=&quot;font-size: 28px;&quot;&gt;&lt;b style=&quot;font-size: 28px;&quot;&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;font-size: 28px;&quot;&gt;&lt;/div&gt;&lt;br style=&quot;font-size: 28px;&quot;&gt;&lt;div style=&quot;font-size: 28px;&quot;&gt;&lt;font style=&quot;font-size: 28px;&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="fMJiMuw9cCGgAMzBKRTZ-7">
-          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#647687;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#314354;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];fontSize=28;" parent="1" vertex="1">
-            <mxGeometry x="880" y="320" width="240" height="120" as="geometry" />
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Type="Relationship" id="fMJiMuw9cCGgAMzBKRTZ-9">
-          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=2;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0.335;exitY=1.027;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" target="fMJiMuw9cCGgAMzBKRTZ-2" edge="1" source="fMJiMuw9cCGgAMzBKRTZ-5">
-            <mxGeometry width="240" relative="1" as="geometry">
-              <mxPoint x="160" y="452" as="sourcePoint" />
-              <mxPoint x="340" y="660" as="targetPoint" />
-              <Array as="points">
-                <mxPoint x="160" y="660" />
-              </Array>
-            </mxGeometry>
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Type="Relationship" id="fMJiMuw9cCGgAMzBKRTZ-11">
-          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=2;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0.377;exitY=1.01;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
-            <mxGeometry width="240" relative="1" as="geometry">
-              <mxPoint x="469.9999999999999" y="605.24" as="sourcePoint" />
-              <mxPoint x="222.4" y="440" as="targetPoint" />
-              <Array as="points">
-                <mxPoint x="223.4" y="605" />
-              </Array>
-            </mxGeometry>
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Type="Relationship" id="HGUvb0VNojGdCowsVtzC-2">
-          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=2;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fMJiMuw9cCGgAMzBKRTZ-2">
-            <mxGeometry width="240" relative="1" as="geometry">
-              <mxPoint x="750" y="654.58" as="sourcePoint" />
-              <mxPoint x="1030" y="435" as="targetPoint" />
-              <Array as="points">
-                <mxPoint x="1029" y="655" />
-              </Array>
-            </mxGeometry>
-          </mxCell>
-        </object>
-        <object placeholders="1" c4Type="Relationship" id="HGUvb0VNojGdCowsVtzC-3">
-          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=2;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-            <mxGeometry width="240" relative="1" as="geometry">
-              <mxPoint x="960" y="440" as="sourcePoint" />
-              <mxPoint x="710" y="610" as="targetPoint" />
-              <Array as="points">
-                <mxPoint x="960" y="610" />
-              </Array>
-            </mxGeometry>
-          </mxCell>
-        </object>
-        <mxCell id="uOZ1NGQyUF_j5dUGv6je-2" value="- Apache Kafka&lt;br style=&quot;font-size: 15px;&quot;&gt;- RabbitMQ&lt;br style=&quot;font-size: 15px;&quot;&gt;- Google Pubsub" style="shape=note;strokeWidth=2;fontSize=15;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#4D4D4D;fontStyle=3" vertex="1" parent="1">
-          <mxGeometry x="530" y="740" width="150" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="uOZ1NGQyUF_j5dUGv6je-3" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=0;exitY=0;exitDx=65;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uOZ1NGQyUF_j5dUGv6je-2">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="560" y="740" as="sourcePoint" />
-            <mxPoint x="610" y="690" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="uOZ1NGQyUF_j5dUGv6je-5" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Module Communication&lt;/h1&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;color: rgb(77, 77, 77); font-size: 16px; font-style: italic; font-weight: 700; text-align: center;&quot;&gt;-&lt;/span&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;color: rgb(77, 77, 77); font-style: italic; font-weight: 700; text-align: center;&quot;&gt; Assyncronous&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;color: rgb(77, 77, 77); font-style: italic; font-weight: 700; text-align: center;&quot;&gt;- Interfaces for message contracts&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;background-color: initial; color: rgb(77, 77, 77); font-style: italic; font-weight: 700; text-align: center;&quot;&gt;- Completely Decoupled&lt;/span&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="420" y="280" width="320" height="160" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

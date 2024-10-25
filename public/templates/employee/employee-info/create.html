@@ -4,15 +4,15 @@
     <form class="ui form" action="/employees/employee-info/create" method="POST">
         <div class="field">
             <label for="first_name"><strong>First Name:</strong></label>
-            <input class="ui input" type="text" name="first_name" id="first_name" placeholder="Type First Name" required>
+            <input class="ui input" type="text" name="first_name" id="first_name" placeholder="Type First Name" >
         </div>
         <div class="field">
             <label for="last_name"><strong>Last Name:</strong></label>
-            <input class="ui input" type="text" name="last_name" id="last_name" placeholder="Type Last Name" required>
+            <input class="ui input" type="text" name="last_name" id="last_name" placeholder="Type Last Name" >
         </div>
         <div class="field">
             <label for="identification_type_id"><strong>Identification Type:</strong></label>
-            <select class="ui dropdown" name="identification_type_id" id="identification_type_id" required>
+            <select class="ui dropdown" name="identification_type_id" id="identification_type_id" >
                 <option value="">Select Identification Type</option>
                 {{ range .IdentificationTypes }}
                     <option value="{{ .TypeId }}">{{ .TypeName }}</option>
@@ -21,7 +21,7 @@
         </div>
         <div class="field">
             <label for="identification_number"><strong>Identification Number:</strong></label>
-            <input class="ui input" type="text" name="identification_number" id="identification_number" placeholder="Enter Identification Number" required>
+            <input class="ui input" type="text" name="identification_number" id="identification_number" placeholder="Enter Identification Number" >
         </div>
         <div class="field">
             <label for="gender"><strong>Gender:</strong></label>

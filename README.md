@@ -17,7 +17,7 @@ Example of a complete modular sofware, written in Golang
 - [x] Authentication
 - [x] Company
 - [x] Reference
-- [ ] Employees
+- [x] Employees
 - [ ] Reports
 
 
@@ -29,17 +29,24 @@ Example of a complete modular sofware, written in Golang
 ![Structure](docs/_diagrams/Module%20Structure.png)
 
 
-## Module Comunication
-![Comunication Between Modules](docs/_diagrams/Comunication.jpg)
+## Module Flow
+![Flow](docs/_diagrams/Modules%20-%20Flow.png)
+
+
+## Module Communication
+![Comunication Between Modules](docs/_diagrams/Communication.png)
 
 
 ## Routing 
-![Routing](docs/_diagrams/Routes.jpg)
+![Routing](docs/_diagrams/Routes.png)
 
 
 ## Database 
-![Database Schemas](docs/_diagrams/Modular%20Database.jpg)
+![Database](docs/_diagrams/Modular%20Database.png)
+
+## Schema Objects 
 ![Schema Objects](docs/_diagrams/Schema-Objects.png)
+
 
 ## Module Creation
 ![Module Creation](docs/_diagrams/Module%20Creation.png)
