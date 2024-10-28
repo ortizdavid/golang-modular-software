@@ -55,6 +55,9 @@ Example of a complete modular sofware, written in Golang
 ![Module Creation](docs/_diagrams/Module%20Creation.png)
 
 
+## App Initialization
+![App Initialization](docs/_diagrams/App%20Initalization.png)
+
 ## How to Run App
 - Configure Database:
     - Open Postgres: ``psql -U postgres``

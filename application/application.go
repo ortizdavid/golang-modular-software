@@ -17,11 +17,14 @@ type Application struct {
 // initialize an application with static files, middlewares and controllers
 func NewApplication() (*Application, error) {
 	app := fiber.New(fiber.Config{
-		Views: config.GetTemplateEngine(),		
+		Views: config.GetTemplateEngine(), // Template engines
 	})
 
-	// Main database
-	dbConn, err := database.NewDBConnectionFromEnv("DATABASE_MAIN_URL")
+	// Configure location of css, js, .jpg, .pdf and other files
+	config.ConfigStaticFiles(app)
+
+	// Connect to Database
+	dbConn, err := database.NewDBConnectionFromEnv("DATABASE_MAIN_URL") // Main database
 	if err != nil {
 		return nil, err
 	}
@@ -34,13 +37,10 @@ func NewApplication() (*Application, error) {
 		}
 	}
 
-	// configure location of css, js, .jpg, .pdf and other files
-	config.ConfigStaticFiles(app)
-
-	// initialize all the middlewares needed
+	// Initialize all the middlewares needed
 	middlewares.InitializeMiddlewares(app, db)
 	
-	// initialize all controllers containing routes of application
+	// Initialize all controllers containing routes of application
 	modules.RegisterRoutes(app, db)
 	
 	return &Application{
