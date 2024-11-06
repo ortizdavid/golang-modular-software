@@ -111,6 +111,7 @@ CREATE TABLE employees.documents(
     document_number VARCHAR(40),
     expiration_date DATE,
     file_name VARCHAR(150),
+    upload_path VARCHAR(150),
     status TYPE_DOCUMENT_STATUS DEFAULT 'Active',
     unique_id VARCHAR(50) UNIQUE,
     created_at TIMESTAMP DEFAULT NOW(),

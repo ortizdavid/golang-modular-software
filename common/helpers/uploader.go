@@ -66,8 +66,8 @@ func NewUploader(destinationPath string, maxSize int, allowedExts FileExtensions
 }
 
 // UploadSingleFile uploads a single file using Fiber.
-func (upl Uploader) UploadSingleFile(ctx *fiber.Ctx, formFile string) (UploadInfo, error) {
-	fileHeader, err := ctx.FormFile(formFile)
+func (upl Uploader) UploadSingleFile(c *fiber.Ctx, formFile string) (UploadInfo, error) {
+	fileHeader, err := c.FormFile(formFile)
 	if err != nil {
 		return UploadInfo{}, err
 	}
@@ -107,8 +107,8 @@ func (upl Uploader) UploadSingleFile(ctx *fiber.Ctx, formFile string) (UploadInf
 }
 
 // UploadMultipleFiles uploads multiple files using Fiber.
-func (upl Uploader) UploadMultipleFiles(ctx *fiber.Ctx, formFile string) ([]UploadInfo, error) {
-	form, err := ctx.MultipartForm()
+func (upl Uploader) UploadMultipleFiles(c *fiber.Ctx, formFile string) ([]UploadInfo, error) {
+	form, err := c.MultipartForm()
 	if err != nil {
 		return nil, err
 	}

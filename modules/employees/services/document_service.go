@@ -47,7 +47,7 @@ func (s *DocumentService) Create(ctx context.Context, fiberCtx *fiber.Ctx,  requ
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("document already exists for employee: "+employee.FirstName)
+		return apperrors.NewConflictError("document already exists for employee: "+employee.FirstName)
 	}
 	//------------Upload ------------------------------------------------
 	uploadPath := config.UploadDocumentPath() + "/employees"
@@ -64,6 +64,7 @@ func (s *DocumentService) Create(ctx context.Context, fiberCtx *fiber.Ctx,  requ
 		DocumentNumber: request.DocumentNumber,
 		ExpirationDate: expirationDate,
 		FileName:       info.FinalName,
+		UploadPath:     uploadPath,
 		Status:         request.Status,
 		BaseEntity:     shared.BaseEntity{
 			UniqueId:       encryption.GenerateUUID(),

@@ -53,23 +53,23 @@ func (api *EmployeeApi) Routes(router *fiber.App) {
 
 	group.Get("/:id/professional-info", api.getProfessionalInfo)
 	group.Post("/:id/professional-info", api.addProfessionalInfo)
-	group.Put("/:id/professional-info", api.editProfessionalInfo)
+	group.Put("/:empId/professional-info/:proId", api.editProfessionalInfo)
 
 	group.Get("/:id/addresses", api.getAddresses)
 	group.Post("/:id/addresses", api.addAddress)
-	group.Put("/:id/addresses", api.editAddress)
+	group.Put("/:empId/addresses/:addId", api.editAddress)
 
 	group.Get("/:id/documents", api.getDocuments)
 	group.Post("/:id/documents", api.addDocument)
-	group.Put("/:id/documents", api.editDocument)
+	group.Put("/:empId/documents/:docId", api.editDocument)
 
 	group.Get("/:id/emails", api.getEmails)
 	group.Post("/:id/emails", api.addEmail)
-	group.Put("/:id/emails", api.editEmail)
+	group.Put("/:empId/emails/:contId", api.editEmail)
 
 	group.Get("/:id/phones", api.getPhones)
 	group.Post("/:id/phones", api.addPhone)
-	group.Put("/:id/phones", api.editPhone)
+	group.Put("/:empId/phones/:contId", api.editPhone)
 	
 	group.Get("/:id/account", api.getUserAccount)
 	group.Post("/:id/account", api.addUserAccount)

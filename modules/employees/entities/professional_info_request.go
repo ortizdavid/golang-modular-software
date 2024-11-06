@@ -8,7 +8,6 @@ import (
 // -- Create
 type CreateProfessionalInfoRequest struct {
 	EmployeeId				int64 `json:"employee_id" form:"employee_id" validate:"required"`
-	MaritalStatusId			int `json:"marital_status_id" form:"marital_status_id" validate:"required"`
 	DepartmentId			int `json:"department_id" form:"department_id"  validate:"required"`
 	JobTitleId				int `json:"job_title_id" form:"job_title_id" validate:"required"`
 	EmploymentStatusId		int `json:"employment_status_id" form:"employment_status_id" validate:"required"`
@@ -29,7 +28,6 @@ func (req CreateProfessionalInfoRequest) Validate() error {
 // -- Update
 type UpdateProfessionalInfoRequest struct {
 	EmployeeId				int64 `json:"employee_id" form:"employee_id" validate:"required"`
-	MaritalStatusId			int `json:"marital_status_id" form:"marital_status_id" validate:"required"`
 	DepartmentId			int `json:"department_id" form:"department_id"  validate:"required"`
 	JobTitleId				int `json:"job_title_id" form:"job_title_id" validate:"required"`
 	EmploymentStatusId		int `json:"employment_status_id" form:"employment_status_id" validate:"required"`

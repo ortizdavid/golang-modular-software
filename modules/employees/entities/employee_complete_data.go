@@ -37,6 +37,7 @@ type DocumentBasic struct {
 	DocumentNumber           string `json:"document_number,omitempty"`
 	ExpirationDate           string `json:"expiration_date,omitempty"`
 	FileName                 string `json:"file_name,omitempty"`
+	UploadPath               string `json:"upload_path,omitempty"`
 	Status                   string `json:"status,omitempty"`
 	DocumentTypeName         string `json:"document_type,omitempty"`
 }
@@ -95,6 +96,7 @@ type EmployeeCompleteDataRaw struct {
     DocumentNumber       string `json:"document_number"`
     ExpirationDate       string `json:"expiration_date"`
     FileName             string `json:"file_name"`
+	UploadPath           string `json:"upload_path"`
     DocumentStatus       string `json:"document_status"`
     DocumentTypeName     string `json:"document_type"`
 

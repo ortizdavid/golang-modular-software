@@ -14,6 +14,7 @@ type Document struct {
 	DocumentNumber 	string `gorm:"column:document_number"`
 	ExpirationDate	time.Time `gorm:"column:expiration_date"`
 	FileName		string `gorm:"column:file_name"`
+	UploadPath		string `gorm:"column:upload_path"`
 	Status			string `gorm:"column:status"`
 	shared.BaseEntity
 }
@@ -29,6 +30,7 @@ type DocumentData struct {
 	DocumentNumber 		string `json:"document_number"`
 	ExpirationDate		string `json:"expiration_date"`
 	FileName			string `json:"file_name"`
+	UploadPath			string `json:"upload_path"`
 	Status				string `json:"status"`
 	CreatedAt   		string `json:"created_at"`
 	UpdatedAt			string `json:"updated_at"`

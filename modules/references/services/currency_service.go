@@ -129,6 +129,22 @@ func (s *CurrencyService) GetByUniqueId(ctx context.Context, uniqueId string) (e
 	return currency, nil
 }
 
+func (s *CurrencyService) GetByName(ctx context.Context, name string) (entities.Currency, error) {
+	currency, err := s.repository.GetDataByName(ctx, name)
+	if err != nil {
+		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
+	}
+	return currency, nil
+}
+
+func (s *CurrencyService) GetByCode(ctx context.Context, name string) (entities.Currency, error) {
+	currency, err := s.repository.GetDataByCode(ctx, name)
+	if err != nil {
+		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
+	}
+	return currency, nil
+}
+
 func (s *CurrencyService) Remove(ctx context.Context, uniqueId string) error {
 	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {

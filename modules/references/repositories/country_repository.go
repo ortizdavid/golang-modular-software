@@ -38,6 +38,18 @@ func (repo *CountryRepository) GetDataByUniqueId(ctx context.Context, uniqueId s
 	return country, result.Error
 }
 
+func (repo *CountryRepository) GetDataByName(ctx context.Context, name string) (entities.CountryData, error) {
+	var country entities.CountryData
+	result := repo.db.WithContext(ctx).Table("reference.view_country_data").Where("country_name=?", name).First(&country)
+	return country, result.Error
+}
+
+func (repo *CountryRepository) GetDataByIsoCode(ctx context.Context, isoCode string) (entities.CountryData, error) {
+	var country entities.CountryData
+	result := repo.db.WithContext(ctx).Table("reference.view_country_data").Where("iso_code=? OR iso_code_lower=?", isoCode, isoCode).First(&country)
+	return country, result.Error
+}
+
 func (repo *CountryRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.CountryData, error) {
 	var countries []entities.CountryData
 	likeParam := "%" + param + "%"

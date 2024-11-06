@@ -2,9 +2,7 @@ package controllers
 
 import (
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/ortizdavid/golang-modular-software/common/config"
 	"github.com/ortizdavid/golang-modular-software/modules/employees/entities"
 )
 
@@ -46,7 +44,7 @@ func (ctrl *EmployeeController) addDocument(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' added document for employee '%s'", loggedUser.UserName, employee.FirstName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' added document '%s' for employee '%s'", loggedUser.UserName, request.DocumentName, employee.FirstName))
 	return c.Redirect("/employees/employee-info/" + id + "/details")
 }
 
@@ -110,8 +108,6 @@ func (ctrl *EmployeeController) displayDocument(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	documentPath := config.UploadDocumentPath() + "/employees"
-
 	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' displayed document '%s'", loggedUser.UserName, document.DocumentName))
-	return c.SendFile(documentPath + "/" + document.FileName)
+	return c.SendFile(document.UploadPath + "/" + document.FileName)
 }

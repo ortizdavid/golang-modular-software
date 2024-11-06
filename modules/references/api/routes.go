@@ -6,4 +6,6 @@ import (
 )
 
 func RegisterApiRoutes(router *fiber.App, db *database.Database) {
+	NewCountryApi(db).Routes(router, db)
+	NewCurrencyApi(db).Routes(router, db)
 }

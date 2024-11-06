@@ -26,6 +26,18 @@ func (repo *CurrencyRepository) GetDataByUniqueId(ctx context.Context, uniqueId 
 	return currency, result.Error
 }
 
+func (repo *CurrencyRepository) GetDataByName(ctx context.Context, name string) (entities.Currency, error) {
+	var currency entities.Currency
+	result := repo.db.WithContext(ctx).Table("reference.currencies").Where("currency_name=?", name).First(&currency)
+	return currency, result.Error
+}
+
+func (repo *CurrencyRepository) GetDataByCode(ctx context.Context, code string) (entities.Currency, error) {
+	var currency entities.Currency
+	result := repo.db.WithContext(ctx).Table("reference.currencies").Where("code=?", code).First(&currency)
+	return currency, result.Error
+}
+
 func (repo *CurrencyRepository) FindByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
 	var currency entities.Currency
 	result := repo.db.WithContext(ctx).Where("unique_id=?", uniqueId).First(&currency)

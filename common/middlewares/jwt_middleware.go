@@ -32,6 +32,7 @@ func (mid *JwtMiddleware) AllowRoles(roles ...string) fiber.Handler {
 		if authHeader == "" {
 			return unauthorizedResponse(c, "Unauthorized. Authorization header missing")
 		}
+		
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		if tokenString == authHeader {
 			return unauthorizedResponse(c, "Unauthorized. Invalid token format")

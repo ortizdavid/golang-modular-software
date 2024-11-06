@@ -130,6 +130,22 @@ func (s *CountryService) GetByUniqueId(ctx context.Context, uniqueId string) (en
 	return country, nil
 }
 
+func (s *CountryService) GetByName(ctx context.Context, name string) (entities.CountryData, error) {
+	country, err := s.repository.GetDataByName(ctx, name)
+	if err != nil {
+		return entities.CountryData{}, apperrors.NewNotFoundError("country not found")
+	}
+	return country, nil
+}
+
+func (s *CountryService) GetByIsoCode(ctx context.Context, isoCode string) (entities.CountryData, error) {
+	country, err := s.repository.GetDataByIsoCode(ctx, isoCode)
+	if err != nil {
+		return entities.CountryData{}, apperrors.NewNotFoundError("country not found")
+	}
+	return country, nil
+}
+
 func (s *CountryService) Remove(ctx context.Context, uniqueId string) error {
 	country, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
