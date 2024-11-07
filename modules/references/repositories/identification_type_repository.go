@@ -20,12 +20,6 @@ func NewIdentificationTypeRepository(db *database.Database) *IdentificationTypeR
 	}
 }
 
-func (repo *IdentificationTypeRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.IdentificationType, error) {
-	var identificationType entities.IdentificationType
-	result := repo.db.WithContext(ctx).Table("reference.identification_types").Where("unique_id=?", uniqueId).First(&identificationType)
-	return identificationType, result.Error
-}
-
 func (repo *IdentificationTypeRepository) Search(ctx context.Context, param string, limit int, offset int) ([]entities.IdentificationType, error) {
 	var identificationTypes []entities.IdentificationType
 	likeParam := "%" + param + "%"

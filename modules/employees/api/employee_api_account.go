@@ -37,8 +37,8 @@ func (api *EmployeeApi) addUserAccount(c *fiber.Ctx) error {
 	}
 	userId := api.userService.GetUserInsertedId()
 	assRequest := authentication.AssociateUserRequest{
-		UserId: userId,
-		EntityId: employee.EmployeeId,
+		UserId:     userId,
+		EntityId:   employee.EmployeeId,
 		EntityName: "employee",
 	}
 	err = api.userService.AssociateUserToRole(c.Context(), assRequest)
@@ -49,9 +49,9 @@ func (api *EmployeeApi) addUserAccount(c *fiber.Ctx) error {
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Added account to employee '"+employee.IdentificationNumber+"' successfully"
+	msg := "Added account to employee '" + employee.IdentificationNumber + "' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) associateUserAccount(c *fiber.Ctx) error {
@@ -75,8 +75,7 @@ func (api *EmployeeApi) associateUserAccount(c *fiber.Ctx) error {
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Employee '"+employee.IdentificationNumber+"' associated to an account successfully"
+	msg := "Employee '" + employee.IdentificationNumber + "' associated to an account successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
-

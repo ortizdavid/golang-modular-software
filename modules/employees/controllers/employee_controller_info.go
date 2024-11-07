@@ -129,7 +129,7 @@ func (ctrl *EmployeeController) create(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created employment '"+request.IdentificationNumber+"' successfully")
+	ctrl.infoLogger.Info(c, "User "+loggedUser.UserName+" Created employee '"+request.IdentificationNumber+"' successfully")
 	return c.Redirect("/employees/employee-info")
 }
 

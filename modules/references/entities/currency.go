@@ -5,10 +5,10 @@ import (
 )
 
 type Currency struct {
-	CurrencyId   int       `gorm:"autoIncrement;primaryKey"`
-	CurrencyName string    `gorm:"column:currency_name"`
-	Code         string    `gorm:"column:code"`
-	Symbol       string  `gorm:"column:symbol"`
+	CurrencyId   int    `gorm:"autoIncrement;primaryKey" json:"currency_id"`
+	CurrencyName string `gorm:"column:currency_name" json:"currency_name"`
+	Code         string `gorm:"column:code" json:"code"`
+	Symbol       string `gorm:"column:symbol" json:"symbol"`
 	shared.BaseEntity
 }
 

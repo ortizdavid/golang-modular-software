@@ -30,9 +30,9 @@ func (api *EmployeeApi) addDocument(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Document '"+request.DocumentName+"' for employee '"+employee.FirstName+"' added" 
+	msg := "Document '" + request.DocumentName + "' for employee '" + employee.FirstName + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editDocument(c *fiber.Ctx) error {
@@ -56,7 +56,7 @@ func (api *EmployeeApi) editDocument(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Document '"+request.DocumentName+"' info for employee '"+employee.FirstName+" edited "
+	msg := "Document '" + request.DocumentName + "' info for employee '" + employee.FirstName + " edited "
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }

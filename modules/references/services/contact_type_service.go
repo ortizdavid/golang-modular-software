@@ -121,7 +121,23 @@ func (s *ContactTypeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, re
 }
 
 func (s *ContactTypeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ContactType, error) {
-	contactType, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	contactType, err := s.repository.FindByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.ContactType{}, apperrors.NewNotFoundError("type not found")
+	}
+	return contactType, nil
+}
+
+func (s *ContactTypeService) GetByCode(ctx context.Context, code string) (entities.ContactType, error) {
+	contactType, err := s.repository.FindByField(ctx, "code", code)
+	if err != nil {
+		return entities.ContactType{}, apperrors.NewNotFoundError("type not found")
+	}
+	return contactType, nil
+}
+
+func (s *ContactTypeService) GetByName(ctx context.Context, name string) (entities.ContactType, error) {
+	contactType, err := s.repository.FindByField(ctx, "type_name", name)
 	if err != nil {
 		return entities.ContactType{}, apperrors.NewNotFoundError("type not found")
 	}

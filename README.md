@@ -62,6 +62,7 @@ Example of a complete modular sofware, written in Golang
 - Configure Database:
     - Open Postgres: ``psql -U postgres``
     - Create Database: ``CREATE DATABASE golang_modular_software;``
+    - Add database to .env file -> var: DATABASE_MAIN_URL
 - Run Application: ``go run main.go``
 - User the url: http://localhost:4003
 - Login with Default user:

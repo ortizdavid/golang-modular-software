@@ -10,17 +10,17 @@ import (
 )
 
 type CountryApi struct {
-	service			*services.CountryService
-	infoLogger		*helpers.Logger
-	errorLogger		*helpers.Logger
+	service     *services.CountryService
+	infoLogger  *helpers.Logger
+	errorLogger *helpers.Logger
 	shared.BaseController
 }
 
 func NewCountryApi(db *database.Database) *CountryApi {
 	return &CountryApi{
-		service:        services.NewCountryService(db),
-		infoLogger:     helpers.NewInfoLogger(infoLogFile),
-		errorLogger:    helpers.NewErrorLogger(errorLogFile),
+		service:     services.NewCountryService(db),
+		infoLogger:  helpers.NewInfoLogger(infoLogFile),
+		errorLogger: helpers.NewErrorLogger(errorLogFile),
 	}
 }
 
@@ -33,7 +33,6 @@ func (api *CountryApi) Routes(router *fiber.App, db *database.Database) {
 	group.Get("/by-uuid/:id", api.getByUniqueId)
 	group.Get("/by-name/:name", api.getByCountryName)
 	group.Get("/by-iso-code/:code", api.getByIsoCode)
-	
 }
 
 func (api *CountryApi) getAll(c *fiber.Ctx) error {
@@ -55,9 +54,9 @@ func (api *CountryApi) add(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Country '"+request.CountryName+"' added"
+	msg := "Country '" + request.CountryName + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *CountryApi) edit(c *fiber.Ctx) error {
@@ -75,11 +74,10 @@ func (api *CountryApi) edit(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Country '"+country.CountryName+"' edited"
+	msg := "Country '" + country.CountryName + "' edited"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
-
 
 func (api *CountryApi) getAllNotPaginated(c *fiber.Ctx) error {
 	countries, err := api.service.GetAll(c.Context())

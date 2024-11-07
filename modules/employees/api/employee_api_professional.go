@@ -30,9 +30,9 @@ func (api *EmployeeApi) addProfessionalInfo(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Professional info for employee '"+employee.IdentificationNumber+"' added"
+	msg := "Professional info for employee '" + employee.IdentificationNumber + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editProfessionalInfo(c *fiber.Ctx) error {
@@ -56,7 +56,7 @@ func (api *EmployeeApi) editProfessionalInfo(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Professional info for employee '"+employee.IdentificationNumber+"' updated"
+	msg := "Professional info for employee '" + employee.IdentificationNumber + "' updated"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }

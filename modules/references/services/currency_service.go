@@ -122,7 +122,7 @@ func (s *CurrencyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, reque
 }
 
 func (s *CurrencyService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
-	currency, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
 	}
@@ -130,15 +130,15 @@ func (s *CurrencyService) GetByUniqueId(ctx context.Context, uniqueId string) (e
 }
 
 func (s *CurrencyService) GetByName(ctx context.Context, name string) (entities.Currency, error) {
-	currency, err := s.repository.GetDataByName(ctx, name)
+	currency, err := s.repository.FindByField(ctx, "currency_name", name)
 	if err != nil {
 		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
 	}
 	return currency, nil
 }
 
-func (s *CurrencyService) GetByCode(ctx context.Context, name string) (entities.Currency, error) {
-	currency, err := s.repository.GetDataByCode(ctx, name)
+func (s *CurrencyService) GetByCode(ctx context.Context, code string) (entities.Currency, error) {
+	currency, err := s.repository.FindByField(ctx, "code", code)
 	if err != nil {
 		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
 	}

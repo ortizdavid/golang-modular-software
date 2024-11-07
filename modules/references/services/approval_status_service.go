@@ -121,11 +121,27 @@ func (s *ApprovalStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx,
 }
 
 func (s *ApprovalStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ApprovalStatus, error) {
-	approvalStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	maritalStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.ApprovalStatus{}, apperrors.NewNotFoundError("status not found")
 	}
-	return approvalStatus, nil
+	return maritalStatus, nil
+}
+
+func (s *ApprovalStatusService) GetByName(ctx context.Context, name string) (entities.ApprovalStatus, error) {
+	maritalStatus, err := s.repository.FindByField(ctx, "status_name", name)
+	if err != nil {
+		return entities.ApprovalStatus{}, apperrors.NewNotFoundError("status not found")
+	}
+	return maritalStatus, nil
+}
+
+func (s *ApprovalStatusService) GetByCode(ctx context.Context, code string) (entities.ApprovalStatus, error) {
+	maritalStatus, err := s.repository.FindByField(ctx, "code", code)
+	if err != nil {
+		return entities.ApprovalStatus{}, apperrors.NewNotFoundError("status not found")
+	}
+	return maritalStatus, nil
 }
 
 func (s *ApprovalStatusService) Remove(ctx context.Context, uniqueId string) error {

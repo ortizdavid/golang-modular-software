@@ -127,11 +127,27 @@ func (s *WorkflowStatusService) Search(ctx context.Context, fiberCtx *fiber.Ctx,
 }
 
 func (s *WorkflowStatusService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.WorkflowStatus, error) {
-	workflowStatus, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	maritalStatus, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
 		return entities.WorkflowStatus{}, apperrors.NewNotFoundError("status not found")
 	}
-	return workflowStatus, nil
+	return maritalStatus, nil
+}
+
+func (s *WorkflowStatusService) GetByName(ctx context.Context, name string) (entities.WorkflowStatus, error) {
+	maritalStatus, err := s.repository.FindByField(ctx, "status_name", name)
+	if err != nil {
+		return entities.WorkflowStatus{}, apperrors.NewNotFoundError("status not found")
+	}
+	return maritalStatus, nil
+}
+
+func (s *WorkflowStatusService) GetByCode(ctx context.Context, code string) (entities.WorkflowStatus, error) {
+	maritalStatus, err := s.repository.FindByField(ctx, "code", code)
+	if err != nil {
+		return entities.WorkflowStatus{}, apperrors.NewNotFoundError("status not found")
+	}
+	return maritalStatus, nil
 }
 
 func (s *WorkflowStatusService) Remove(ctx context.Context, uniqueId string) error {

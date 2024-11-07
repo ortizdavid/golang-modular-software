@@ -30,9 +30,9 @@ func (api *EmployeeApi) addEmail(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Employee '"+employee.IdentificationNumber+"' email added"
+	msg := "Employee '" + employee.IdentificationNumber + "' email added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editEmail(c *fiber.Ctx) error {
@@ -56,9 +56,9 @@ func (api *EmployeeApi) editEmail(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Employee '"+employee.IdentificationNumber+"' email edited"
+	msg := "Employee '" + employee.IdentificationNumber + "' email edited"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) getPhones(c *fiber.Ctx) error {
@@ -86,9 +86,9 @@ func (api *EmployeeApi) addPhone(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Employee '"+employee.IdentificationNumber+"' phone added"
+	msg := "Employee '" + employee.IdentificationNumber + "' phone added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editPhone(c *fiber.Ctx) error {
@@ -112,8 +112,7 @@ func (api *EmployeeApi) editPhone(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Employee '"+employee.IdentificationNumber+"' phone edited"
+	msg := "Employee '" + employee.IdentificationNumber + "' phone edited"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
-

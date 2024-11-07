@@ -20,7 +20,7 @@ func (api *EmployeeApi) create(c *fiber.Ctx) error {
 	}
 	msg := fmt.Sprintf("Employee '%s %s' created", request.FirstName, request.LastName)
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) edit(c *fiber.Ctx) error {
@@ -36,9 +36,8 @@ func (api *EmployeeApi) edit(c *fiber.Ctx) error {
 	}
 	msg := fmt.Sprintf("Employee '%s %s' editd", request.FirstName, request.LastName)
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
-
 
 func (api *EmployeeApi) getAll(c *fiber.Ctx) error {
 	params := helpers.GetPaginationParams(c)

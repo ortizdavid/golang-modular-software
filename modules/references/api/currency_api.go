@@ -10,17 +10,17 @@ import (
 )
 
 type CurrencyApi struct {
-	service			*services.CurrencyService
-	infoLogger		*helpers.Logger
-	errorLogger		*helpers.Logger
+	service     *services.CurrencyService
+	infoLogger  *helpers.Logger
+	errorLogger *helpers.Logger
 	shared.BaseController
 }
 
 func NewCurrencyApi(db *database.Database) *CurrencyApi {
 	return &CurrencyApi{
-		service:        services.NewCurrencyService(db),
-		infoLogger:     helpers.NewInfoLogger(infoLogFile),
-		errorLogger:    helpers.NewErrorLogger(errorLogFile),
+		service:     services.NewCurrencyService(db),
+		infoLogger:  helpers.NewInfoLogger(infoLogFile),
+		errorLogger: helpers.NewErrorLogger(errorLogFile),
 	}
 }
 
@@ -33,7 +33,7 @@ func (api *CurrencyApi) Routes(router *fiber.App, db *database.Database) {
 	group.Get("/by-uuid/:id", api.getByUniqueId)
 	group.Get("/by-name/:name", api.getByCurrencyName)
 	group.Get("/by-code/:code", api.getByCode)
-	
+
 }
 
 func (api *CurrencyApi) getAll(c *fiber.Ctx) error {
@@ -55,9 +55,9 @@ func (api *CurrencyApi) add(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Currency '"+request.CurrencyName+"' added"
+	msg := "Currency '" + request.CurrencyName + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
 
 func (api *CurrencyApi) edit(c *fiber.Ctx) error {
@@ -75,11 +75,10 @@ func (api *CurrencyApi) edit(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Currency '"+country.CurrencyName+"' edited"
+	msg := "Currency '" + country.CurrencyName + "' edited"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(msg)
+	return c.JSON(fiber.Map{"message": msg})
 }
-
 
 func (api *CurrencyApi) getAllNotPaginated(c *fiber.Ctx) error {
 	countries, err := api.service.GetAll(c.Context())

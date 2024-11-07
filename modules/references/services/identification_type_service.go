@@ -121,7 +121,23 @@ func (s *IdentificationTypeService) Search(ctx context.Context, fiberCtx *fiber.
 }
 
 func (s *IdentificationTypeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.IdentificationType, error) {
-	identType, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
+	identType, err := s.repository.FindByUniqueId(ctx, uniqueId)
+	if err != nil {
+		return entities.IdentificationType{}, apperrors.NewNotFoundError("type not found")
+	}
+	return identType, nil
+}
+
+func (s *IdentificationTypeService) GetByCode(ctx context.Context, code string) (entities.IdentificationType, error) {
+	identType, err := s.repository.FindByField(ctx, "code", code)
+	if err != nil {
+		return entities.IdentificationType{}, apperrors.NewNotFoundError("type not found")
+	}
+	return identType, nil
+}
+
+func (s *IdentificationTypeService) GetByName(ctx context.Context, name string) (entities.IdentificationType, error) {
+	identType, err := s.repository.FindByField(ctx, "type_name", name)
 	if err != nil {
 		return entities.IdentificationType{}, apperrors.NewNotFoundError("type not found")
 	}
