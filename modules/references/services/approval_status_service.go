@@ -39,6 +39,9 @@ func (s *ApprovalStatusService) Create(ctx context.Context, request entities.Cre
 	approvalStatus := entities.ApprovalStatus{
 		StatusName:  request.StatusName,
 		Code:        request.Code,
+		LblColor: 	 request.LblColor,
+		BgColor:     request.BgColor,
+		Description: request.Description,
 		BaseEntity: shared.BaseEntity{
 			UniqueId:         encryption.GenerateUUID(),
 			CreatedAt:        time.Now().UTC(),
@@ -62,6 +65,9 @@ func (s *ApprovalStatusService) Update(ctx context.Context, uniqueId string, req
 	}
 	approvalStatus.StatusName = request.StatusName
 	approvalStatus.Code = request.Code
+	approvalStatus.BgColor = request.BgColor
+	approvalStatus.LblColor = request.LblColor
+	approvalStatus.Description = request.Description
 	approvalStatus.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, approvalStatus)
 	if err != nil {

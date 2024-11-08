@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/database"
@@ -56,7 +55,7 @@ func (api *MaritalStatusApi) add(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Created marital status '" + request.StatusName + "' successfully"
+	msg := "Created marital status '"+request.StatusName+"' successfully"
 	api.infoLogger.Info(c, msg)
 	return c.JSON(fiber.Map{"message": msg})
 }
@@ -72,7 +71,7 @@ func (api *MaritalStatusApi) edit(c *fiber.Ctx) error {
 		api.errorLogger.Error(c, err.Error())
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Updated marital status '" + request.StatusName + "' successfully"
+	msg := "Updated marital status '"+request.StatusName+"' successfully"
 	api.infoLogger.Info(c, msg)
 	return c.JSON(fiber.Map{"message": msg})
 }
@@ -106,7 +105,7 @@ func (ctrl *MaritalStatusApi) getByName(c *fiber.Ctx) error {
 
 func (api *MaritalStatusApi) remove(c *fiber.Ctx) error {
 	id := c.Params("id")
-	identType, err := api.service.GetByUniqueId(c.Context(), id)
+	status, err := api.service.GetByUniqueId(c.Context(), id)
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
@@ -114,7 +113,7 @@ func (api *MaritalStatusApi) remove(c *fiber.Ctx) error {
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
-	msg := "Removed marital status '" + identType.StatusName + "'"
+	msg := "Removed marital status '"+status.StatusName+"'"
 	api.infoLogger.Info(c, msg)
 	return c.JSON(fiber.Map{"message": msg})
 }
@@ -124,6 +123,5 @@ func (api *MaritalStatusApi) getAllNotPaginated(c *fiber.Ctx) error {
 	if err != nil {
 		return api.HandleErrorsApi(c, err)
 	}
-	fmt.Println(statuses)
 	return c.JSON(statuses)
 }

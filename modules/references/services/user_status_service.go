@@ -39,6 +39,9 @@ func (s *UserStatusService) Create(ctx context.Context, request entities.CreateS
 	userStatus := entities.UserStatus{
 		StatusName:  request.StatusName,
 		Code:        request.Code,
+		LblColor:    request.LblColor,
+		BgColor:     request.BgColor,
+		Description: request.Description,
 		BaseEntity: shared.BaseEntity{
 			UniqueId:         encryption.GenerateUUID(),
 			CreatedAt:        time.Now().UTC(),
@@ -62,6 +65,9 @@ func (s *UserStatusService) Update(ctx context.Context, uniqueId string, request
 	}
 	userStatus.StatusName = request.StatusName
 	userStatus.Code = request.Code
+	userStatus.BgColor = request.BgColor
+	userStatus.LblColor = request.LblColor
+	userStatus.Description = request.Description
 	userStatus.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, userStatus)
 	if err != nil {

@@ -95,7 +95,7 @@ func (s *TaskStatusService) GetAllPaginated(ctx context.Context, fiberCtx *fiber
 	return pagination, nil
 }
 
-func (s *TaskStatusService) GetAllStatuses(ctx context.Context) ([]entities.TaskStatus, error) {
+func (s *TaskStatusService) GetAll(ctx context.Context) ([]entities.TaskStatus, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No statuses found")
