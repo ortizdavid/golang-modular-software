@@ -5,10 +5,10 @@ import (
 )
 
 type Country struct {
-	CountryId int `gorm:"autoIncrement;primaryKey"`
-	CountryName  string    `gorm:"column:country_name"`
-	IsoCode  string    `gorm:"column:iso_code"`
-	DialingCode  string    `gorm:"column:dialing_code"`
+	CountryId int `gorm:"autoIncrement;primaryKey" json:"country_id"`
+	CountryName  string    `gorm:"column:country_name" json:"country_name"`
+	IsoCode  string    `gorm:"column:iso_code" json:"iso_code"`
+	DialingCode  string    `gorm:"column:dialing_code" json:"dialing_code"`
 	shared.BaseEntity
 }
 
