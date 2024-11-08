@@ -46,9 +46,15 @@ func (repo *ModuleFlagRepository) FindAllFlagsMap(ctx context.Context) (map[stri
 	return flagMap, nil
 }
 
-func (repo *ModuleFlagRepository) FindByModuleCode(ctx context.Context, module string) (entities.ModuleFlagData, error) {
+func (repo *ModuleFlagRepository) FindByModuleCode(ctx context.Context, code string) (entities.ModuleFlagData, error) {
 	var moduleFlag entities.ModuleFlagData
-	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("code=?", module)
+	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("code=?", code).First(&moduleFlag)
+	return moduleFlag, result.Error
+}
+
+func (repo *ModuleFlagRepository) FindByModuleId(ctx context.Context, id int) (entities.ModuleFlagData, error) {
+	var moduleFlag entities.ModuleFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_module_flag_data").Where("module_id=?", id).First(&moduleFlag)
 	return moduleFlag, result.Error
 }
 

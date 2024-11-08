@@ -26,6 +26,18 @@ func (repo *CoreEntityFlagRepository) FindAllData(ctx context.Context) ([]entiti
 	return coreEntityFlags, result.Error
 }
 
+func (repo *CoreEntityFlagRepository) FindAllDataByModuleId(ctx context.Context, moduleId int) ([]entities.CoreEntityFlagData, error) {
+	var coreEntityFlags []entities.CoreEntityFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("module_id=?", moduleId).Find(&coreEntityFlags)
+	return coreEntityFlags, result.Error
+}
+
+func (repo *CoreEntityFlagRepository) FindAllDataByModuleCode(ctx context.Context, moduleCode string) ([]entities.CoreEntityFlagData, error) {
+	var coreEntityFlags []entities.CoreEntityFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("module_code=?", moduleCode).Find(&coreEntityFlags)
+	return coreEntityFlags, result.Error
+}
+
 func (repo *CoreEntityFlagRepository) FindAllDataLimit(ctx context.Context, limit int, offset int) ([]entities.CoreEntityFlagData, error) {
 	var coreEntityFlags []entities.CoreEntityFlagData
 	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Limit(limit).Offset(offset).Find(&coreEntityFlags)
@@ -48,13 +60,19 @@ func (repo *CoreEntityFlagRepository) FindAllFlagsMap(ctx context.Context) (map[
 
 func (repo *CoreEntityFlagRepository) FindByModuleCode(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
 	var coreEntityFlag entities.CoreEntityFlagData
-	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("module_code=?", module)
+	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("module_code=?", module).First(&coreEntityFlag)
 	return coreEntityFlag, result.Error
 }
 
-func (repo *CoreEntityFlagRepository) FindByEntityCode(ctx context.Context, module string) (entities.CoreEntityFlagData, error) {
+func (repo *CoreEntityFlagRepository) FindByEntityId(ctx context.Context, entityId int) (entities.CoreEntityFlagData, error) {
 	var coreEntityFlag entities.CoreEntityFlagData
-	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("code=?", module)
+	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("entity_id=?", entityId).First(&coreEntityFlag)
+	return coreEntityFlag, result.Error
+}
+
+func (repo *CoreEntityFlagRepository) FindByEntityCode(ctx context.Context, code string) (entities.CoreEntityFlagData, error) {
+	var coreEntityFlag entities.CoreEntityFlagData
+	result := repo.db.WithContext(ctx).Table("configurations.view_core_entity_flag_data").Where("code=?", code).First(&coreEntityFlag)
 	return coreEntityFlag, result.Error
 }
 

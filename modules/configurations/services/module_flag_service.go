@@ -88,12 +88,22 @@ func (s *ModuleFlagService) GetByUniqueId(ctx context.Context, uniqueId string) 
 	return module, nil
 }
 
-func (s *ModuleFlagService) GetByCode(ctx context.Context, code string) (entities.ModuleFlagData, error) {
+func (s *ModuleFlagService) GetByModuleCode(ctx context.Context, code string) (entities.ModuleFlagData, error) {
 	moduleFlag, err := s.repository.FindByModuleCode(ctx, code)
 	if err != nil {
 		return entities.ModuleFlagData{}, apperrors.NewNotFoundError("module flag not found")
 	}
 	return moduleFlag, nil
 }
+
+
+func (s *ModuleFlagService) GetByModuleId(ctx context.Context, moduleId int) (entities.ModuleFlagData, error) {
+	moduleFlag, err := s.repository.FindByModuleId(ctx, moduleId)
+	if err != nil {
+		return entities.ModuleFlagData{}, apperrors.NewNotFoundError("module flag not found")
+	}
+	return moduleFlag, nil
+}
+
 
 

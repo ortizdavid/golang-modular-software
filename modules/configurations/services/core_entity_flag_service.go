@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/apperrors"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
@@ -13,13 +14,13 @@ import (
 
 type CoreEntityFlagService struct {
 	repository        *repositories.CoreEntityFlagRepository
-	coreEntityRepository *repositories.ModuleRepository
+	moduleRepository *repositories.ModuleRepository
 }
 
 func NewCoreEntityFlagService(db *database.Database) *CoreEntityFlagService {
 	return &CoreEntityFlagService{
 		repository:        repositories.NewCoreEntityFlagRepository(db),
-		coreEntityRepository: repositories.NewModuleRepository(db),
+		moduleRepository: repositories.NewModuleRepository(db),
 	}
 }
 
@@ -73,6 +74,60 @@ func (s *CoreEntityFlagService) GetAll(ctx context.Context) ([]entities.CoreEnti
 		return nil, apperrors.NewNotFoundError("No core entities found")
 	}
 	coreEntities, err := s.repository.FindAllData(ctx)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+	}
+	return coreEntities, nil
+}
+
+func (s *CoreEntityFlagService) GetByCoreEntityId(ctx context.Context, entityId int) (entities.CoreEntityFlagData, error) {
+	coreEntity, err := s.repository.FindByEntityId(ctx, entityId)
+	if err != nil {
+		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
+	}
+	if coreEntity.FlagId == 0 {
+		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
+	}
+	return coreEntity, nil
+}
+
+func (s *CoreEntityFlagService) GetByCoreEntityCode(ctx context.Context, code string) (entities.CoreEntityFlagData, error) {
+	coreEntity, err := s.repository.FindByEntityCode(ctx, code)
+	if err != nil {
+		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
+	}
+	if coreEntity.FlagId == 0 {
+		return entities.CoreEntityFlagData{}, apperrors.NewNotFoundError("core entity not found")
+	}
+	return coreEntity, nil
+}
+
+func (s *CoreEntityFlagService) GetAllByModuleId(ctx context.Context, moduleId int) ([]entities.CoreEntityFlagData, error) {
+	_, err := s.moduleRepository.FindById(ctx, moduleId)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("module not found")
+	}
+	_, err = s.repository.Count(ctx)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No core entities found")
+	}
+	coreEntities, err := s.repository.FindAllDataByModuleId(ctx, moduleId)
+	if err != nil {
+		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+	}
+	return coreEntities, nil
+}
+
+func (s *CoreEntityFlagService) GetAllByModuleCode(ctx context.Context, code string) ([]entities.CoreEntityFlagData, error) {
+	_, err := s.moduleRepository.FindByCode(ctx, code)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("module not found")
+	}
+	_, err = s.repository.Count(ctx)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("No core entities found")
+	}
+	coreEntities, err := s.repository.FindAllDataByModuleCode(ctx, code)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

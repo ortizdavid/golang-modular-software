@@ -11,7 +11,7 @@ type UpdateCompanyConfigurationRequest struct {
 	CompanyPhone     string `json:"company_phone" form:"company_phone" validate:"required,max=20"`
 	CompanyEmail     string `json:"company_email" form:"company_email" validate:"required,min=8,max=100"`
 	CompanyMainColor string `json:"company_main_color" form:"company_main_color" validate:"required,max=10"`
-	CompanyLogo string `json:"company_logo" form:"company_logo" validate:"required,max=100"`
+	CompanyLogo string `json:"company_logo" form:"company_logo" validate:"max=100"`
 }
 
 func (req UpdateCompanyConfigurationRequest) Validate() error {
