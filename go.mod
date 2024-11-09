@@ -1,6 +1,6 @@
 module github.com/ortizdavid/golang-modular-software
 
-go 1.23.0
+go 1.23.3
 
 require gorm.io/gorm v1.25.11
 

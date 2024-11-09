@@ -2,6 +2,7 @@ package entities
 
 import (
 	"fmt"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 )

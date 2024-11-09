@@ -26,6 +26,12 @@ func (repo *CompanyRepository) FindAllDataLimit(ctx context.Context, limit int, 
 	return companies, result.Error
 }
 
+func (repo *CompanyRepository) GetCurrentData(ctx context.Context) (entities.CompanyData, error) {
+	var company entities.CompanyData
+	result := repo.db.WithContext(ctx).Table("company.view_company_data").First(&company)
+	return company, result.Error
+}
+
 func (repo *CompanyRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.CompanyData, error) {
 	var company entities.CompanyData
 	result := repo.db.WithContext(ctx).Table("company.view_company_data").Where("unique_id=?", uniqueId).First(&company)

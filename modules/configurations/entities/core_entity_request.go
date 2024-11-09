@@ -5,12 +5,12 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 )
 
-//--CREATE
+// --CREATE
 type CreateCoreEntityRequest struct {
-    ModuleId    int    `json:"module_id" form:"module_id" validate:"required"`
-    Code        string   `json:"code" form:"code" validate:"required,min=4,max=50"`
-    EntityName  string    `json:"entity_name" form:"entity_name" validate:"required,min=5,max=100"`
-    Description string    `json:"description" form:"description" validate:"required,max=255"`
+	ModuleId    int    `json:"module_id" form:"module_id" validate:"required"`
+	Code        string `json:"code" form:"code" validate:"required,min=4,max=50"`
+	EntityName  string `json:"entity_name" form:"entity_name" validate:"required,min=5,max=100"`
+	Description string `json:"description" form:"description" validate:"required,max=255"`
 }
 
 func (req CreateCoreEntityRequest) Validate() error {
@@ -25,12 +25,12 @@ func (req CreateCoreEntityRequest) Validate() error {
 	return nil
 }
 
-//--CREATE
+// --CREATE
 type UpdateCoreEntityRequest struct {
-    ModuleId    int    `json:"module_id" form:"module_id" validate:"required"`
-    Code        string   `json:"code" form:"code" validate:"required,min=4,max=50"`
-    EntityName  string    `json:"entity_name" form:"entity_name" validate:"required,min=5,max=100"`
-    Description string    `json:"description" form:"description" validate:"required,max=255"`
+	ModuleId    int    `json:"module_id" form:"module_id" validate:"required"`
+	Code        string `json:"code" form:"code" validate:"required,min=4,max=50"`
+	EntityName  string `json:"entity_name" form:"entity_name" validate:"required,min=5,max=100"`
+	Description string `json:"description" form:"description" validate:"required,max=255"`
 }
 
 func (req UpdateCoreEntityRequest) Validate() error {
@@ -47,5 +47,5 @@ func (req UpdateCoreEntityRequest) Validate() error {
 
 // --- Search
 type SearchCoreEntityRequest struct {
-	SearchParam		string `json:"search_param" form:"search_param"`
+	SearchParam string `json:"search_param" form:"search_param"`
 }

@@ -5,9 +5,9 @@ import (
 )
 
 type ContactType struct {
-	TypeId    int       `gorm:"autoIncrement;primaryKey" json:"type_id"`
-	TypeName  string    `gorm:"column:type_name" json:"type_name"`
-	Code      string    `gorm:"column:code" json:"code"`
+	TypeId   int    `gorm:"autoIncrement;primaryKey" json:"type_id"`
+	TypeName string `gorm:"column:type_name" json:"type_name"`
+	Code     string `gorm:"column:code" json:"code"`
 	shared.BaseEntity
 }
 

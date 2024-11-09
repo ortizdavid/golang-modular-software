@@ -1,7 +1,7 @@
 package entities
 
 import (
-    shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
+	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type CompanyConfiguration struct {

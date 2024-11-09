@@ -134,6 +134,14 @@ func (s *CompanyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, reques
 	return pagination, nil
 }
 
+func (s *CompanyService) GetCurrent(ctx context.Context) (entities.CompanyData, error) {
+	company, err := s.repository.GetCurrentData(ctx)
+	if err != nil {
+		return entities.CompanyData{}, apperrors.NewNotFoundError("company not found")
+	}
+	return company, nil
+}
+
 func (s *CompanyService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.CompanyData, error) {
 	company, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {

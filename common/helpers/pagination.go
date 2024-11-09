@@ -3,23 +3,24 @@ package helpers
 import (
 	"fmt"
 	"math"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/go-nopain/conversion"
 )
 
 type Pagination[T any] struct {
-	Items           []T `json:"items"`
-	MetaData			MetaData `json:"metadata"`
+	Items    []T      `json:"items"`
+	MetaData MetaData `json:"metadata"`
 }
 
 type MetaData struct {
-	CurrentPage     int      `json:"current_page"`
-	TotalItems      int64      `json:"total_items"`
-	TotalPages      int      `json:"total_pages"`
-	FirstPageUrl    string   `json:"first_page_url"`
-	PreviousPageUrl string   `json:"previous_page_url"`
-	NextPageUrl     string   `json:"next_page_url"`
-	LastPageUrl     string   `json:"last_page_url"`
+	CurrentPage     int    `json:"current_page"`
+	TotalItems      int64  `json:"total_items"`
+	TotalPages      int    `json:"total_pages"`
+	FirstPageUrl    string `json:"first_page_url"`
+	PreviousPageUrl string `json:"previous_page_url"`
+	NextPageUrl     string `json:"next_page_url"`
+	LastPageUrl     string `json:"last_page_url"`
 }
 
 func NewPagination[T any](c *fiber.Ctx, items []T, count int64, currentPage int, limit int) (*Pagination[T], error) {
@@ -30,15 +31,15 @@ func NewPagination[T any](c *fiber.Ctx, items []T, count int64, currentPage int,
 		return nil, fmt.Errorf("page size must be >= 1")
 	}
 	pagination := Pagination[T]{
-		Items:      items,
-		MetaData:	MetaData{
+		Items: items,
+		MetaData: MetaData{
 			CurrentPage:     currentPage,
 			TotalItems:      count,
 			TotalPages:      int(math.Ceil(float64(count) / float64(limit))),
-			FirstPageUrl: 	 "",
+			FirstPageUrl:    "",
 			PreviousPageUrl: "",
 			NextPageUrl:     "",
-			LastPageUrl:	 "",
+			LastPageUrl:     "",
 		},
 	}
 	pagination.calculateUrls(c, currentPage, limit)
@@ -46,7 +47,7 @@ func NewPagination[T any](c *fiber.Ctx, items []T, count int64, currentPage int,
 }
 
 func (p *Pagination[T]) HasNextPage() bool {
-	return p.MetaData.CurrentPage < p.MetaData.TotalPages - 1
+	return p.MetaData.CurrentPage < p.MetaData.TotalPages-1
 }
 
 func (p *Pagination[T]) HasPreviousPage() bool {
@@ -55,7 +56,7 @@ func (p *Pagination[T]) HasPreviousPage() bool {
 
 func (p *Pagination[T]) calculateUrls(c *fiber.Ctx, currentPage, limit int) {
 	baseUrl := getRequestBaseUrl(c)
-	
+
 	p.MetaData.FirstPageUrl = getPageUrl(baseUrl, 0, limit)
 	if currentPage < p.MetaData.TotalPages {
 		p.MetaData.NextPageUrl = getPageUrl(baseUrl, currentPage+1, limit)

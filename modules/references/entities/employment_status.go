@@ -5,10 +5,10 @@ import (
 )
 
 type EmploymentStatus struct {
-	StatusId    int       `gorm:"autoIncrement;primaryKey" json:"status_id"`
-	StatusName  string    `gorm:"column:status_name" json:"status_name"`
-	Code        string    `gorm:"column:code" json:"code"`
-	Description string    `gorm:"column:description" json:"description"`
+	StatusId    int    `gorm:"autoIncrement;primaryKey" json:"status_id"`
+	StatusName  string `gorm:"column:status_name" json:"status_name"`
+	Code        string `gorm:"column:code" json:"code"`
+	Description string `gorm:"column:description" json:"description"`
 	shared.BaseEntity
 }
 
