@@ -2,7 +2,6 @@ package config
 
 import (
 	"strconv"
-
 	"github.com/ortizdavid/go-nopain/conversion"
 )
 

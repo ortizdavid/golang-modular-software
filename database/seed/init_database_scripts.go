@@ -18,6 +18,32 @@ const (
 	sqlScriptsBase = "./database/sql"
 )
 
+// InitDatabaseScripts initializes and executes all database scripts.
+func InitDatabaseScripts(db *database.Database) error {
+	log.Println("Connected to Database...")
+	log.Println("Executing database scripts...")
+
+	if err := execCreateSchemas(db); err != nil {
+		return err
+	}
+	if err := execCreateConfigsAndExtensions(db); err != nil {
+		return err
+	}
+	if err := execAuthenticationScripts(db); err != nil {
+		return err
+	}
+	if err := execConfigurationScripts(db); err != nil {
+		return err
+	}
+	if err := execCompanyScripts(db); err != nil {
+		return err
+	}
+	if err := execEmployeeScripts(db); err != nil {
+		return err
+	}
+	return execReferenceScripts(db)
+}
+
 // execDatabaseScript executes a SQL script located in the specified directory.
 func execDatabaseScript(db *database.Database, directory, scriptFile string) error {
 	scriptPath := filepath.Join(sqlScriptsBase, directory, scriptFile)
@@ -82,9 +108,6 @@ func execConfigurationScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, configDir, "tables.sql"); err != nil {
 		return err
 	}
-	if err := execDatabaseScript(db, configDir, "scripts.sql"); err != nil {
-		return err
-	}
 	if err := execDatabaseScript(db, configDir, "triggers.sql"); err != nil {
 		return err
 	}
@@ -100,9 +123,6 @@ func execCompanyScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, companyDir, "tables.sql"); err != nil {
 		return err
 	}
-	if err := execDatabaseScript(db, companyDir, "scripts.sql"); err != nil {
-		return err
-	}
 	if err := execDatabaseScript(db, companyDir, "triggers.sql"); err != nil {
 		return err
 	}
@@ -116,9 +136,6 @@ func execCompanyScripts(db *database.Database) error {
 func execEmployeeScripts(db *database.Database) error {
 	log.Println("Executing employee schema scripts...")
 	if err := execDatabaseScript(db, employeeDir, "tables.sql"); err != nil {
-		return err
-	}
-	if err := execDatabaseScript(db, employeeDir, "scripts.sql"); err != nil {
 		return err
 	}
 	if err := execDatabaseScript(db, employeeDir, "triggers.sql"); err != nil {
@@ -137,9 +154,6 @@ func execReferenceScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, referenceDir, "tables.sql"); err != nil {
 		return err
 	}
-	if err := execDatabaseScript(db, referenceDir, "scripts.sql"); err != nil {
-		return err
-	}
 	if err := execDatabaseScript(db, referenceDir, "triggers.sql"); err != nil {
 		return err
 	}
@@ -147,30 +161,4 @@ func execReferenceScripts(db *database.Database) error {
 		return err
 	}
 	return execDatabaseScript(db, referenceDir, "views.sql")
-}
-
-// InitDatabaseScripts initializes and executes all database scripts.
-func InitDatabaseScripts(db *database.Database) error {
-	log.Println("Connected to Database...")
-	log.Println("Executing database scripts...")
-
-	if err := execCreateSchemas(db); err != nil {
-		return err
-	}
-	if err := execCreateConfigsAndExtensions(db); err != nil {
-		return err
-	}
-	if err := execAuthenticationScripts(db); err != nil {
-		return err
-	}
-	if err := execConfigurationScripts(db); err != nil {
-		return err
-	}
-	if err := execCompanyScripts(db); err != nil {
-		return err
-	}
-	if err := execEmployeeScripts(db); err != nil {
-		return err
-	}
-	return execReferenceScripts(db)
 }
