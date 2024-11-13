@@ -35,9 +35,9 @@ func (repo *BranchRepository) Delete(ctx context.Context, branch entities.Branch
 	return result.Error
 }
 
-func (repo *BranchRepository) FindAll(ctx context.Context) ([]entities.Branch, error) {
-	var branches []entities.Branch
-	result := repo.db.WithContext(ctx).Find(&branches)
+func (repo *BranchRepository) FindAll(ctx context.Context) ([]entities.BranchData, error) {
+	var branches []entities.BranchData
+	result := repo.db.WithContext(ctx).Raw("SELECT * FROM company.view_branch_data").Find(&branches)
 	return branches, result.Error
 }
 

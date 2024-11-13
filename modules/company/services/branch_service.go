@@ -105,16 +105,16 @@ func (s *BranchService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx
 	return pagination, nil
 }
 
-func (s *BranchService) GetAll(ctx context.Context) ([]entities.Branch, error) {
+func (s *BranchService) GetAll(ctx context.Context) ([]entities.BranchData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No branchs found")
+		return nil, apperrors.NewNotFoundError("No branches found")
 	}
-	branchs, err := s.repository.FindAll(ctx)
+	branches, err := s.repository.FindAll(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
-	return branchs, nil
+	return branches, nil
 }
 
 func (s *BranchService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchBranchRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.BranchData], error) {
@@ -125,11 +125,11 @@ func (s *BranchService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request
 	if err := paginationParams.Validate(); err != nil {
 		return nil, apperrors.NewBadRequestError(err.Error())
 	}
-	branchs, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
+	branches, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
-	pagination, err := helpers.NewPagination(fiberCtx, branchs, count, paginationParams.CurrentPage, paginationParams.Limit)
+	pagination, err := helpers.NewPagination(fiberCtx, branches, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
 	}
