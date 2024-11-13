@@ -31,7 +31,7 @@ func NewModuleFlagController(db *database.Database) *ModuleFlagController {
 		authService:             authentication.NewAuthService(db),
 		configService:           services.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger(infoLogFile),
-		errorLogger:             helpers.NewErrorLogger(erroLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

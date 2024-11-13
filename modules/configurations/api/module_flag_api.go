@@ -10,17 +10,17 @@ import (
 )
 
 type ModuleFlagApi struct {
-	service                 *services.ModuleFlagService
-	infoLogger              *helpers.Logger
-	errorLogger             *helpers.Logger
+	service     *services.ModuleFlagService
+	infoLogger  *helpers.Logger
+	errorLogger *helpers.Logger
 	shared.BaseController
 }
 
 func NewModuleFlagApi(db *database.Database) *ModuleFlagApi {
 	return &ModuleFlagApi{
-		service:                 services.NewModuleFlagService(db),
-		infoLogger:              helpers.NewInfoLogger(infoLogFile),
-		errorLogger:             helpers.NewErrorLogger(erroLogFile),
+		service:     services.NewModuleFlagService(db),
+		infoLogger:  helpers.NewInfoLogger(infoLogFile),
+		errorLogger: helpers.NewErrorLogger(errorLogFile),
 	}
 }
 
@@ -56,4 +56,3 @@ func (api *ModuleFlagApi) getByModuleCode(c *fiber.Ctx) error {
 	}
 	return c.JSON(moduleFlag)
 }
-

@@ -16,13 +16,13 @@ func CreateAdminUsers(db *database.Database) error {
 	user1 := entities.CreateUserRequest{
 		UserName: "sup-admin01",
 		RoleId:   entities.RoleSuperAdmin.Id,
-		Email:    "admin01@gmail.com",
+		Email:    "sup-admin01@gmail.com",
 		Password: "12345678",
 	}
 	user2 := entities.CreateUserRequest{
-		UserName: "admin04",
+		UserName: "admin01",
 		RoleId:   entities.RoleAdmin.Id,
-		Email:    "admin02@gmail.com",
+		Email:    "admin01@gmail.com",
 		Password: "12345678",
 	}
 	// create users -----------------------------------------------

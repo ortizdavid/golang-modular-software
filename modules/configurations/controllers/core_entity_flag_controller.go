@@ -33,7 +33,7 @@ func NewCoreEntityFlagController(db *database.Database) *CoreEntityFlagControlle
 		authService:                 authentication.NewAuthService(db),
 		configService:               services.NewAppConfigurationService(db),
 		infoLogger:                  helpers.NewInfoLogger(infoLogFile),
-		errorLogger:                 helpers.NewErrorLogger(erroLogFile),
+		errorLogger:                 helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

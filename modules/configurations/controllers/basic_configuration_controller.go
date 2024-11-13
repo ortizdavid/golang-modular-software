@@ -29,7 +29,7 @@ func NewBasicConfigurationController(db *database.Database) *BasicConfigurationC
 		authService:             authentication.NewAuthService(db),
 		configService:           services.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger(infoLogFile),
-		errorLogger:             helpers.NewErrorLogger(erroLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

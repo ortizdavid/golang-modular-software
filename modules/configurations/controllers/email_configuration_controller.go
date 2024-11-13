@@ -29,7 +29,7 @@ func NewEmailConfigurationController(db *database.Database) *EmailConfigurationC
 		authService:             authentication.NewAuthService(db),
 		configService:           services.NewAppConfigurationService(db),
 		infoLogger:              helpers.NewInfoLogger(infoLogFile),
-		errorLogger:             helpers.NewErrorLogger(erroLogFile),
+		errorLogger:             helpers.NewErrorLogger(errorLogFile),
 	}
 }
 

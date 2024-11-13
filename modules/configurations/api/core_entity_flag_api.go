@@ -10,17 +10,17 @@ import (
 )
 
 type CoreEntityFlagApi struct {
-	service             *services.CoreEntityFlagService
-	infoLogger          *helpers.Logger
-	errorLogger         *helpers.Logger
+	service     *services.CoreEntityFlagService
+	infoLogger  *helpers.Logger
+	errorLogger *helpers.Logger
 	shared.BaseController
 }
 
 func NewCoreEntityFlagApi(db *database.Database) *CoreEntityFlagApi {
 	return &CoreEntityFlagApi{
-		service:                     services.NewCoreEntityFlagService(db),
-		infoLogger:                  helpers.NewInfoLogger(infoLogFile),
-		errorLogger:                 helpers.NewErrorLogger(erroLogFile),
+		service:     services.NewCoreEntityFlagService(db),
+		infoLogger:  helpers.NewInfoLogger(infoLogFile),
+		errorLogger: helpers.NewErrorLogger(errorLogFile),
 	}
 }
 
@@ -76,4 +76,3 @@ func (api *CoreEntityFlagApi) getAllByModuleCode(c *fiber.Ctx) error {
 	}
 	return c.JSON(moduleFlags)
 }
-

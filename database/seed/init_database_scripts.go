@@ -108,6 +108,9 @@ func execConfigurationScripts(db *database.Database) error {
 	if err := execDatabaseScript(db, configDir, "tables.sql"); err != nil {
 		return err
 	}
+	if err := execDatabaseScript(db, configDir, "scripts.sql"); err != nil {
+		return err
+	}
 	if err := execDatabaseScript(db, configDir, "triggers.sql"); err != nil {
 		return err
 	}
