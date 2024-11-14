@@ -22,7 +22,7 @@ func (Project) TableName() string {
 }
 
 type ProjectData struct {
-	ProjectId   int `gorm:"primaryKey;autoIncrement"`
+	ProjectId   int `json:"project_id"`
 	UniqueId    string  `json:"unique_id"`
 	ProjectName string  `json:"project_name"`
 	Description string  `json:"description"`

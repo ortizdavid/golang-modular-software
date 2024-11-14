@@ -110,12 +110,12 @@ func (s *RoomService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, 
 	return pagination, nil
 }
 
-func (s *RoomService) GetAll(ctx context.Context) ([]entities.Room, error) {
+func (s *RoomService) GetAll(ctx context.Context) ([]entities.RoomData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No rooms found")
 	}
-	rooms, err := s.repository.FindAll(ctx)
+	rooms, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

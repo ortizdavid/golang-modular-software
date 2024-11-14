@@ -26,6 +26,12 @@ func (repo *DepartmentRepository) FindAllDataLimit(ctx context.Context, limit in
 	return departments, result.Error
 }
 
+func (repo *DepartmentRepository) FindAllData(ctx context.Context) ([]entities.DepartmentData, error) {
+	var departments []entities.DepartmentData
+	result := repo.db.WithContext(ctx).Table("company.view_department_data").Find(&departments)
+	return departments, result.Error
+}
+
 func (repo *DepartmentRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.DepartmentData, error) {
 	var department entities.DepartmentData
 	result := repo.db.WithContext(ctx).Table("company.view_department_data").Where("unique_id=?", uniqueId).First(&department)

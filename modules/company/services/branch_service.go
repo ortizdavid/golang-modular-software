@@ -110,7 +110,7 @@ func (s *BranchService) GetAll(ctx context.Context) ([]entities.BranchData, erro
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No branches found")
 	}
-	branches, err := s.repository.FindAll(ctx)
+	branches, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

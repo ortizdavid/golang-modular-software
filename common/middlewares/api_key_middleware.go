@@ -20,11 +20,11 @@ func NewApiKeyMiddleware(db *database.Database) *ApiKeyMiddleware {
 
 func (mid *ApiKeyMiddleware) AllowRoles(roleCodes ...string) fiber.Handler {
 	return func (c *fiber.Ctx) error {
-		xUserId := c.Get("X-User-ID")
+		xUserId := c.Get("X-USER-ID")
 		if xUserId == "" {
 			return unauthorizedResponse(c, "Unauthorized. User ID missing")
 		}
-		xApiKey := c.Get("X-API-Key")
+		xApiKey := c.Get("X-API-KEY")
 		if xApiKey == "" {
 			return unauthorizedResponse(c, "Unauthorized. API Key missing")
 		}

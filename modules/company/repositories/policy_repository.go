@@ -26,6 +26,12 @@ func (repo *PolicyRepository) FindAllDataLimit(ctx context.Context, limit int, o
 	return policies, result.Error
 }
 
+func (repo *PolicyRepository) FindAllData(ctx context.Context) ([]entities.PolicyData, error) {
+	var policies []entities.PolicyData
+	result := repo.db.WithContext(ctx).Table("company.view_policy_data").Find(&policies)
+	return policies, result.Error
+}
+
 func (repo *PolicyRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.PolicyData, error) {
 	var policy entities.PolicyData
 	result := repo.db.WithContext(ctx).Table("company.view_policy_data").Where("unique_id=?", uniqueId).First(&policy)

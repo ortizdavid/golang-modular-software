@@ -26,6 +26,12 @@ func (repo *ProjectRepository) FindAllDataLimit(ctx context.Context, limit int, 
 	return projects, result.Error
 }
 
+func (repo *ProjectRepository) FindAllData(ctx context.Context) ([]entities.ProjectData, error) {
+	var projects []entities.ProjectData
+	result := repo.db.WithContext(ctx).Table("company.view_project_data").Find(&projects)
+	return projects, result.Error
+}
+
 func (repo *ProjectRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.ProjectData, error) {
 	var project entities.ProjectData
 	result := repo.db.WithContext(ctx).Table("company.view_project_data").Where("unique_id=?", uniqueId).First(&project)

@@ -26,6 +26,12 @@ func (repo *OfficeRepository) FindAllDataLimit(ctx context.Context, limit int, o
 	return offices, result.Error
 }
 
+func (repo *OfficeRepository) FindAllData(ctx context.Context) ([]entities.OfficeData, error) {
+	var offices []entities.OfficeData
+	result := repo.db.WithContext(ctx).Table("company.view_office_data").Find(&offices)
+	return offices, result.Error
+}
+
 func (repo *OfficeRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
 	var office entities.OfficeData
 	result := repo.db.WithContext(ctx).Table("company.view_office_data").Where("unique_id=?", uniqueId).First(&office)

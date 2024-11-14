@@ -26,6 +26,12 @@ func (repo *RoomRepository) FindAllDataLimit(ctx context.Context, limit int, off
 	return rooms, result.Error
 }
 
+func (repo *RoomRepository) FindAllData(ctx context.Context) ([]entities.RoomData, error) {
+	var rooms []entities.RoomData
+	result := repo.db.WithContext(ctx).Table("company.view_room_data").Find(&rooms)
+	return rooms, result.Error
+}
+
 func (repo *RoomRepository) GetDataByUniqueId(ctx context.Context, uniqueId string) (entities.RoomData, error) {
 	var room entities.RoomData
 	result := repo.db.WithContext(ctx).Table("company.view_room_data").Where("unique_id=?", uniqueId).First(&room)

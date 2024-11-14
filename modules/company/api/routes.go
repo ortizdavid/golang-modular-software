@@ -10,4 +10,7 @@ func RegisterRoutes(router *fiber.App, db *database.Database) {
 	NewBranchApi(db).Routes(router, db)
 	NewOfficeApi(db).Routes(router, db)
 	NewDepartmentApi(db).Routes(router, db)
+	NewRoomApi(db).Routes(router, db)
+	NewProjectApi(db).Routes(router, db)
+	NewPolicyApi(db).Routes(router, db)
 }

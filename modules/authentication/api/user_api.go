@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
-	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/services"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
@@ -32,8 +31,7 @@ func NewUserApi(db *database.Database) *UserApi {
 }
 
 func (api *UserApi) Routes(router *fiber.App, db *database.Database) {
-	jwtMiddleware := middlewares.NewJwtMiddleware(db)
-	group := router.Group("/api/user-management/users", jwtMiddleware.AllowRoles("super-admin"))
+	group := router.Group("/api/user-management/users")
 	group.Get("", api.getAllUsers)
 	group.Get("/active-users", api.getAllActiveUsers)
 	group.Get("/inactive-users", api.getAllInactiveUsers)

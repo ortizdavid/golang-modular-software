@@ -103,12 +103,12 @@ func (s *DepartmentService) GetAllPaginated(ctx context.Context, fiberCtx *fiber
 	return pagination, nil
 }
 
-func (s *DepartmentService) GetAll(ctx context.Context) ([]entities.Department, error) {
+func (s *DepartmentService) GetAll(ctx context.Context) ([]entities.DepartmentData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No departments found")
 	}
-	departments, err := s.repository.FindAll(ctx)
+	departments, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}

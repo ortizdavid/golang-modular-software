@@ -105,12 +105,12 @@ func (s *OfficeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx
 	return pagination, nil
 }
 
-func (s *OfficeService) GetAll(ctx context.Context) ([]entities.Office, error) {
+func (s *OfficeService) GetAll(ctx context.Context) ([]entities.OfficeData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No offices found")
 	}
-	offices, err := s.repository.FindAll(ctx)
+	offices, err := s.repository.FindAllData(ctx)
 	if err != nil {
 		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
 	}
