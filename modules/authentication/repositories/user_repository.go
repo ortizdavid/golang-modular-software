@@ -124,6 +124,12 @@ func (repo *UserRepository) GetDataByEmail(ctx context.Context, email string) (e
 	return userData, result.Error
 }
 
+func (repo *UserRepository) GetDataByToken(ctx context.Context, token string) (entities.UserData, error) {
+	var user entities.UserData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_data").Where("token=?", token).First(&user)
+	return user, result.Error
+}
+
 func (repo *UserRepository) FindAllByStatus(ctx context.Context, status string, limit int, offset int) ([]entities.UserData, error) {
 	var users []entities.UserData
 	result := repo.db.WithContext(ctx).

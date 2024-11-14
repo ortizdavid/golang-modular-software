@@ -32,6 +32,12 @@ func (repo *LoginActivityRepository) GetDataByUniqueId(ctx context.Context, uniq
 	return loginActivityData, result.Error
 }
 
+func (repo *LoginActivityRepository) GetDataByUserId(ctx context.Context, userId int64) (entities.LoginActivityData, error) {
+	var loginActivityData entities.LoginActivityData
+	result := repo.db.WithContext(ctx).Table("authentication.view_login_activity_data").Where("user_id=?", userId).First(&loginActivityData)
+	return loginActivityData, result.Error
+}
+
 func (repo *LoginActivityRepository) FindByUserId(ctx context.Context, userId int64) (entities.LoginActivity, error) {
 	var loginAct entities.LoginActivity
 	result := repo.db.WithContext(ctx).Where("user_id=?", userId).First(&loginAct)

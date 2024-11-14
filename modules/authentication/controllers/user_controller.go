@@ -11,6 +11,7 @@ import (
 
 type UserController struct {
 	service                 *services.UserService
+	loginActivity           *services.LoginActivityService
 	authService             *services.AuthService
 	roleService             *services.RoleService
 	configService           *configurations.AppConfigurationService
@@ -23,6 +24,7 @@ type UserController struct {
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
 		service:                 services.NewUserService(db),
+		loginActivity:           services.NewLoginActivityService(db),
 		authService:             services.NewAuthService(db),
 		roleService:             services.NewRoleService(db),
 		configService:           configurations.NewAppConfigurationService(db),
@@ -57,8 +59,8 @@ func (ctrl *UserController) Routes(router *fiber.App, db *database.Database) {
 	group.Get("/:id/reset-password", ctrl.resetPasswordForm)
 	group.Post("/:id/reset-password", ctrl.resetPassword)
 
-	group.Get("/active-users", ctrl.getAllActiveUsers)
-	group.Get("/inactive-users", ctrl.getAllInactiveUsers)
-	group.Get("/online-users", ctrl.getAllOnlineUsers)
-	group.Get("/offline-users", ctrl.getAllOfflineUsers)
+	group.Get("/active-users", ctrl.getActiveUsers)
+	group.Get("/inactive-users", ctrl.getInactiveUsers)
+	group.Get("/online-users", ctrl.getOnlineUsers)
+	group.Get("/offline-users", ctrl.getOfflineUsers)
 }

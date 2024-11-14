@@ -32,34 +32,22 @@ func NewUserApi(db *database.Database) *UserApi {
 
 func (api *UserApi) Routes(router *fiber.App, db *database.Database) {
 	group := router.Group("/api/user-management/users")
+	
 	group.Get("", api.getAllUsers)
-	group.Get("/active-users", api.getAllActiveUsers)
-	group.Get("/inactive-users", api.getAllInactiveUsers)
+	group.Get("/active-users", api.getActiveUsers)
+	group.Get("/inactive-users", api.getInactiveUsers)
+	group.Get("/online-users", api.getOnlineUsers)
+	group.Get("/offline-users", api.getOfflineUsers)
+	group.Get("/search/:param", api.search)
+
+	group.Post("", api.create)
+	group.Put("/:id", api.edit)
+	
+	group.Get("/:id", api.getByUniqueId)
+	group.Get("/by-name/:name", api.getByName)
+	group.Get("/by-email/:email", api.getByEmail)
+	group.Get("/by-token/:token", api.getByToken)
+
+	group.Get("/:id/roles", api.getUserRoles)
 }
 
-func (ctrl *UserApi) getAllUsers(c *fiber.Ctx) error {
-	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllUsers(c.Context(), c, params)
-	if err != nil {
-		return ctrl.HandleErrorsApi(c, err)
-	}
-	return c.JSON(pagination)
-}
-
-func (ctrl *UserApi) getAllActiveUsers(c *fiber.Ctx) error {
-	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
-	if err != nil {
-		return ctrl.HandleErrorsApi(c, err)
-	}
-	return c.JSON(pagination)
-}
-
-func (ctrl *UserApi) getAllInactiveUsers(c *fiber.Ctx) error {
-	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
-	if err != nil {
-		return ctrl.HandleErrorsApi(c, err)
-	}
-	return c.JSON(pagination)
-}

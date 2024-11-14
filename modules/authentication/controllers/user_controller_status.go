@@ -5,11 +5,11 @@ import (
 	"github.com/ortizdavid/golang-modular-software/common/helpers"
 )
 
-func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
+func (ctrl *UserController) getActiveUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllActiveUsers(c.Context(), c, params)
+	pagination, err := ctrl.service.GetActiveUsers(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -22,11 +22,11 @@ func (ctrl *UserController) getAllActiveUsers(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
+func (ctrl *UserController) getInactiveUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllInactiveUsers(c.Context(), c, params)
+	pagination, err := ctrl.service.GetInactiveUsers(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -39,11 +39,11 @@ func (ctrl *UserController) getAllInactiveUsers(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl *UserController) getAllOnlineUsers(c *fiber.Ctx) error {
+func (ctrl *UserController) getOnlineUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllOnlineUsers(c.Context(), c, params)
+	pagination, err := ctrl.service.GetOnlineUsers(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -56,11 +56,11 @@ func (ctrl *UserController) getAllOnlineUsers(c *fiber.Ctx) error {
 	})
 }
 
-func (ctrl *UserController) getAllOfflineUsers(c *fiber.Ctx) error {
+func (ctrl *UserController) getOfflineUsers(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	params := helpers.GetPaginationParams(c)
-	pagination, err := ctrl.service.GetAllOfflineUsers(c.Context(), c, params)
+	pagination, err := ctrl.service.GetOfflineUsers(c.Context(), c, params)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

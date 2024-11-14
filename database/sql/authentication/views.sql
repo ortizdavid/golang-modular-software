@@ -14,18 +14,8 @@ SELECT
     us.token,
     TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
-    la.status,
-    COALESCE(la.host, 'Unknown') AS host,
-    COALESCE(la.browser, 'Unknown') AS browser,
-    COALESCE(la.ip_address, 'Unknown') AS ip_address,
-    COALESCE(la.device, 'Unknown') AS device, 
-    COALESCE(la.location, 'Unknown') AS location, 
-    COALESCE(TO_CHAR(la.last_login, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_login,
-    COALESCE(TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_logout,
-    la.total_login,
-    la.total_logout
+    us.status
 FROM authentication.users us
-LEFT JOIN authentication.login_activity la ON us.user_id = la.user_id
 ORDER BY us.created_at ASC;
 
 
@@ -104,12 +94,16 @@ ORDER BY created_at DESC;
 DROP VIEW IF EXISTS authentication.view_login_activity_data;
 CREATE VIEW authentication.view_login_activity_data AS
 SELECT la.login_id, la.unique_id,
-    la.status, la.host,
-    la.browser, la.ip_address,
-    la.device,
-    TO_CHAR(la.last_login, 'YYYY-MM-DD HH24:MI:SS') AS last_login, 
-    TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS') AS last_logout,
-    la.total_login, la.total_logout,
+    la.status, 
+    COALESCE(la.host, 'Unknown') AS host,
+    COALESCE(la.browser, 'Unknown') AS browser,
+    COALESCE(la.ip_address, 'Unknown') AS ip_address,
+    COALESCE(la.device, 'Unknown') AS device, 
+    COALESCE(la.location, 'Unknown') AS location, 
+    COALESCE(TO_CHAR(la.last_login, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_login,
+    COALESCE(TO_CHAR(la.last_logout, 'YYYY-MM-DD HH24:MI:SS'), 'N/A') AS last_logout,
+    la.total_login,
+    la.total_logout,
     TO_CHAR(la.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(la.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
     us.user_id, us.user_name,
@@ -117,6 +111,7 @@ SELECT la.login_id, la.unique_id,
 FROM authentication.login_activity la
 JOIN authentication.users us ON(la.user_id = us.user_id)
 ORDER BY created_at DESC;
+
 
 
 --- View: view_user_api_key_data
@@ -143,8 +138,9 @@ SELECT
     COUNT(user_id) AS users,
     SUM(CASE WHEN is_active THEN 1 ELSE 0 END) AS active_users,
     SUM(CASE WHEN NOT is_active THEN 1 ELSE 0 END) AS inactive_users,
-    (SELECT COUNT(DISTINCT ur.user_id) FROM authentication.user_roles ur) AS online_users, 
-    (SELECT COUNT(DISTINCT ur.user_id) FROM authentication.user_roles ur) AS offline_users, 
+    -- Calculate online and offline users without referencing the main query's tables
+    (SELECT COUNT(DISTINCT user_id) FROM authentication.users WHERE status = 'Online') AS online_users, 
+    (SELECT COUNT(DISTINCT user_id) FROM authentication.users WHERE status = 'Offline') AS offline_users, 
     (SELECT COUNT(role_id) FROM authentication.roles) AS roles,
     (SELECT COUNT(permission_id) FROM authentication.permissions) AS permissions, 
     (SELECT COUNT(*) FROM authentication.login_activity) AS login_activity 

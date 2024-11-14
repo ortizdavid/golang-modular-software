@@ -66,3 +66,11 @@ func (s *LoginActivityService) GetLoginActivityByUniqueId(ctx context.Context, u
 	}
 	return loginActivity, nil
 }
+
+func (s *LoginActivityService) GetLoginActivityByUserId(ctx context.Context, userId int64) (entities.LoginActivityData, error) {
+	loginActivity, err := s.repository.GetDataByUserId(ctx, userId)
+	if err != nil {
+		return entities.LoginActivityData{}, apperrors.NewNotFoundError("login activity not found")
+	}
+	return loginActivity, nil
+}

@@ -28,7 +28,7 @@ func (s *UserService) GetAllUsers(ctx context.Context, fiberCtx *fiber.Ctx, para
 	return pagination, nil
 }
 
-func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) GetActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.CountUsersByStatus(ctx, true)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No active users found")
@@ -47,7 +47,7 @@ func (s *UserService) GetAllActiveUsers(ctx context.Context, fiberCtx *fiber.Ctx
 	return pagination, nil
 }
 
-func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) GetInactiveUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.CountUsersByStatus(ctx, false)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No inactive users found")
@@ -66,7 +66,7 @@ func (s *UserService) GetAllInactiveUsers(ctx context.Context, fiberCtx *fiber.C
 	return pagination, nil
 }
 
-func (s *UserService) GetAllOnlineUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) GetOnlineUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.CountUsersByActivityStatus(ctx, entities.ActivityStatusOnline)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No online users found")
@@ -85,7 +85,7 @@ func (s *UserService) GetAllOnlineUsers(ctx context.Context, fiberCtx *fiber.Ctx
 	return pagination, nil
 }
 
-func (s *UserService) GetAllOfflineUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
+func (s *UserService) GetOfflineUsers(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.UserData], error) {
 	count, err := s.CountUsersByActivityStatus(ctx, entities.ActivityStatusOffline)
 	if err != nil {
 		return nil, apperrors.NewNotFoundError("No offline users found")

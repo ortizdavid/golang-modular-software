@@ -27,6 +27,18 @@ func (repo *UserRoleRepository) FindAllDataByUserId(ctx context.Context, userId 
 	return userRoles, result.Error
 }
 
+func (repo *UserRoleRepository) FindAllDataByUserName(ctx context.Context, userName string) ([]entities.UserRoleData, error) {
+	var userRoles []entities.UserRoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_name = ?", userName).Find(&userRoles)
+	return userRoles, result.Error
+}
+
+func (repo *UserRoleRepository) FindAllDataByUserUniqueId(ctx context.Context, uniqueId string) ([]entities.UserRoleData, error) {
+	var userRoles []entities.UserRoleData
+	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_unique_id = ?", uniqueId).Find(&userRoles)
+	return userRoles, result.Error
+}
+
 func (repo *UserRoleRepository) GetDataById(ctx context.Context, userRoleId int) (entities.UserRoleData, error) {
 	var userRole entities.UserRoleData
 	result := repo.db.WithContext(ctx).Table("authentication.view_user_role_data").Where("user_role_id=?", userRoleId).First(&userRole)

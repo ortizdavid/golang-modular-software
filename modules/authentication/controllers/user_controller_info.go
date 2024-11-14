@@ -35,6 +35,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
+	loginActivity, _ := ctrl.loginActivity.GetLoginActivityByUserId(c.Context(), user.UserId)
 	userRoles, _ := ctrl.roleService.GetAssignedRolesByUser(c.Context(), user.UserId)
 	userApiKey, _ := ctrl.service.GetUserApiKeyById(c.Context(), user.UserId)
 	return c.Render("authentication/user/details", fiber.Map{
@@ -43,6 +44,7 @@ func (ctrl *UserController) details(c *fiber.Ctx) error {
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"User":             user,
+		"LoginActivity":	loginActivity,
 		"UserRoles":        userRoles,
 		"CountRoles":       len(userRoles),
 		"UserApiKey":       userApiKey,

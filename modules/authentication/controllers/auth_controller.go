@@ -93,7 +93,7 @@ func (ctrl *AuthController) recoverPassword(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	user, err := ctrl.userService.GetUserByToken(c.Context(), token)
+	user, err := ctrl.userService.FindUserByToken(c.Context(), token)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
@@ -117,7 +117,7 @@ func (ctrl *AuthController) getRecoverLink(c *fiber.Ctx) error {
 	if err := c.BodyParser(&request); err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	user, err := ctrl.userService.GetUserByEmail(c.Context(), request.Email)
+	user, err := ctrl.userService.FindUserByEmail(c.Context(), request.Email)
 	if err != nil {
 		return ctrl.HandleErrorsWeb(c, err)
 	}

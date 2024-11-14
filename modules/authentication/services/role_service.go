@@ -160,7 +160,7 @@ func (s *RoleService) GetAllRolesPaginated(ctx context.Context, fiberCtx *fiber.
 	}
 	roles, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, roles, count, params.CurrentPage, params.Limit)
 	if err != nil {
@@ -176,7 +176,7 @@ func (s *RoleService) GetAllRoles(ctx context.Context) ([]entities.Role, error) 
 	}
 	roles, err := s.repository.FindAll(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	return roles, nil
 }
@@ -188,7 +188,7 @@ func (s *RoleService) GetAllEnaledRoles(ctx context.Context) ([]entities.Role, e
 	}
 	roles, err := s.repository.FindAllEnabled(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	return roles, nil
 }
@@ -200,7 +200,7 @@ func (s *RoleService) GetAllEnaledRolesNotIn(ctx context.Context, values []strin
 	}
 	roles, err := s.repository.FindAllEnabledNotIn(ctx, values)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	return roles, nil
 }
@@ -212,7 +212,7 @@ func (s *RoleService) GetUnassignedRolesByUser(ctx context.Context, userId int64
 	}
 	roles, err := s.repository.FindUnassignedRolesByUser(ctx, userId)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	return roles, nil
 }
@@ -227,7 +227,7 @@ func (s *RoleService) SearchRoles(ctx context.Context, fiberCtx *fiber.Ctx, requ
 	}
 	roles, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, roles, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
@@ -263,7 +263,23 @@ func (s *RoleService) GetUserRole(ctx context.Context, uniqueId string) (entitie
 func (s *RoleService) GetAssignedRolesByUser(ctx context.Context, userId int64) ([]entities.UserRoleData, error) {
 	userRoles, err := s.userRoleRepository.FindAllDataByUserId(ctx, userId)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: "+err.Error())
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
+	}
+	return userRoles, nil
+}
+
+func (s *RoleService) GetAssignedRolesByUserName(ctx context.Context, userName string) ([]entities.UserRoleData, error) {
+	userRoles, err := s.userRoleRepository.FindAllDataByUserName(ctx, userName)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
+	}
+	return userRoles, nil
+}
+
+func (s *RoleService) GetAssignedRolesByUserUniqueId(ctx context.Context, uniqueId string) ([]entities.UserRoleData, error) {
+	userRoles, err := s.userRoleRepository.FindAllDataByUserUniqueId(ctx, uniqueId)
+	if err != nil {
+		return nil, apperrors.NewNotFoundError("no records found: "+err.Error())
 	}
 	return userRoles, nil
 }

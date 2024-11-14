@@ -14,6 +14,7 @@ import (
 
 type AccountController struct {
 	service                 *services.UserService
+	loginActivityService         *services.LoginActivityService
 	authService             *services.AuthService
 	roleService             *services.RoleService
 	configService           *configurations.AppConfigurationService
@@ -26,6 +27,7 @@ type AccountController struct {
 func NewAccountController(db *database.Database) *AccountController {
 	return &AccountController{
 		service:                 services.NewUserService(db),
+		loginActivityService: 	 services.NewLoginActivityService(db),
 		authService:             services.NewAuthService(db),
 		roleService:             services.NewRoleService(db),
 		configService:           configurations.NewAppConfigurationService(db),
@@ -94,12 +96,14 @@ func (ctrl *AccountController) changePassword(c *fiber.Ctx) error {
 
 func (ctrl *AccountController) userData(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
+	loginActivity, _ := ctrl.loginActivityService.GetLoginActivityByUserId(c.Context(), loggedUser.UserId)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	return c.Render("authentication/account/user-data", fiber.Map{
 		"Title":            "User Data",
 		"AppConfig":        ctrl.configService.LoadAppConfigurations(c.Context()),
 		"ModuleFlagStatus": moduleFlagStatus,
 		"LoggedUser":       loggedUser,
+		"LoginActivity": loginActivity,
 	})
 }
 

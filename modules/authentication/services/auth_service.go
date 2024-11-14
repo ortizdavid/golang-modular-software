@@ -70,6 +70,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	}
 	//Update Token
 	user.Token = encryption.GenerateRandomToken()
+	user.Status = entities.ActivityStatusOnline
 	if err := s.repository.Update(ctx, user); err != nil {
 		return apperrors.NewInternalServerError(err.Error())
 	}
@@ -161,6 +162,10 @@ func (s *AuthService) Logout(ctx context.Context, fiberCtx *fiber.Ctx) error {
 	}
 	// Get user
 	user, _ := s.repository.FindById(ctx, loggedUser.UserId)
+	user.Status = entities.ActivityStatusOffline
+	if err := s.repository.Update(ctx, user); err != nil { //Update status
+		return apperrors.NewInternalServerError(err.Error())
+	}
 	//Update Login Activity--------------------------------------------------------
 	loginAct, err := s.loginActRepository.FindByUserId(ctx, user.UserId)
 	if err != nil {

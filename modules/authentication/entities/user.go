@@ -13,6 +13,7 @@ type User struct {
 	UserImage  	string `gorm:"column:user_image"`
 	InitialRole	string `gorm:"column:initial_role"`
 	Token  		string `gorm:"column:token"`
+	Status      LoginActivityStatus `gorm:"column:status"`
 	shared.BaseEntity
 }
 
@@ -32,14 +33,5 @@ type UserData struct {
 	CreatedAt    	string `json:"created_at"`
 	UpdatedAt    	string `json:"updated_at"`
 	Status     		string `json:"status"`
-	Host       		string `json:"host"`
-	Browser    		string `json:"browser"`
-	IPAddress  		string `json:"ip_address"`
-	Device     		string `json:"device"`
-	Location   		string `json:"location"`
-	LastLogin  		string `json:"last_login"`
-	LastLogout 		string `json:"last_logout"`
-	TotalLogin		int64 `json:"total_login"`
-	TotalLogout		int64 `json:"total_logout"`
 }
 
