@@ -57,7 +57,7 @@ func (api *DocumentStatusApi) add(c *fiber.Ctx) error {
 	}
 	msg := "Created document status '"+request.StatusName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *DocumentStatusApi) edit(c *fiber.Ctx) error {

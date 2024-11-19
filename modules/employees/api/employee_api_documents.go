@@ -32,7 +32,7 @@ func (api *EmployeeApi) addDocument(c *fiber.Ctx) error {
 	}
 	msg := "Document '" + request.DocumentName + "' for employee '" + employee.FirstName + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editDocument(c *fiber.Ctx) error {

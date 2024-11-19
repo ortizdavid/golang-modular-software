@@ -57,7 +57,7 @@ func (api *ApprovalStatusApi) add(c *fiber.Ctx) error {
 	}
 	msg := "Created approval status '"+request.StatusName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *ApprovalStatusApi) edit(c *fiber.Ctx) error {

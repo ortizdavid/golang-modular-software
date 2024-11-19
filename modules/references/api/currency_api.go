@@ -57,7 +57,7 @@ func (api *CurrencyApi) add(c *fiber.Ctx) error {
 	}
 	msg := "Currency '" + request.CurrencyName + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *CurrencyApi) edit(c *fiber.Ctx) error {

@@ -71,7 +71,7 @@ func (api *BranchApi) create(c *fiber.Ctx) error {
 	}
 	msg := "Created Branch '"+request.BranchName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"msg": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"msg": msg})
 }
 
 func (api *BranchApi) edit(c *fiber.Ctx) error {

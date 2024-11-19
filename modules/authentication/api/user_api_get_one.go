@@ -46,3 +46,21 @@ func (ctrl *UserApi) getUserRoles(c *fiber.Ctx) error {
 	}
 	return c.JSON(roles)
 }
+
+func (ctrl *UserApi) getLoginActivityByName(c *fiber.Ctx) error {
+	name := c.Params("name")
+	activity, err := ctrl.activityService.GetLoginActivityByUserName(c.Context(), name)
+	if err != nil {
+		return ctrl.HandleErrorsApi(c, err)
+	}
+	return c.JSON(activity)
+}
+
+func (ctrl *UserApi) getApiInfoByName(c *fiber.Ctx) error {
+	name := c.Params("name")
+	activity, err := ctrl.service.GetUserApiKeyByName(c.Context(), name)
+	if err != nil {
+		return ctrl.HandleErrorsApi(c, err)
+	}
+	return c.JSON(activity)
+}

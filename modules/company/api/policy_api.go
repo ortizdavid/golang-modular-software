@@ -71,7 +71,7 @@ func (api *PolicyApi) create(c *fiber.Ctx) error {
 	}
 	msg := "Created Policy '"+request.PolicyName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"msg": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"msg": msg})
 }
 
 func (api *PolicyApi) edit(c *fiber.Ctx) error {

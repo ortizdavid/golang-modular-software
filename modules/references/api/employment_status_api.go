@@ -57,7 +57,7 @@ func (api *EmploymentStatusApi) add(c *fiber.Ctx) error {
 	}
 	msg := "Created employment status '"+request.StatusName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmploymentStatusApi) edit(c *fiber.Ctx) error {

@@ -71,7 +71,7 @@ func (api *OfficeApi) create(c *fiber.Ctx) error {
 	}
 	msg := "Created Office '"+request.OfficeName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"msg": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"msg": msg})
 }
 
 func (api *OfficeApi) edit(c *fiber.Ctx) error {

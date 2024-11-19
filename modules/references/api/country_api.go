@@ -56,7 +56,7 @@ func (api *CountryApi) add(c *fiber.Ctx) error {
 	}
 	msg := "Country '" + request.CountryName + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *CountryApi) edit(c *fiber.Ctx) error {

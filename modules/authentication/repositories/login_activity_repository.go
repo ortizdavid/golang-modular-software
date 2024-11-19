@@ -38,6 +38,18 @@ func (repo *LoginActivityRepository) GetDataByUserId(ctx context.Context, userId
 	return loginActivityData, result.Error
 }
 
+func (repo *LoginActivityRepository) GetDataByUserName(ctx context.Context, userName string) (entities.LoginActivityData, error) {
+	var loginActivityData entities.LoginActivityData
+	result := repo.db.WithContext(ctx).Table("authentication.view_login_activity_data").Where("user_name=?", userName).First(&loginActivityData)
+	return loginActivityData, result.Error
+}
+
+func (repo *LoginActivityRepository) GetDataByEmail(ctx context.Context, email string) (entities.LoginActivityData, error) {
+	var loginActivityData entities.LoginActivityData
+	result := repo.db.WithContext(ctx).Table("authentication.view_login_activity_data").Where("email=?", email).First(&loginActivityData)
+	return loginActivityData, result.Error
+}
+
 func (repo *LoginActivityRepository) FindByUserId(ctx context.Context, userId int64) (entities.LoginActivity, error) {
 	var loginAct entities.LoginActivity
 	result := repo.db.WithContext(ctx).Where("user_id=?", userId).First(&loginAct)

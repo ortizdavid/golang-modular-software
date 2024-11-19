@@ -11,6 +11,7 @@ import (
 
 type UserApi struct {
 	service       *services.UserService
+	activityService *services.LoginActivityService
 	roleService   *services.RoleService
 	authService   *services.AuthService
 	configService *configurations.BasicConfigurationService
@@ -22,6 +23,7 @@ type UserApi struct {
 func NewUserApi(db *database.Database) *UserApi {
 	return &UserApi{
 		service:       services.NewUserService(db),
+		activityService: services.NewLoginActivityService(db),
 		roleService:   services.NewRoleService(db),
 		authService:   services.NewAuthService(db),
 		configService: configurations.NewBasicConfigurationService(db),
@@ -49,5 +51,10 @@ func (api *UserApi) Routes(router *fiber.App, db *database.Database) {
 	group.Get("/by-token/:token", api.getByToken)
 
 	group.Get("/:id/roles", api.getUserRoles)
+	group.Get("/:name/login-activity", api.getLoginActivityByName)
+	group.Get("/:name/api-info", api.getApiInfoByName)
+
+	group.Post("/:id/activate", api.activate)
+	group.Post("/:id/deactivate", api.deactivate)
 }
 

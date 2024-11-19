@@ -32,7 +32,7 @@ func (api *EmployeeApi) addEmail(c *fiber.Ctx) error {
 	}
 	msg := "Employee '" + employee.IdentificationNumber + "' email added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editEmail(c *fiber.Ctx) error {
@@ -88,7 +88,7 @@ func (api *EmployeeApi) addPhone(c *fiber.Ctx) error {
 	}
 	msg := "Employee '" + employee.IdentificationNumber + "' phone added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editPhone(c *fiber.Ctx) error {

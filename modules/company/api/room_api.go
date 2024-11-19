@@ -71,7 +71,7 @@ func (api *RoomApi) create(c *fiber.Ctx) error {
 	}
 	msg := "Created Room '"+request.RoomName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"msg": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"msg": msg})
 }
 
 func (api *RoomApi) edit(c *fiber.Ctx) error {

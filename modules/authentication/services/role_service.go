@@ -244,6 +244,14 @@ func (s *RoleService) GetRoleByUniqueId(ctx context.Context, uniqueId string) (e
 	return role, nil
 }
 
+func (s *RoleService) GetRoleByCode(ctx context.Context, code string) (entities.RoleData, error) {
+	role, err := s.repository.GetDataByCode(ctx, code)
+	if err != nil {
+		return entities.RoleData{}, apperrors.NewNotFoundError("role not found")
+	}
+	return role, nil
+}
+
 func (s *RoleService) CountRoles(ctx context.Context) (int64, error) {
 	count, err := s.repository.Count(ctx)
 	if err != nil {

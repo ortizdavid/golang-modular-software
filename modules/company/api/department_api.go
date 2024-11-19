@@ -71,7 +71,7 @@ func (api *DepartmentApi) create(c *fiber.Ctx) error {
 	}
 	msg := "Created Department '"+request.DepartmentName+"' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"msg": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"msg": msg})
 }
 
 func (api *DepartmentApi) edit(c *fiber.Ctx) error {

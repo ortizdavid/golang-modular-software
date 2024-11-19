@@ -11,7 +11,7 @@ import (
 
 type UserController struct {
 	service                 *services.UserService
-	loginActivity           *services.LoginActivityService
+	activityService           *services.LoginActivityService
 	authService             *services.AuthService
 	roleService             *services.RoleService
 	configService           *configurations.AppConfigurationService
@@ -24,7 +24,7 @@ type UserController struct {
 func NewUserController(db *database.Database) *UserController {
 	return &UserController{
 		service:                 services.NewUserService(db),
-		loginActivity:           services.NewLoginActivityService(db),
+		activityService:           services.NewLoginActivityService(db),
 		authService:             services.NewAuthService(db),
 		roleService:             services.NewRoleService(db),
 		configService:           configurations.NewAppConfigurationService(db),

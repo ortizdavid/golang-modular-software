@@ -57,7 +57,7 @@ func (api *ContactTypeApi) add(c *fiber.Ctx) error {
 	}
 	msg := "Created contact type '" + request.TypeName + "' successfully"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *ContactTypeApi) edit(c *fiber.Ctx) error {

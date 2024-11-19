@@ -20,7 +20,7 @@ func (api *EmployeeApi) create(c *fiber.Ctx) error {
 	}
 	msg := fmt.Sprintf("Employee '%s %s' created", request.FirstName, request.LastName)
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) edit(c *fiber.Ctx) error {

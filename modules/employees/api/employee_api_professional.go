@@ -32,7 +32,7 @@ func (api *EmployeeApi) addProfessionalInfo(c *fiber.Ctx) error {
 	}
 	msg := "Professional info for employee '" + employee.IdentificationNumber + "' added"
 	api.infoLogger.Info(c, msg)
-	return c.JSON(fiber.Map{"message": msg})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": msg})
 }
 
 func (api *EmployeeApi) editProfessionalInfo(c *fiber.Ctx) error {

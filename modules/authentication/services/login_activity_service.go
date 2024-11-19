@@ -74,3 +74,19 @@ func (s *LoginActivityService) GetLoginActivityByUserId(ctx context.Context, use
 	}
 	return loginActivity, nil
 }
+
+func (s *LoginActivityService) GetLoginActivityByUserName(ctx context.Context, userName string) (entities.LoginActivityData, error) {
+	loginActivity, err := s.repository.GetDataByUserName(ctx, userName)
+	if err != nil {
+		return entities.LoginActivityData{}, apperrors.NewNotFoundError("login activity not found")
+	}
+	return loginActivity, nil
+}
+
+func (s *LoginActivityService) GetLoginActivityByEmail(ctx context.Context, email string) (entities.LoginActivityData, error) {
+	loginActivity, err := s.repository.GetDataByEmail(ctx, email)
+	if err != nil {
+		return entities.LoginActivityData{}, apperrors.NewNotFoundError("login activity not found")
+	}
+	return loginActivity, nil
+}

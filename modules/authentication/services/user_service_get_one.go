@@ -62,6 +62,17 @@ func (s *UserService) GetUserApiKeyById(ctx context.Context, userId int64) (enti
 	return user, nil
 }
 
+func (s *UserService) GetUserApiKeyByName(ctx context.Context, userName string) (entities.UserApiKeyData, error) {
+	user, err := s.userApiKeyRepository.FindByUserName(ctx, userName)
+	if err != nil {
+		return entities.UserApiKeyData{}, apperrors.NewNotFoundError("user api key not found")
+	}
+	if user.UserId == 0 {
+		return entities.UserApiKeyData{}, apperrors.NewNotFoundError("user api key not found")
+	}
+	return user, nil
+}
+
 func (s *UserService) GetUserByToken(ctx context.Context, token string) (entities.UserData, error) {
 	user, err := s.repository.GetDataByToken(ctx, token)
 	if err != nil {

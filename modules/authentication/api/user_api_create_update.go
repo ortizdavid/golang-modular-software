@@ -15,8 +15,9 @@ func (ctrl *UserApi) create(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsApi(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User '"+request.UserName+"' added successfully")
-	return c.Redirect("/user-management/users")
+	msg := "User '"+request.UserName+"' added successfully"
+	ctrl.infoLogger.Info(c, msg)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"msg": msg})
 }
 
 func (ctrl *UserApi) edit(c *fiber.Ctx) error {
@@ -30,6 +31,7 @@ func (ctrl *UserApi) edit(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsApi(c, err)
 	}
-	ctrl.infoLogger.Info(c, "User '"+request.UserName+"' edited successfuly")
-	return c.Redirect("/user-management/users")
+	msg := "User '"+request.UserName+"' edited successfuly"
+	ctrl.infoLogger.Info(c, msg)
+	return c.JSON(fiber.Map{"msg": msg})
 }
