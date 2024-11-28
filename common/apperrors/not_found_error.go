@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func NewNotFoundError(message string) *HttpError {
+func NotFoundError(message string) *HttpError {
 	return &HttpError{
 		Message: message,
 		StatusCode: http.StatusNotFound,

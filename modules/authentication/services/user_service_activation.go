@@ -11,17 +11,17 @@ import (
 func (s *UserService) ActivateUser(ctx context.Context, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. invalid user id")
+		return apperrors.NotFoundError("user not found. invalid user id")
 	}
 	if user.IsActive == true {
-		return apperrors.NewConflictError("user '"+user.UserName+"'  is already active")
+		return apperrors.ConflictError("user '" + user.UserName + "'  is already active")
 	}
 	user.IsActive = true
 	user.Token = encryption.GenerateRandomToken()
 	user.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, user)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while activating user: " + err.Error())
+		return apperrors.InternalServerError("error while activating user: " + err.Error())
 	}
 	return nil
 }
@@ -29,16 +29,16 @@ func (s *UserService) ActivateUser(ctx context.Context, userId int64) error {
 func (s *UserService) DeactivateUser(ctx context.Context, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. invalid user id")
+		return apperrors.NotFoundError("user not found. invalid user id")
 	}
 	if user.IsActive == false {
-		return apperrors.NewConflictError("user '"+user.UserName+"' is already inactive")
+		return apperrors.ConflictError("user '" + user.UserName + "' is already inactive")
 	}
 	user.IsActive = false
 	user.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, user)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while deactivating user: " + err.Error())
+		return apperrors.InternalServerError("error while deactivating user: " + err.Error())
 	}
 	return nil
 }

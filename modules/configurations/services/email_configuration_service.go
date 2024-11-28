@@ -26,11 +26,11 @@ func NewEmailConfigurationService(db *database.Database) *EmailConfigurationServ
 
 func (s *EmailConfigurationService) Update(ctx context.Context, request entities.UpdateEmailConfigurationRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	// Attempt to retrieve the existing configuration
-    conf, err := s.repository.FindLast(ctx)
-    if err != nil {
+	conf, err := s.repository.FindLast(ctx)
+	if err != nil {
 		// Create a new configuration if none exists
 		conf = entities.EmailConfiguration{
 			ConfigurationId: 0,
@@ -38,10 +38,10 @@ func (s *EmailConfigurationService) Update(ctx context.Context, request entities
 			SMTPPort:        request.SMTPPort,
 			SenderEmail:     request.SenderEmail,
 			SenderPassword:  request.SenderPassword,
-			BaseEntity:      shared.BaseEntity{
-				UniqueId:         encryption.GenerateUUID(),
-				CreatedAt:        time.Now().UTC(),
-				UpdatedAt:        time.Now().UTC(),
+			BaseEntity: shared.BaseEntity{
+				UniqueId:  encryption.GenerateUUID(),
+				CreatedAt: time.Now().UTC(),
+				UpdatedAt: time.Now().UTC(),
 			},
 		}
 		err = s.repository.Create(ctx, conf)
@@ -49,19 +49,18 @@ func (s *EmailConfigurationService) Update(ctx context.Context, request entities
 			return fmt.Errorf("failed to create email configuration: %w", err)
 		}
 		return nil
-    }
-    // Update the existing configuration with new values
-    conf.SMTPServer = request.SMTPServer
-    conf.SMTPPort = request.SMTPPort
-    conf.SenderEmail = request.SenderEmail
-    conf.SenderPassword = request.SenderPassword
-    err = s.repository.Update(ctx, conf)
-    if err != nil {
-        return fmt.Errorf("failed to update email configuration: %w", err)
-    }
-    return nil
+	}
+	// Update the existing configuration with new values
+	conf.SMTPServer = request.SMTPServer
+	conf.SMTPPort = request.SMTPPort
+	conf.SenderEmail = request.SenderEmail
+	conf.SenderPassword = request.SenderPassword
+	err = s.repository.Update(ctx, conf)
+	if err != nil {
+		return fmt.Errorf("failed to update email configuration: %w", err)
+	}
+	return nil
 }
-
 
 func (s *EmailConfigurationService) GetCurrent(ctx context.Context) (entities.EmailConfiguration, error) {
 	conf, err := s.repository.FindLast(ctx)

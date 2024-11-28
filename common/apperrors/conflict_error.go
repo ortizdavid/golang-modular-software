@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func NewConflictError(message string) *HttpError {
+func ConflictError(message string) *HttpError {
 	return &HttpError{
 		Message: message,
 		StatusCode: http.StatusConflict,

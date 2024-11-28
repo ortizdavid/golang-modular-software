@@ -17,13 +17,13 @@ import (
 )
 
 type UserService struct {
-	repository *repositories.UserRepository
-	roleRepository *repositories.RoleRepository
-	userRoleRepository *repositories.UserRoleRepository
+	repository                *repositories.UserRepository
+	roleRepository            *repositories.RoleRepository
+	userRoleRepository        *repositories.UserRoleRepository
 	userAssociationRepository *repositories.UserAssociationRepository
-	loginActRepository *repositories.LoginActivityRepository
-	userApiKeyRepository *repositories.UserApiKeyRepository
-	userInsertedId	int64
+	loginActRepository        *repositories.LoginActivityRepository
+	userApiKeyRepository      *repositories.UserApiKeyRepository
+	userInsertedId            int64
 }
 
 func NewUserService(db *database.Database) *UserService {
@@ -39,38 +39,38 @@ func NewUserService(db *database.Database) *UserService {
 
 func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUserRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	// Apply a transaction to ensure all operations are atomic (either all succeed or all fail)
 	return s.repository.WithTransaction(ctx, func(tx *database.Database) error {
 		// --- Check if user with the given name or email already exists
 		existsName, err := s.repository.ExistsByName(ctx, request.UserName)
 		if err != nil {
-			return apperrors.NewNotFoundError(err.Error())
+			return apperrors.NotFoundError(err.Error())
 		}
 		if existsName {
-			return apperrors.NewConflictError("user '"+request.UserName+"' already exists")
+			return apperrors.ConflictError("user '" + request.UserName + "' already exists")
 		}
 		existsEmail, err := s.repository.ExistsByEmail(ctx, request.Email)
 		if err != nil {
-			return apperrors.NewNotFoundError(err.Error())
+			return apperrors.NotFoundError(err.Error())
 		}
 		if existsEmail {
-			return apperrors.NewConflictError("email '"+request.Email+"' already exists")
+			return apperrors.ConflictError("email '" + request.Email + "' already exists")
 		}
 		// Check Role ------------------
 		role, err := s.roleRepository.FindById(ctx, request.RoleId)
 		if err != nil {
-			return apperrors.NewNotFoundError("role not found. invalid role id")
+			return apperrors.NotFoundError("role not found. invalid role id")
 		}
 		//--- Create User ----------------------------------------------------------------------
 		user := entities.User{
-			UserName:  request.UserName,
-			Email:     request.Email,
-			Password:  encryption.HashPassword(request.Password),
-			IsActive:  true,
-			UserImage: "",
-			Token:     encryption.GenerateRandomToken(),
+			UserName:    request.UserName,
+			Email:       request.Email,
+			Password:    encryption.HashPassword(request.Password),
+			IsActive:    true,
+			UserImage:   "",
+			Token:       encryption.GenerateRandomToken(),
 			InitialRole: role.Code,
 			BaseEntity: shared.BaseEntity{
 				UniqueId:  encryption.GenerateUUID(),
@@ -80,14 +80,14 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		}
 		err = s.repository.Create(ctx, user)
 		if err != nil {
-			return apperrors.NewInternalServerError("error while creating user: "+ err.Error())
+			return apperrors.InternalServerError("error while creating user: " + err.Error())
 		}
 		userId := s.repository.LastInsertId
 		s.userInsertedId = userId
 		// --- Create a new UserRole association
 		userRole := entities.UserRole{
-			UserId:     userId,
-			RoleId:     request.RoleId,
+			UserId: userId,
+			RoleId: request.RoleId,
 			BaseEntity: shared.BaseEntity{
 				UniqueId:  encryption.GenerateUUID(),
 				CreatedAt: time.Now(),
@@ -96,11 +96,11 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		}
 		err = s.userRoleRepository.Create(ctx, userRole)
 		if err != nil {
-			return apperrors.NewInternalServerError("error while adding role: "+ err.Error())
+			return apperrors.InternalServerError("error while adding role: " + err.Error())
 		}
 		// --- Create Login Activity entry
 		loginAct := entities.LoginActivity{
-			UserId:   userId,
+			UserId: userId,
 			Status: entities.ActivityStatusOffline,
 			BaseEntity: shared.BaseEntity{
 				UniqueId:  encryption.GenerateUUID(),
@@ -110,7 +110,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		}
 		err = s.loginActRepository.Create(ctx, loginAct)
 		if err != nil {
-			return apperrors.NewInternalServerError("error while creating login activity: "+err.Error())
+			return apperrors.InternalServerError("error while creating login activity: " + err.Error())
 		}
 		// --- Generate and assign an API key for the user
 		userApiKey := entities.UserApiKey{
@@ -118,7 +118,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 			XUserId:   encryption.GenerateUUID(),
 			XApiKey:   encryption.GenerateRandomToken(),
 			IsActive:  true,
-			ExpiresAt: time.Now().AddDate(0, 1, 0),  // Add 1 month to the current time
+			ExpiresAt: time.Now().AddDate(0, 1, 0), // Add 1 month to the current time
 			BaseEntity: shared.BaseEntity{
 				UniqueId:  encryption.GenerateUUID(),
 				CreatedAt: time.Now(),
@@ -127,7 +127,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		}
 		err = s.userApiKeyRepository.Create(ctx, userApiKey)
 		if err != nil {
-			return apperrors.NewInternalServerError("error while creating api key: "+err.Error())
+			return apperrors.InternalServerError("error while creating api key: " + err.Error())
 		}
 		return nil
 	})
@@ -135,38 +135,37 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 
 func (s *UserService) UpdateUser(ctx context.Context, uniqueId string, request entities.UpdateUserRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	user, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. invalid user id")
+		return apperrors.NotFoundError("user not found. invalid user id")
 	}
 	user.UserName = request.UserName
 	err = s.repository.Update(ctx, user)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while update user: "+ err.Error())
+		return apperrors.InternalServerError("error while update user: " + err.Error())
 	}
 	return nil
 }
 
-
 func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, userId int64) error {
 	user, err := s.repository.FindById(ctx, userId)
 	if err != nil {
-		return apperrors.NewNotFoundError("user not found. invalid user id")
+		return apperrors.NotFoundError("user not found. invalid user id")
 	}
 	// remove current image if exists //TODO
 	uploadPath := config.UploadImagePath() + "/users"
 	uploader := helpers.NewUploader(uploadPath, config.MaxUploadImageSize(), helpers.ExtImages)
 	info, err := uploader.UploadSingleFile(fiberCtx, "user_image")
 	if err != nil {
-		return apperrors.NewNotFoundError("error while uploading image: "+err.Error())
+		return apperrors.NotFoundError("error while uploading image: " + err.Error())
 	}
 	user.UserImage = info.FinalName
 	user.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, user)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while changing password: "+ err.Error())
+		return apperrors.InternalServerError("error while changing password: " + err.Error())
 	}
 	return nil
 }
@@ -174,7 +173,7 @@ func (s *UserService) UploadUserImage(ctx context.Context, fiberCtx *fiber.Ctx, 
 func (s *UserService) RemoveUser(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while deleting user: "+ err.Error())
+		return apperrors.InternalServerError("error while deleting user: " + err.Error())
 	}
 	return nil
 }

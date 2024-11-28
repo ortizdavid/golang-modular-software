@@ -12,7 +12,6 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/repositories"
 	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
-
 )
 
 type CountryService struct {
@@ -27,39 +26,39 @@ func NewCountryService(db *database.Database) *CountryService {
 
 func (s *CountryService) Create(ctx context.Context, request entities.CreateCountryRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	exists, err := s.repository.ExistsByName(ctx, request.CountryName)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("Country already exists")
+		return apperrors.BadRequestError("Country already exists")
 	}
 	country := entities.Country{
 		CountryName: request.CountryName,
 		IsoCode:     request.IsoCode,
 		DialingCode: request.DialingCode,
 		BaseEntity: shared.BaseEntity{
-			UniqueId:         encryption.GenerateUUID(),
-			CreatedAt:        time.Now().UTC(),
-			UpdatedAt:        time.Now().UTC(),
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
 		},
 	}
 	err = s.repository.Create(ctx, country)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while creating country: " + err.Error())
+		return apperrors.InternalServerError("error while creating country: " + err.Error())
 	}
 	return nil
 }
 
 func (s *CountryService) Update(ctx context.Context, uniqueId string, request entities.UpdateCountryRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	country, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("country not found")
+		return apperrors.NotFoundError("country not found")
 	}
 	country.CountryName = request.CountryName
 	country.IsoCode = request.IsoCode
@@ -67,26 +66,26 @@ func (s *CountryService) Update(ctx context.Context, uniqueId string, request en
 	country.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, country)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while updating country: " + err.Error())
+		return apperrors.InternalServerError("error while updating country: " + err.Error())
 	}
 	return nil
 }
 
 func (s *CountryService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.CountryData], error) {
 	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	count, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No countries found")
+		return nil, apperrors.NotFoundError("No countries found")
 	}
 	countries, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, countries, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -94,11 +93,11 @@ func (s *CountryService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ct
 func (s *CountryService) GetAll(ctx context.Context) ([]entities.CountryData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No countries found")
+		return nil, apperrors.NotFoundError("No countries found")
 	}
 	countries, err := s.repository.FindAllData(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	return countries, nil
 }
@@ -106,18 +105,18 @@ func (s *CountryService) GetAll(ctx context.Context) ([]entities.CountryData, er
 func (s *CountryService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCountryRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.CountryData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No countries found")
+		return nil, apperrors.NotFoundError("No countries found")
 	}
 	if err := paginationParams.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	countries, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, countries, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -125,7 +124,7 @@ func (s *CountryService) Search(ctx context.Context, fiberCtx *fiber.Ctx, reques
 func (s *CountryService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.CountryData, error) {
 	country, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.CountryData{}, apperrors.NewNotFoundError("country not found")
+		return entities.CountryData{}, apperrors.NotFoundError("country not found")
 	}
 	return country, nil
 }
@@ -133,7 +132,7 @@ func (s *CountryService) GetByUniqueId(ctx context.Context, uniqueId string) (en
 func (s *CountryService) GetByName(ctx context.Context, name string) (entities.CountryData, error) {
 	country, err := s.repository.GetDataByName(ctx, name)
 	if err != nil {
-		return entities.CountryData{}, apperrors.NewNotFoundError("country not found")
+		return entities.CountryData{}, apperrors.NotFoundError("country not found")
 	}
 	return country, nil
 }
@@ -141,7 +140,7 @@ func (s *CountryService) GetByName(ctx context.Context, name string) (entities.C
 func (s *CountryService) GetByIsoCode(ctx context.Context, isoCode string) (entities.CountryData, error) {
 	country, err := s.repository.GetDataByIsoCode(ctx, isoCode)
 	if err != nil {
-		return entities.CountryData{}, apperrors.NewNotFoundError("country not found")
+		return entities.CountryData{}, apperrors.NotFoundError("country not found")
 	}
 	return country, nil
 }
@@ -149,11 +148,11 @@ func (s *CountryService) GetByIsoCode(ctx context.Context, isoCode string) (enti
 func (s *CountryService) Remove(ctx context.Context, uniqueId string) error {
 	country, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("country not found")
+		return apperrors.NotFoundError("country not found")
 	}
 	err = s.repository.Delete(ctx, country)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing country: "+ err.Error())
+		return apperrors.InternalServerError("error while removing country: " + err.Error())
 	}
 	return nil
 }

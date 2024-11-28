@@ -26,18 +26,18 @@ func NewAddressService(db *database.Database) *AddressService {
 
 func (s *AddressService) Create(ctx context.Context, request entities.CreateAddressRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	employee, err := s.employeeRepository.FindById(ctx, request.EmployeeId)
 	if err != nil {
-		return apperrors.NewNotFoundError("employee not found")
+		return apperrors.NotFoundError("employee not found")
 	}
 	exists, err := s.repository.Exists(ctx, request)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("address already exists for employee: " + employee.FirstName)
+		return apperrors.BadRequestError("address already exists for employee: " + employee.FirstName)
 	}
 	// Update Current Address as false
 	err = s.repository.UpdateCurrent(ctx, employee.EmployeeId)
@@ -64,21 +64,21 @@ func (s *AddressService) Create(ctx context.Context, request entities.CreateAddr
 	}
 	err = s.repository.Create(ctx, address)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while creating address: " + err.Error())
+		return apperrors.InternalServerError("error while creating address: " + err.Error())
 	}
 	return nil
 }
 
 func (s *AddressService) Update(ctx context.Context, addressId int64, request entities.UpdateAddressRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	address, err := s.repository.FindById(ctx, addressId)
 	if err != nil {
-		return apperrors.NewNotFoundError("address not found")
+		return apperrors.NotFoundError("address not found")
 	}
 	if !address.IsCurrent {
-		return apperrors.NewBadRequestError("Cannot update address. Only the current address can be updated.")
+		return apperrors.BadRequestError("Cannot update address. Only the current address can be updated.")
 	}
 	address.EmployeeId = request.EmployeeId
 	address.State = request.State
@@ -92,7 +92,7 @@ func (s *AddressService) Update(ctx context.Context, addressId int64, request en
 	address.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, address)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while updating address: " + err.Error())
+		return apperrors.InternalServerError("error while updating address: " + err.Error())
 	}
 	return nil
 }
@@ -100,11 +100,11 @@ func (s *AddressService) Update(ctx context.Context, addressId int64, request en
 func (s *AddressService) GetAll(ctx context.Context, employeeId int64) ([]entities.AddressData, error) {
 	_, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No addresss found")
+		return nil, apperrors.NotFoundError("No addresss found")
 	}
 	addresss, err := s.repository.FindAllByEmployeeId(ctx, employeeId)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	return addresss, nil
 }
@@ -112,7 +112,7 @@ func (s *AddressService) GetAll(ctx context.Context, employeeId int64) ([]entiti
 func (s *AddressService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.AddressData, error) {
 	address, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.AddressData{}, apperrors.NewNotFoundError("address not found")
+		return entities.AddressData{}, apperrors.NotFoundError("address not found")
 	}
 	return address, nil
 }
@@ -120,7 +120,7 @@ func (s *AddressService) GetByUniqueId(ctx context.Context, uniqueId string) (en
 func (s *AddressService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.AddressData, error) {
 	addresses, err := s.repository.GetAllByEmployeeUniqueId(ctx, uniqueId)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("address not found")
+		return nil, apperrors.NotFoundError("address not found")
 	}
 	return addresses, nil
 }
@@ -128,7 +128,7 @@ func (s *AddressService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId 
 func (s *AddressService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing address: " + err.Error())
+		return apperrors.InternalServerError("error while removing address: " + err.Error())
 	}
 	return nil
 }

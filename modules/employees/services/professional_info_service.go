@@ -14,7 +14,7 @@ import (
 )
 
 type ProfessionalInfoService struct {
-	repository *repositories.ProfessionalInfoRepository
+	repository         *repositories.ProfessionalInfoRepository
 	employeeRepository *repositories.EmployeeRepository
 }
 
@@ -25,46 +25,46 @@ func NewProfessionalInfoService(db *database.Database) *ProfessionalInfoService 
 	}
 }
 
-func (s *ProfessionalInfoService) CreateProfessionalInfo(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateProfessionalInfoRequest) error {
+func (s *ProfessionalInfoService) CreateProfessionalInfo(ctx context.Context, fiberCtx *fiber.Ctx, request entities.CreateProfessionalInfoRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	employee, err := s.employeeRepository.FindById(ctx, request.EmployeeId)
 	if err != nil {
-		return apperrors.NewNotFoundError("employee not found")
+		return apperrors.NotFoundError("employee not found")
 	}
 	exists, err := s.repository.Exists(ctx, request)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("professional info already exists for employee: "+employee.FirstName)
+		return apperrors.BadRequestError("professional info already exists for employee: " + employee.FirstName)
 	}
 	professionalInfo := entities.ProfessionalInfo{
 		EmployeeId:         request.EmployeeId,
 		DepartmentId:       request.DepartmentId,
 		JobTitleId:         request.JobTitleId,
 		EmploymentStatusId: request.EmploymentStatusId,
-		BaseEntity:         shared.BaseEntity{
-			UniqueId: encryption.GenerateUUID(), 
-			CreatedAt: time.Now().UTC(), 
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
 		},
 	}
 	err = s.repository.Create(ctx, professionalInfo)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while creating professional info: " + err.Error())
+		return apperrors.InternalServerError("error while creating professional info: " + err.Error())
 	}
 	return nil
 }
 
 func (s *ProfessionalInfoService) UpdateProfessionalInfo(ctx context.Context, professionalInfoId int64, request entities.UpdateProfessionalInfoRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	professionalInfo, err := s.repository.FindById(ctx, professionalInfoId)
 	if err != nil {
-		return apperrors.NewNotFoundError("professional info not found")
+		return apperrors.NotFoundError("professional info not found")
 	}
 	professionalInfo.EmployeeId = request.EmployeeId
 	professionalInfo.DepartmentId = request.DepartmentId
@@ -73,7 +73,7 @@ func (s *ProfessionalInfoService) UpdateProfessionalInfo(ctx context.Context, pr
 	professionalInfo.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, professionalInfo)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while updating professional info: " + err.Error())
+		return apperrors.InternalServerError("error while updating professional info: " + err.Error())
 	}
 	return nil
 }
@@ -81,10 +81,10 @@ func (s *ProfessionalInfoService) UpdateProfessionalInfo(ctx context.Context, pr
 func (s *ProfessionalInfoService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
 	professionalInfo, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+		return entities.ProfessionalInfoData{}, apperrors.NotFoundError("professional info not found")
 	}
 	if professionalInfo.EmployeeId == 0 {
-		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+		return entities.ProfessionalInfoData{}, apperrors.NotFoundError("professional info not found")
 	}
 	return professionalInfo, nil
 }
@@ -92,10 +92,10 @@ func (s *ProfessionalInfoService) GetByUniqueId(ctx context.Context, uniqueId st
 func (s *ProfessionalInfoService) GetByEmployeeId(ctx context.Context, employeeId int64) (entities.ProfessionalInfoData, error) {
 	professionalInfo, err := s.repository.GetDataByEmployeeId(ctx, employeeId)
 	if err != nil {
-		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+		return entities.ProfessionalInfoData{}, apperrors.NotFoundError("professional info not found")
 	}
 	if professionalInfo.EmployeeId == 0 {
-		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+		return entities.ProfessionalInfoData{}, apperrors.NotFoundError("professional info not found")
 	}
 	return professionalInfo, nil
 }
@@ -103,10 +103,10 @@ func (s *ProfessionalInfoService) GetByEmployeeId(ctx context.Context, employeeI
 func (s *ProfessionalInfoService) GetByEmployeeUniqueId(ctx context.Context, uniqueId string) (entities.ProfessionalInfoData, error) {
 	professionalInfo, err := s.repository.GetDataByEmployeeUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+		return entities.ProfessionalInfoData{}, apperrors.NotFoundError("professional info not found")
 	}
 	if professionalInfo.EmployeeId == 0 {
-		return entities.ProfessionalInfoData{}, apperrors.NewNotFoundError("professional info not found")
+		return entities.ProfessionalInfoData{}, apperrors.NotFoundError("professional info not found")
 	}
 	return professionalInfo, nil
 }
@@ -114,7 +114,7 @@ func (s *ProfessionalInfoService) GetByEmployeeUniqueId(ctx context.Context, uni
 func (s *ProfessionalInfoService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing professional info: "+ err.Error())
+		return apperrors.InternalServerError("error while removing professional info: " + err.Error())
 	}
 	return nil
 }

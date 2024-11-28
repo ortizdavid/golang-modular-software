@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func NewUnprocessableEntityError(message string) *HttpError {
+func UnprocessableEntityError(message string) *HttpError {
 	return &HttpError{
 		Message:    message,
 		StatusCode: http.StatusUnprocessableEntity,

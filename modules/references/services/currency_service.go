@@ -12,7 +12,6 @@ import (
 	"github.com/ortizdavid/golang-modular-software/modules/references/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/references/repositories"
 	shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
-
 )
 
 type CurrencyService struct {
@@ -27,38 +26,38 @@ func NewCurrencyService(db *database.Database) *CurrencyService {
 
 func (s *CurrencyService) Create(ctx context.Context, request entities.CreateCurrencyRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	exists, err := s.repository.ExistsByName(ctx, request.CurrencyName)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("Currency already exists")
+		return apperrors.BadRequestError("Currency already exists")
 	}
 	currency := entities.Currency{
 		CurrencyName: request.CurrencyName,
 		Code:         request.Code,
 		BaseEntity: shared.BaseEntity{
-			UniqueId:         encryption.GenerateUUID(),
-			CreatedAt:        time.Now().UTC(),
-			UpdatedAt:        time.Now().UTC(),
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
 		},
 	}
 	err = s.repository.Create(ctx, currency)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while creating currency: " + err.Error())
+		return apperrors.InternalServerError("error while creating currency: " + err.Error())
 	}
 	return nil
 }
 
 func (s *CurrencyService) Update(ctx context.Context, uniqueId string, request entities.UpdateCurrencyRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("currency not found")
+		return apperrors.NotFoundError("currency not found")
 	}
 	currency.CurrencyName = request.CurrencyName
 	currency.Code = request.Code
@@ -66,26 +65,26 @@ func (s *CurrencyService) Update(ctx context.Context, uniqueId string, request e
 	currency.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, currency)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while updating currency: " + err.Error())
+		return apperrors.InternalServerError("error while updating currency: " + err.Error())
 	}
 	return nil
 }
 
 func (s *CurrencyService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.Currency], error) {
 	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	count, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No currencies found")
+		return nil, apperrors.NotFoundError("No currencies found")
 	}
 	currencies, err := s.repository.FindAllLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, currencies, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -93,11 +92,11 @@ func (s *CurrencyService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.C
 func (s *CurrencyService) GetAll(ctx context.Context) ([]entities.Currency, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No currencies found")
+		return nil, apperrors.NotFoundError("No currencies found")
 	}
 	currencies, err := s.repository.FindAll(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	return currencies, nil
 }
@@ -105,18 +104,18 @@ func (s *CurrencyService) GetAll(ctx context.Context) ([]entities.Currency, erro
 func (s *CurrencyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchCurrencyRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.Currency], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No currencies found")
+		return nil, apperrors.NotFoundError("No currencies found")
 	}
 	if err := paginationParams.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	currencies, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, currencies, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -124,7 +123,7 @@ func (s *CurrencyService) Search(ctx context.Context, fiberCtx *fiber.Ctx, reque
 func (s *CurrencyService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.Currency, error) {
 	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
+		return entities.Currency{}, apperrors.NotFoundError("currency not found")
 	}
 	return currency, nil
 }
@@ -132,7 +131,7 @@ func (s *CurrencyService) GetByUniqueId(ctx context.Context, uniqueId string) (e
 func (s *CurrencyService) GetByName(ctx context.Context, name string) (entities.Currency, error) {
 	currency, err := s.repository.FindByField(ctx, "currency_name", name)
 	if err != nil {
-		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
+		return entities.Currency{}, apperrors.NotFoundError("currency not found")
 	}
 	return currency, nil
 }
@@ -140,7 +139,7 @@ func (s *CurrencyService) GetByName(ctx context.Context, name string) (entities.
 func (s *CurrencyService) GetByCode(ctx context.Context, code string) (entities.Currency, error) {
 	currency, err := s.repository.FindByField(ctx, "code", code)
 	if err != nil {
-		return entities.Currency{}, apperrors.NewNotFoundError("currency not found")
+		return entities.Currency{}, apperrors.NotFoundError("currency not found")
 	}
 	return currency, nil
 }
@@ -148,11 +147,11 @@ func (s *CurrencyService) GetByCode(ctx context.Context, code string) (entities.
 func (s *CurrencyService) Remove(ctx context.Context, uniqueId string) error {
 	currency, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("currency not found")
+		return apperrors.NotFoundError("currency not found")
 	}
 	err = s.repository.Delete(ctx, currency)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing currency: "+ err.Error())
+		return apperrors.InternalServerError("error while removing currency: " + err.Error())
 	}
 	return nil
 }

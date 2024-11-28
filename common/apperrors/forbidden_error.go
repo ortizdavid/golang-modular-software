@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func NewForbiddenError(message string) *HttpError {
+func ForbiddenError(message string) *HttpError {
 	return &HttpError{
 		Message:    message,
 		StatusCode: http.StatusForbidden,

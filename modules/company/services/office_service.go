@@ -28,18 +28,18 @@ func NewOfficeService(db *database.Database) *OfficeService {
 
 func (s *OfficeService) Create(ctx context.Context, request entities.CreateOfficeRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	company, err := s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
-		return apperrors.NewNotFoundError("company not found")
+		return apperrors.NotFoundError("company not found")
 	}
 	exists, err := s.repository.ExistsByName(ctx, company.CompanyId, request.OfficeName)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("Office already exists for company " + company.CompanyName)
+		return apperrors.BadRequestError("Office already exists for company " + company.CompanyName)
 	}
 	office := entities.Office{
 		CompanyId:  company.CompanyId,
@@ -49,29 +49,29 @@ func (s *OfficeService) Create(ctx context.Context, request entities.CreateOffic
 		Phone:      request.Phone,
 		Email:      request.Email,
 		BaseEntity: shared.BaseEntity{
-			UniqueId:   encryption.GenerateUUID(),
-			CreatedAt:  time.Now().UTC(),
-			UpdatedAt:  time.Now().UTC(),
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
 		},
 	}
 	err = s.repository.Create(ctx, office)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while creating office: " + err.Error())
+		return apperrors.InternalServerError("error while creating office: " + err.Error())
 	}
 	return nil
 }
 
 func (s *OfficeService) Update(ctx context.Context, uniqueId string, request entities.UpdateOfficeRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	office, err := s.repository.FindByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewNotFoundError("office not found")
+		return apperrors.NotFoundError("office not found")
 	}
 	_, err = s.companyRepository.FindById(ctx, request.CompanyId)
 	if err != nil {
-		return apperrors.NewNotFoundError("company not found")
+		return apperrors.NotFoundError("company not found")
 	}
 	office.CompanyId = request.CompanyId
 	office.OfficeName = request.OfficeName
@@ -81,26 +81,26 @@ func (s *OfficeService) Update(ctx context.Context, uniqueId string, request ent
 	office.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, office)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while updating office: " + err.Error())
+		return apperrors.InternalServerError("error while updating office: " + err.Error())
 	}
 	return nil
 }
 
 func (s *OfficeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
 	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	count, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No offices found")
+		return nil, apperrors.NotFoundError("No offices found")
 	}
 	offices, err := s.repository.FindAllDataLimit(ctx, params.Limit, params.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, offices, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -108,11 +108,11 @@ func (s *OfficeService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx
 func (s *OfficeService) GetAll(ctx context.Context) ([]entities.OfficeData, error) {
 	_, err := s.repository.Count(ctx)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No offices found")
+		return nil, apperrors.NotFoundError("No offices found")
 	}
 	offices, err := s.repository.FindAllData(ctx)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	return offices, nil
 }
@@ -120,7 +120,7 @@ func (s *OfficeService) GetAll(ctx context.Context) ([]entities.OfficeData, erro
 func (s *OfficeService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.OfficeData, error) {
 	office, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.OfficeData{}, apperrors.NewNotFoundError("office not found")
+		return entities.OfficeData{}, apperrors.NotFoundError("office not found")
 	}
 	return office, nil
 }
@@ -128,18 +128,18 @@ func (s *OfficeService) GetByUniqueId(ctx context.Context, uniqueId string) (ent
 func (s *OfficeService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchOfficeRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.OfficeData], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No offices found")
+		return nil, apperrors.NotFoundError("No offices found")
 	}
 	if err := paginationParams.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	offices, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, offices, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }

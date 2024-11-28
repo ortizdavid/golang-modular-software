@@ -15,7 +15,7 @@ import (
 )
 
 type EmployeeEmailService struct {
-	repository *repositories.EmployeeEmailRepository
+	repository         *repositories.EmployeeEmailRepository
 	employeeRepository *repositories.EmployeeRepository
 }
 
@@ -26,45 +26,45 @@ func NewEmployeeEmailService(db *database.Database) *EmployeeEmailService {
 	}
 }
 
-func (s *EmployeeEmailService) Create(ctx context.Context, fiberCtx *fiber.Ctx,  request entities.CreateEmployeeEmailRequest) error {
+func (s *EmployeeEmailService) Create(ctx context.Context, fiberCtx *fiber.Ctx, request entities.CreateEmployeeEmailRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	employee, err := s.employeeRepository.FindById(ctx, request.EmployeeId)
 	if err != nil {
-		return apperrors.NewNotFoundError("employee not found")
+		return apperrors.NotFoundError("employee not found")
 	}
 	exists, err := s.repository.Exists(ctx, request.EmailAddress)
 	if err != nil {
 		return err
 	}
 	if exists {
-		return apperrors.NewBadRequestError("employee email already exists for employee: "+employee.FirstName)
+		return apperrors.BadRequestError("employee email already exists for employee: " + employee.FirstName)
 	}
 	employeeEmail := entities.EmployeeEmail{
 		EmployeeId:    request.EmployeeId,
 		ContactTypeId: request.ContactTypeId,
 		EmailAddress:  request.EmailAddress,
-		BaseEntity:    shared.BaseEntity{
-			UniqueId:      encryption.GenerateUUID(),
-			CreatedAt:     time.Now().UTC(),
-			UpdatedAt:     time.Now().UTC(),
+		BaseEntity: shared.BaseEntity{
+			UniqueId:  encryption.GenerateUUID(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
 		},
 	}
 	err = s.repository.Create(ctx, employeeEmail)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while creating employee email: " + err.Error())
+		return apperrors.InternalServerError("error while creating employee email: " + err.Error())
 	}
 	return nil
 }
 
 func (s *EmployeeEmailService) Update(ctx context.Context, employeeEmailId int64, request entities.UpdateEmployeeEmailRequest) error {
 	if err := request.Validate(); err != nil {
-		return apperrors.NewBadRequestError(err.Error())
+		return apperrors.BadRequestError(err.Error())
 	}
 	employeeEmail, err := s.repository.FindById(ctx, employeeEmailId)
 	if err != nil {
-		return apperrors.NewNotFoundError("employee email not found")
+		return apperrors.NotFoundError("employee email not found")
 	}
 	employeeEmail.EmployeeId = request.EmployeeId
 	employeeEmail.ContactTypeId = request.ContactTypeId
@@ -72,26 +72,26 @@ func (s *EmployeeEmailService) Update(ctx context.Context, employeeEmailId int64
 	employeeEmail.UpdatedAt = time.Now().UTC()
 	err = s.repository.Update(ctx, employeeEmail)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while updating employee email: " + err.Error())
+		return apperrors.InternalServerError("error while updating employee email: " + err.Error())
 	}
 	return nil
 }
 
 func (s *EmployeeEmailService) GetAllPaginated(ctx context.Context, fiberCtx *fiber.Ctx, params helpers.PaginationParam, employeeId int64) (*helpers.Pagination[entities.EmployeeEmailData], error) {
 	if err := params.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	count, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No employee emails found for employee: ")
+		return nil, apperrors.NotFoundError("No employee emails found for employee: ")
 	}
 	employeeEmails, err := s.repository.FindAllByEmployeeIdLimit(ctx, params.Limit, params.CurrentPage, employeeId)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, employeeEmails, count, params.CurrentPage, params.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -99,11 +99,11 @@ func (s *EmployeeEmailService) GetAllPaginated(ctx context.Context, fiberCtx *fi
 func (s *EmployeeEmailService) GetAll(ctx context.Context, employeeId int64) ([]entities.EmployeeEmailData, error) {
 	_, err := s.repository.CountByEmployee(ctx, employeeId)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No employee emails found")
+		return nil, apperrors.NotFoundError("No employee emails found")
 	}
 	employeeEmails, err := s.repository.FindAllByEmployeeId(ctx, employeeId)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	return employeeEmails, nil
 }
@@ -111,18 +111,18 @@ func (s *EmployeeEmailService) GetAll(ctx context.Context, employeeId int64) ([]
 func (s *EmployeeEmailService) Search(ctx context.Context, fiberCtx *fiber.Ctx, request entities.SearchEmployeeEmailRequest, paginationParams helpers.PaginationParam) (*helpers.Pagination[entities.EmployeeEmail], error) {
 	count, err := s.repository.CountByParam(ctx, request.SearchParam)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("No employee emails found")
+		return nil, apperrors.NotFoundError("No employee emails found")
 	}
 	if err := paginationParams.Validate(); err != nil {
-		return nil, apperrors.NewBadRequestError(err.Error())
+		return nil, apperrors.BadRequestError(err.Error())
 	}
 	employeeEmails, err := s.repository.Search(ctx, request.SearchParam, paginationParams.Limit, paginationParams.CurrentPage)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error fetching rows: " + err.Error())
+		return nil, apperrors.InternalServerError("Error fetching rows: " + err.Error())
 	}
 	pagination, err := helpers.NewPagination(fiberCtx, employeeEmails, count, paginationParams.CurrentPage, paginationParams.Limit)
 	if err != nil {
-		return nil, apperrors.NewInternalServerError("Error creating pagination: " + err.Error())
+		return nil, apperrors.InternalServerError("Error creating pagination: " + err.Error())
 	}
 	return pagination, nil
 }
@@ -130,10 +130,10 @@ func (s *EmployeeEmailService) Search(ctx context.Context, fiberCtx *fiber.Ctx, 
 func (s *EmployeeEmailService) GetByUniqueId(ctx context.Context, uniqueId string) (entities.EmployeeEmailData, error) {
 	employeeEmail, err := s.repository.GetDataByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return entities.EmployeeEmailData{}, apperrors.NewNotFoundError("employee email not found")
+		return entities.EmployeeEmailData{}, apperrors.NotFoundError("employee email not found")
 	}
 	if employeeEmail.EmployeeId == 0 {
-		return entities.EmployeeEmailData{}, apperrors.NewNotFoundError("employee email not found")
+		return entities.EmployeeEmailData{}, apperrors.NotFoundError("employee email not found")
 	}
 	return employeeEmail, nil
 }
@@ -141,7 +141,7 @@ func (s *EmployeeEmailService) GetByUniqueId(ctx context.Context, uniqueId strin
 func (s *EmployeeEmailService) GetAllByEmployeeUniqueId(ctx context.Context, uniqueId string) ([]entities.EmployeeEmailData, error) {
 	employeeEmails, err := s.repository.GetAllByEmployeeUniqueId(ctx, uniqueId)
 	if err != nil {
-		return nil, apperrors.NewNotFoundError("employee email not found")
+		return nil, apperrors.NotFoundError("employee email not found")
 	}
 	return employeeEmails, nil
 }
@@ -149,7 +149,7 @@ func (s *EmployeeEmailService) GetAllByEmployeeUniqueId(ctx context.Context, uni
 func (s *EmployeeEmailService) Remove(ctx context.Context, uniqueId string) error {
 	err := s.repository.DeleteByUniqueId(ctx, uniqueId)
 	if err != nil {
-		return apperrors.NewInternalServerError("error while removing employee email: "+ err.Error())
+		return apperrors.InternalServerError("error while removing employee email: " + err.Error())
 	}
 	return nil
 }

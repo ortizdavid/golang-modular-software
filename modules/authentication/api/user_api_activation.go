@@ -15,7 +15,7 @@ func (api *UserApi) deactivate(c *fiber.Ctx) error {
 	}
 	loggedUser, _ := api.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
-		return api.HandleErrorsApi(c, apperrors.NewConflictError("You cannot deactivate your own account"))
+		return api.HandleErrorsApi(c, apperrors.ConflictError("You cannot deactivate your own account"))
 	}
 	err = api.service.DeactivateUser(c.Context(), user.UserId)
 	if err != nil {
@@ -35,7 +35,7 @@ func (api *UserApi) activate(c *fiber.Ctx) error {
 	}
 	loggedUser, _ := api.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
-		return api.HandleErrorsApi(c, apperrors.NewConflictError("You cannot activate your own account"))
+		return api.HandleErrorsApi(c, apperrors.ConflictError("You cannot activate your own account"))
 	}
 	err = api.service.ActivateUser(c.Context(), user.UserId)
 	if err != nil {

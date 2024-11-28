@@ -16,7 +16,7 @@ func (ctrl *UserController) deactivateForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	if loggedUser.UserId == user.UserId {
-		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("You cannot deactivate your own account"))
+		return ctrl.HandleErrorsWeb(c, apperrors.ConflictError("You cannot deactivate your own account"))
 	}
 	return c.Render("authentication/user/deactivate", fiber.Map{
 		"Title":            "Deactivate User",
@@ -35,7 +35,7 @@ func (ctrl *UserController) deactivate(c *fiber.Ctx) error {
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
-		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("You cannot deactivate your own account"))
+		return ctrl.HandleErrorsWeb(c, apperrors.ConflictError("You cannot deactivate your own account"))
 	}
 	err = ctrl.service.DeactivateUser(c.Context(), user.UserId)
 	if err != nil {
@@ -55,7 +55,7 @@ func (ctrl *UserController) activateForm(c *fiber.Ctx) error {
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	moduleFlagStatus, _ := ctrl.moduleFlagStatusService.LoadModuleFlagStatus(c.Context())
 	if loggedUser.UserId == user.UserId {
-		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("You cannot activate your own account"))
+		return ctrl.HandleErrorsWeb(c, apperrors.ConflictError("You cannot activate your own account"))
 	}
 	return c.Render("authentication/user/activate", fiber.Map{
 		"Title":            "Activate User",
@@ -74,7 +74,7 @@ func (ctrl *UserController) activate(c *fiber.Ctx) error {
 	}
 	loggedUser, _ := ctrl.authService.GetLoggedUser(c.Context(), c)
 	if loggedUser.UserId == user.UserId {
-		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("You cannot activate your own account"))
+		return ctrl.HandleErrorsWeb(c, apperrors.ConflictError("You cannot activate your own account"))
 	}
 	err = ctrl.service.ActivateUser(c.Context(), user.UserId)
 	if err != nil {

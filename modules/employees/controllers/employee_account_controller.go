@@ -23,7 +23,7 @@ func (ctrl *EmployeeController) addUserAccountForm(c *fiber.Ctx) error {
 	}
 	employeeAccount, _ := ctrl.accountService.GetById(c.Context(), employee.EmployeeId)
 	if employeeAccount.UserName != "" {
-		return ctrl.HandleErrorsWeb(c, apperrors.NewConflictError("Employee '"+employee.FirstName+"' already have account"))
+		return ctrl.HandleErrorsWeb(c, apperrors.ConflictError("Employee '"+employee.FirstName+"' already have account"))
 	}
 	return c.Render("employee/employee-info/add-user-account", fiber.Map{
 		"Title":            "Add Employee User Account",
@@ -56,8 +56,8 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 	}
 	userId := ctrl.userService.GetUserInsertedId()
 	assRequest := authentication.AssociateUserRequest{
-		UserId: userId,
-		EntityId: employee.EmployeeId,
+		UserId:     userId,
+		EntityId:   employee.EmployeeId,
 		EntityName: authentication.RoleEmployee.Code,
 	}
 	err = ctrl.userService.AssociateUserToRole(c.Context(), assRequest)
@@ -69,7 +69,7 @@ func (ctrl *EmployeeController) addUserAccount(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' added user account to employee '"+employee.IdentificationNumber+"' successfully")
-	return c.Redirect("/employees/employee-info/" +id+ "/details")
+	return c.Redirect("/employees/employee-info/" + id + "/details")
 }
 
 func (ctrl *EmployeeController) associateUserAccountForm(c *fiber.Ctx) error {
@@ -117,5 +117,5 @@ func (ctrl *EmployeeController) associateUserAccount(c *fiber.Ctx) error {
 		return ctrl.HandleErrorsWeb(c, err)
 	}
 	ctrl.infoLogger.Info(c, "User '"+loggedUser.UserName+"' associated user account to employee '"+employee.IdentificationNumber+"' successfully")
-	return c.Redirect("/employees/employee-info/" +id+ "/details")
+	return c.Redirect("/employees/employee-info/" + id + "/details")
 }
