@@ -1,4 +1,4 @@
--- triggers for 'reference' schema 
+-- triggers for 'authentication' schema 
 
 
 -- Lock delete assigned roles-------------------------------------------------------------------------------------

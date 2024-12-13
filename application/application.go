@@ -2,8 +2,10 @@ package application
 
 import (
 	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ortizdavid/golang-modular-software/common/config"
+	"github.com/ortizdavid/golang-modular-software/common/helpers"
 	"github.com/ortizdavid/golang-modular-software/common/middlewares"
 	"github.com/ortizdavid/golang-modular-software/database"
 	seed "github.com/ortizdavid/golang-modular-software/database/seed"
@@ -16,8 +18,12 @@ type Application struct {
 
 // initialize an application with static files, middlewares and controllers
 func NewApplication() (*Application, error) {
+
+	engine := config.GetTemplateEngine() // Template engines
+	helpers.AddTemplateHelpers(engine) // Register all Helper Functions to Templates
+
 	app := fiber.New(fiber.Config{
-		Views: config.GetTemplateEngine(), // Template engines
+		Views: engine,
 	})
 
 	// Configure location of css, js, .jpg, .pdf and other files

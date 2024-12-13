@@ -14,3 +14,4 @@ CREATE SCHEMA IF NOT EXISTS employees;
 
 -- reference management
 CREATE SCHEMA IF NOT EXISTS reference;
+

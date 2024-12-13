@@ -1,4 +1,4 @@
--- views for 'reference' schema 
+-- views for 'authentication' schema 
 
 -- View: view_user_data
 DROP VIEW IF EXISTS authentication.view_user_data;
