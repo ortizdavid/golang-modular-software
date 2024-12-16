@@ -13,6 +13,7 @@ func (repo *BaseRepository[T]) FindByUniqueId(ctx context.Context, uniqueId stri
 func (repo *BaseRepository[T]) FindByField(ctx context.Context, field string, value interface{}) (T, error) {
 	var entity T
 	result := repo.db.WithContext(ctx).Where(field+" = ?", value).First(&entity)
+	repo.setAffectedRows(result.RowsAffected)
 	return entity, result.Error
 }
 

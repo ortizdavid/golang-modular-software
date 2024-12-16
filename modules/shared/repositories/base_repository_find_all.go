@@ -9,6 +9,7 @@ import (
 func (repo *BaseRepository[T]) FindAllLimit(ctx context.Context, limit int, offset int) ([]T, error) {
 	var entities []T
 	result := repo.db.WithContext(ctx).Model(&entities).Limit(limit).Offset(offset).Find(&entities)
+	repo.setAffectedRows(result.RowsAffected)
 	return entities, result.Error
 }
 
@@ -16,6 +17,7 @@ func (repo *BaseRepository[T]) FindAllLimit(ctx context.Context, limit int, offs
 func (repo *BaseRepository[T]) FindAllOrdered(ctx context.Context, fieldAnOrder string) ([]T, error) {
 	var entities []T
 	result := repo.db.WithContext(ctx).Order(fieldAnOrder).Find(&entities)
+	repo.setAffectedRows(result.RowsAffected)
 	return entities, result.Error
 }
 
@@ -23,6 +25,7 @@ func (repo *BaseRepository[T]) FindAllOrdered(ctx context.Context, fieldAnOrder 
 func (repo *BaseRepository[T]) FindAllNotIn(ctx context.Context, fieldName string, values ...[]interface{}) ([]T, error) {
 	var entities []T
 	result := repo.db.WithContext(ctx).Model(&entities).Where(fmt.Sprintf("%s NOT IN (?)", fieldName), values).Find(&entities)
+	repo.setAffectedRows(result.RowsAffected)
 	return entities, result.Error
 }
 

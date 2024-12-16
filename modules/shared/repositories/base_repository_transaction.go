@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-
 	"github.com/ortizdavid/golang-modular-software/database"
 )
 

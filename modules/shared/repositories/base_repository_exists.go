@@ -10,5 +10,6 @@ func (repo *BaseRepository[T]) ExistsField(ctx context.Context, field string, va
 	if result.Error != nil {
 		return false, result.Error
 	}
+	repo.setAffectedRows(result.RowsAffected)
 	return count > 0, nil
 }

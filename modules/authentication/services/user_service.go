@@ -82,7 +82,7 @@ func (s *UserService) CreateUser(ctx context.Context, request entities.CreateUse
 		if err != nil {
 			return apperrors.InternalServerError("error while creating user: " + err.Error())
 		}
-		userId := s.repository.LastInsertId
+		userId := s.repository.GetLastInsertId()
 		s.userInsertedId = userId
 		// --- Create a new UserRole association
 		userRole := entities.UserRole{
