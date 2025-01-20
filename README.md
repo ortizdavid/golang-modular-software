@@ -31,6 +31,9 @@ Example of a complete modular sofware, written in Golang
 ## Module Structure
 ![Structure](docs/_diagrams/Module%20Structure.png)
 
+## Core Entity 
+![Core Entity](docs/_diagrams/Core%20Entity%20Structure.png)
+
 
 ## Module Flow
 ![Flow](docs/_diagrams/Modules%20-%20Flow.png)

@@ -172,7 +172,6 @@ INSERT INTO configurations.core_entities (module_id, entity_name, code, descript
 (6, 'Reference Reports', 'reports.reference_reports', 'Reports related to reference data');
 
 
-
 -- Table: core_entity_flag
 DROP TABLE IF EXISTS configurations.core_entity_flag;
 CREATE TABLE configurations.core_entity_flag(
