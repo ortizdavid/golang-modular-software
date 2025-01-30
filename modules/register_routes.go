@@ -44,6 +44,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 	flagMiddleware := middlewares.NewModuleFlagMiddleware(db)
 	sessionMiddleware := middlewares.NewSessionAuthMiddleware(db)
 	apiKeyMiddleware := middlewares.NewApiKeyMiddleware(db)
+	authorizationMiddleware := middlewares.NewAuthorizationMiddleware(db)
 	//jwtMiddleware := middlewares.NewJwtMiddleware(db)
 
 	return []routeGroup{
@@ -59,6 +60,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			module: configEntities.ModuleAuthentication,
 			middlewares: []fiber.Handler{
 				sessionMiddleware.CheckLoggedUser,
+				authorizationMiddleware.AllowRoles(authEntities.RoleSuperAdmin.Code),
 				flagMiddleware.CheckModule(configEntities.ModuleAuthentication.Code),
 
 			},
@@ -77,6 +79,7 @@ func createRouteGroups(db *database.Database) []routeGroup {
 			module: configEntities.ModuleConfigurations,
 			middlewares: []fiber.Handler{
 				sessionMiddleware.CheckLoggedUser,
+				authorizationMiddleware.AllowRoles(authEntities.RoleSuperAdmin.Code),
 				flagMiddleware.CheckModule(configEntities.ModuleConfigurations.Code),
 				
 			},

@@ -19,15 +19,16 @@ func NewSessionAuthMiddleware(db *database.Database) *SessionAuthMiddleware {
 
 func (mid *SessionAuthMiddleware) AuthenticateRequests(c *fiber.Ctx) error {
 	requestedPath := c.Path()
-	if requestedPath == "/" ||
-		strings.HasPrefix(requestedPath, "/api") ||
-		strings.HasPrefix(requestedPath, "/images") ||
-		strings.HasPrefix(requestedPath, "/css") ||
-		strings.HasPrefix(requestedPath, "/js") ||
-		strings.HasPrefix(requestedPath, "/lib") ||
-		strings.HasPrefix(requestedPath, "/auth/login") {
+	skipPaths := []string{"/api", "/images", "/js", "/lib", "/auth/login"}
+	
+	if requestedPath == "/" {
 		return c.Next()
 	}
+	for _, path := range skipPaths  {
+		if strings.HasPrefix(requestedPath, path) {
+			return c.Next()
+		}
+	} 
 	if !mid.service.IsUserAuthenticated(c.Context(), c) {
 		return c.Status(fiber.StatusUnauthorized).Render("_errors/authentication", fiber.Map{
 			"Title": "Authentication Error",
@@ -37,7 +38,6 @@ func (mid *SessionAuthMiddleware) AuthenticateRequests(c *fiber.Ctx) error {
 }
 
 func (mid *SessionAuthMiddleware)  CheckLoggedUser(c *fiber.Ctx) error {
-	// Skip session check for API routes
     if strings.HasPrefix(c.Path(), "/api") {
         return c.Next() 
     }

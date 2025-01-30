@@ -11,6 +11,7 @@ SELECT
     us.password, 
     CASE WHEN us.is_active THEN 'Yes' ELSE 'No' END AS is_active,
     us.user_image,
+    us.initial_role,
     us.token,
     TO_CHAR(us.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
     TO_CHAR(us.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,

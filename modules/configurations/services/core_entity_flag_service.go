@@ -142,10 +142,3 @@ func (s *CoreEntityFlagService) GetByUniqueId(ctx context.Context, uniqueId stri
 	return coreEntity, nil
 }
 
-func (s *CoreEntityFlagService) GetByCode(ctx context.Context, code string) (entities.CoreEntityFlagData, error) {
-	coreEntity, err := s.repository.FindByEntityCode(ctx, code)
-	if err != nil {
-		return entities.CoreEntityFlagData{}, apperrors.NotFoundError("core entity not found")
-	}
-	return coreEntity, nil
-}

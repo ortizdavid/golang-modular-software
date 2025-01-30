@@ -24,12 +24,13 @@ func (User) TableName() string {
 type UserData struct {
 	UserId       	int64 `json:"user_id"`
 	UniqueId     	string `json:"unique_id"`
-	Token        	string `json:"token"`
 	UserName     	string `json:"user_name"`
 	Email        	string `json:"email"`
 	Password     	string `json:"password"`  
 	IsActive     	string `json:"is_active"`
 	UserImage    	string `json:"user_image"`
+	InitialRole    	string `json:"initial_role"`
+	Token        	string `json:"token"`
 	CreatedAt    	string `json:"created_at"`
 	UpdatedAt    	string `json:"updated_at"`
 	Status     		string `json:"status"`

@@ -65,7 +65,7 @@ func (repo *RoleRepository) FindByCode(ctx context.Context, code string) (entiti
 
 func (repo *RoleRepository) ExistsByCode(ctx context.Context, code string) (bool, error) {
 	var count int64
-	result := repo.db.WithContext(ctx).Table("authentication.roles").WithContext(ctx).Where("code = ?", code).Count(&count)
+	result := repo.db.WithContext(ctx).Table("authentication.roles").Where("code = ?", code).Count(&count)
 	return count > 0, result.Error
 }
 
