@@ -280,7 +280,7 @@ CREATE TYPE TYPE_ACTIVITY_STATUS AS ENUM('Online', 'Offline');
 DROP TABLE IF EXISTS authentication.login_activity;
 CREATE TABLE authentication.login_activity (
     login_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL UNIQUE,
     status TYPE_ACTIVITY_STATUS DEFAULT 'Offline',
     host VARCHAR(150),
     browser VARCHAR(150),
