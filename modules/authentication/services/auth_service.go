@@ -16,7 +16,6 @@ import (
 	entities "github.com/ortizdavid/golang-modular-software/modules/authentication/entities"
 	"github.com/ortizdavid/golang-modular-software/modules/authentication/repositories"
 	configurations "github.com/ortizdavid/golang-modular-software/modules/configurations/services"
-	//shared "github.com/ortizdavid/golang-modular-software/modules/shared/entities"
 )
 
 type AuthService struct {
@@ -39,23 +38,17 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	if err := request.Validate(); err != nil {
 		return apperrors.BadRequestError(err.Error())
 	}
-	userName := request.UserName
-	password := request.Password
-	// check if exists
-	exists, err := s.repository.ExistsActiveUser(ctx, userName)
+	
+	user, err := s.repository.FindByUserName(ctx, request.UserName)
 	if err != nil {
-		return apperrors.InternalServerError("Error checking user existence")
+		return apperrors.NotFoundError("User not found"+err.Error())
 	}
-	if !exists {
-		return apperrors.NotFoundError("User does not exists")
+	if !user.IsActive {
+		return apperrors.NotFoundError("User is inactive")
 	}
-	user, err := s.repository.FindByUserName(ctx, userName)
-	if err != nil {
-		return apperrors.NotFoundError(err.Error())
-	}
-	hashedPassword := user.Password
+	
 	// check password
-	if !encryption.CheckPassword(hashedPassword, password) {
+	if !encryption.CheckPassword(user.Password, request.Password) {
 		return apperrors.UnauthorizedError("Invalid User Name or Password")
 	}
 	// create session
@@ -64,8 +57,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 	if err != nil {
 		return apperrors.InternalServerError(err.Error())
 	}
-	session.Set("user_name", userName)
-	session.Set("password", hashedPassword)
+	session.Set("user_name", request.UserName)
 	if err := session.Save(); err != nil {
 		return apperrors.InternalServerError(err.Error())
 	}
@@ -76,7 +68,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 		return apperrors.InternalServerError(err.Error())
 	}
 
-	loginAct, err := s.loginActRepository.FindByUserId(ctx, user.UserId)
+	loginAct, _ := s.loginActRepository.FindByUserId(ctx, user.UserId)
 	// Update the existing login activity record
 	loginAct.Status = entities.ActivityStatusOnline
 	loginAct.Host = fiberCtx.Hostname()
@@ -98,23 +90,18 @@ func (s *AuthService) AuthenticateAPI(ctx context.Context, request entities.Logi
 	if err := request.Validate(); err != nil {
 		return "", apperrors.BadRequestError(err.Error())
 	}
-	userName := request.UserName
-	password := request.Password
-	// check if exists
-	exists, err := s.repository.ExistsActiveUser(ctx, userName)
+
+	user, err := s.repository.FindByUserName(ctx, request.UserName)
 	if err != nil {
-		return "", apperrors.InternalServerError("Error checking user existence")
+		return "", apperrors.NotFoundError("User not found: "+err.Error())
 	}
-	if !exists {
-		return "", apperrors.NotFoundError("User does not exists")
+
+	if !user.IsActive {
+		return "", apperrors.NotFoundError("User is inactive")
 	}
-	user, err := s.repository.FindByUserName(ctx, userName)
-	if err != nil {
-		return "", apperrors.NotFoundError(err.Error())
-	}
-	hashedPassword := user.Password
+
 	// check password
-	if !encryption.CheckPassword(hashedPassword, password) {
+	if !encryption.CheckPassword(user.Password, request.Password) {
 		return "", apperrors.UnauthorizedError("Invalid User Name or Password")
 	}
 	// Generate JWT token

@@ -126,6 +126,6 @@ func (ctrl *AuthController) getRecoverLink(c *fiber.Ctx) error {
 		ctrl.errorLogger.Error(c, err.Error())
 		return ctrl.HandleErrorsWeb(c, err)
 	}
-	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' recovered password", user.UserName))
+	ctrl.infoLogger.Info(c, fmt.Sprintf("User '%s' got recover link", user.UserName))
 	return c.Redirect("/auth/get-recover-link")
 }
