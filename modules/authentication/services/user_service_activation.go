@@ -13,7 +13,7 @@ func (s *UserService) ActivateUser(ctx context.Context, userId int64) error {
 	if err != nil {
 		return apperrors.NotFoundError("user not found. invalid user id")
 	}
-	if user.IsActive == true {
+	if user.IsActive {
 		return apperrors.ConflictError("user '" + user.UserName + "'  is already active")
 	}
 	user.IsActive = true
@@ -31,7 +31,7 @@ func (s *UserService) DeactivateUser(ctx context.Context, userId int64) error {
 	if err != nil {
 		return apperrors.NotFoundError("user not found. invalid user id")
 	}
-	if user.IsActive == false {
+	if !user.IsActive {
 		return apperrors.ConflictError("user '" + user.UserName + "' is already inactive")
 	}
 	user.IsActive = false

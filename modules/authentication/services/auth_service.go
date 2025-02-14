@@ -44,7 +44,7 @@ func (s *AuthService) Authenticate(ctx context.Context, fiberCtx *fiber.Ctx, req
 		return apperrors.NotFoundError("User not found"+err.Error())
 	}
 	if !user.IsActive {
-		return apperrors.NotFoundError("User is inactive")
+		return apperrors.NotFoundError("Your user is inactive")
 	}
 	
 	// check password
@@ -97,7 +97,7 @@ func (s *AuthService) AuthenticateAPI(ctx context.Context, request entities.Logi
 	}
 
 	if !user.IsActive {
-		return "", apperrors.NotFoundError("User is inactive")
+		return "", apperrors.NotFoundError("Your user is inactive")
 	}
 
 	// check password
